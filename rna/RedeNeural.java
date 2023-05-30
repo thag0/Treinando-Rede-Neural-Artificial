@@ -11,7 +11,7 @@ public class RedeNeural implements Cloneable{
 
    public int qtdCamadasOcultas;
 
-   int BIAS = 0;
+   int BIAS = 1;
    double TAXA_APRENDIZAGEM = 0.3;
 
    //padronizar uso das funções de ativação
@@ -23,7 +23,7 @@ public class RedeNeural implements Cloneable{
    final int ativacaoTanHDx = 6;
    final int ativacaoLeakyRelu = 7;
    
-   int funcaoAtivacao = ativacaoTanH;
+   int funcaoAtivacao = ativacaoRelu;
    int funcaoAtivacaoSaida = ativacaoReluDx;
 
    int i, j, k;//contadores
@@ -184,7 +184,7 @@ public class RedeNeural implements Cloneable{
             
             for(int k = 0; k < proximaCamada.neuronios.length; k++){
                erro += (proximaCamada.neuronios[k].erro * camadaAtual.neuronios[j].pesos[k]);
-               camadaAtual.neuronios[j].erro = erro * tanHDx(camadaAtual.neuronios[j].saida);
+               camadaAtual.neuronios[j].erro = erro * reluDx(camadaAtual.neuronios[j].saida);
             }
          }
       }

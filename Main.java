@@ -12,7 +12,8 @@ class Main{
          {1, 1, 0, 0},
          {1, 1, 1, 1}
       };
-      RedeNeural rede = new RedeNeural(3, 5, 1, 2);
+
+      RedeNeural rede = new RedeNeural(3, 5, 1, 1);
 
       double[] dados_teste = new double[3];
       double[] saida_teste = new double[1];
