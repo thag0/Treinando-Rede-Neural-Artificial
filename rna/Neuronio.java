@@ -14,8 +14,8 @@ public class Neuronio{
       this.qtdLigacoes = qtdLigacoes;
 
       pesos = new double[qtdLigacoes];
-      for(int i = 0; i < qtdLigacoes; i++){
-         pesos[i] = random.nextDouble(-100, 100);//-100 a 100
+      for(int i = 0; i < pesos.length; i++){
+         pesos[i] = random.nextDouble(-10, 10);//-100 a 100
       }
 
       this.saida = 0;

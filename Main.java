@@ -16,35 +16,37 @@ class Main{
 
       RedeNeural rede = new RedeNeural(3, 3, 1, 2);
 
-      double[] dados_teste = new double[3];
+      double[] dados_teste = new double[rede.entrada.neuronios.length];
       double[] saida_teste = new double[1];
 
-      dados_teste[0] = dados[2][0];
-      dados_teste[1] = dados[2][1];
-      dados_teste[2] = dados[2][2];
-      saida_teste[0] = dados[2][3];
+      dados_teste[0] = dados[3][0];
+      dados_teste[1] = dados[3][1];
+      dados_teste[2] = dados[3][2];
+      saida_teste[0] = dados[3][3];
 
       System.out.println("Precisão antes: " + rede.calcularPrecisao(dados));
 
       rede.backpropagation(dados_teste, saida_teste);
-      imprimirErrosRede(rede);
+      System.out.println("------------------");
 
+      long contador = 0;
       do{
+         if(!errosValidos(rede)){
+            System.out.println("-Pesos NaN-");
+            break;
+         }
          for(int i = 0; i < dados.length; i++){
             dados_teste[0] = dados[i][0];
             dados_teste[1] = dados[i][1];
             dados_teste[2] = dados[i][2];
-            saida_teste[0] = dados[i][3];         
+            saida_teste[0] = dados[i][3];
             rede.backpropagation(dados_teste, saida_teste);
          }
-      }while(rede.calcularPrecisao(dados) < 30.0);
+         contador++;
+      }while(rede.calcularPrecisao(dados) < 40.0);
 
-      System.out.println("------------------");
-      imprimirErrosRede(rede);
-      System.out.println(rede.calcularPrecisao(dados));
-
-      //imprimirErrosRede(rede);
-
+      System.out.println("Precisão depois: " +rede.calcularPrecisao(dados));
+      System.out.println("Quantidade de epocas: " + contador);
    }
 
    public static void imprimirErrosRede(RedeNeural rede){
@@ -61,6 +63,19 @@ class Main{
          System.out.println("[" + rede.saida.neuronios[i].erro +"]");
       }
    }
+
+
+   public static boolean errosValidos(RedeNeural rede){
+      for(int i = 0; i < rede.ocultas.length; i++){
+         for(int j = 0; j < rede.ocultas[i].neuronios.length; j++){
+            for(int k = 0; k < rede.ocultas[i].neuronios[j].pesos.length; k++){
+               if(Double.isNaN(rede.ocultas[i].neuronios[j].pesos[k])) return false;
+            }
+         }
+      }
+      return true;
+   }
+
 
    public static void limparConsole(){
       try{

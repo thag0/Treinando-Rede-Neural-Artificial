@@ -12,7 +12,7 @@ public class RedeNeural implements Cloneable{
    public int qtdCamadasOcultas;
 
    int BIAS = 1;
-   double TAXA_APRENDIZAGEM = 0.3;
+   double TAXA_APRENDIZAGEM = 0.00001;
 
    //padronizar uso das funções de ativação
    final int ativacaoRelu = 1;
@@ -24,7 +24,7 @@ public class RedeNeural implements Cloneable{
    final int ativacaoLeakyRelu = 7;
    
    int funcaoAtivacao = ativacaoRelu;
-   int funcaoAtivacaoSaida = ativacaoReluDx;
+   int funcaoAtivacaoSaida = ativacaoRelu;
 
    int i, j, k;//contadores
 
@@ -155,6 +155,9 @@ public class RedeNeural implements Cloneable{
    }
 
 
+   //teste
+   //não consegue lidar com mais de uma camada oculta
+   //as vezes gera NaN nos erros
    public void backpropagation(double[] dados, double[] saidaEsperada){
       if(saidaEsperada.length != this.saida.neuronios.length){
          System.out.println("imcompatibilidade de dimensões");
@@ -166,61 +169,65 @@ public class RedeNeural implements Cloneable{
 
       //CALCULANDO OS ERRROS DAS CAMADAS
       //calcular erros da saída
-      for(int i = 0; i < this.saida.neuronios.length; i++){
-         this.saida.neuronios[i].erro = (this.saida.neuronios[i].saida - saidaEsperada[i]);
-         this.saida.neuronios[i].erro = reluDx(this.saida.neuronios[i].erro);
+      for(i = 0; i < this.saida.neuronios.length; i++){
+         this.saida.neuronios[i].erro = (this.saida.neuronios[i].saida - saidaEsperada[i]) * funcaoAtivacaoSaidaDx(this.saida.neuronios[i].saida);
       }
 
-      //propagar o erros para as outras camadas
-      for(int i = (this.ocultas.length-1); i >= 0; i--){
+      //propagar o erros para as camadas ocultas
+      for(i = (this.ocultas.length-1); i >= 0; i--){
          Camada camadaAtual = this.ocultas[i];
          Camada proximaCamada;
          if(i == (this.ocultas.length-1)) proximaCamada = this.saida;
          else proximaCamada = this.ocultas[i+1];
 
          //percorrer neuronios da camada atual
-         for(int j = 0; j < camadaAtual.neuronios.length; j++){
-            double erro = 0.0;
-            
-            for(int k = 0; k < proximaCamada.neuronios.length; k++){
+         for(j = 0; j < camadaAtual.neuronios.length; j++){
+
+            double erro = 0.0;    
+            for(k = 0; k < proximaCamada.neuronios.length; k++){
                erro += (proximaCamada.neuronios[k].erro * camadaAtual.neuronios[j].pesos[k]);
-               camadaAtual.neuronios[j].erro = erro * reluDx(camadaAtual.neuronios[j].saida);
             }
+            camadaAtual.neuronios[j].erro = erro * funcaoAtivacaoDx(camadaAtual.neuronios[j].saida);
          }
       }
 
-      //feito pelo chat, não muito confiavel ainda
-      //atualizando os pesos
-      for (int i = 0; i < ocultas.length; i++) {
-         Camada camadaAtual = ocultas[i];
-         Camada proximaCamada;
-         if (i == ocultas.length - 1)
-            proximaCamada = saida;
-         else
-            proximaCamada = ocultas[i + 1];
-      
-         for (int j = 0; j < camadaAtual.neuronios.length; j++) {
-            Neuronio neuronioAtual = camadaAtual.neuronios[j];
-      
-            // Atualizar os pesos do neurônio atual
-            for (int k = 0; k < proximaCamada.neuronios.length; k++) {
-               Neuronio neuronioProximaCamada = proximaCamada.neuronios[k];
-      
-               // Calcular o ajuste do peso usando a regra do Gradiente Descendente
-               double ajustePeso = TAXA_APRENDIZAGEM * neuronioProximaCamada.erro * neuronioAtual.saida;
-               neuronioAtual.pesos[k] -= ajustePeso;
-            }
+      //não precisa calcular erros da entrada
+      //são apenas os dados 
+
+      //ATUALIZANDO OS PESOS
+      // Camada de saída
+      for (int i = 0; i < this.saida.neuronios.length; i++) {
+         Neuronio neuronioSaida = this.saida.neuronios[i];
+
+         for (int j = 0; j < neuronioSaida.pesos.length; j++) {
+            double entrada = this.ocultas[this.ocultas.length - 1].neuronios[j].saida;
+            double erro = neuronioSaida.erro;
+
+            // Calcular a variação do peso
+            double variacaoPeso = TAXA_APRENDIZAGEM * erro * entrada;
+
+            // Atualizar o peso
+            neuronioSaida.pesos[j] -= variacaoPeso;
          }
       }
-      
-      // Atualizar os pesos da camada de saída
-      for (int i = 0; i < saida.neuronios.length; i++) {
-         Neuronio neuronioSaida = saida.neuronios[i];
-      
-         // Calcular o ajuste do peso usando a regra do Gradiente Descendente
-         double ajustePeso = TAXA_APRENDIZAGEM * neuronioSaida.erro * neuronioSaida.saida;
-         for (int j = 0; j < neuronioSaida.pesos.length; j++) {
-            neuronioSaida.pesos[j] -= ajustePeso;
+
+      // Camadas ocultas
+      for (int i = this.ocultas.length - 1; i >= 0; i--){
+         Camada camadaAtual = this.ocultas[i];
+
+         for (int j = 0; j < camadaAtual.neuronios.length; j++){
+            Neuronio neuronioAtual = camadaAtual.neuronios[j];
+
+            for (int k = 0; k < neuronioAtual.pesos.length; k++){
+               double erro = neuronioAtual.erro;
+               double entrada ;//= (i == 0) ? dados[k] : this.ocultas[i - 1].neuronios[k].saida;
+               if(i == 0) entrada = dados[k];
+               else entrada = this.ocultas[i - 1].neuronios[k].saida;
+
+               double variacaoPeso = TAXA_APRENDIZAGEM * erro * entrada;
+
+               neuronioAtual.pesos[k] -= variacaoPeso;
+            }
          }
       }
    }
@@ -271,6 +278,24 @@ public class RedeNeural implements Cloneable{
       if(funcaoAtivacaoSaida == ativacaoLeakyRelu) return leakyRelu(valor);
 
       else return valor;
+   }
+
+
+   private double funcaoAtivacaoDx(double valor){
+      if(funcaoAtivacao == ativacaoRelu) return reluDx(valor);
+      if(funcaoAtivacao == ativacaoSigmoid) return sigmoidDx(valor);
+      if(funcaoAtivacao == ativacaoTanH) return tanHDx(valor);
+
+      return valor;
+   }
+
+
+   private double funcaoAtivacaoSaidaDx(double valor){
+      if(funcaoAtivacaoSaida == ativacaoRelu) return reluDx(valor);
+      if(funcaoAtivacaoSaida == ativacaoSigmoid) return sigmoidDx(valor);
+      if(funcaoAtivacaoSaida == ativacaoTanH) return tanHDx(valor);
+
+      return valor;
    }
 
 
