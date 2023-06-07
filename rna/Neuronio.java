@@ -3,8 +3,9 @@ package rna;
 import java.util.Random;
 
 public class Neuronio{
-   public double[] pesos;
    public double saida;
+   public double entrada;
+   public double[] pesos;
    public double erro;//implementar backpropagation
 
    public int qtdLigacoes;
@@ -15,7 +16,7 @@ public class Neuronio{
 
       pesos = new double[qtdLigacoes];
       for(int i = 0; i < pesos.length; i++){
-         pesos[i] = random.nextDouble(-10, 10);//-100 a 100
+         pesos[i] = random.nextDouble(-4, 4);
       }
 
       this.saida = 0;

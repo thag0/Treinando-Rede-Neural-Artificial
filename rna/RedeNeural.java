@@ -104,6 +104,7 @@ public class RedeNeural implements Cloneable{
             for(k = 0; k < camadaAnterior.neuronios.length; k++){
                soma += camadaAnterior.neuronios[k].saida * camadaAnterior.neuronios[k].pesos[j];
             }
+            camadaAtual.neuronios[j].entrada = soma;
             soma += BIAS;
             camadaAtual.neuronios[j].saida = funcaoAtivacao(soma);
          }
@@ -118,12 +119,15 @@ public class RedeNeural implements Cloneable{
                this.ocultas[this.qtdCamadasOcultas-1].neuronios[j].pesos[i]
             ); 
          }
+         this.saida.neuronios[i].entrada = soma;
          soma += BIAS;
          this.saida.neuronios[i].saida = funcaoAtivacaoSaida(soma);
       }
    }
 
-   
+
+   //adaptar para multiplas saídas
+   //separar os parametros para dados e classes
    public double calcularPrecisao(double[][] dados){
       double precisao = 0;
 
@@ -155,8 +159,25 @@ public class RedeNeural implements Cloneable{
    }
 
 
+   public void treinar(double[][] dados, double[] saida, int epochs){
+      double[] dados_treino = new double[dados[0].length];
+      double[] saida_treino = new double[1];
+
+      int i, j, k;
+      for(i = 0; i < epochs; i++){
+         
+         for(j = 0; j < dados[0].length; j++){//percorrer as linhas dos dados
+            for(k = 0; k < dados.length; k++){//percorrer as colunas dos dados
+               dados_treino[k] = dados[j][k];
+            }
+            saida_treino[0] = saida[j];
+            backpropagation(dados_treino, saida_treino);
+         }
+      }
+   }
+
+
    //teste
-   //não consegue lidar com mais de uma camada oculta
    //as vezes gera NaN nos erros
    public void backpropagation(double[] dados, double[] saidaEsperada){
       if(saidaEsperada.length != this.saida.neuronios.length){
@@ -194,39 +215,26 @@ public class RedeNeural implements Cloneable{
       //não precisa calcular erros da entrada
       //são apenas os dados 
 
-      //ATUALIZANDO OS PESOS
-      // Camada de saída
-      for (int i = 0; i < this.saida.neuronios.length; i++) {
-         Neuronio neuronioSaida = this.saida.neuronios[i];
-
-         for (int j = 0; j < neuronioSaida.pesos.length; j++) {
-            double entrada = this.ocultas[this.ocultas.length - 1].neuronios[j].saida;
-            double erro = neuronioSaida.erro;
-
-            // Calcular a variação do peso
-            double variacaoPeso = TAXA_APRENDIZAGEM * erro * entrada;
-
-            // Atualizar o peso
-            neuronioSaida.pesos[j] -= variacaoPeso;
+      //ATUALIZANDO OS PESOS --------------------------------
+      //atualização dos pesos da saída
+      for(i = 0; i < this.saida.neuronios.length; i++){
+         Neuronio neuronio = this.saida.neuronios[i];
+         for(j = 0; j < neuronio.pesos.length; j++){
+            double gradiente = neuronio.erro * neuronio.entrada;
+            neuronio.pesos[j] -= (TAXA_APRENDIZAGEM * gradiente);
          }
       }
 
-      // Camadas ocultas
-      for (int i = this.ocultas.length - 1; i >= 0; i--){
+      //atualização dos pesos das camadas ocultas
+      for(i = this.ocultas.length - 1; i >= 0; i--){
          Camada camadaAtual = this.ocultas[i];
 
-         for (int j = 0; j < camadaAtual.neuronios.length; j++){
-            Neuronio neuronioAtual = camadaAtual.neuronios[j];
+         for(j = 0; j < camadaAtual.neuronios.length; j++){
+            Neuronio neuronio = camadaAtual.neuronios[j];
 
-            for (int k = 0; k < neuronioAtual.pesos.length; k++){
-               double erro = neuronioAtual.erro;
-               double entrada ;//= (i == 0) ? dados[k] : this.ocultas[i - 1].neuronios[k].saida;
-               if(i == 0) entrada = dados[k];
-               else entrada = this.ocultas[i - 1].neuronios[k].saida;
-
-               double variacaoPeso = TAXA_APRENDIZAGEM * erro * entrada;
-
-               neuronioAtual.pesos[k] -= variacaoPeso;
+            for(k = 0; k < neuronio.pesos.length; k++){
+               double gradiente = neuronio.erro * neuronio.entrada;
+               neuronio.pesos[k] -= TAXA_APRENDIZAGEM * gradiente;
             }
          }
       }
@@ -292,6 +300,7 @@ public class RedeNeural implements Cloneable{
 
    private double funcaoAtivacaoSaidaDx(double valor){
       if(funcaoAtivacaoSaida == ativacaoRelu) return reluDx(valor);
+      if(funcaoAtivacaoSaida == ativacaoReluDx) return reluDx(valor);
       if(funcaoAtivacaoSaida == ativacaoSigmoid) return sigmoidDx(valor);
       if(funcaoAtivacaoSaida == ativacaoTanH) return tanHDx(valor);
 
@@ -300,19 +309,19 @@ public class RedeNeural implements Cloneable{
 
 
    private double relu(double valor){
-      if(valor < 0) return 0;
+      if(valor <= 0) return 0;
       return valor;
    }
 
 
    private double reluDx(double valor){
-      if(valor < 0) return 0;
+      if(valor <= 0) return 0;
       return 1;     
    }
 
 
    private double sigmoid(double valor){
-      return 1 / (1 + Math.exp(-valor));
+      return (1 / (1 + Math.exp(-valor)));
    }
 
 

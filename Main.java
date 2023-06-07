@@ -14,7 +14,7 @@ class Main{
          {1, 1, 1, 1}
       };
 
-      RedeNeural rede = new RedeNeural(3, 3, 1, 2);
+      RedeNeural rede = new RedeNeural(3, 5, 1, 1);
 
       double[] dados_teste = new double[rede.entrada.neuronios.length];
       double[] saida_teste = new double[1];
@@ -26,9 +26,7 @@ class Main{
 
       System.out.println("Precisão antes: " + rede.calcularPrecisao(dados));
 
-      rede.backpropagation(dados_teste, saida_teste);
       System.out.println("------------------");
-
       long contador = 0;
       do{
          if(!errosValidos(rede)){
@@ -43,9 +41,9 @@ class Main{
             rede.backpropagation(dados_teste, saida_teste);
          }
          contador++;
-      }while(rede.calcularPrecisao(dados) < 40.0);
+      }while(rede.calcularPrecisao(dados) < 20.0);
 
-      System.out.println("Precisão depois: " +rede.calcularPrecisao(dados));
+      System.out.println("Precisão depois: " + rede.calcularPrecisao(dados));
       System.out.println("Quantidade de epocas: " + contador);
    }
 
