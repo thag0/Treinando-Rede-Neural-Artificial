@@ -1,9 +1,17 @@
+import java.text.DecimalFormat;
+
 import rna.RedeNeural;
 
 class Main{
    public static void main(String[] args){
       limparConsole();
-      double[][] dados = {
+      double[][] dados = {//xor
+         {0, 0, 0},
+         {0, 1, 1},
+         {1, 0, 1},
+         {1, 1, 0}
+      };
+      double[][] dados2 = {
          {0, 0, 0, 0},
          {0, 0, 1, 1},
          {0, 1, 0, 1},
@@ -31,29 +39,8 @@ class Main{
          }
       }
 
-      //modelo de rede
-      RedeNeural rede = new RedeNeural(3, 2, 1, 1);
-      rede.configurarAlcancePesos(2);
-      rede.configurarFuncaoAtivacao(3, 3);
-      rede.configurarBias(true);
-      rede.configurarTaxaAprendizagem(0.01);
-      rede.compilar();
-
-
-      double custoAntes, custoDepois;
-
-      custoAntes = rede.funcaoDeCusto(dados_entrada, dados_saida);
-      System.out.println(custoAntes);
-
-      rede.treinar(dados_entrada, dados_saida, 10*1000);
-
-      custoDepois = rede.funcaoDeCusto(dados_entrada, dados_saida);
-      System.out.println(custoDepois);
-      System.out.println();
-
-      if(custoAntes > custoDepois) System.out.println("Custo diminuiu");
-      else if(custoAntes < custoDepois) System.out.println("Custo aumentou");
-
+      //modelo de rede que interpreta a porta lógica XOR
+      RedeNeural rede = modeloXOR();
 
       //mostrar saída da rede em comparação com os dados
       double[] entrada_rede = new double[rede.entrada.neuronios.length-1];
@@ -73,10 +60,13 @@ class Main{
          for(int k = 0; k < entrada_rede.length; k++){
             System.out.print("|" + entrada_rede[k] + "|");
          }
-         System.out.print(" Esperado -> " + dados[i][3] + " Saída -> " + saida_rede[0] + "\n");
+         System.out.print(" Esperado -> " + dados[i][dados[0].length-1] + " Saída -> " + formatarFloat((float)saida_rede[0]) + "\n");
       }
+      System.out.println("\nCusto: " + rede.funcaoDeCusto(dados_entrada, dados_saida) + "\n");
 
+      Auxiliares.imprimirRede(rede);
    }
+
 
    public static void imprimirErrosRede(RedeNeural rede){
 
@@ -106,6 +96,42 @@ class Main{
    }
 
 
+   public static RedeNeural modeloXOR(){
+      RedeNeural rede =  new RedeNeural(2, 4, 1, 1);
+      rede.configurarFuncaoAtivacao(3, 3);
+      rede.compilar();
+
+      //n1
+      rede.entrada.neuronios[0].pesos[0] = 3.011978;
+      rede.entrada.neuronios[0].pesos[1] = 0.537028;
+      rede.entrada.neuronios[0].pesos[2] = 5.857057;
+      rede.entrada.neuronios[0].pesos[3] = 2.036597;
+
+      //n2
+      rede.entrada.neuronios[1].pesos[0] = 3.107690;
+      rede.entrada.neuronios[1].pesos[1] = 0.431248;
+      rede.entrada.neuronios[1].pesos[2] = 5.830700;
+      rede.entrada.neuronios[1].pesos[3] = 1.963531;
+      
+      //b1
+      rede.entrada.neuronios[2].pesos[0] = -5.029354;
+      rede.entrada.neuronios[2].pesos[1] = -0.545232;
+      rede.entrada.neuronios[2].pesos[2] = -2.434113;
+      rede.entrada.neuronios[2].pesos[3] = -3.516930;
+
+      //n1 n2 n3 n4
+      rede.ocultas[0].neuronios[0].pesos[0] = -6.179475;      
+      rede.ocultas[0].neuronios[1].pesos[0] = -1.509866;
+      rede.ocultas[0].neuronios[2].pesos[0] = 7.957819;      
+      rede.ocultas[0].neuronios[3].pesos[0] = -4.044065;      
+      
+      //b2
+      rede.ocultas[0].neuronios[4].pesos[0] = -2.709660;
+
+      return rede;
+   }
+
+
    public static void limparConsole(){
       try{
           String nomeSistema = System.getProperty("os.name");
@@ -121,5 +147,15 @@ class Main{
       }catch(Exception e){
           return;
       }
+   }
+
+
+   public static String formatarFloat(float valor){
+      String valorFormatado = "";
+
+      DecimalFormat df = new DecimalFormat("#.##");
+      valorFormatado = df.format(valor);
+
+      return valorFormatado;
    }
 }

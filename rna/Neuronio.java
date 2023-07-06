@@ -28,6 +28,6 @@ public class Neuronio implements Serializable{
       }
 
       this.entrada = 0;
-      this.saida = 1;
+      this.saida = 1;// considerar que pode ter bias aplicado ao modelo
    }
 }

@@ -19,6 +19,7 @@ public class RedeNeural implements Cloneable, Serializable{
    private int BIAS = 1;
    private double alcancePeso = 100;
    private double TAXA_APRENDIZAGEM = 0.1;
+   private boolean modeloCompilado = false;
 
    //padronizar uso das funções de ativação
    private final int ativacaoRelu = 1;
@@ -195,15 +196,29 @@ public class RedeNeural implements Cloneable, Serializable{
       for(int i = 0; i < qtdNeuroniosSaida; i++){
          saida.neuronios[i] = new Neuronio(qtdNeuroniosSaida, alcancePeso);
       }
+
+      modeloCompilado = true;
+   }
+
+
+   /**
+    * Verifica se o modelo já foi compilado.
+    * @return resultado da verificação.
+    */
+   private void modeloValido(){
+      if(!this.modeloCompilado) throw new IllegalArgumentException("O modelo ainda não foi compilado");
    }
 
 
    /**
     * Propaga os dados de entrada pela rede neural pelo método de feedforward.
     * @param dados dados usados para a camada de entrada.
+    * @throws IllegalArgumentException se o modelo não foi compilado previamente.
     * @throws IllegalArgumentException se o tamanho dos dados de entrada for diferente do tamanho dos neurônios de entrada, sem contar os bias.
     */
    public void calcularSaida(double[] dados){
+      modeloValido();
+
       if(dados.length != (this.entrada.neuronios.length-BIAS)){
          throw new IllegalArgumentException("As dimensões dos dados de entrada com os neurônios de entrada da rede não são iguais");
       }
@@ -266,10 +281,13 @@ public class RedeNeural implements Cloneable, Serializable{
     * @param dados matriz com os dados de entrada.
     * @param saida matriz com os dados de saída.
     * @return precisão obtida com base nos dados fornecidos.
+    * @throws IllegalArgumentException se o modelo não foi compilado previamente.
     * @throws IllegalArgumentException se o tamanho dos dados de entrada for diferente do tamanho dos neurônios de entrada, sem contar os bias.
     * @throws IllegalArgumentException se o tamanho dos dados de saída for diferente do tamanho dos neurôniosde de saída.
     */
    public double calcularPrecisao(double[][] dados, double[][] saida){
+      modeloValido();
+
       if(dados[0].length != this.entrada.neuronios.length-BIAS){
          throw new IllegalArgumentException("Incompatibilidade entre os dados de entrada e os neurônios de entrada da rede");
       }
@@ -308,10 +326,13 @@ public class RedeNeural implements Cloneable, Serializable{
     * @param dados matriz de dados de entrada.
     * @param saida matriz dos dados de saída.
     * @return valor de custo da rede.
+    * @throws IllegalArgumentException se o modelo não foi compilado previamente.
     * @throws IllegalArgumentException se o tamanho dos dados de entrada for diferente do tamanho dos neurônios de entrada, sem contar os bias.
     * @throws IllegalArgumentException se o tamanho dos dados de saída for diferente do tamanho dos neurôniosde de saída.
     */
    public double funcaoDeCusto(double[][] dados, double[][] saida){
+      modeloValido();
+      
       if(dados[0].length != this.entrada.neuronios.length-BIAS){
          throw new IllegalArgumentException("Incompatibilidade entre os dados de entrada e os neurônios de entrada da rede");
       }
@@ -352,11 +373,14 @@ public class RedeNeural implements Cloneable, Serializable{
     * @param dados matriz de dados de entrada.
     * @param saida matriz de dados de saída.
     * @param epochs quantidade de épocas do treino.
+    * @throws IllegalArgumentException se o modelo não foi compilado previamente.
     * @throws IllegalArgumentException se o tamanho dos dados de entrada for diferente do tamanho dos neurônios de entrada, sem contar os bias.
     * @throws IllegalArgumentException se o tamanho dos dados de saída for diferente do tamanho dos neurôniosde de saída.
     * @throws IllegalArgumentException se o valor de epochs for menor que um.
     */
    public void treinar(double[][] dados, double[][] saida, int epochs){
+      modeloValido();
+
       if(dados[0].length != this.entrada.neuronios.length-BIAS){
          throw new IllegalArgumentException("Incompatibilidade entre os dados de entrada e os neurônios de entrada da rede");
       }
@@ -388,15 +412,18 @@ public class RedeNeural implements Cloneable, Serializable{
 
 
    /**
-    * <strong>Em teste</strong>
+    * <p><strong>Em teste</strong></p>
     * Retropropaga o erro da rede de acorodo com o dado aplicado e a saída esperada, depois
     * corrige os pesos com a técnica de gradiente descendente.
     * @param dados array com os dados de entrada.
     * @param saidaEsperada array com as saídas esperadas
+    * @throws IllegalArgumentException se o modelo não foi compilado previamente.
     * @throws IllegalArgumentException se o tamanho dos dados de entrada for diferente do tamanho dos neurônios de entrada, sem contar os bias.
     * @throws IllegalArgumentException se o tamanho dos dados de saída for diferente do tamanho dos neurôniosde de saída.
     */
    public void backpropagation(double[] dados, double[] saidaEsperada){
+      modeloValido();
+
       if(dados.length != (this.entrada.neuronios.length-BIAS)){
          throw new IllegalArgumentException("O tamanho dos dados de entrada não corresponde ao tamaho dos neurônios de entrada da rede, com exceção dos bias");
       }
@@ -407,16 +434,15 @@ public class RedeNeural implements Cloneable, Serializable{
       //calcular saída para aplicar o erro
       this.calcularSaida(dados);
 
-      //CALCULANDO OS ERROS DAS CAMADAS------
+      //CALCULANDO OS ERROS DAS CAMADAS
 
       //calcular erros da saída
       for(int i = 0; i < this.saida.neuronios.length; i++){
          Neuronio neuronio = this.saida.neuronios[i];
          double erro = saidaEsperada[i] - neuronio.saida;
-         neuronio.erro = erro * funcaoAtivacaoSaidaDx(neuronio.saida);
+         neuronio.erro = erro * funcaoAtivacaoSaidaDx(neuronio.entrada);
       }
-      
-      //calcular erros das ocultas
+
       //percorrer camadas ocultas
       for(int i = (this.ocultas.length-1); i >= 0; i--){
          Camada camadaAtual = this.ocultas[i];
@@ -432,16 +458,17 @@ public class RedeNeural implements Cloneable, Serializable{
             for(int k = 0; k < proximaCamada.neuronios.length; k++){
                erro += (proximaCamada.neuronios[k].erro * camadaAtual.neuronios[j].pesos[k]);
             }
-            neuronio.erro = erro * funcaoAtivacaoDx(neuronio.saida);
+            neuronio.erro = erro * funcaoAtivacaoDx(neuronio.entrada);
          }
       }
+
 
       //ATUALIZANDO OS PESOS --------------------------------
       //atualização dos pesos da saída
       for(int i = 0; i < this.saida.neuronios.length; i++){
          Neuronio neuronio = this.saida.neuronios[i];
          for(int j = 0; j < neuronio.pesos.length; j++){
-            double gradiente = neuronio.erro * funcaoAtivacaoSaidaDx(neuronio.entrada);
+            double gradiente = neuronio.erro * neuronio.entrada;
             neuronio.pesos[j] -= (TAXA_APRENDIZAGEM * gradiente);
          }
       }
@@ -454,7 +481,7 @@ public class RedeNeural implements Cloneable, Serializable{
             Neuronio neuronio = camadaAtual.neuronios[j];
 
             for(int k = 0; k < neuronio.pesos.length; k++){
-               double gradiente = neuronio.erro * funcaoAtivacaoDx(neuronio.entrada);
+               double gradiente = neuronio.erro * neuronio.entrada;
                neuronio.pesos[k] -= TAXA_APRENDIZAGEM * gradiente;
             }
          }
@@ -464,11 +491,14 @@ public class RedeNeural implements Cloneable, Serializable{
 
    /**
     * Copia os dados de saída de cada neurônio da rede neural para um vetor.
+    * A ordem de cópia é crescente, do primeiro neurônio da saída ao último.
     * @return vetor com os dados das saídas da rede.
+    * @throws IllegalArgumentException se o modelo não foi compilado previamente.
     */
    public double[] obterSaida(){
-      double saida[] = new double[this.saida.neuronios.length];
+      modeloValido();
 
+      double saida[] = new double[this.saida.neuronios.length];
       for(int i = 0; i < saida.length; i++){
          saida[i] = this.saida.neuronios[i].saida;
       }
@@ -562,7 +592,6 @@ public class RedeNeural implements Cloneable, Serializable{
    }
 
 
-   //funções exclusivas para a saída
    private void argmax(){
       int indiceMaior = 0;
       double maiorValor = this.saida.neuronios[0].saida;
