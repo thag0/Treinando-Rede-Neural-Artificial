@@ -425,10 +425,10 @@ public class RedeNeural implements Cloneable, Serializable{
       modeloValido();
 
       if(dados.length != (this.entrada.neuronios.length-BIAS)){
-         throw new IllegalArgumentException("O tamanho dos dados de entrada não corresponde ao tamaho dos neurônios de entrada da rede, com exceção dos bias");
+         throw new IllegalArgumentException("O tamanho dos dados de entrada não corresponde ao tamanho dos neurônios de entrada da rede, com exceção dos bias");
       }
       if(saidaEsperada.length != this.saida.neuronios.length){
-         throw new IllegalArgumentException("O tamanho dos dados de saída não corresponde ao tamaho dos neurônios de saída da rede");
+         throw new IllegalArgumentException("O tamanho dos dados de saída não corresponde ao tamanho dos neurônios de saída da rede");
       }
 
       //calcular saída para aplicar o erro
@@ -439,39 +439,28 @@ public class RedeNeural implements Cloneable, Serializable{
       //calcular erros da saída
       for(int i = 0; i < this.saida.neuronios.length; i++){
          Neuronio neuronio = this.saida.neuronios[i];
-         double erro = saidaEsperada[i] - neuronio.saida;
-         neuronio.erro = erro * funcaoAtivacaoSaidaDx(neuronio.entrada);
+         double erro = neuronio.saida - saidaEsperada[i];
+         neuronio.erro = erro * funcaoAtivacaoSaidaDx(neuronio.saida);
       }
 
       //percorrer camadas ocultas
       for(int i = (this.ocultas.length-1); i >= 0; i--){
          Camada camadaAtual = this.ocultas[i];
-         Camada proximaCamada;
-         if(i == (this.ocultas.length-1)) proximaCamada = this.saida;
-         else proximaCamada = this.ocultas[i+1];
+         Camada proximaCamada = i == this.ocultas.length-1 ? this.saida : this.ocultas[i+1];
 
          //percorrer neuronios da camada atual
          for(int j = 0; j < camadaAtual.neuronios.length; j++){
-
             Neuronio neuronio = camadaAtual.neuronios[j];
             double erro = 0.0;
+
             for(int k = 0; k < proximaCamada.neuronios.length; k++){
-               erro += (proximaCamada.neuronios[k].erro * camadaAtual.neuronios[j].pesos[k]);
+               erro += (proximaCamada.neuronios[k].erro * neuronio.pesos[k]);
             }
-            neuronio.erro = erro * funcaoAtivacaoDx(neuronio.entrada);
+
+            neuronio.erro = erro * funcaoAtivacaoDx(neuronio.saida);
          }
       }
 
-
-      //ATUALIZANDO OS PESOS --------------------------------
-      //atualização dos pesos da saída
-      for(int i = 0; i < this.saida.neuronios.length; i++){
-         Neuronio neuronio = this.saida.neuronios[i];
-         for(int j = 0; j < neuronio.pesos.length; j++){
-            double gradiente = neuronio.erro * neuronio.entrada;
-            neuronio.pesos[j] -= (TAXA_APRENDIZAGEM * gradiente);
-         }
-      }
 
       //atualização dos pesos das camadas ocultas
       for(int i = this.ocultas.length - 1; i >= 0; i--){
@@ -669,7 +658,7 @@ public class RedeNeural implements Cloneable, Serializable{
       clone.neuronios = new Neuronio[camada.neuronios.length];
 
       for (int i = 0; i < camada.neuronios.length; i++) {
-         clone.neuronios[i] = cloneNeuronio(camada.neuronios[i], camada.neuronios[i].qtdLigacoes, camada.neuronios[i].pesos);
+         clone.neuronios[i] = cloneNeuronio(camada.neuronios[i], camada.neuronios[i].pesos.length, camada.neuronios[i].pesos);
       }
 
       return clone;
@@ -686,7 +675,6 @@ public class RedeNeural implements Cloneable, Serializable{
       }
 
       clone.pesos = pesosClone;
-      clone.qtdLigacoes = qtdLigacoes;
 
       return clone;
    }

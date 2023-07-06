@@ -40,7 +40,7 @@ public class Auxiliares{
          
          System.out.println("n" + i);
          System.out.print("[");
-         for(int j = 0; j < rede.entrada.neuronios[i].qtdLigacoes; j++){
+         for(int j = 0; j < rede.entrada.neuronios[i].pesos.length; j++){
             if(j == 0) System.out.print(rede.entrada.neuronios[i].pesos[j]);
             else System.out.print(", " + rede.entrada.neuronios[i].pesos[j]);
          }

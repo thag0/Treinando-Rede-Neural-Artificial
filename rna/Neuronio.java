@@ -9,7 +9,6 @@ public class Neuronio implements Serializable{
    public double[] pesos;
    public double erro;//implementar backpropagation
 
-   public int qtdLigacoes;
    private Random random = new Random();
 
    /**
@@ -19,8 +18,6 @@ public class Neuronio implements Serializable{
     */
    public Neuronio(int qtdLigacoes, double alcancePeso){
       if(alcancePeso <= 0) throw new IllegalArgumentException("O valor de alcance do peso deve ser positivo e diferente de zero.");
-
-      this.qtdLigacoes = qtdLigacoes;
 
       pesos = new double[qtdLigacoes];
       for(int i = 0; i < pesos.length; i++){

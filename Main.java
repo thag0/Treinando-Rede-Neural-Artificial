@@ -11,60 +11,83 @@ class Main{
          {1, 0, 1},
          {1, 1, 0}
       };
-      double[][] dados2 = {
-         {0, 0, 0, 0},
-         {0, 0, 1, 1},
-         {0, 1, 0, 1},
-         {0, 1, 1, 0},
-         {1, 0, 0, 1},
-         {1, 0, 1, 0},
-         {1, 1, 0, 0},
-         {1, 1, 1, 1}
-      };
 
-      double[][] dados_entrada = new double[dados.length][dados[0].length-1];
-      double[][] dados_saida = new double[dados.length][1];
-
-      //preencher dados de entrada
-      for(int i = 0; i < dados_entrada.length; i++){
-         for(int j = 0; j < dados_entrada[0].length; j++){
-            dados_entrada[i][j] = dados[i][j];
-         }
-      }
-
-      //preencher dados de saída
-      for(int i = 0; i < dados_saida.length; i++){
-         for(int j = 0; j < dados_saida[0].length; j++){
-            dados_saida[i][j] = dados[i][dados_entrada[0].length + j];
-         }
-      }
-
+      double[][] dadosEntrada = new double[dados.length][dados[0].length-1];
+      double[][] dadosSaida = new double[dados.length][1];
+      dadosEntrada = separarDadosEntrada(dados, dados.length, 2);
+      dadosSaida = separarDadosSaida(dados, dadosEntrada, dadosSaida);
+      
+      RedeNeural rede = new RedeNeural(2, 4, 1, 2);
+      rede.configurarFuncaoAtivacao(3, 3);
+      rede.configurarAlcancePesos(1);
+      rede.configurarTaxaAprendizagem(0.001);
+      rede.compilar();
+      
+      double custo1, custo2;   
+      custo1 = rede.funcaoDeCusto(dadosEntrada, dadosSaida);
+      rede.treinar(dadosEntrada, dadosSaida, 10*1000);
+      custo2 = rede.funcaoDeCusto(dadosEntrada, dadosSaida);
+      
+      System.out.println(custo1);
+      System.out.println(custo2);  
+      
       //modelo de rede que interpreta a porta lógica XOR
-      RedeNeural rede = modeloXOR();
+      RedeNeural redeXor = modeloXOR();
+      System.out.println("\nRede xor");
+      compararSaidaRede(redeXor, dadosEntrada, dadosSaida);
+      System.out.println("Custo rede xor: " + redeXor.funcaoDeCusto(dadosEntrada, dadosSaida));
+   }
 
-      //mostrar saída da rede em comparação com os dados
+   //public static double[][] separarDadosEntrada(double[][] dadosEntrada, double[][] dados)
+   public static double[][] separarDadosEntrada(double[][] dados, int linhas, int colunas){
+      double[][] dadosEntrada = new double[linhas][colunas];
+      for(int i = 0; i < linhas; i++){
+         for(int j = 0; j < colunas; j++){
+            dadosEntrada[i][j] = dados[i][j];
+         }
+      }
+      return dadosEntrada;
+   }
+
+
+   public static double[][] separarDadosSaida(double[][] dados, double[][] dadosEntrada, double[][] dadosSaida){
+      for(int i = 0; i < dadosSaida.length; i++){
+         for(int j = 0; j < dadosSaida[0].length; j++){
+            dadosSaida[i][j] = dados[i][dadosEntrada[0].length + j];
+         }
+      }
+      return dadosSaida;
+   }
+
+
+   public static void compararSaidaRede(RedeNeural rede, double[][] dadosEntrada, double[][] dadosSaida){
       double[] entrada_rede = new double[rede.entrada.neuronios.length-1];
       double[] saida_rede = new double[rede.saida.neuronios.length];
 
       //mostrar saída da rede comparada aos dados
-      System.out.println();
-      for(int i = 0; i < dados_entrada.length; i++){
-         for(int j = 0; j < dados_entrada[0].length; j++){
-            entrada_rede[j] = dados_entrada[i][j];
+      for(int i = 0; i < dadosEntrada.length; i++){
+         for(int j = 0; j < dadosEntrada[0].length; j++){
+            entrada_rede[j] = dadosEntrada[i][j];
          }
 
          rede.calcularSaida(entrada_rede);
          saida_rede = rede.obterSaida();
 
          System.out.print("Entrada: ");
-         for(int k = 0; k < entrada_rede.length; k++){
-            System.out.print("|" + entrada_rede[k] + "|");
+         for(int j = 0; j < entrada_rede.length; j++){
+            System.out.print("|" + entrada_rede[j] + "|");
          }
-         System.out.print(" Esperado -> " + dados[i][dados[0].length-1] + " Saída -> " + formatarFloat((float)saida_rede[0]) + "\n");
-      }
-      System.out.println("\nCusto: " + rede.funcaoDeCusto(dados_entrada, dados_saida) + "\n");
 
-      Auxiliares.imprimirRede(rede);
+         System.out.print(" Esperado ->");
+         for(int j = 0; j < dadosSaida[0].length; j++){
+            System.out.print(" " + dadosSaida[i][j]);
+         }
+         System.out.print(" Rede ->");
+         for(int j = 0; j < rede.saida.neuronios.length; j++){
+            System.out.print(" " + formatarFloat(saida_rede[j]));
+         }
+         System.out.println();
+      }
    }
 
 
@@ -150,10 +173,10 @@ class Main{
    }
 
 
-   public static String formatarFloat(float valor){
+   public static String formatarFloat(double valor){
       String valorFormatado = "";
 
-      DecimalFormat df = new DecimalFormat("#.##");
+      DecimalFormat df = new DecimalFormat("#.######");
       valorFormatado = df.format(valor);
 
       return valorFormatado;
