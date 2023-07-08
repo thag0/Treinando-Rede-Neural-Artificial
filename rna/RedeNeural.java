@@ -395,7 +395,6 @@ public class RedeNeural implements Cloneable, Serializable{
       double[] dadosSaida = new double[saida[0].length];//tamanho de colunas da saída
 
       for(int i = 0; i < epochs; i++){//quantidade de épocas
-
          for(int j = 0; j < dados.length; j++){//percorrer linhas dos dados
 
             for(int k = 0; k < dados[0].length; k++){//preencher dados de entrada
@@ -434,33 +433,30 @@ public class RedeNeural implements Cloneable, Serializable{
       //calcular saída para aplicar o erro
       this.calcularSaida(dados);
 
-      //CALCULANDO OS ERROS DAS CAMADAS
+      //CALCULANDO OS ERROS DAS CAMADAS ---------------------------
 
       //calcular erros da saída
       for(int i = 0; i < this.saida.neuronios.length; i++){
          Neuronio neuronio = this.saida.neuronios[i];
-         double erro = neuronio.saida - saidaEsperada[i];
-         neuronio.erro = erro * funcaoAtivacaoSaidaDx(neuronio.saida);
+         neuronio.erro = (saidaEsperada[i] - neuronio.saida) * funcaoAtivacaoSaidaDx(neuronio.saida);
       }
 
-      //percorrer camadas ocultas
-      for(int i = (this.ocultas.length-1); i >= 0; i--){
+      //calcular erros das ocultas
+      for(int i = (this.ocultas.length-1); i >= 0; i--){//percorrer ocultas
          Camada camadaAtual = this.ocultas[i];
          Camada proximaCamada = i == this.ocultas.length-1 ? this.saida : this.ocultas[i+1];
 
-         //percorrer neuronios da camada atual
-         for(int j = 0; j < camadaAtual.neuronios.length; j++){
+         for(int j = 0; j < camadaAtual.neuronios.length; j++){//percorrer neuronios da camada atual
             Neuronio neuronio = camadaAtual.neuronios[j];
             double erro = 0.0;
 
-            for(int k = 0; k < proximaCamada.neuronios.length; k++){
-               erro += (proximaCamada.neuronios[k].erro * neuronio.pesos[k]);
+            for(int k = 0; k < proximaCamada.neuronios.length; k++){//percorrer neuronios da proxima camada
+               erro += (neuronio.pesos[k] * proximaCamada.neuronios[k].erro);
             }
 
             neuronio.erro = erro * funcaoAtivacaoDx(neuronio.saida);
          }
       }
-
 
       //atualização dos pesos das camadas ocultas
       for(int i = this.ocultas.length - 1; i >= 0; i--){
@@ -488,7 +484,7 @@ public class RedeNeural implements Cloneable, Serializable{
       modeloValido();
 
       double saida[] = new double[this.saida.neuronios.length];
-      for(int i = 0; i < saida.length; i++){
+      for(int i = 0; i < this.saida.neuronios.length; i++){
          saida[i] = this.saida.neuronios[i].saida;
       }
 

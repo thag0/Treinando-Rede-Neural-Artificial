@@ -19,18 +19,24 @@ class Main{
       
       RedeNeural rede = new RedeNeural(2, 4, 1, 2);
       rede.configurarFuncaoAtivacao(3, 3);
-      rede.configurarAlcancePesos(1);
-      rede.configurarTaxaAprendizagem(0.001);
+      rede.configurarAlcancePesos(2);
+      rede.configurarTaxaAprendizagem(0.0001);
       rede.compilar();
       
       double custo1, custo2;   
       custo1 = rede.funcaoDeCusto(dadosEntrada, dadosSaida);
-      rede.treinar(dadosEntrada, dadosSaida, 10*1000);
+      rede.treinar(dadosEntrada, dadosSaida, 50*1000);
       custo2 = rede.funcaoDeCusto(dadosEntrada, dadosSaida);
       
       System.out.println(custo1);
-      System.out.println(custo2);  
+      System.out.println(custo2);
       
+      compararSaidaRede(rede, dadosEntrada, dadosSaida);
+      
+      // exibirModeloXor(dadosEntrada, dadosSaida);
+   }
+
+   public static void exibirModeloXor(double[][] dadosEntrada, double[][] dadosSaida) {
       //modelo de rede que interpreta a porta lógica XOR
       RedeNeural redeXor = modeloXOR();
       System.out.println("\nRede xor");
