@@ -4,6 +4,16 @@ import rna.RedeNeural;
 
 class Main{
 
+   static double[][] dadosDup = {
+      {0, 0},
+      {1, 2},
+      {2, 4},
+      {3, 6},
+      {4, 8},
+      {5, 10},
+      {6, 12}
+   };
+
    static double[][] dadosOr = {
       {0, 0, 0},
       {0, 1, 1},
@@ -46,30 +56,26 @@ class Main{
       dadosEntrada = separarDadosEntrada(dados, dados.length, 2);
       dadosSaida = separarDadosSaida(dados, dadosEntrada, dadosSaida);
       
-      RedeNeural rede = criarRede(dadosEntrada[0].length, 4, dadosSaida[0].length, 1);
+      RedeNeural rede = criarRede(dadosEntrada[0].length, 2, dadosSaida[0].length, 1);
       double custo1, custo2;
 
       custo1 = rede.funcaoDeCusto(dadosEntrada, dadosSaida);
-      rede.diferencaFinita(dadosEntrada, dadosSaida, 0.001, 10*1000);
+      rede.diferencaFinita(dadosEntrada, dadosSaida, 0.001, 30*1000);
       custo2 = rede.funcaoDeCusto(dadosEntrada, dadosSaida);
 
       System.out.println("Custo antes: " + custo1 + "\nCusto depois: " + custo2);
 
       compararSaidaRede(rede, dadosEntrada, dadosSaida);
-      
-      int[] arc = rede.obterArquitetura();
-      for(int i = 0; i < arc.length; i++) System.out.print("[" + arc[i] + "]");
+
+      System.out.println(rede);
    }
 
 
    public static RedeNeural criarRede(int nE, int nO, int nS, int qO){
-      // RedeNeural rede = new RedeNeural(nE, nO, nS, qO);
-
-      int[] arquitetura = {2, 2, 1};
-      RedeNeural rede = new RedeNeural(arquitetura);
-      rede.configurarFuncaoAtivacao(3, 3);
+      RedeNeural rede = new RedeNeural(nE, nO, nS, qO);
+      rede.configurarFuncaoAtivacao(3, 7);
       rede.configurarAlcancePesos(1);
-      rede.configurarTaxaAprendizagem(0.15);
+      rede.configurarTaxaAprendizagem(0.1);
       rede.compilar();
 
       return rede;
@@ -84,6 +90,7 @@ class Main{
       compararSaidaRede(redeXor, dadosEntrada, dadosSaida);
       System.out.println("Custo rede xor: " + redeXor.funcaoDeCusto(dadosEntrada, dadosSaida));
    }
+
 
    //public static double[][] separarDadosEntrada(double[][] dadosEntrada, double[][] dados)
    public static double[][] separarDadosEntrada(double[][] dados, int linhas, int colunas){
@@ -122,10 +129,11 @@ class Main{
          rede.calcularSaida(entrada_rede);
          saida_rede = rede.obterSaida();
 
-         System.out.print("Entrada: ");
+         System.out.print("Entrada: |");
          for(int j = 0; j < entrada_rede.length; j++){
-            System.out.print("|" + entrada_rede[j] + "|");
+            System.out.print(" " + entrada_rede[j] + " ");
          }
+         System.out.print("|");
 
          System.out.print(" Esperado ->");
          for(int j = 0; j < dadosSaida[0].length; j++){
@@ -141,7 +149,6 @@ class Main{
 
 
    public static void imprimirErrosRede(RedeNeural rede){
-
       for(int i = 0; i < rede.ocultas.length; i++){
          System.out.println("O" + i);
          for(int j = 0; j < rede.ocultas[i].neuronios.length; j++){

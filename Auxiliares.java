@@ -35,32 +35,37 @@ public class Auxiliares{
 
 
    static void imprimirRede(RedeNeural rede){
-      System.out.println("\t--Entrada--");
+      String espacamento = "  ";
+      String espacamentoDuplo = espacamento + espacamento;
+      String espacamentoTriplo = espacamento + espacamento + espacamento;
+      System.out.println("\n" + rede.getClass().getSimpleName() + " = [");
+      
+      //entrada
+      System.out.println(espacamento + "Entrada = [");
       for(int i = 0; i < rede.entrada.neuronios.length; i++){
          
-         System.out.println("n" + i);
-         System.out.print("[");
+         System.out.println(espacamentoDuplo + "n" + i + " = [");
          for(int j = 0; j < rede.entrada.neuronios[i].pesos.length; j++){
-            if(j == 0) System.out.print(rede.entrada.neuronios[i].pesos[j]);
-            else System.out.print(", " + rede.entrada.neuronios[i].pesos[j]);
+            System.out.println(espacamentoTriplo + "p" + j + " : " + rede.entrada.neuronios[i].pesos[j]);
          }
-         System.out.println("]\n");
+         System.out.println(espacamentoDuplo + "]");
       }
+      System.out.println(espacamento + "]\n");
 
-      System.out.println("\t--Ocultas--");
+      //ocultas
       for(int i = 0; i < rede.ocultas.length; i++){
-         System.out.println("Oculta " + i + " ");
+         System.out.println(espacamento + "Oculta " + i + " = [");
          for(int j = 0; j < rede.ocultas[i].neuronios.length; j++){
             
-            System.out.println("n" + j);
-            System.out.print("[");
+            System.out.println(espacamento + espacamento + "n" + j + " = [");
             for(int k = 0; k < rede.ocultas[i].neuronios[j].pesos.length; k++){
-               if(k == 0) System.out.print(rede.ocultas[i].neuronios[j].pesos[k]);
-               else System.out.print(", " + rede.ocultas[i].neuronios[j].pesos[k]);
+               System.out.println(espacamentoTriplo + "p" + k + " : " + rede.ocultas[i].neuronios[j].pesos[k]);
             }
-            System.out.println("]\n");
+            System.out.println(espacamentoDuplo + "]\n");
          }
+         System.out.println(espacamento + "]");
       }
+      System.out.println("]");
    }
 
    

@@ -613,6 +613,65 @@ public class RedeNeural implements Cloneable, Serializable{
       return arquitetura;
    }
 
+   /**
+    * Exibe as informações importantes da rede neural como:
+    * <ul>
+    *    <li>Contém bias como neurônio adicional.</li>
+    *    <li>Valor da taxa de aprendizagem.</li>
+    *    <li>Função de ativação das camadas ocultas.</li>
+    *    <li>Função de ativação da camada de saída.</li>
+    *    <li>Arquitetura da rede.</li>
+    * </ul>
+    * @return buffer contendo as informações
+    * @throws IllegalArgumentException se o modelo não foi compilado previamente.
+    */
+   public String obterInformacoes(){
+      modeloValido();
+
+      String buffer = "";
+      String espacamento = "    ";
+      System.out.println("\nInformações " + this.getClass().getSimpleName() + " = [");
+
+      //bias
+      if(this.BIAS == 1) buffer += espacamento + "Bias = " + "true\n";
+      else buffer += espacamento + "Bias: " + "false\n";
+
+      //taxa de aprendizagem
+      buffer += espacamento + "Taxa de aprendizgem: " + TAXA_APRENDIZAGEM + "\n";
+
+      //funções de ativação
+      buffer += espacamento + "Ativação ocultas: ";
+      if(this.funcaoAtivacao == ativacaoRelu) buffer += "ReLU";
+      else if(this.funcaoAtivacao == ativacaoReluDx) buffer += "ReLU derivada";
+      else if(this.funcaoAtivacao == ativacaoSigmoid) buffer += "Sigmoide";
+      else if(this.funcaoAtivacao == ativacaoSigmoidDx) buffer += "Sigmoide derivada";
+      else if(this.funcaoAtivacao == ativacaoTanH) buffer += "Tangente hiperbólica";
+      else if(this.funcaoAtivacao == ativacaoTanHDx) buffer += "Tangente hiperbólica derivada";
+      else if(this.funcaoAtivacao == ativacaoLeakyRelu) buffer += "Leaky ReLU";
+      buffer += "\n";
+
+      buffer += espacamento + "Ativação saída: ";
+      if(this.funcaoAtivacao == ativacaoRelu) buffer += "ReLU";
+      else if(this.funcaoAtivacaoSaida == ativacaoReluDx) buffer += "ReLU derivada";
+      else if(this.funcaoAtivacaoSaida == ativacaoSigmoid) buffer += "Sigmoide";
+      else if(this.funcaoAtivacaoSaida == ativacaoSigmoidDx) buffer += "Sigmoide derivada";
+      else if(this.funcaoAtivacaoSaida == ativacaoTanH) buffer += "Tangente hiperbólica";
+      else if(this.funcaoAtivacaoSaida == ativacaoTanHDx) buffer += "Tangente hiperbólica derivada";
+      else if(this.funcaoAtivacaoSaida == ativacaoLeakyRelu) buffer += "Leaky ReLU";
+      else if(this.funcaoAtivacaoSaida == ativacaoArgmax) buffer += "Argmax";
+      else if(this.funcaoAtivacaoSaida == ativacaoSoftmax) buffer += "Softmax";
+      buffer += "\n";
+
+      //arquitetura
+      buffer += espacamento + "estutura = {" + this.neuroniosEntrada;
+      for(int i = 0; i < this.ocultas.length; i++) buffer += ", " + this.neuroniosOcultas;
+      buffer += ", " + this.neuroniosSaida + "}";
+
+      buffer += "\n]\n";
+
+      return buffer;
+   }
+
 
    //FUNÇÕES DE ATIVAÇÃO---------------------------
    private double funcaoAtivacao(double valor){
@@ -840,5 +899,52 @@ public class RedeNeural implements Cloneable, Serializable{
       }
 
       return rede;
+   }
+
+
+   public String toString(){
+      modeloValido();
+
+      String buffer = "";
+      String espacamento = "    ";
+      String espacamentoDuplo = espacamento + espacamento;
+      String espacamentoTriplo = espacamento + espacamento + espacamento;
+      System.out.println("\nArquitetura " + this.getClass().getSimpleName() + " = [");
+
+      //entrada
+      buffer += espacamento + "Entrada = [\n";
+      for(int i = 0; i < this.entrada.neuronios.length; i++){
+         
+         //texto diferente para o bias
+         if((i == this.entrada.neuronios.length-1) && (this.BIAS == 1)) buffer += espacamentoDuplo + "nb = [\n";
+         else buffer += espacamentoDuplo + "n" + i + " = [\n";
+
+         //imprimir pesos do neuronio
+         for(int j = 0; j < this.entrada.neuronios[i].pesos.length; j++){
+            buffer += espacamentoTriplo + "p" + j + " : " + this.entrada.neuronios[i].pesos[j] + "\n";
+         }
+         buffer += espacamentoDuplo + "]\n";
+      }
+      buffer += espacamento + "]\n\n";
+
+      //ocultas
+      for(int i = 0; i < this.ocultas.length; i++){
+         buffer += espacamento + "Oculta " + i + " = [\n";
+         for(int j = 0; j < this.ocultas[i].neuronios.length; j++){
+            
+            //texto diferente pro bias
+            if((j == this.ocultas[i].neuronios.length-1) && (this.BIAS == 1)) buffer += espacamentoDuplo + "nb = [\n";
+            else buffer += espacamento + espacamento + "n" + j + " = [\n";
+            
+            for(int k = 0; k < this.ocultas[i].neuronios[j].pesos.length; k++){
+               buffer += espacamentoTriplo + "p" + k + " : " + this.ocultas[i].neuronios[j].pesos[k] + "\n";
+            }
+            buffer += espacamentoDuplo + "]\n\n";
+         }
+         buffer += espacamento + "]\n\n";
+      }
+      buffer += "]\n";
+
+      return buffer;
    }
 }
