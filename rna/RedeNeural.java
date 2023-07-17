@@ -12,14 +12,14 @@ public class RedeNeural implements Cloneable, Serializable{
    public Camada[] ocultas;
    public Camada saida;
    
-   private int qtdNeuroniosEntrada;
-   private int qtdNeuroniosOcultas;
-   private int qtdNeuroniosSaida;
-   private int qtdCamadasOcultas;
+   private int neuroniosEntrada;
+   private int neuroniosOcultas;
+   private int neuroniosSaida;
+   private int quantidadeOcultas;
 
+   private double TAXA_APRENDIZAGEM = 0.01;
    private int BIAS = 1;
    private double alcancePeso = 100;
-   private double TAXA_APRENDIZAGEM = 0.1;
    private boolean modeloCompilado = false;
 
    //padronizar uso das funções de ativação
@@ -54,21 +54,65 @@ public class RedeNeural implements Cloneable, Serializable{
     *    de configuração, a rede será compilada com os valores padrão.
     * </p>
     * @author Thiago Barroso, acadêmico de Engenharia da Computação pela Universidade Federal do Pará, Campus Tucuruí.
-    * @param qtdNeuroniosEntrada quantidade de neurônios na camada de entrada.
-    * @param qtdNeuroniosOcultas quantidade de neurônios das camadas ocultas.
-    * @param qtdNeuroniosSaida quantidade de neurônios na camada de saída.
-    * @param qtdCamadasOcultas quantidade de camadas ocultas.
+    * @param nEntrada quantidade de neurônios na camada de entrada.
+    * @param nOcultas quantidade de neurônios das camadas ocultas.
+    * @param nSaida quantidade de neurônios na camada de saída.
+    * @param qOcultas quantidade de camadas ocultas.
     * @throws IllegalArgumentException se os valores fornecidos forem menores que um.
     */
-   public RedeNeural(int qtdNeuroniosEntrada, int qtdNeuroniosOcultas, int qtdNeuroniosSaida, int qtdCamadasOcultas){
-      if(qtdNeuroniosEntrada < 1 || qtdNeuroniosOcultas < 1 || qtdNeuroniosSaida < 1 || qtdCamadasOcultas < 1){
+   public RedeNeural(int nEntrada, int nOcultas, int nSaida, int qOcultas){
+      if(nEntrada < 1 || nOcultas < 1 || nSaida < 1 || qOcultas < 1){
          throw new IllegalArgumentException("Os valores fornecidos devem ser maiores ou iguais a um.");
       }
 
-      this.qtdNeuroniosEntrada = qtdNeuroniosEntrada;
-      this.qtdNeuroniosOcultas = qtdNeuroniosOcultas;
-      this.qtdNeuroniosSaida = qtdNeuroniosSaida;
-      this.qtdCamadasOcultas = qtdCamadasOcultas;
+      this.neuroniosEntrada = nEntrada;
+      this.neuroniosOcultas = nOcultas;
+      this.neuroniosSaida = nSaida;
+      this.quantidadeOcultas = qOcultas;
+   }
+
+
+   /**
+    * <p>
+    *    Cria uma instância de rede neural artificial. A arquitetura da rede será baseada de acordo com cada posição do array,
+    *    cada valor contido nele representará a quantidade de neurônios da camada correspondente.
+    * </p> 
+    * <p>
+    *    A camada de entrada deverá ser especificada pelo indice 0, as camadas ocultas devem conter os mesmos valores 
+    *    de neurônios e cada elementos adicional do array representará uma camada oculta adicional, a camada de saída 
+    *    será representada pelo último valor do array.
+    * </p>
+    * Os valores de todos os parâmetros pedidos <strong>NÃO devem</strong>
+    * ser menores que 1.
+    * <p>
+    *    Após instanciar o modelo, é necessário compilar por meio da função "compilar()", certifique-se 
+    *    de configurar as propriedades da rede por meio das funções de configuração fornecidas como, alcance
+    *    dos pesos iniciais, funções de ativação e quantidade de bias. Caso não seja usada nenhuma das funções 
+    *    de configuração, a rede será compilada com os valores padrão.
+    * </p>
+    * @author Thiago Barroso, acadêmico de Engenharia da Computação pela Universidade Federal do Pará, Campus Tucuruí.
+    * @param arquitetura modelo de arquitetura específico da rede.
+    * @throws IllegalArgumentException se o array de arquitetura não possuir, pelo menos, três elementos.
+    * @throws IllegalArgumentException se os valores fornecidos forem menores que um.
+    * @throws IllegalArgumentException se os valores das camadas ocultas forem difernetes.
+    */
+   public RedeNeural(int[] arquitetura){
+      if(arquitetura.length < 3) throw new IllegalArgumentException("A arquitetura da rede não pode conter menos de três elementos");
+      
+      for(int i = 0; i < arquitetura.length; i++){
+         if(arquitetura[i] < 1) throw new IllegalArgumentException("Os valores fornecidos devem ser maiores ou iguais a um.");
+      }
+
+      int verificador = arquitetura[1];
+      for(int i = 1; i < arquitetura.length-1; i++){
+         if(verificador != arquitetura[i]) throw new IllegalArgumentException("Os valores dos neurônios das camadas ocultas devem ser iguais.");
+      }
+
+      this.neuroniosEntrada = arquitetura[0];
+      this.neuroniosOcultas = arquitetura[1];
+      this.neuroniosSaida = arquitetura[arquitetura.length-1];
+      this.quantidadeOcultas = 0;//evitar problemas
+      for(int i = 1; i < arquitetura.length-1; i++) quantidadeOcultas += 1;
    }
 
 
@@ -165,8 +209,8 @@ public class RedeNeural implements Cloneable, Serializable{
     */
    public void compilar(){
       //inicializar camada de entrada
-      int QTD_NEURONIOS_ENTRADA = qtdNeuroniosEntrada + BIAS;
-      int QTD_NEURONIOS_OCULTAS = qtdNeuroniosOcultas + BIAS;
+      int QTD_NEURONIOS_ENTRADA = neuroniosEntrada + BIAS;
+      int QTD_NEURONIOS_OCULTAS = neuroniosOcultas + BIAS;
       
       entrada = new Camada();
       entrada.neuronios = new Neuronio[QTD_NEURONIOS_ENTRADA];//BIAS como neuronio adicional
@@ -175,14 +219,14 @@ public class RedeNeural implements Cloneable, Serializable{
       }
 
       //inicializar camadas ocultas
-      ocultas = new Camada[qtdCamadasOcultas];
-      for (int i = 0; i < qtdCamadasOcultas; i++){
+      ocultas = new Camada[quantidadeOcultas];
+      for (int i = 0; i < this.ocultas.length; i++){
          Camada novaOculta = new Camada();
          novaOculta.neuronios = new Neuronio[QTD_NEURONIOS_OCULTAS];
       
          for (int j = 0; j < novaOculta.neuronios.length; j++){
-            if (i == (qtdCamadasOcultas-1)){
-               novaOculta.neuronios[j] = new Neuronio(qtdNeuroniosSaida, alcancePeso);
+            if (i == (this.ocultas.length-1)){
+               novaOculta.neuronios[j] = new Neuronio(neuroniosSaida, alcancePeso);
             
             }else{
                novaOculta.neuronios[j] = new Neuronio(QTD_NEURONIOS_OCULTAS, alcancePeso);
@@ -193,9 +237,9 @@ public class RedeNeural implements Cloneable, Serializable{
 
       //inicializar camada de saída
       saida = new Camada();
-      saida.neuronios = new Neuronio[qtdNeuroniosSaida];
-      for(int i = 0; i < qtdNeuroniosSaida; i++){
-         saida.neuronios[i] = new Neuronio(qtdNeuroniosSaida, alcancePeso);
+      saida.neuronios = new Neuronio[neuroniosSaida];
+      for(int i = 0; i < this.saida.neuronios.length; i++){
+         saida.neuronios[i] = new Neuronio(1, alcancePeso);
       }
 
       modeloCompilado = true;
@@ -231,7 +275,7 @@ public class RedeNeural implements Cloneable, Serializable{
 
       //ocultas
       double soma = 0.0;
-      for(i = 0; i < this.qtdCamadasOcultas; i++){//percorrer camadas ocultas
+      for(i = 0; i < this.ocultas.length; i++){//percorrer camadas ocultas
 
          Camada camadaAtual = this.ocultas[i];
          Camada camadaAnterior;
@@ -253,10 +297,10 @@ public class RedeNeural implements Cloneable, Serializable{
       //saída
       for(i = 0; i < this.saida.neuronios.length; i++){
          soma = 0.0;
-         for(j = 0; j < (this.ocultas[this.qtdCamadasOcultas-1].neuronios.length); j++){
+         for(j = 0; j < (this.ocultas[this.ocultas.length-1].neuronios.length); j++){
             soma += (
-               this.ocultas[this.qtdCamadasOcultas-1].neuronios[j].saida *
-               this.ocultas[this.qtdCamadasOcultas-1].neuronios[j].pesos[i]
+               this.ocultas[this.ocultas.length-1].neuronios[j].saida *
+               this.ocultas[this.ocultas.length-1].neuronios[j].pesos[i]
             ); 
          }
          this.saida.neuronios[i].entrada = soma;
@@ -483,9 +527,11 @@ public class RedeNeural implements Cloneable, Serializable{
     * @param treinoSaida matriz com os dados de saída
     * @param eps valor de perturbação
     * @param epochs número de épocas do treinamento
+    * @throws IllegalArgumentException se o modelo não foi compilado previamente.
     */
    public void diferencaFinita(double[][] treinoEntrada, double[][] treinoSaida, double eps, int epochs){
-      
+      modeloValido();
+
       RedeNeural redeG = this.clone();//copia da rede para guardar os valores de gradiente
       
       ArrayList<Camada> camadasRede = new ArrayList<Camada>();//copia da rede para camadas
@@ -544,6 +590,27 @@ public class RedeNeural implements Cloneable, Serializable{
       }
 
       return saida;
+   }
+
+
+   /**
+    * Cria um array contendo os valores dos neuônios de cada camada da rede neural. Cada elementos do 
+    * array representa uma camada da rede.
+    * @return array com a arquitetura da rede.
+    * @throws IllegalArgumentException se o modelo não foi compilado previamente.
+    */
+   public int[] obterArquitetura(){
+      modeloValido();
+
+      int[] arquitetura = new int[1 + quantidadeOcultas + 1];
+
+      arquitetura[0] = neuroniosEntrada;
+      for(int i = 1; i < arquitetura.length-1; i++){
+         arquitetura[i] = neuroniosOcultas;
+      }
+      arquitetura[arquitetura.length-1] = neuroniosSaida;
+
+      return arquitetura;
    }
 
 
@@ -674,14 +741,14 @@ public class RedeNeural implements Cloneable, Serializable{
     */
    @Override
    public RedeNeural clone(){
-      try {
+      try{
          RedeNeural clone = (RedeNeural) super.clone();
 
          // Clonar dados importantes
-         clone.qtdNeuroniosEntrada = this.qtdNeuroniosEntrada;
-         clone.qtdNeuroniosOcultas = this.qtdNeuroniosOcultas;
-         clone.qtdNeuroniosSaida = this.qtdNeuroniosSaida;
-         clone.qtdCamadasOcultas = this.qtdCamadasOcultas;
+         clone.neuroniosEntrada = this.neuroniosEntrada;
+         clone.neuroniosOcultas = this.neuroniosOcultas;
+         clone.neuroniosSaida = this.neuroniosSaida;
+         clone.quantidadeOcultas = this.quantidadeOcultas;
          clone.BIAS = this.BIAS;
          clone.TAXA_APRENDIZAGEM = this.TAXA_APRENDIZAGEM;
 
@@ -689,8 +756,8 @@ public class RedeNeural implements Cloneable, Serializable{
          clone.entrada = cloneCamada(this.entrada);
 
          // Clonar camadas ocultas
-         clone.ocultas = new Camada[qtdCamadasOcultas];
-         for (int i = 0; i < qtdCamadasOcultas; i++) {
+         clone.ocultas = new Camada[quantidadeOcultas];
+         for (int i = 0; i < quantidadeOcultas; i++) {
             clone.ocultas[i] = cloneCamada(this.ocultas[i]);
          }
 
@@ -698,7 +765,7 @@ public class RedeNeural implements Cloneable, Serializable{
          clone.saida = cloneCamada(this.saida);
 
          return clone;
-      } catch (CloneNotSupportedException e){
+      }catch(CloneNotSupportedException e){
          throw new RuntimeException(e);
       }
    }

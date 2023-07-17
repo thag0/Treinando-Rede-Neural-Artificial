@@ -3,12 +3,39 @@ import java.text.DecimalFormat;
 import rna.RedeNeural;
 
 class Main{
+
+   static double[][] dadosOr = {
+      {0, 0, 0},
+      {0, 1, 1},
+      {1, 0, 1},
+      {1, 1, 1}
+   };
+
+   static double[][] dadosAnd = {
+      {0, 0, 0},
+      {0, 1, 0},
+      {1, 0, 0},
+      {1, 1, 1}
+   };
+
    static double[][] dadosXor = {
       {0, 0, 0},
       {0, 1, 1},
       {1, 0, 1},
       {1, 1, 0}
    };
+
+   static double[][] dadosXorCascata = {
+      {0, 0, 0, 0},
+      {0, 0, 1, 1},
+      {0, 1, 0, 1},
+      {0, 1, 1, 0},
+      {1, 0, 0, 1},
+      {1, 0, 1, 0},
+      {1, 1, 0, 0},
+      {1, 1, 1, 1},
+   };
+
    public static void main(String[] args){
       limparConsole();
 
@@ -19,26 +46,30 @@ class Main{
       dadosEntrada = separarDadosEntrada(dados, dados.length, 2);
       dadosSaida = separarDadosSaida(dados, dadosEntrada, dadosSaida);
       
-      RedeNeural rede = criarRede();
+      RedeNeural rede = criarRede(dadosEntrada[0].length, 4, dadosSaida[0].length, 1);
       double custo1, custo2;
 
       custo1 = rede.funcaoDeCusto(dadosEntrada, dadosSaida);
-      rede.diferencaFinita(dadosEntrada, dadosSaida, 0.001, 20*1000);
+      rede.diferencaFinita(dadosEntrada, dadosSaida, 0.001, 10*1000);
       custo2 = rede.funcaoDeCusto(dadosEntrada, dadosSaida);
 
       System.out.println("Custo antes: " + custo1 + "\nCusto depois: " + custo2);
 
       compararSaidaRede(rede, dadosEntrada, dadosSaida);
       
-      // exibirModeloXor(dadosEntrada, dadosSaida);
+      int[] arc = rede.obterArquitetura();
+      for(int i = 0; i < arc.length; i++) System.out.print("[" + arc[i] + "]");
    }
 
 
-   public static RedeNeural criarRede(){
-      RedeNeural rede = new RedeNeural(2, 3, 1, 1);
+   public static RedeNeural criarRede(int nE, int nO, int nS, int qO){
+      // RedeNeural rede = new RedeNeural(nE, nO, nS, qO);
+
+      int[] arquitetura = {2, 2, 1};
+      RedeNeural rede = new RedeNeural(arquitetura);
       rede.configurarFuncaoAtivacao(3, 3);
       rede.configurarAlcancePesos(1);
-      rede.configurarTaxaAprendizagem(0.1);
+      rede.configurarTaxaAprendizagem(0.15);
       rede.compilar();
 
       return rede;
