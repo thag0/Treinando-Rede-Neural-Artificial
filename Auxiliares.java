@@ -36,7 +36,7 @@ public class Auxiliares{
 
    static void imprimirRede(RedeNeural rede){
       System.out.println("\t--Entrada--");
-      for(int i = 0; i < rede.entrada.neuronios.length-1; i++){
+      for(int i = 0; i < rede.entrada.neuronios.length; i++){
          
          System.out.println("n" + i);
          System.out.print("[");
@@ -50,7 +50,7 @@ public class Auxiliares{
       System.out.println("\t--Ocultas--");
       for(int i = 0; i < rede.ocultas.length; i++){
          System.out.println("Oculta " + i + " ");
-         for(int j = 0; j < rede.ocultas[i].neuronios.length-1; j++){
+         for(int j = 0; j < rede.ocultas[i].neuronios.length; j++){
             
             System.out.println("n" + j);
             System.out.print("[");

@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class RedeNeural implements Cloneable, Serializable{
    public Camada entrada;
@@ -340,9 +341,9 @@ public class RedeNeural implements Cloneable, Serializable{
          throw new IllegalArgumentException("Incompatibilidade entre os dados de saída e os neurônios de saída da rede");
       }
 
-      double custo = 0.0;
       double[] dados_entrada = new double[dados[0].length];//tamanho das colunas da entrada
       double[] dados_saida = new double[saida[0].length];//tamanho de colunas da saída
+      double custo = 0.0;
 
       for(int i = 0; i < dados.length; i++){//percorrer as linhas da entrada
          for(int j = 0; j < (this.entrada.neuronios.length - BIAS); j++){//passar os dados para a entrada da rede
@@ -437,8 +438,7 @@ public class RedeNeural implements Cloneable, Serializable{
 
       //calcular erros da saída
       for(int i = 0; i < this.saida.neuronios.length; i++){
-         Neuronio neuronio = this.saida.neuronios[i];
-         neuronio.erro = (saidaEsperada[i] - neuronio.saida) * funcaoAtivacaoSaidaDx(neuronio.saida);
+         this.saida.neuronios[i].erro = (saidaEsperada[i] - this.saida.neuronios[i].saida) * funcaoAtivacaoSaidaDx(this.saida.neuronios[i].saida);
       }
 
       //calcular erros das ocultas
@@ -458,19 +458,74 @@ public class RedeNeural implements Cloneable, Serializable{
          }
       }
 
-      //atualização dos pesos das camadas ocultas
-      for(int i = this.ocultas.length - 1; i >= 0; i--){
-         Camada camadaAtual = this.ocultas[i];
+      //ATUALIZAÇÃO DOS PESOS ----------------------------------------
 
-         for(int j = 0; j < camadaAtual.neuronios.length; j++){
-            Neuronio neuronio = camadaAtual.neuronios[j];
+      //última oculta com a saída
+      Camada oculta = this.ocultas[this.ocultas.length-1];
+      Camada saida = this.saida;
+      for(int i = 0; i < oculta.neuronios.length; i++){
+         for(int j = 0; j < saida.neuronios.length; j++){
+            oculta.neuronios[i].pesos[j] -= 
+            TAXA_APRENDIZAGEM * 
+            saida.neuronios[j].erro * 
+            saida.neuronios[j].saida;
+         }
+      }
+   }
 
-            for(int k = 0; k < neuronio.pesos.length; k++){
-               double gradiente = neuronio.erro * neuronio.entrada;
-               neuronio.pesos[k] -= TAXA_APRENDIZAGEM * gradiente;
+
+   /**
+    * Método alternativo no treino da rede neural usando diferenciação finita (finite difference).
+    * <p>Vale ressaltar que esse método é mais lento e menos eficiente que o backpropagation, em arquiteturas de rede maiores ou para problemas mais
+    * complexos ele pode demorar muito para convergir ou simplemente não funcionar como esperado.</p>
+    * <p>Ainda sim pode ser uma abordagem válida.</p>
+    * @param treinoEntrada matriz com os dados de entrada 
+    * @param treinoSaida matriz com os dados de saída
+    * @param eps valor de perturbação
+    * @param epochs número de épocas do treinamento
+    */
+   public void diferencaFinita(double[][] treinoEntrada, double[][] treinoSaida, double eps, int epochs){
+      
+      RedeNeural redeG = this.clone();//copia da rede para guardar os valores de gradiente
+      
+      ArrayList<Camada> camadasRede = new ArrayList<Camada>();//copia da rede para camadas
+      ArrayList<Camada> camadasGradiente = new ArrayList<Camada>();//copia da rede gradiente para camadas
+      
+      //colocando a rede de forma sequencial
+      camadasRede.add(this.entrada);
+      for(Camada camada : this.ocultas) camadasRede.add(camada);
+      camadasRede.add(this.saida);
+      
+      //colocando a rede gradiente de forma sequencial
+      camadasGradiente.add(redeG.entrada);
+      for(Camada camada : redeG.ocultas) camadasGradiente.add(camada);
+      camadasGradiente.add(redeG.saida);
+
+      for(int epocas = 0; epocas < epochs; epocas++){
+         double custo = this.funcaoDeCusto(treinoEntrada, treinoSaida);
+         double valorAnterior = 0;
+
+         for(int i = 0; i < camadasRede.size(); i++){//percorrer camadas da rede
+            for(int j = 0; j < camadasRede.get(i).neuronios.length; j++){//percorrer neuronios da camada
+               for(int k = 0; k < camadasRede.get(i).neuronios[j].pesos.length; k++){//percorrer pesos do neuronio
+                  valorAnterior = camadasRede.get(i).neuronios[j].pesos[k];
+                  camadasRede.get(i).neuronios[j].pesos[k] += eps;
+                  camadasGradiente.get(i).neuronios[j].pesos[k] = ((funcaoDeCusto(treinoEntrada, treinoSaida) - custo)/eps);
+                  camadasRede.get(i).neuronios[j].pesos[k] = valorAnterior;
+               }
+            }
+         }
+
+         //atualizar pesos
+         for(int i = 0; i < camadasRede.size(); i++){
+            for(int j = 0; j < camadasRede.get(i).neuronios.length; j++){
+               for(int k = 0; k < camadasRede.get(i).neuronios[j].pesos.length; k++){
+                  camadasRede.get(i).neuronios[j].pesos[k] -= TAXA_APRENDIZAGEM * camadasGradiente.get(i).neuronios[j].pesos[k];
+               }
             }
          }
       }
+
    }
 
 

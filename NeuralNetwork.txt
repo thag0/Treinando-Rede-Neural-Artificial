@@ -1,0 +1,120 @@
+import java.util.Arrays;
+
+public class NeuralNetwork {
+   private int inputSize;
+   private int hiddenSize;
+   private int outputSize;
+   private double[][] weightsInputHidden;
+   private double[][] weightsHiddenOutput;
+
+   public NeuralNetwork(int inputSize, int hiddenSize, int outputSize) {
+      this.inputSize = inputSize;
+      this.hiddenSize = hiddenSize;
+      this.outputSize = outputSize;
+
+      // Inicialização aleatória dos pesos
+      weightsInputHidden = new double[inputSize][hiddenSize];
+      weightsHiddenOutput = new double[hiddenSize][outputSize];
+      initializeWeights();
+   }
+
+   private void initializeWeights() {
+      for (int i = 0; i < inputSize; i++) {
+         for (int j = 0; j < hiddenSize; j++) {
+            weightsInputHidden[i][j] = Math.random();
+         }
+      }
+
+      for (int i = 0; i < hiddenSize; i++) {
+         for (int j = 0; j < outputSize; j++) {
+            weightsHiddenOutput[i][j] = Math.random();
+         }
+      }
+   }
+
+   public double[] forwardPropagation(double[] input) {
+      double[] hiddenLayerOutput = new double[hiddenSize];
+      double[] output = new double[outputSize];
+
+      // Propagação direta da entrada para a camada oculta
+      for (int i = 0; i < hiddenSize; i++) {
+         double sum = 0.0;
+         for (int j = 0; j < inputSize; j++) {
+            sum += input[j] * weightsInputHidden[j][i];
+         }
+         hiddenLayerOutput[i] = sigmoid(sum);
+      }
+
+      // Propagação direta da camada oculta para a saída
+      for (int i = 0; i < outputSize; i++) {
+         double sum = 0.0;
+         for (int j = 0; j < hiddenSize; j++) {
+               sum += hiddenLayerOutput[j] * weightsHiddenOutput[j][i];
+         }
+         output[i] = sigmoid(sum);
+      }
+
+      return output;
+   }
+
+   private double sigmoid(double x) {
+      return 1 / (1 + Math.exp(-x));
+   }
+
+   public void backpropagation(double[] input, double[] target, double learningRate) {
+      double[] hiddenLayerOutput = new double[hiddenSize];
+      double[] output = forwardPropagation(input);
+
+      // Cálculo do erro da camada de saída
+      double[] outputError = new double[outputSize];
+      for (int i = 0; i < outputSize; i++) {
+         outputError[i] = target[i] - output[i];
+      }
+
+      // Cálculo do erro da camada oculta
+      double[] hiddenError = new double[hiddenSize];
+      for (int i = 0; i < hiddenSize; i++) {
+         double error = 0.0;
+         for (int j = 0; j < outputSize; j++) {
+               error += outputError[j] * weightsHiddenOutput[i][j];
+         }
+         hiddenError[i] = hiddenLayerOutput[i] * (1 - hiddenLayerOutput[i]) * error;
+      }
+
+      // Atualização dos pesos da camada oculta para a saída
+      for (int i = 0; i < hiddenSize; i++) {
+         for (int j = 0; j < outputSize; j++) {
+               weightsHiddenOutput[i][j] += learningRate * outputError[j] * hiddenLayerOutput[i];
+         }
+      }
+
+      // Atualização dos pesos da entrada para a camada oculta
+      for (int i = 0; i < inputSize; i++) {
+         for (int j = 0; j < hiddenSize; j++) {
+               weightsInputHidden[i][j] += learningRate * hiddenError[j] * input[i];
+         }
+      }
+   }
+
+    public static void main(String[] args) {
+        // Exemplo de uso da rede neural
+        int inputSize = 2;
+        int hiddenSize = 3;
+        int outputSize = 1;
+
+        NeuralNetwork neuralNetwork = new NeuralNetwork(inputSize, hiddenSize, outputSize);
+
+        double[] input = {0.5, 0.8};
+        double[] target = {1.0};
+
+        // Treinamento por 1000 épocas
+        for (int epoch = 1; epoch <= 10*1000; epoch++) {
+            neuralNetwork.backpropagation(input, target, 0.1);
+        }
+
+        double[] output = neuralNetwork.forwardPropagation(input);
+        System.out.println("Input: " + Arrays.toString(input));
+        System.out.println("Output: " + Arrays.toString(output));
+    }
+}
+

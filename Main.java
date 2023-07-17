@@ -3,41 +3,51 @@ import java.text.DecimalFormat;
 import rna.RedeNeural;
 
 class Main{
+   static double[][] dadosXor = {
+      {0, 0, 0},
+      {0, 1, 1},
+      {1, 0, 1},
+      {1, 1, 0}
+   };
    public static void main(String[] args){
       limparConsole();
-      double[][] dados = {//xor
-         {0, 0, 0},
-         {0, 1, 1},
-         {1, 0, 1},
-         {1, 1, 0}
-      };
+
+      double[][] dados = dadosXor;
 
       double[][] dadosEntrada = new double[dados.length][dados[0].length-1];
       double[][] dadosSaida = new double[dados.length][1];
       dadosEntrada = separarDadosEntrada(dados, dados.length, 2);
       dadosSaida = separarDadosSaida(dados, dadosEntrada, dadosSaida);
       
-      RedeNeural rede = new RedeNeural(2, 4, 1, 2);
-      rede.configurarFuncaoAtivacao(3, 3);
-      rede.configurarAlcancePesos(2);
-      rede.configurarTaxaAprendizagem(0.0001);
-      rede.compilar();
-      
-      double custo1, custo2;   
+      RedeNeural rede = criarRede();
+      double custo1, custo2;
+
       custo1 = rede.funcaoDeCusto(dadosEntrada, dadosSaida);
-      rede.treinar(dadosEntrada, dadosSaida, 50*1000);
+      rede.diferencaFinita(dadosEntrada, dadosSaida, 0.001, 20*1000);
       custo2 = rede.funcaoDeCusto(dadosEntrada, dadosSaida);
-      
-      System.out.println(custo1);
-      System.out.println(custo2);
-      
+
+      System.out.println("Custo antes: " + custo1 + "\nCusto depois: " + custo2);
+
       compararSaidaRede(rede, dadosEntrada, dadosSaida);
       
       // exibirModeloXor(dadosEntrada, dadosSaida);
    }
 
+
+   public static RedeNeural criarRede(){
+      RedeNeural rede = new RedeNeural(2, 3, 1, 1);
+      rede.configurarFuncaoAtivacao(3, 3);
+      rede.configurarAlcancePesos(1);
+      rede.configurarTaxaAprendizagem(0.1);
+      rede.compilar();
+
+      return rede;
+   }
+
+
    public static void exibirModeloXor(double[][] dadosEntrada, double[][] dadosSaida) {
       //modelo de rede que interpreta a porta lógica XOR
+      //exemplo pego pela internet
       RedeNeural redeXor = modeloXOR();
       System.out.println("\nRede xor");
       compararSaidaRede(redeXor, dadosEntrada, dadosSaida);
@@ -69,6 +79,8 @@ class Main{
    public static void compararSaidaRede(RedeNeural rede, double[][] dadosEntrada, double[][] dadosSaida){
       double[] entrada_rede = new double[rede.entrada.neuronios.length-1];
       double[] saida_rede = new double[rede.saida.neuronios.length];
+
+      System.out.println();
 
       //mostrar saída da rede comparada aos dados
       for(int i = 0; i < dadosEntrada.length; i++){
@@ -110,18 +122,6 @@ class Main{
       for(int i = 0; i < rede.saida.neuronios.length; i++){
          System.out.println("[" + rede.saida.neuronios[i].erro +"]");
       }
-   }
-
-
-   public static boolean errosValidos(RedeNeural rede){
-      for(int i = 0; i < rede.ocultas.length; i++){
-         for(int j = 0; j < rede.ocultas[i].neuronios.length; j++){
-            for(int k = 0; k < rede.ocultas[i].neuronios[j].pesos.length; k++){
-               if(Double.isNaN(rede.ocultas[i].neuronios[j].pesos[k])) return false;
-            }
-         }
-      }
-      return true;
    }
 
 
