@@ -21,7 +21,7 @@ class Main{
       double custo1, custo2;
 
       custo1 = rede.funcaoDeCusto(dadosEntrada, dadosSaida);
-      rede.diferencaFinita(dadosEntrada, dadosSaida, 0.001, 20*1000);
+      rede.diferencaFinita(dadosEntrada, dadosSaida, 0.001, 25*1000);
       custo2 = rede.funcaoDeCusto(dadosEntrada, dadosSaida);
 
       System.out.println("Custo antes: " + custo1 + "\nCusto depois: " + custo2);
@@ -29,8 +29,8 @@ class Main{
       compararSaidaRede(rede, dadosEntrada, dadosSaida);
 
       System.out.println(rede.obterInformacoes());
-      System.out.println(rede);
-      //testarRede(rede, dadosEntrada[0].length);
+      // System.out.println(rede);
+      // testarRede(rede, dadosEntrada[0].length);
    }
 
 
@@ -76,8 +76,8 @@ class Main{
 
    public static RedeNeural criarRede(int nE, int nO, int nS, int qO){
       RedeNeural rede = new RedeNeural(nE, nO, nS, qO);
-      rede.configurarFuncaoAtivacao(5, 3);
-      rede.configurarAlcancePesos(0.5);
+      rede.configurarFuncaoAtivacao(2, 2);
+      rede.configurarAlcancePesos(2);
       rede.configurarTaxaAprendizagem(0.5);
       rede.compilar();
 
