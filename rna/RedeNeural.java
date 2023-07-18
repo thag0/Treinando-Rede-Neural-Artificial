@@ -32,12 +32,13 @@ public class RedeNeural implements Cloneable, Serializable{
       TANH_DX,
       LEAKY_RELU,
       ELU,
+      LINEAR,
       ARGMAX,
       SOFTMAX
    }
 
    Ativacao ativacaoOcultas = Ativacao.RELU;
-   Ativacao ativacaoSaida = Ativacao.RELU_DX;
+   Ativacao ativacaoSaida = Ativacao.RELU;
 
    /**
     * <p>
@@ -145,55 +146,52 @@ public class RedeNeural implements Cloneable, Serializable{
     * Define a função de ativação que a rede usará nos neurônios das camadas ocultas 
     * e na camada de saída.
     * <p>O uso das funções Argmax e Softmax é restrito para a saída da rede.</p>
-    * <p>Os valores padrão são 1 e 2.</p>
+    * <p>Os valores padrão são 1 e 1.</p>
     * Funções de ativação disponíveis:
     * <ul>
     *    <li> 1 - ReLU. </li>
-    *    <li> 2 - ReLU derivada. </li>
-    *    <li> 3 - Sigmoide. </li>
-    *    <li> 4 - Sigmoid derivada .</li>
-    *    <li> 5 - Tangente hiperbólica. </li>
-    *    <li> 6 - Tangente hiperbólica derivada. </li>
-    *    <li> 7 - Leaky ReLU. </li>
-    *    <li> 8 - ELU. </li>
-    *    <li> 9 - Argmax. </li>
-    *    <li> 10 - Softmax. </li>
+    *    <li> 2 - Sigmoide. </li>
+    *    <li> 3 - Tangente hiperbólica. </li>
+    *    <li> 4 - Leaky ReLU. </li>
+    *    <li> 5 - ELU. </li>
+    *    <li> 6 - Linear. </li>
+    *    <li> 7 - Argmax. </li>
+    *    <li> 8 - Softmax. </li>
     * </ul>
     * @param ocultas função de ativação das camadas ocultas.
     * @param saida função de ativação da camada de saída.
-    * @throws IllegalArgumentException se o valor fornecido para a função das camadas ocultas for menor que 1 ou maior que 7.
-    * @throws IllegalArgumentException se o valor fornecido para a função da camada de saída for menor que 1 ou maior que 9.
+    * @throws IllegalArgumentException se o valor fornecido para a função das camadas ocultas for menor que 1 ou maior que 5.
+    * @throws IllegalArgumentException se o valor fornecido para a função da camada de saída for menor que 1 ou maior que 7.
     */
    public void configurarFuncaoAtivacao(int ocultas, int saida){
-      if((ocultas < 1) || (ocultas > 8)){
-         throw new IllegalArgumentException("O valor fornecido para a função das camadas ocultas deve estar no intervalo entre 1 e 7");
+      if((ocultas < 1) || (ocultas > 6)){
+         throw new IllegalArgumentException("O valor fornecido para a função das camadas ocultas deve estar no intervalo entre 1 e 6");
       }
 
-      if((saida < 1) || (saida > 10)){
-         throw new IllegalArgumentException("O valor fornecido para a função da camada de saída deve estar no intervalo entre 1 e 9");
+      if((saida < 1) || (saida > 8)){
+         throw new IllegalArgumentException("O valor fornecido para a função da camada de saída deve estar no intervalo entre 1 e 8");
       }
 
       //infelizmente vai ficar feio assim mesmo
       switch(ocultas){
          case 1: this.ativacaoOcultas = Ativacao.RELU; break;
-         case 2: this.ativacaoOcultas = Ativacao.RELU_DX; break;
-         case 3: this.ativacaoOcultas = Ativacao.SIGMOID; break;
-         case 4: this.ativacaoOcultas = Ativacao.SIGMOID_DX; break;
-         case 5: this.ativacaoOcultas = Ativacao.TANH; break;
-         case 6: this.ativacaoOcultas = Ativacao.TANH_DX; break;
-         case 7: this.ativacaoOcultas = Ativacao.LEAKY_RELU; break;
-         case 8: this.ativacaoOcultas = Ativacao.LEAKY_RELU; break;
+         case 2: this.ativacaoOcultas = Ativacao.SIGMOID; break;
+         case 3: this.ativacaoOcultas = Ativacao.TANH; break;
+         case 4: this.ativacaoOcultas = Ativacao.LEAKY_RELU; break;
+         case 5: this.ativacaoOcultas = Ativacao.ELU; break;
+         case 6: this.ativacaoOcultas = Ativacao.LINEAR; break;
       }
 
       switch(saida){
          case 1: this.ativacaoSaida = Ativacao.RELU; break;
-         case 2: this.ativacaoSaida = Ativacao.RELU_DX; break;
-         case 3: this.ativacaoSaida = Ativacao.SIGMOID; break;
-         case 4: this.ativacaoSaida = Ativacao.SIGMOID_DX; break;
-         case 5: this.ativacaoSaida = Ativacao.TANH; break;
-         case 6: this.ativacaoSaida = Ativacao.TANH_DX; break;
-         case 7: this.ativacaoSaida = Ativacao.LEAKY_RELU; break;
-         case 8: this.ativacaoSaida = Ativacao.ELU; break;
+         case 2: this.ativacaoSaida = Ativacao.SIGMOID; break;
+         case 3: this.ativacaoSaida = Ativacao.TANH; break;
+         case 4: this.ativacaoSaida = Ativacao.LEAKY_RELU; break;
+         case 5: this.ativacaoSaida = Ativacao.ELU; break;
+         case 6: this.ativacaoSaida = Ativacao.LINEAR; break;
+
+         case 7: this.ativacaoSaida = Ativacao.ARGMAX; break;
+         case 8: this.ativacaoSaida = Ativacao.SOFTMAX; break;
       }
    }
 
@@ -268,7 +266,7 @@ public class RedeNeural implements Cloneable, Serializable{
 
 
    /**
-    * Verifica se o modelo já foi compilado.
+    * Verifica se o modelo já foi compilado para evitar problemas de uso indevido.
     * @return resultado da verificação.
     */
    private void modeloValido(){
@@ -543,7 +541,8 @@ public class RedeNeural implements Cloneable, Serializable{
 
 
    /**
-    * Método alternativo no treino da rede neural usando diferenciação finita (finite difference).
+    * Método alternativo no treino da rede neural usando diferenciação finita (finite difference), que calcula a "derivada" da função de custo levando
+    * a rede ao mínimo local dela. É importante encontrar um bom balanço entre a taxa de aprendizagem da rede e o valor de perturbação usado.
     * <p>Vale ressaltar que esse método é mais lento e menos eficiente que o backpropagation, em arquiteturas de rede maiores ou para problemas mais
     * complexos ele pode demorar muito para convergir ou simplemente não funcionar como esperado.</p>
     * <p>Ainda sim pode ser uma abordagem válida.</p>
@@ -597,7 +596,7 @@ public class RedeNeural implements Cloneable, Serializable{
                for(int k = 0; k < camadasRede.get(i).neuronios[j].pesos.length; k++){//percorrer pesos do neuronio
                   valorAnterior = camadasRede.get(i).neuronios[j].pesos[k];
                   camadasRede.get(i).neuronios[j].pesos[k] += eps;
-                  camadasGradiente.get(i).neuronios[j].pesos[k] = ((funcaoDeCusto(treinoEntrada, treinoSaida) - custo)/eps);
+                  camadasGradiente.get(i).neuronios[j].pesos[k] = ((funcaoDeCusto(treinoEntrada, treinoSaida) - custo)/eps);//derivada da função de custo
                   camadasRede.get(i).neuronios[j].pesos[k] = valorAnterior;
                }
             }
@@ -696,98 +695,70 @@ public class RedeNeural implements Cloneable, Serializable{
    }
 
 
-   //FUNÇÕES DE ATIVAÇÃO---------------------------
+   /**
+    * Executa a função de ativação específica para as camadas ocultas.
+    * @param valor valor anterior do cálculo da função de ativação.
+    * @return valor resultante do cálculo da função de ativação.
+    * @throws IllegalArgumentException caso haja algum erro na seleção da função de ativação.
+    */
    private double funcaoAtivacao(double valor){
-      if(ativacaoOcultas == Ativacao.RELU) return relu(valor);
-      if(ativacaoOcultas == Ativacao.RELU_DX) return reluDx(valor);
-      if(ativacaoOcultas == Ativacao.SIGMOID) return sigmoid(valor);
-      if(ativacaoOcultas == Ativacao.SIGMOID_DX) return sigmoidDx(valor);
-      if(ativacaoOcultas == Ativacao.TANH) return tanH(valor);
-      if(ativacaoOcultas == Ativacao.TANH_DX) return tanHDx(valor);
-      if(ativacaoOcultas == Ativacao.LEAKY_RELU) return leakyRelu(valor);
-      if(ativacaoOcultas == Ativacao.ELU) return elu(valor);
+      if(ativacaoOcultas == Ativacao.RELU) return Ativacoes.relu(valor);
+      if(ativacaoOcultas == Ativacao.SIGMOID) return Ativacoes.sigmoid(valor);
+      if(ativacaoOcultas == Ativacao.TANH) return Ativacoes.tanH(valor);
+      if(ativacaoOcultas == Ativacao.LEAKY_RELU) return Ativacoes.leakyRelu(valor);
+      if(ativacaoOcultas == Ativacao.ELU) return Ativacoes.elu(valor);
+      if(ativacaoOcultas == Ativacao.LINEAR) return Ativacoes.linear(valor);
 
-      return valor;
+      //se por algum motivo não achar a função de ativação
+      throw new IllegalArgumentException("Erro ao selecionar a ativação das camadas ocultas");
    }
 
 
+   /**
+    * Executa a função de ativação específica para a camada de saída.
+    * @param valor valor anterior do cálculo da função de ativação.
+    * @return valor resultante do cálculo da função de ativação.
+    * @throws IllegalArgumentException caso haja algum erro na seleção da função de ativação.
+    */
    private double funcaoAtivacaoSaida(double valor){
-      if(ativacaoSaida == Ativacao.RELU) return relu(valor);
-      if(ativacaoSaida == Ativacao.RELU_DX) return reluDx(valor);
-      if(ativacaoSaida == Ativacao.SIGMOID) return sigmoid(valor);
-      if(ativacaoSaida == Ativacao.SIGMOID_DX) return sigmoidDx(valor);
-      if(ativacaoSaida == Ativacao.TANH) return tanH(valor);
-      if(ativacaoSaida == Ativacao.TANH_DX) return tanHDx(valor);
-      if(ativacaoSaida == Ativacao.LEAKY_RELU) return leakyRelu(valor);
-      if(ativacaoSaida == Ativacao.ELU) return elu(valor);
+      if(ativacaoSaida == Ativacao.RELU) return Ativacoes.relu(valor);
+      if(ativacaoSaida == Ativacao.SIGMOID) return Ativacoes.sigmoid(valor);
+      if(ativacaoSaida == Ativacao.TANH) return Ativacoes.tanH(valor);
+      if(ativacaoSaida == Ativacao.LEAKY_RELU) return Ativacoes.leakyRelu(valor);
+      if(ativacaoSaida == Ativacao.ELU) return Ativacoes.elu(valor);
+      if(ativacaoSaida == Ativacao.LINEAR) return Ativacoes.linear(valor);
 
-      return valor;
+      //argmax e softmax são computadas durante o cálculo de saída da rede
+
+      throw new IllegalArgumentException("Erro ao selecionar a ativação da camada de saída");
    }
 
 
    private double funcaoAtivacaoDx(double valor){
-      if(ativacaoOcultas == Ativacao.RELU) return reluDx(valor);
-      if(ativacaoOcultas == Ativacao.SIGMOID) return sigmoidDx(valor);
-      if(ativacaoOcultas == Ativacao.TANH) return tanHDx(valor);
+      if(ativacaoOcultas == Ativacao.RELU) return Ativacoes.reluDx(valor);
+      if(ativacaoOcultas == Ativacao.SIGMOID) return Ativacoes.sigmoidDx(valor);
+      if(ativacaoOcultas == Ativacao.TANH) return Ativacoes.tanHDx(valor);
+      if(ativacaoOcultas == Ativacao.LEAKY_RELU) return Ativacoes.leakyReluDx(valor);
+      if(ativacaoOcultas == Ativacao.ELU) return Ativacoes.eluDx(valor);
+      if(ativacaoOcultas == Ativacao.LINEAR) return Ativacoes.linearDx(valor);
 
-      return valor;
+      throw new IllegalArgumentException("Erro ao selecionar a ativação derivada das camadas ocultas");
    }
 
 
    private double funcaoAtivacaoSaidaDx(double valor){
-      if(ativacaoOcultas == Ativacao.RELU) return reluDx(valor);
-      if(ativacaoOcultas == Ativacao.SIGMOID) return sigmoidDx(valor);
-      if(ativacaoOcultas == Ativacao.TANH) return tanHDx(valor);
+      if(ativacaoSaida == Ativacao.RELU) return Ativacoes.reluDx(valor);
+      if(ativacaoSaida == Ativacao.SIGMOID) return Ativacoes.sigmoidDx(valor);
+      if(ativacaoSaida == Ativacao.TANH) return Ativacoes.tanHDx(valor);
+      if(ativacaoSaida == Ativacao.LEAKY_RELU) return Ativacoes.leakyReluDx(valor);
+      if(ativacaoSaida == Ativacao.ELU) return Ativacoes.eluDx(valor);
+      if(ativacaoSaida == Ativacao.LINEAR) return Ativacoes.linearDx(valor);
 
-      return valor;
+      throw new IllegalArgumentException("Erro ao selecionar a ativação derivada da camada de saída");
    }
 
 
-   private double relu(double valor){
-      if(valor < 0) return 0;
-      return valor;
-   }
-
-
-   private double reluDx(double valor){
-      if(valor < 0) return 0;
-      return 1;     
-   }
-
-
-   private double sigmoid(double valor){
-      return (1 / (1 + Math.exp(-valor)));
-   }
-
-
-   private double sigmoidDx(double valor){
-      return (sigmoid(valor) * (1-sigmoid(valor)));
-   }
-
-
-   private double tanH(double valor){
-      return Math.tanh(valor);
-   }
-
-
-   private double tanHDx(double valor){
-      double resultado = Math.tanh(valor);
-      return (1 - Math.pow(resultado, 2));
-   }
-
-
-   private double leakyRelu(double valor){
-      if(valor > 0) return valor;
-      else return ((0.001) * valor);
-   }
-
-
-   private double elu(double valor){
-      if(valor > 0) return valor;
-      else return (0.001 * (Math.exp(valor)-1));
-   }
-
-
+   //exclusiva para a saída
    private void argmax(){
       int indiceMaior = 0;
       double maiorValor = this.saida.neuronios[0].saida;
@@ -808,6 +779,7 @@ public class RedeNeural implements Cloneable, Serializable{
    }
 
 
+   //exclusiva para a saída
    private void softmax(){
       double somaExponencial = 0.0;
 
@@ -885,6 +857,7 @@ public class RedeNeural implements Cloneable, Serializable{
 
       return clone;
    }
+
 
    /**
     * Salva a classe da rede em um arquivo especificado, o caminho não leva em consideração
