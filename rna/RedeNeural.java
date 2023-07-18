@@ -478,8 +478,10 @@ public class RedeNeural implements Cloneable, Serializable{
 
 
    /**
-    * <p><strong>Em teste</strong></p>
-    * Retropropaga o erro da rede de acorodo com o dado aplicado e a saída esperada, depois
+    * <p>
+    *    <strong>Em teste</strong>, as vezes funciona mas é muito inconsistente ainda
+    * </p>
+    * Retropropaga o erro da rede de acordo com o dado aplicado e a saída esperada, depois
     * corrige os pesos com a técnica de gradiente descendente.
     * @param dados array com os dados de entrada.
     * @param saidaEsperada array com as saídas esperadas
@@ -500,41 +502,36 @@ public class RedeNeural implements Cloneable, Serializable{
       //calcular saída para aplicar o erro
       this.calcularSaida(dados);
 
-      //CALCULANDO OS ERROS DAS CAMADAS ---------------------------
+      //transformar a rede num vetor de camadas
+      ArrayList<Camada> redec = new ArrayList<>();
+      redec.add(this.entrada);
+      for(Camada camada : this.ocultas) redec.add(camada);
+      redec.add(this.saida);
 
-      //calcular erros da saída
+      //erro da saída
       for(int i = 0; i < this.saida.neuronios.length; i++){
-         this.saida.neuronios[i].erro = (saidaEsperada[i] - this.saida.neuronios[i].saida) * funcaoAtivacaoSaidaDx(this.saida.neuronios[i].saida);
+         Neuronio neuronio = this.saida.neuronios[i];
+         neuronio.erro = ((saidaEsperada[i] - neuronio.saida) * funcaoAtivacaoSaidaDx(neuronio.saida));
       }
 
-      //calcular erros das ocultas
-      for(int i = (this.ocultas.length-1); i >= 0; i--){//percorrer ocultas
-         Camada camadaAtual = this.ocultas[i];
-         Camada proximaCamada = i == this.ocultas.length-1 ? this.saida : this.ocultas[i+1];
-
-         for(int j = 0; j < camadaAtual.neuronios.length; j++){//percorrer neuronios da camada atual
-            Neuronio neuronio = camadaAtual.neuronios[j];
-            double erro = 0.0;
-
-            for(int k = 0; k < proximaCamada.neuronios.length; k++){//percorrer neuronios da proxima camada
-               erro += (neuronio.pesos[k] * proximaCamada.neuronios[k].erro);
+      double somaErros;
+      for(int i = redec.size()-2; i >= 0; i--){//percorrer ocultas de trás pra frente
+         for(int j = 0; j < redec.get(i).neuronios.length; j++){//percorrer neuronios da camada atual
+            Neuronio neuronio = redec.get(i).neuronios[j];
+            
+            //somar erros da camada seguinte
+            somaErros = 0.0;
+            for(int k = 0; k < (redec.get(i+1).neuronios.length); k++){
+               Neuronio neuronioSeguinte = redec.get(i+1).neuronios[k];
+               somaErros += neuronioSeguinte.erro;
             }
 
-            neuronio.erro = erro * funcaoAtivacaoDx(neuronio.saida);
-         }
-      }
-
-      //ATUALIZAÇÃO DOS PESOS ----------------------------------------
-
-      //última oculta com a saída
-      Camada oculta = this.ocultas[this.ocultas.length-1];
-      Camada saida = this.saida;
-      for(int i = 0; i < oculta.neuronios.length; i++){
-         for(int j = 0; j < saida.neuronios.length; j++){
-            oculta.neuronios[i].pesos[j] -= 
-            TAXA_APRENDIZAGEM * 
-            saida.neuronios[j].erro * 
-            saida.neuronios[j].saida;
+            neuronio.erro = somaErros * funcaoAtivacaoDx(neuronio.saida);
+            
+            //atualizar os pesos do neuronio
+            for(int k = 0; k < neuronio.pesos.length; k++){
+               neuronio.pesos[k] += TAXA_APRENDIZAGEM * neuronio.erro * neuronio.saida;
+            } 
          }
       }
    }
