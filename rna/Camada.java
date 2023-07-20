@@ -21,7 +21,7 @@ public class Camada implements Serializable{
       SOFTMAX
    }
 
-   public FuncaoAtivacao ativacao = FuncaoAtivacao.TANH;
+   public FuncaoAtivacao ativacao = FuncaoAtivacao.RELU;
 
 
    public Camada(boolean temBias){
@@ -56,24 +56,11 @@ public class Camada implements Serializable{
       }
    }
 
-
    /**
-    * Configura a função de ativação da camada correspondente, a função de ativação padrão é a ReLU.
-    * <p>segue a lista das funções disponíveis:</p>
-    * <ul>
-    *    <li>1 - ReLU.</li>
-    *    <li>2 - Sigmoid.</li>
-    *    <li>3 - Tangente Hiperbólica.</li>
-    *    <li>4 - Leaky ReLU.</li>
-    *    <li>5 - ELU.</li>
-    *    <li>6 - Linear.</li>
-    *    <li>7 - Argmax.</li>
-    *    <li>8 - Softmax.</li>
-    * </ul>
-    * @param ativacao valor relativo a lista de ativações disponíveis.
-    * @throws IllegalArgumentException caso o valor fornecido esteja fora das funções disponíveis.
+    * Configura a função de ativação
+    * @param ativacao valor da nova função de ativação
     */
-   public void setAtivacao(int ativacao){
+   public void configurarAtivacao(int ativacao){
       switch(ativacao){
          case 1: this.ativacao = FuncaoAtivacao.RELU; break;
          case 2: this.ativacao = FuncaoAtivacao.SIGMOID; break;

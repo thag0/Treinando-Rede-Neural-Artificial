@@ -112,6 +112,66 @@ public class RedeNeural implements Cloneable, Serializable{
 
 
    /**
+    * Configura a função de ativação da camada correspondente, a função de ativação padrão é a ReLU. É preciso
+    * compilar o modelo previamente para poder configurar suas funções de ativação
+    * <p>segue a lista das funções disponíveis:</p>
+    * <ul>
+    *    <li>1 - ReLU.</li>
+    *    <li>2 - Sigmoid.</li>
+    *    <li>3 - Tangente Hiperbólica.</li>
+    *    <li>4 - Leaky ReLU.</li>
+    *    <li>5 - ELU.</li>
+    *    <li>6 - Linear.</li>
+    *    <li>7 - Argmax.</li>
+    *    <li>8 - Softmax.</li>
+    * </ul>
+    * @param indice indice da camada que será configurada
+    * @param funcaoAtivacao valor relativo a lista de ativações disponíveis.
+    * @throws IllegalArgumentException se o modelo não foi compilado previamente.
+    * @throws IllegalArgumentException caso o valor fornecido esteja fora das funções disponíveis.
+    * @throws IllegalArgumentException caso o valor fornecido seja o índice da camada de entrada.
+    */
+   public void configurarFuncaoAtivacao(int indice, int funcaoAtivacao){
+      modeloValido();
+
+      if(indice < 0 || indice > this.arquitetura.length) throw new IllegalArgumentException("O índice fornecido está fora do alcance da quantidade de camadas.");
+      if(indice == 0) throw new IllegalArgumentException("Não é possível definir uma função de ativação para a camda de entrada.");
+      
+      if(indice == this.arquitetura.length-1){
+         this.saida.configurarAtivacao(funcaoAtivacao);
+      
+      }else{
+         this.ocultas[indice-1].configurarAtivacao(funcaoAtivacao);
+      }
+   }
+
+
+   /**
+    * Configura a função de ativação de todas as camadas da rede, a função de ativação padrão é a ReLU. É preciso
+    * compilar o modelo previamente para poder configurar suas funções de ativação
+    * <p>segue a lista das funções disponíveis:</p>
+    * <ul>
+    *    <li>1 - ReLU.</li>
+    *    <li>2 - Sigmoid.</li>
+    *    <li>3 - Tangente Hiperbólica.</li>
+    *    <li>4 - Leaky ReLU.</li>
+    *    <li>5 - ELU.</li>
+    *    <li>6 - Linear.</li>
+    *    <li>7 - Argmax.</li>
+    *    <li>8 - Softmax.</li>
+    * </ul>
+    * @param funcaoAtivacao valor relativo a lista de ativações disponíveis.
+    * @throws IllegalArgumentException se o modelo não foi compilado previamente.
+    */
+   public void configurarFuncaoAtivacao(int funcaoAtivacao){
+      modeloValido();
+      
+      for(Camada camada : this.ocultas) camada.configurarAtivacao(funcaoAtivacao);
+      this.saida.configurarAtivacao(funcaoAtivacao);
+   }
+
+
+   /**
     * Compila o modelo de rede baseado nos valores fornecidos. Antes da compilação é possível
     * informar alguns valores ajustáveis na inicialização da rede, como:
     * <ul>
@@ -158,49 +218,6 @@ public class RedeNeural implements Cloneable, Serializable{
       //inicializar camada de saída
       saida = new Camada(false);
       saida.neuronios = new Neuronio[arquitetura[arquitetura.length-1]];
-      for(int i = 0; i < this.saida.neuronios.length; i++){
-         saida.neuronios[i] = new Neuronio(1, alcancePeso);
-      }
-
-      modeloCompilado = true;
-   }
-
-
-   /**
-    * compilar()
-    */
-   public void lambda(){
-      //inicializar camada de entrada
-      boolean temBias = (this.BIAS == 1) ? true : false;
-      int QTD_NEURONIOS_ENTRADA = neuroniosEntrada + BIAS;
-      int QTD_NEURONIOS_OCULTAS = neuroniosOcultas + BIAS;
-      
-      entrada = new Camada(temBias);
-      entrada.neuronios = new Neuronio[QTD_NEURONIOS_ENTRADA];//BIAS como neuronio adicional
-      for(int i = 0; i < entrada.neuronios.length; i++){
-         entrada.neuronios[i] = new Neuronio(QTD_NEURONIOS_OCULTAS, alcancePeso);
-      }
-
-      //inicializar camadas ocultas
-      ocultas = new Camada[quantidadeOcultas];
-      for (int i = 0; i < this.ocultas.length; i++){
-         Camada novaOculta = new Camada(temBias);
-         novaOculta.neuronios = new Neuronio[QTD_NEURONIOS_OCULTAS];
-      
-         for (int j = 0; j < novaOculta.neuronios.length; j++){
-            if (i == (this.ocultas.length-1)){
-               novaOculta.neuronios[j] = new Neuronio(neuroniosSaida, alcancePeso);
-            
-            }else{
-               novaOculta.neuronios[j] = new Neuronio(QTD_NEURONIOS_OCULTAS, alcancePeso);
-            }
-         }
-         ocultas[i] = novaOculta;
-      }
-
-      //inicializar camada de saída
-      saida = new Camada(false);
-      saida.neuronios = new Neuronio[neuroniosSaida];
       for(int i = 0; i < this.saida.neuronios.length; i++){
          saida.neuronios[i] = new Neuronio(1, alcancePeso);
       }
@@ -584,7 +601,7 @@ public class RedeNeural implements Cloneable, Serializable{
       buffer += espacamento + "Taxa de aprendizgem: " + TAXA_APRENDIZAGEM + "\n\n";
 
       for(int i = 0; i < this.ocultas.length; i++){
-         buffer += espacamento + "Ativação oculta " + i + " = " + this.ocultas[0].ativacao + "\n";
+         buffer += espacamento + "Ativação oculta " + i + " = " + this.ocultas[i].ativacao + "\n";
       }
       buffer += espacamento + "Ativação saída = " + this.saida.ativacao + "\n";
 
