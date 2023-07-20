@@ -281,7 +281,7 @@ public class Painel extends JPanel{
          coordSaida.add(new Coordenada(x+larguraDesenho, y+(larguraDesenho/2), rede.saida.neuronios[contador].saida));
          desenharNeuronio(g2, x, y, rede.saida.neuronios[contador].saida);
          
-         g2.drawString(("s" + contador), (x+40), (y+16));
+         g2.drawString(("s" + contador + " = " + (float)rede.saida.neuronios[contador].saida), (x+40), (y+16));
 
          y += larguraDesenho + espacoVerticalEntreNeuronio; 
       }

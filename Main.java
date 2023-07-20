@@ -6,25 +6,35 @@ import render.Janela;
 import rna.RedeNeural;
 
 class Main{
+   static final boolean BACKPROPAGATION = false;
+   static final int epocas = 20*1000;
+
 
    public static void main(String[] args){
       limparConsole();
 
-      double[][] dados = Dados.dadosSoma;//escolher os dados
+      double[][] dados = Dados.dadosXor;//escolher os dados
       int qEntradas = 2;
       int qSaidas = 1;
 
-      //separar para o treino
+      // separar para o treino
       double[][] dadosEntrada = new double[dados.length][qEntradas];
       double[][] dadosSaida = new double[dados.length][qSaidas];
       dadosEntrada = separarDadosEntrada(dados, dados.length, qEntradas);
       dadosSaida = separarDadosSaida(dados, dadosEntrada, dadosSaida);
       
       RedeNeural rede = criarRede(qEntradas, qSaidas);
-      double custo1, custo2;
+      double custo1 = rede.funcaoDeCusto(dadosEntrada, dadosSaida);
+      double custo2;
 
-      custo1 = rede.funcaoDeCusto(dadosEntrada, dadosSaida);
-      rede.diferencaFinita(dadosEntrada, dadosSaida, 0.001, 15*1000, 0.001);
+      if(BACKPROPAGATION){
+         rede.treinar(dadosEntrada, dadosSaida, epocas);
+         System.out.println("Backpropagation");
+      }else{
+         System.out.println("Diferença finita");
+         rede.diferencaFinita(dadosEntrada, dadosSaida, 0.001, epocas, 0.001);
+      }
+      
       custo2 = rede.funcaoDeCusto(dadosEntrada, dadosSaida);
 
       System.out.println("Custo antes: " + custo1 + "\nCusto depois: " + custo2);
@@ -42,14 +52,13 @@ class Main{
 
 
    public static RedeNeural criarRede(int qEntradas, int qSaidas){
-      int[] arquitetura = {qEntradas, 5, 5, qSaidas};
+      int[] arquitetura = {qEntradas, 4, qSaidas};
       RedeNeural rede = new RedeNeural(arquitetura);
 
-      rede.configurarAlcancePesos(2);
-      rede.configurarTaxaAprendizagem(0.2);
+      rede.configurarAlcancePesos(3);
+      rede.configurarTaxaAprendizagem(0.3);
       rede.compilar();
       rede.configurarFuncaoAtivacao(2);
-      rede.configurarFuncaoAtivacao(3, 4);
 
       return rede;
    }

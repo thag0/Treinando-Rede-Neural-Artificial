@@ -2,18 +2,20 @@ package rna;
 
 import java.io.Serializable;
 
+/**
+ * Representa uma camada de neurônios em uma rede neural.
+ * Cada camada possui um conjunto de neurônios e uma função de ativação que pode ser configurada.
+ * A função de ativação é aplicada aos valores de saída dos neurônios após a soma ponderada com os pesos.
+ */
 public class Camada implements Serializable{
    public Neuronio[] neuronios;
    public boolean temBias = true;
 
-   //padronizar uso das funções de ativação
+   //melhor controle das funções de ativação
    private enum FuncaoAtivacao{
       RELU,
-      RELU_DX,
       SIGMOID,
-      SIGMOID_DX,
       TANH,
-      TANH_DX,
       LEAKY_RELU,
       ELU,
       LINEAR,
@@ -25,6 +27,11 @@ public class Camada implements Serializable{
    public FuncaoAtivacao ativacao = FuncaoAtivacao.RELU;
 
 
+   /**
+    * Inicializa uma instância de camada de RedeNeural. Ainda é preciso configurar a quantidade de neurõnios dela.
+    * @param temBias define se a camada possui um neurônio de bias. Se true, será adicionado um neurônio adicional
+    * que a saída é sempre 1.
+    */
    public Camada(boolean temBias){
       this.temBias = temBias;
    }
@@ -58,8 +65,9 @@ public class Camada implements Serializable{
    }
 
    /**
-    * Configura a função de ativação
-    * @param ativacao valor da nova função de ativação
+    * Configura a função de ativação da camada
+    * @param ativacao valor da nova função de ativação.
+    * @throws IllegalArgumentException se o valor fornecido não corresponder a nenhuma função de ativação suportada.
     */
    public void configurarAtivacao(int ativacao){
       switch(ativacao){
@@ -78,8 +86,8 @@ public class Camada implements Serializable{
 
 
    /**
-    * Executa a função de ativação específica para as camadas ocultas.
-    * @param valor valor anterior do cálculo da função de ativação.
+    * Executa a função de ativação específica da camada.
+    * @param valor valor de entrada do neurônio que será ativado.
     * @return valor resultante do cálculo da função de ativação.
     * @throws IllegalArgumentException caso haja algum erro na seleção da função de ativação.
     */
@@ -93,10 +101,16 @@ public class Camada implements Serializable{
       if(this.ativacao == FuncaoAtivacao.SENO) return Ativacoes.seno(valor);
 
       //se por algum motivo não achar a função de ativação
-      throw new IllegalArgumentException("Erro ao selecionar a ativação");
+      throw new IllegalArgumentException("Erro ao selecionar a ativação.");
    }
 
 
+   /**
+    * Executa a função de ativação derivada específica da camada.
+    * @param valor valor anterior do cálculo da função de ativação
+    * @return valor resultante do cálculo da função de ativação derivada.
+    * @throws IllegalArgumentException se houver algum erro na seleção da função de ativação derivada.
+    */
    public double funcaoAtivacaoDx(double valor){
       if(this.ativacao == FuncaoAtivacao.RELU) return Ativacoes.reluDx(valor);
       if(this.ativacao == FuncaoAtivacao.SIGMOID) return Ativacoes.sigmoidDx(valor);
@@ -106,6 +120,6 @@ public class Camada implements Serializable{
       if(this.ativacao == FuncaoAtivacao.LINEAR) return Ativacoes.linearDx(valor);
       if(this.ativacao == FuncaoAtivacao.SENO) return Ativacoes.senoDx(valor);
 
-      throw new IllegalArgumentException("Erro ao selecionar a ativação derivada das camadas ocultas");
+      throw new IllegalArgumentException("Erro ao selecionar a ativação derivada.");
    }
 }

@@ -177,7 +177,7 @@ public class RedeNeural implements Cloneable, Serializable{
     * <ul>
     *    <li>Valor máximo e mínimo para os pesos gerados aleatoriamente.</li>
     *    <li>Funções de ativação para as camadas ocultas e para a camada de saída.</li>
-    *    <li>Quantidade de neurônios atuando como bias.</li>
+    *    <li>Neurônios adicionais nas camadas atuando como bias.</li>
     *    <li>Taxa de aprendizagem.</li>
     * </ul>
     * <p>
@@ -265,50 +265,50 @@ public class RedeNeural implements Cloneable, Serializable{
 
    
    /**
-    * Calcula a precisão de saída da rede de acordo com os dados fornecidos.
-    * O cálculo é feito comparando diretamente o valor de saída da rede com a saída fornecida, então
-    * o uso desse método pode não ser apropriado para aplicações onde as saídas são valores contínuos.
+    * Calcula a precisão da rede neural com base nos dados fornecidos.
+    * A precisão é calculada como a média do erro absoluto entre a saída prevista pela rede e a saída fornecida.
+    * Esse método pode ser adequado para tarefas de regressão, mas não é uma boa abordagem em problemas de classificação
+    * ou quando as saídas são valores discretos ou categóricos.
     * @param dados matriz com os dados de entrada.
     * @param saida matriz com os dados de saída.
-    * @return precisão obtida com base nos dados fornecidos.
+    * @return precisão obtida com base nos dados fornecidos, um valor entre 0 e 1, onde 1 representa a máxima precisão.
     * @throws IllegalArgumentException se o modelo não foi compilado previamente.
     * @throws IllegalArgumentException se o tamanho dos dados de entrada for diferente do tamanho dos neurônios de entrada, excluindo o bias.
-    * @throws IllegalArgumentException se o tamanho dos dados de saída for diferente do tamanho dos neurôniosde de saída.
+    * @throws IllegalArgumentException se o tamanho dos dados de saída for diferente do tamanho dos neurônios de saída.
     */
-    public double calcularPrecisao(double[][] dados, double[][] saida){
+   public double calcularPrecisao(double[][] dados, double[][] saida){
       modeloValido();
-   
-      if(dados[0].length != this.entrada.neuronios.length - BIAS){
+
+      if(dados[0].length != (this.entrada.neuronios.length - BIAS)){
          throw new IllegalArgumentException("Incompatibilidade entre os dados de entrada e os neurônios de entrada da rede");
       }
       if(saida[0].length != this.saida.neuronios.length){
          throw new IllegalArgumentException("Incompatibilidade entre os dados de saída e os neurônios de saída da rede");
       }
-   
+
       double[] dadosEntrada = new double[dados[0].length];
       double[] dadosSaida = new double[saida[0].length];
       double erroMedio = 0;
-   
-      for(int i = 0; i < dados.length; i++){//percorrer linhas dos dados
 
-         for(int j = 0; j < dados[i].length; j++){//preencher dados de entrada
+      for(int i = 0; i < dados.length; i++){ // Percorrer linhas dos dados
+         for(int j = 0; j < dados[i].length; j++){ // Preencher dados de entrada
             dadosEntrada[j] = dados[i][j];
          }
-         for(int j = 0; j < saida[i].length; j++){//preencher dados de saída desejada
+         for(int j = 0; j < saida[i].length; j++){ // Preencher dados de saída desejada
             dadosSaida[j] = saida[i][j];
          }
-   
+
          this.calcularSaida(dadosEntrada);
+
          for(int k = 0; k < this.saida.neuronios.length; k++){
             erroMedio += Math.abs(dadosSaida[k] - this.saida.neuronios[k].saida);
          }
       }
-   
+
       erroMedio /= dados.length;
-      return (1 - erroMedio);//converter num valor relativo a porcentagem
+      return (1 - erroMedio); // Converter em um valor relativo a porcentagem
    }
    
-
 
    /**
     * Calcula a função de custo baseada nos dados de entrada e na saída esperada para eles por meio do erro médio quadrado.
@@ -322,7 +322,7 @@ public class RedeNeural implements Cloneable, Serializable{
    public double funcaoDeCusto(double[][] dados, double[][] saida){
       modeloValido();
       
-      if(dados[0].length != this.entrada.neuronios.length-BIAS){
+      if(dados[0].length != (this.entrada.neuronios.length-BIAS)){
          throw new IllegalArgumentException("Incompatibilidade entre os dados de entrada e os neurônios de entrada da rede");
       }
       if(saida[0].length != this.saida.neuronios.length){
@@ -349,7 +349,7 @@ public class RedeNeural implements Cloneable, Serializable{
          //calcular custo com base na saída
          for(k = 0; k < this.saida.neuronios.length; k++){
             diferenca = dados_saida[k] - this.saida.neuronios[k].saida;
-            custo += diferenca*diferenca;
+            custo += (diferenca*diferenca);
          }
       }
 
@@ -373,7 +373,7 @@ public class RedeNeural implements Cloneable, Serializable{
    public void treinar(double[][] dados, double[][] saida, int epochs){
       modeloValido();
 
-      if(dados[0].length != this.entrada.neuronios.length-BIAS){
+      if(dados[0].length != (this.entrada.neuronios.length-BIAS)){
          throw new IllegalArgumentException("Incompatibilidade entre os dados de entrada e os neurônios de entrada da rede");
       }
       if(saida[0].length != this.saida.neuronios.length){
@@ -464,9 +464,13 @@ public class RedeNeural implements Cloneable, Serializable{
    /**
     * Método alternativo no treino da rede neural usando diferenciação finita (finite difference), que calcula a "derivada" da função de custo levando
     * a rede ao mínimo local dela. É importante encontrar um bom balanço entre a taxa de aprendizagem da rede e o valor de perturbação usado.
-    * <p>Vale ressaltar que esse método é mais lento e menos eficiente que o backpropagation, em arquiteturas de rede maiores ou para problemas mais
-    * complexos ele pode demorar muito para convergir ou simplemente não funcionar como esperado.</p>
-    * <p>Ainda sim pode ser uma abordagem válida.</p>
+    * <p>
+    *    Vale ressaltar que esse método é mais lento e menos eficiente que o backpropagation, em arquiteturas de rede maiores ou para problemas mais
+    *    complexos ele pode demorar muito para convergir ou simplemente não funcionar como esperado.
+    * </p>
+    * <p>
+    *    Ainda sim pode ser uma abordagem válida.
+    * </p>
     * @param treinoEntrada matriz com os dados de entrada 
     * @param treinoSaida matriz com os dados de saída
     * @param eps valor de perturbação
@@ -483,7 +487,7 @@ public class RedeNeural implements Cloneable, Serializable{
    public void diferencaFinita(double[][] treinoEntrada, double[][] treinoSaida, double eps, int epochs, double custoMinimo){
       modeloValido();
 
-      if(treinoEntrada[0].length != this.entrada.neuronios.length-BIAS){
+      if(treinoEntrada[0].length != (this.entrada.neuronios.length-BIAS)){
          throw new IllegalArgumentException("Incompatibilidade entre os dados de entrada e os neurônios de entrada da rede.");
       }
       if(treinoSaida[0].length != this.saida.neuronios.length){
@@ -545,7 +549,7 @@ public class RedeNeural implements Cloneable, Serializable{
 
 
    /**
-    * Copia os dados de saída de cada neurônio da rede neural para um vetor.
+    * Copia os dados de saída de cada neurônio da camada de saída da rede neural para um vetor.
     * A ordem de cópia é crescente, do primeiro neurônio da saída ao último.
     * @return vetor com os dados das saídas da rede.
     * @throws IllegalArgumentException se o modelo não foi compilado previamente.
@@ -579,11 +583,11 @@ public class RedeNeural implements Cloneable, Serializable{
     * <ul>
     *    <li>Contém bias como neurônio adicional.</li>
     *    <li>Valor da taxa de aprendizagem.</li>
-    *    <li>Função de ativação das camadas ocultas.</li>
+    *    <li>Função de ativação de todas as camadas ocultas.</li>
     *    <li>Função de ativação da camada de saída.</li>
     *    <li>Arquitetura da rede.</li>
     * </ul>
-    * @return buffer contendo as informações
+    * @return buffer formatado contendo as informações.
     * @throws IllegalArgumentException se o modelo não foi compilado previamente.
     */
    public String obterInformacoes(){
