@@ -31,6 +31,13 @@ public class Dados{
       {1, 1, 0}
    };
 
+   static double[][] dadosXor2 = {
+      {0, 0, 0, 0},
+      {0, 1, 0, 1},
+      {1, 0, 0, 1},
+      {1, 1, 0, 0}
+   };
+
    static double[][] dadosXorCascata = {
       {0, 0, 0, 0},
       {0, 0, 1, 1},

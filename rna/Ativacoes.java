@@ -71,5 +71,41 @@ public class Ativacoes{
 
    public static double linearDx(double valor){
       return 1;
-   } 
+   }
+
+
+   public static void argmax(Camada camada){
+      int indiceMaior = 0;
+      double maiorValor = camada.neuronios[0].saida;
+
+      //procurar maior valor da saída
+      for(int i = 0; i < camada.neuronios.length; i++){
+         if(camada.neuronios[i].saida > maiorValor){
+            indiceMaior = i;
+            maiorValor = camada.neuronios[i].saida;
+         }
+      }
+
+      //aplicar argmax
+      for(int i = 0; i < camada.neuronios.length; i++){
+         if(i == indiceMaior) camada.neuronios[i].saida = 1;
+         else camada.neuronios[i].saida = 0;
+      }
+   }
+
+
+   public static void softmax(Camada camada){
+      double somaExponencial = 0.0;
+
+      //soma exponencial da saída
+      for (int i = 0; i < camada.neuronios.length; i++){
+         somaExponencial += Math.exp(camada.neuronios[i].saida);
+      }
+
+      //aplicar softmax
+      for (int i = 0; i < camada.neuronios.length; i++){
+         double valorExponencial = Math.exp(camada.neuronios[i].saida);
+         camada.neuronios[i].saida = (valorExponencial / somaExponencial);
+      }
+   }
 }

@@ -2,6 +2,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.text.DecimalFormat;
 
+import render.Janela;
 import rna.RedeNeural;
 
 class Main{
@@ -10,18 +11,20 @@ class Main{
       limparConsole();
 
       double[][] dados = Dados.dadosXor;//escolher os dados
+      int qEntradas = 2;
+      int qSaidas = 1;
 
       //separar para o treino
-      double[][] dadosEntrada = new double[dados.length][dados[0].length-1];
-      double[][] dadosSaida = new double[dados.length][1];
-      dadosEntrada = separarDadosEntrada(dados, dados.length, dados[0].length-1);
+      double[][] dadosEntrada = new double[dados.length][qEntradas];
+      double[][] dadosSaida = new double[dados.length][qSaidas];
+      dadosEntrada = separarDadosEntrada(dados, dados.length, qEntradas);
       dadosSaida = separarDadosSaida(dados, dadosEntrada, dadosSaida);
       
-      RedeNeural rede = criarRede(dadosEntrada[0].length, 2, dadosSaida[0].length, 1);
+      RedeNeural rede = criarRede(qEntradas, qSaidas);
       double custo1, custo2;
 
       custo1 = rede.funcaoDeCusto(dadosEntrada, dadosSaida);
-      rede.diferencaFinita(dadosEntrada, dadosSaida, 0.001, 20*1000);
+      rede.diferencaFinita(dadosEntrada, dadosSaida, 0.001, 10*1000, 0.01);
       custo2 = rede.funcaoDeCusto(dadosEntrada, dadosSaida);
 
       System.out.println("Custo antes: " + custo1 + "\nCusto depois: " + custo2);
@@ -30,7 +33,11 @@ class Main{
 
       System.out.println(rede.obterInformacoes());
       // System.out.println(rede);
-      // testarRede(rede, dadosEntrada[0].length);
+
+      double precisao = rede.calcularPrecisao(dadosEntrada, dadosSaida)*100;
+      System.out.println("Precisão = " + formatarFloat(precisao) + "%");
+
+      desenharRede(rede);
    }
 
 
@@ -47,6 +54,12 @@ class Main{
 
 		return entrada;
 	}
+
+
+   public static void desenharRede(RedeNeural rede){
+      Janela janela = new Janela();
+      janela.desenhar(rede);
+   }
 
 
    public static void testarRede(RedeNeural rede, int tamanhoEntrada){
@@ -74,11 +87,11 @@ class Main{
    }
 
 
-   public static RedeNeural criarRede(int nE, int nO, int nS, int qO){
-      RedeNeural rede = new RedeNeural(nE, nO, nS, qO);
-      rede.configurarFuncaoAtivacao(2, 2);
+   public static RedeNeural criarRede(int qEntradas, int qSaidas){
+      int[] arquitetura = {qEntradas, 2, qSaidas};
+      RedeNeural rede = new RedeNeural(arquitetura);
       rede.configurarAlcancePesos(2);
-      rede.configurarTaxaAprendizagem(0.5);
+      rede.configurarTaxaAprendizagem(0.3);
       rede.compilar();
 
       return rede;
