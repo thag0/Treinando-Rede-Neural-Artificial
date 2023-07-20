@@ -120,8 +120,9 @@ public class RedeNeural implements Cloneable, Serializable{
     *    <li>4 - Leaky ReLU.</li>
     *    <li>5 - ELU.</li>
     *    <li>6 - Linear.</li>
-    *    <li>7 - Argmax.</li>
-    *    <li>8 - Softmax.</li>
+    *    <li>7 - Seno.</li>
+    *    <li>8 - Argmax.</li>
+    *    <li>9 - Softmax.</li>
     * </ul>
     * @param indice indice da camada que será configurada
     * @param funcaoAtivacao valor relativo a lista de ativações disponíveis.
@@ -131,7 +132,7 @@ public class RedeNeural implements Cloneable, Serializable{
     */
    public void configurarFuncaoAtivacao(int indice, int funcaoAtivacao){
       modeloValido();
-
+      
       if(indice < 0 || indice > this.arquitetura.length) throw new IllegalArgumentException("O índice fornecido está fora do alcance da quantidade de camadas.");
       if(indice == 0) throw new IllegalArgumentException("Não é possível definir uma função de ativação para a camda de entrada.");
       
@@ -155,8 +156,9 @@ public class RedeNeural implements Cloneable, Serializable{
     *    <li>4 - Leaky ReLU.</li>
     *    <li>5 - ELU.</li>
     *    <li>6 - Linear.</li>
-    *    <li>7 - Argmax.</li>
-    *    <li>8 - Softmax.</li>
+    *    <li>7 - Seno.</li>
+    *    <li>8 - Argmax.</li>
+    *    <li>9 - Softmax.</li>
     * </ul>
     * @param funcaoAtivacao valor relativo a lista de ativações disponíveis.
     * @throws IllegalArgumentException se o modelo não foi compilado previamente.

@@ -74,6 +74,16 @@ public class Ativacoes{
    }
 
 
+   public static double seno(double valor){
+      return Math.sin(valor);
+   }
+
+
+   public static double senoDx(double valor){
+      return Math.cos(valor);
+   }
+
+
    public static void argmax(Camada camada){
       int indiceMaior = 0;
       double maiorValor = camada.neuronios[0].saida;

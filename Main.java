@@ -10,7 +10,7 @@ class Main{
    public static void main(String[] args){
       limparConsole();
 
-      double[][] dados = Dados.dadosXor;//escolher os dados
+      double[][] dados = Dados.dadosSoma;//escolher os dados
       int qEntradas = 2;
       int qSaidas = 1;
 
@@ -24,7 +24,7 @@ class Main{
       double custo1, custo2;
 
       custo1 = rede.funcaoDeCusto(dadosEntrada, dadosSaida);
-      rede.diferencaFinita(dadosEntrada, dadosSaida, 0.001, 1*1000, 0.001);
+      rede.diferencaFinita(dadosEntrada, dadosSaida, 0.001, 15*1000, 0.001);
       custo2 = rede.funcaoDeCusto(dadosEntrada, dadosSaida);
 
       System.out.println("Custo antes: " + custo1 + "\nCusto depois: " + custo2);
@@ -42,13 +42,14 @@ class Main{
 
 
    public static RedeNeural criarRede(int qEntradas, int qSaidas){
-      int[] arquitetura = {qEntradas, 2, qSaidas};
+      int[] arquitetura = {qEntradas, 5, 5, qSaidas};
       RedeNeural rede = new RedeNeural(arquitetura);
 
       rede.configurarAlcancePesos(2);
       rede.configurarTaxaAprendizagem(0.2);
       rede.compilar();
-      rede.configurarFuncaoAtivacao(3);
+      rede.configurarFuncaoAtivacao(2);
+      rede.configurarFuncaoAtivacao(3, 4);
 
       return rede;
    }

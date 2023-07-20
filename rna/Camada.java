@@ -17,6 +17,7 @@ public class Camada implements Serializable{
       LEAKY_RELU,
       ELU,
       LINEAR,
+      SENO,
       ARGMAX,
       SOFTMAX
    }
@@ -68,8 +69,9 @@ public class Camada implements Serializable{
          case 4: this.ativacao = FuncaoAtivacao.LEAKY_RELU; break;
          case 5: this.ativacao = FuncaoAtivacao.ELU; break;
          case 6: this.ativacao = FuncaoAtivacao.LINEAR; break;
-         case 7: this.ativacao = FuncaoAtivacao.ARGMAX; break;
-         case 8: this.ativacao = FuncaoAtivacao.SOFTMAX; break;
+         case 7: this.ativacao = FuncaoAtivacao.SENO; break;
+         case 8: this.ativacao = FuncaoAtivacao.ARGMAX; break;
+         case 9: this.ativacao = FuncaoAtivacao.SOFTMAX; break;
          default: throw new IllegalArgumentException("Valor fornecido para a função de ativação está fora de alcance.");
       }
    }
@@ -88,6 +90,7 @@ public class Camada implements Serializable{
       if(this.ativacao == FuncaoAtivacao.LEAKY_RELU) return Ativacoes.leakyRelu(valor);
       if(this.ativacao == FuncaoAtivacao.ELU) return Ativacoes.elu(valor);
       if(this.ativacao == FuncaoAtivacao.LINEAR) return Ativacoes.linear(valor);
+      if(this.ativacao == FuncaoAtivacao.SENO) return Ativacoes.seno(valor);
 
       //se por algum motivo não achar a função de ativação
       throw new IllegalArgumentException("Erro ao selecionar a ativação");
@@ -101,6 +104,7 @@ public class Camada implements Serializable{
       if(this.ativacao == FuncaoAtivacao.LEAKY_RELU) return Ativacoes.leakyReluDx(valor);
       if(this.ativacao == FuncaoAtivacao.ELU) return Ativacoes.eluDx(valor);
       if(this.ativacao == FuncaoAtivacao.LINEAR) return Ativacoes.linearDx(valor);
+      if(this.ativacao == FuncaoAtivacao.SENO) return Ativacoes.senoDx(valor);
 
       throw new IllegalArgumentException("Erro ao selecionar a ativação derivada das camadas ocultas");
    }
