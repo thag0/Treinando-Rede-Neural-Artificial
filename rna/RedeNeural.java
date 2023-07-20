@@ -31,16 +31,14 @@ public class RedeNeural implements Cloneable, Serializable{
     *    cada valor contido nele representará a quantidade de neurônios da camada correspondente.
     * </p> 
     * <p>
-    *    A camada de entrada deverá ser especificada pelo indice 0, as camadas ocultas devem conter os mesmos valores 
-    *    de neurônios e cada elementos adicional do array representará uma camada oculta adicional, a camada de saída 
-    *    será representada pelo último valor do array.
+    *    A camada de entrada deverá ser especificada pelo indice 0, a camada de saída 
+    *    será representada pelo último valor do array e as camadas ocultas serão representadas pelos valores intermediários.
     * </p>
-    * Os valores de todos os parâmetros pedidos <strong>NÃO devem</strong>
-    * ser menores que 1.
+    * Os valores de todos os parâmetros pedidos <strong>NÃO devem</strong> ser menores que 1.
     * <p>
     *    Após instanciar o modelo, é necessário compilar por meio da função "compilar()", certifique-se 
     *    de configurar as propriedades da rede por meio das funções de configuração fornecidas como, alcance
-    *    dos pesos iniciais, funções de ativação e quantidade de bias. Caso não seja usada nenhuma das funções 
+    *    dos pesos iniciais, taxa de aprendizagem e uso de bias. Caso não seja usada nenhuma das funções 
     *    de configuração, a rede será compilada com os valores padrão.
     * </p>
     * @author Thiago Barroso, acadêmico de Engenharia da Computação pela Universidade Federal do Pará, Campus Tucuruí.
@@ -656,6 +654,8 @@ public class RedeNeural implements Cloneable, Serializable{
    private Camada cloneCamada(Camada camada, boolean temBias){
       Camada clone = new Camada(temBias);
       clone.neuronios = new Neuronio[camada.neuronios.length];
+      clone.ativacao = camada.ativacao;
+      clone.temBias = camada.temBias;
 
       for (int i = 0; i < camada.neuronios.length; i++) {
          clone.neuronios[i] = cloneNeuronio(camada.neuronios[i], camada.neuronios[i].pesos.length, camada.neuronios[i].pesos);

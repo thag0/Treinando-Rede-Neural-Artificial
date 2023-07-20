@@ -24,7 +24,7 @@ class Main{
       double custo1, custo2;
 
       custo1 = rede.funcaoDeCusto(dadosEntrada, dadosSaida);
-      rede.diferencaFinita(dadosEntrada, dadosSaida, 0.001, 10*1000, 0.001);
+      rede.diferencaFinita(dadosEntrada, dadosSaida, 0.001, 1*1000, 0.001);
       custo2 = rede.funcaoDeCusto(dadosEntrada, dadosSaida);
 
       System.out.println("Custo antes: " + custo1 + "\nCusto depois: " + custo2);
@@ -38,6 +38,19 @@ class Main{
       System.out.println("Precisão = " + formatarFloat(precisao) + "%");
 
       desenharRede(rede);
+   }
+
+
+   public static RedeNeural criarRede(int qEntradas, int qSaidas){
+      int[] arquitetura = {qEntradas, 2, qSaidas};
+      RedeNeural rede = new RedeNeural(arquitetura);
+
+      rede.configurarAlcancePesos(2);
+      rede.configurarTaxaAprendizagem(0.2);
+      rede.compilar();
+      rede.configurarFuncaoAtivacao(3);
+
+      return rede;
    }
 
 
@@ -84,18 +97,6 @@ class Main{
          for(int i = 0; i < rede.saida.neuronios.length; i++) System.out.print("[" + rede.saida.neuronios[i].saida + "]");
          System.out.println();
       }
-   }
-
-
-   public static RedeNeural criarRede(int qEntradas, int qSaidas){
-      int[] arquitetura = {qEntradas, 2, 2, qSaidas};
-      RedeNeural rede = new RedeNeural(arquitetura);
-      rede.configurarAlcancePesos(2);
-      rede.configurarTaxaAprendizagem(0.2);
-      rede.compilar();
-      rede.configurarFuncaoAtivacao(2);
-
-      return rede;
    }
 
 

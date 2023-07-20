@@ -43,7 +43,7 @@ public class Painel extends JPanel{
    int larguraDesenho = 26;
    int alturaDesenho = larguraDesenho;
    int espacoVerticalEntreNeuronio = 8;
-   int espacoHorizontalEntreCamadas = (int)(larguraDesenho * 2.6);
+   int espacoHorizontalEntreCamadas = (int)(larguraDesenho * 2.8);
    String texto = "";
 
    //informações
@@ -89,8 +89,8 @@ public class Painel extends JPanel{
 
       int quantidadeCamadas = 2 + rede.ocultas.length;
       int tamanhoRede = (quantidadeCamadas*(larguraDesenho));//quantidade de neuronios
-      tamanhoRede += (espacoHorizontalEntreCamadas*(quantidadeCamadas-2));//quantidade de espaços entre as camadas
-      x0 = (this.largura/2) - (tamanhoRede/2) + 10;
+      tamanhoRede += (espacoHorizontalEntreCamadas*(quantidadeCamadas-1));//quantidade de espaços entre as camadas
+      x0 = 10 + (this.largura/2) - (tamanhoRede/2);
       repaint();
    }
 
