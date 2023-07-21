@@ -199,7 +199,7 @@ public class RedeNeural implements Cloneable, Serializable{
       entrada = new Camada(temBias);
       entrada.neuronios = new Neuronio[QTD_NEURONIOS_ENTRADA];
       for(int i = 0; i < entrada.neuronios.length; i++){
-         entrada.neuronios[i] = new Neuronio(arquitetura[1], alcancePeso);
+         entrada.neuronios[i] = new Neuronio((arquitetura[1]-BIAS), alcancePeso);
       }
 
       //inicializar camadas ocultas
@@ -208,9 +208,10 @@ public class RedeNeural implements Cloneable, Serializable{
          Camada novaOculta = new Camada(temBias);
          novaOculta.neuronios = new Neuronio[arquitetura[i+1]];
       
+         // inicializar neuronios da camada
          for (int j = 0; j < novaOculta.neuronios.length; j++){
             if (i == (this.ocultas.length-1)) novaOculta.neuronios[j] = new Neuronio(neuroniosSaida, alcancePeso);
-            else novaOculta.neuronios[j] = new Neuronio(arquitetura[i+2], alcancePeso);
+            else novaOculta.neuronios[j] = new Neuronio((arquitetura[i+2]-BIAS), alcancePeso);
          }
          ocultas[i] = novaOculta;
       }
@@ -414,7 +415,7 @@ public class RedeNeural implements Cloneable, Serializable{
     * @throws IllegalArgumentException se o tamanho dos dados de entrada for diferente do tamanho dos neurônios de entrada, excluindo o bias.
     * @throws IllegalArgumentException se o tamanho dos dados de saída for diferente do tamanho dos neurôniosde de saída.
     */
-   public void backpropagation(double[] dados, double[] saidaEsperada){
+    public void backpropagation(double[] dados, double[] saidaEsperada){
       modeloValido();
 
       if(dados.length != (this.entrada.neuronios.length-BIAS)){
