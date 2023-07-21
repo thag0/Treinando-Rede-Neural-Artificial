@@ -436,11 +436,11 @@ public class RedeNeural implements Cloneable, Serializable{
       //erro da saída
       for(int i = 0; i < this.saida.neuronios.length; i++){
          Neuronio neuronio = this.saida.neuronios[i];
-         neuronio.erro = ((saidaEsperada[i] - neuronio.saida) * this.saida.funcaoAtivacaoDx(neuronio.saida));
+         neuronio.erro = ((saidaEsperada[i] - neuronio.saida) * this.saida.funcaoAtivacaoDx(neuronio.entrada));
       }
 
       double somaErros;
-      for(int i = redec.size()-2; i >= 0; i--){//percorrer ocultas de trás pra frente
+      for(int i = redec.size()-2; i > 0; i--){//percorrer ocultas de trás pra frente
          for(int j = 0; j < redec.get(i).neuronios.length; j++){//percorrer neuronios da camada atual
             Neuronio neuronio = redec.get(i).neuronios[j];
             
@@ -451,7 +451,7 @@ public class RedeNeural implements Cloneable, Serializable{
                somaErros += neuronioSeguinte.erro;
             }
 
-            neuronio.erro = somaErros * redec.get(i).funcaoAtivacaoDx(neuronio.saida);
+            neuronio.erro = somaErros * redec.get(i).funcaoAtivacaoDx(neuronio.entrada);
             
             //atualizar os pesos do neuronio
             for(int k = 0; k < neuronio.pesos.length; k++){

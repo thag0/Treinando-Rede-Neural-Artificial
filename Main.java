@@ -6,7 +6,6 @@ import render.Janela;
 import rna.RedeNeural;
 
 class Main{
-   static final boolean BACKPROPAGATION = false;
    static final int epocas = 20*1000;
 
 
@@ -23,42 +22,48 @@ class Main{
       dadosEntrada = separarDadosEntrada(dados, dados.length, qEntradas);
       dadosSaida = separarDadosSaida(dados, dadosEntrada, dadosSaida);
       
-      RedeNeural rede = criarRede(qEntradas, qSaidas);
-      double custo1 = rede.funcaoDeCusto(dadosEntrada, dadosSaida);
-      double custo2;
+      RedeNeural redeBP = criarRede(qEntradas, qSaidas);
+      RedeNeural redeDF = redeBP.clone();
 
-      if(BACKPROPAGATION){
-         rede.treinar(dadosEntrada, dadosSaida, epocas);
-         System.out.println("Backpropagation");
-      }else{
-         System.out.println("Diferença finita");
-         rede.diferencaFinita(dadosEntrada, dadosSaida, 0.001, epocas, 0.001);
-      }
+      double custo1BP, custo2BP;
+      double custo1DF, custo2DF;
+
+      custo1BP = redeBP.funcaoDeCusto(dadosEntrada, dadosSaida);
+      custo1DF = redeDF.funcaoDeCusto(dadosEntrada, dadosSaida);
+
+      redeBP.treinar(dadosEntrada, dadosSaida, epocas);
+      redeDF.diferencaFinita(dadosEntrada, dadosSaida, 0.001, epocas, 0.001);
       
-      custo2 = rede.funcaoDeCusto(dadosEntrada, dadosSaida);
+      custo2BP = redeBP.funcaoDeCusto(dadosEntrada, dadosSaida);
+      custo2DF = redeDF.funcaoDeCusto(dadosEntrada, dadosSaida);
 
-      System.out.println("Custo antes: " + custo1 + "\nCusto depois: " + custo2);
+      System.out.println("Custo antes com Backpropagation: " + custo1BP + "\nCusto depois com Backpropagation: " + custo2BP);
+      System.out.println();
+      System.out.println("Custo antes com Diferenças finitas: " + custo1DF + "\nCusto depois com Diferenças finitas: " + custo2DF);
 
-      compararSaidaRede(rede, dadosEntrada, dadosSaida);
+      compararSaidaRede(redeBP, dadosEntrada, dadosSaida, "Desempenho com Backpropagation");
 
-      System.out.println(rede.obterInformacoes());
-      // System.out.println(rede);
+      compararSaidaRede(redeDF, dadosEntrada, dadosSaida, "Desempenho com Diferenças finitas");
 
-      double precisao = rede.calcularPrecisao(dadosEntrada, dadosSaida)*100;
-      System.out.println("Precisão = " + formatarFloat(precisao) + "%");
+      double precisaoBP = redeBP.calcularPrecisao(dadosEntrada, dadosSaida)*100;
+      double precisaoDF = redeDF.calcularPrecisao(dadosEntrada, dadosSaida)*100;
 
-      desenharRede(rede);
+      System.out.println();
+      System.out.println("Precisão com backpropagation = " + formatarFloat(precisaoBP) + "%");
+      System.out.println("Precisão com diferenças finitas = " + formatarFloat(precisaoDF) + "%");
+
+      // desenharRede(rede);
    }
 
 
    public static RedeNeural criarRede(int qEntradas, int qSaidas){
-      int[] arquitetura = {qEntradas, 4, qSaidas};
+      int[] arquitetura = {qEntradas, 2, qSaidas};
       RedeNeural rede = new RedeNeural(arquitetura);
 
-      rede.configurarAlcancePesos(3);
-      rede.configurarTaxaAprendizagem(0.3);
+      rede.configurarAlcancePesos(2);
+      rede.configurarTaxaAprendizagem(0.1);
       rede.compilar();
-      rede.configurarFuncaoAtivacao(2);
+      rede.configurarFuncaoAtivacao(3);
 
       return rede;
    }
@@ -132,11 +137,11 @@ class Main{
    }
 
 
-   public static void compararSaidaRede(RedeNeural rede, double[][] dadosEntrada, double[][] dadosSaida){
+   public static void compararSaidaRede(RedeNeural rede, double[][] dadosEntrada, double[][] dadosSaida, String texto){
       double[] entrada_rede = new double[rede.entrada.neuronios.length-1];
       double[] saida_rede = new double[rede.saida.neuronios.length];
 
-      System.out.println();
+      System.out.println("\n" + texto);
 
       //mostrar saída da rede comparada aos dados
       for(int i = 0; i < dadosEntrada.length; i++){
