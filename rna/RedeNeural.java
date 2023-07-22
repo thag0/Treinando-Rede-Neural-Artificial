@@ -124,24 +124,14 @@ public class RedeNeural implements Cloneable, Serializable{
     *    <li>8 - Argmax.</li>
     *    <li>9 - Softmax.</li>
     * </ul>
-    * @param indice indice da camada que será configurada
+    * @param camada camada que será configurada
     * @param funcaoAtivacao valor relativo a lista de ativações disponíveis.
     * @throws IllegalArgumentException se o modelo não foi compilado previamente.
-    * @throws IllegalArgumentException caso o valor fornecido esteja fora das funções disponíveis.
-    * @throws IllegalArgumentException caso o valor fornecido seja o índice da camada de entrada.
     */
-   public void configurarFuncaoAtivacao(int indice, int funcaoAtivacao){
+   public void configurarFuncaoAtivacao(Camada camada, int funcaoAtivacao){
       modeloValido();
       
-      if(indice < 0 || indice > this.arquitetura.length) throw new IllegalArgumentException("O índice fornecido está fora do alcance da quantidade de camadas.");
-      if(indice == 0) throw new IllegalArgumentException("Não é possível definir uma função de ativação para a camda de entrada.");
-      
-      if(indice == this.arquitetura.length-1){
-         this.saida.configurarAtivacao(funcaoAtivacao);
-      
-      }else{
-         this.ocultas[indice-1].configurarAtivacao(funcaoAtivacao);
-      }
+      camada.configurarAtivacao(funcaoAtivacao);
    }
 
 
@@ -550,12 +540,51 @@ public class RedeNeural implements Cloneable, Serializable{
 
 
    /**
+    * Retorna a camada de entrada da rede.
+    * @return camada de entrada.
+    * @throws IllegalArgumentException se o modelo não foi compilado previamente.
+    */
+   public Camada obterCamadaEntrada(){
+      modeloValido();
+      return this.entrada;
+   }
+
+
+   /**
+    * Retorna a camada oculta correspondente a ao índice fornecido
+    * @param indice índice da busca
+    * @return camada oculta baseada na busca
+    * @throws IllegalArgumentException se o modelo não foi compilado previamente.
+    * @throws IllegalArgumentException se o índice estiver fora do alcance do tamanho das camadas ocultas.
+    */
+   public Camada obterCamadaOculta(int indice){
+      modeloValido();
+      if((indice < 0) || (indice > this.ocultas.length-1)){
+         throw new IllegalArgumentException("O índice fornecido está fora do alcance das camadas disponíveis");
+      }
+   
+      return this.ocultas[indice];
+   }
+
+
+   /**
+    * Retorna a camada de saída da rede.
+    * @return camada de saída.
+    * @throws IllegalArgumentException se o modelo não foi compilado previamente.
+    */
+   public Camada obterCamadaSaida(){
+      modeloValido();
+      return this.saida;
+   }
+
+
+   /**
     * Copia os dados de saída de cada neurônio da camada de saída da rede neural para um vetor.
     * A ordem de cópia é crescente, do primeiro neurônio da saída ao último.
     * @return vetor com os dados das saídas da rede.
     * @throws IllegalArgumentException se o modelo não foi compilado previamente.
     */
-   public double[] obterSaida(){
+   public double[] obterSaidas(){
       modeloValido();
 
       double saida[] = new double[this.saida.neuronios.length];
