@@ -25,7 +25,8 @@ public class Ativacoes{
 
 
    public static double sigmoidDx(double valor){
-      return (sigmoid(valor) * (1-sigmoid(valor)));
+      double sig = sigmoid(valor);
+      return (sig * (1-sig));
    }
 
 
@@ -84,6 +85,7 @@ public class Ativacoes{
    }
 
 
+   //corrigir para nova arquitetura
    public static void argmax(Camada camada){
       int indiceMaior = 0;
       double maiorValor = camada.neuronios[0].saida;
@@ -104,6 +106,7 @@ public class Ativacoes{
    }
 
 
+   //corrigir para nova arquitetura
    public static void softmax(Camada camada){
       double somaExponencial = 0.0;
 

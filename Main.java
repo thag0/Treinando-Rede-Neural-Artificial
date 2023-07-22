@@ -12,11 +12,14 @@ class Main{
 
    public static void main(String[] args){
       limparConsole();
-      long t1, t2;
-      double tf;
 
-      double[][] dados = Dados.dadosXor;//escolher os dados
-      int qEntradas = 2;
+      //calcular diferença de tempo 
+      long tempo1Bp, tempo2Bp;
+      long tempo1Df, tempo2Df;
+      double tempofinalBp, tempoFinalDf;
+
+      double[][] dados = Dados.dadosXorCascata;//escolher os dados
+      int qEntradas = 3;
       int qSaidas = 1;
 
       // separar para o treino
@@ -25,42 +28,60 @@ class Main{
       dadosEntrada = separarDadosEntrada(dados, dados.length, qEntradas);
       dadosSaida = separarDadosSaida(dados, dadosEntrada, dadosSaida);
       
-      RedeNeural rede = criarRede(qEntradas, qSaidas);
+      RedeNeural redeDf = criarRede(qEntradas, qSaidas);
+      RedeNeural redeBp = redeDf.clone();
 
-      double custo1, custo2;
+      double custo1Bp, custo2Bp, custo1Df, custo2Df;
 
-      custo1 = rede.funcaoDeCusto(dadosEntrada, dadosSaida);
+      custo1Df = redeDf.funcaoDeCusto(dadosEntrada, dadosSaida);
+      custo1Bp = redeBp.funcaoDeCusto(dadosEntrada, dadosSaida);
 
-      t1 = System.nanoTime();
-      rede.diferencaFinita(dadosEntrada, dadosSaida, 0.001, epocas, 0.0001);
-      t2 = System.nanoTime();
-      tf = (double)(t2 - t1)/1_000_000_000;
 
-      custo2 = rede.funcaoDeCusto(dadosEntrada, dadosSaida);
+      //calculando tempo com diferenças finitas
+      tempo1Df = System.nanoTime();
+      redeDf.diferencaFinita(dadosEntrada, dadosSaida, 0.001, epocas, 0.0001);
+      tempo2Df = System.nanoTime();
+      tempoFinalDf = (double)(tempo2Df - tempo1Df)/1_000_000_000;
 
-      System.out.println("Custo antes: " + custo1 + "\nCusto depois: " + custo2);
+      //calculando tempo com backpropagation
+      tempo1Bp = System.nanoTime();
+      redeBp.treinar(dadosEntrada, dadosSaida, epocas);
+      tempo2Bp = System.nanoTime();
+      tempofinalBp = (double)(tempo2Bp - tempo1Bp)/1_000_000_000;
 
-      compararSaidaRede(rede, dadosEntrada, dadosSaida, "Desempenho da rede");
+      //custos após o treino
+      custo2Df = redeDf.funcaoDeCusto(dadosEntrada, dadosSaida);
+      custo2Bp = redeBp.funcaoDeCusto(dadosEntrada, dadosSaida);
 
-      double precisao = rede.calcularPrecisao(dadosEntrada, dadosSaida)*100;
+      System.out.println("Custo antes com Diferenças Finitas: " + custo1Df + "\nCusto depois com Diferenças Finitas: " + custo2Df);
+      System.out.println("\nCusto antes com Backpropagation: " + custo1Bp + "\nCusto depois com Backpropagation: " + custo2Bp);
+
+
+      compararSaidaRede(redeDf, dadosEntrada, dadosSaida, "Rede treinada com Diferenças Finitas");
+      compararSaidaRede(redeBp, dadosEntrada, dadosSaida, "Rede treinada com Backpropagation");
+
+      double precisaoDf = redeDf.calcularPrecisao(dadosEntrada, dadosSaida)*100;
+      double precisaoBp = redeBp.calcularPrecisao(dadosEntrada, dadosSaida)*100;
 
       System.out.println();
-      System.out.println("Precisão = " + formatarFloat(precisao) + "%");
+      System.out.println("Precisão com Diferenças Finitas = " + formatarFloat(precisaoDf) + "%");
+      System.out.println("Precisão com Backpropagation = " + formatarFloat(precisaoBp) + "%");
 
-      System.out.println("\nTempo = " + tf + " s");
+      System.out.println("\nTempo treinando com Diferenças Finitas = " + tempoFinalDf + " s");
+      System.out.println("Tempo treinando com Backpropagation = " + tempofinalBp + " s");
 
-      System.out.println(rede.obterInformacoes());
+
    }
 
 
    public static RedeNeural criarRede(int qEntradas, int qSaidas){
-      int[] arquitetura = {qEntradas, 2, qSaidas};
+      int[] arquitetura = {qEntradas, 5, 5, qSaidas};
       RedeNeural rede = new RedeNeural(arquitetura);
 
       rede.configurarAlcancePesos(1);
-      rede.configurarTaxaAprendizagem(0.5);
+      rede.configurarTaxaAprendizagem(0.2);
       rede.compilar();
-      rede.configurarFuncaoAtivacao(2);
+      rede.configurarFuncaoAtivacao(3);
 
       return rede;
    }

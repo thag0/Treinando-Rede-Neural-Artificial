@@ -10,6 +10,7 @@ import java.io.Serializable;
 public class Camada implements Serializable{
    public Neuronio[] neuronios;
    public boolean temBias = true;
+   private int b = 1;
 
    //melhor controle das funções de ativação
    private enum FuncaoAtivacao{
@@ -34,33 +35,38 @@ public class Camada implements Serializable{
     */
    public Camada(boolean temBias){
       this.temBias = temBias;
+
+      if(temBias) b = 1;
+      else b = 0;
    }
 
 
    /**
-    * Calcula a soma dos valores de saída multiplicado pelo peso correspondente ao neurônio da próxima camada
+    * Calcula a soma dos valores de saída multiplicado pelo peso correspondente ao neurônio da próxima anterior
     * e aplica a função de ativação.
-    * @param camadaAnterior camada anterior que contém os valores de saída dos neurônios e seus pesos
+    * @param camadaAnterior camada anterior que contém os valores de saída dos neurônios
     */
    public void ativarNeuronios(Camada camadaAnterior){
-      int qNeuronios = this.neuronios.length - ((temBias) ? 1 : 0);
 
-      for(int i = 0; i < qNeuronios; i++){
-
-         this.neuronios[i].entrada = 0;
-         //somatorio dos pesos com as saídas
-         for(int j = 0; j < camadaAnterior.neuronios.length; j++){
-            //peso relativo ao neuronio da camada atual
-            this.neuronios[i].entrada += (camadaAnterior.neuronios[j].saida * camadaAnterior.neuronios[j].pesos[i]);
+      //preencher entradas dos neuronios
+      for(int i = 0; i < (this.neuronios.length-b); i++){
+         
+         Neuronio neuronio = this.neuronios[i];
+         for(int j = 0; j < neuronio.entradas.length; j++){
+            neuronio.entradas[j] = camadaAnterior.neuronios[j].saida;
          }
       }
 
-      if(this.ativacao == FuncaoAtivacao.ARGMAX) Ativacoes.argmax(this);
-      else if(this.ativacao == FuncaoAtivacao.SOFTMAX) Ativacoes.softmax(this);
-      else{
-         for(int i = 0; i < qNeuronios; i++){
-            this.neuronios[i].saida = funcaoAtivacao(this.neuronios[i].entrada);
+      //calculando o somatorio com os pesos
+      double somatorio;
+      for(int i = 0; i < (this.neuronios.length-b); i++){
+
+         somatorio = 0.0;
+         for(int j = 0; j < this.neuronios[i].entradas.length; j++){
+            somatorio += (this.neuronios[i].entradas[j] * this.neuronios[i].pesos[j]);
          }
+         this.neuronios[i].somatorio = somatorio;
+         this.neuronios[i].saida = funcaoAtivacao(somatorio);
       }
    }
 
