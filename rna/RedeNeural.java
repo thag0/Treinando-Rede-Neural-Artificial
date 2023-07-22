@@ -351,19 +351,22 @@ public class RedeNeural implements Cloneable, Serializable{
 
 
    /**
-    * <p><strong>Em teste<strong></p>
-    * Treina a rede com uso do método Backpropagation.
-    * @param dados matriz de dados de entrada.
-    * @param saida matriz de dados de saída.
-    * @param epochs quantidade de épocas do treino.
+    * Treina a rede neural usando o algoritmo Backpropagation.
+    * @param dados matriz de dados de entrada. Cada linha representa um exemplo de entrada.
+    * @param saida matriz de dados de saída esperados. Cada linha representa o valor de saída correspondente ao exemplo de entrada.
+    * @param epochs número de épocas de treinamento. Uma época é um ciclo completo de treinamento em que todos os exemplos de treinamento são apresentados para a rede.
     * @throws IllegalArgumentException se o modelo não foi compilado previamente.
+    * @throws IllegalArgumentException se a quantidade de amostras dos dados de entrada for diferente da quantidade de amostras da saída.
     * @throws IllegalArgumentException se o tamanho dos dados de entrada for diferente do tamanho dos neurônios de entrada, excluindo o bias.
-    * @throws IllegalArgumentException se o tamanho dos dados de saída for diferente do tamanho dos neurôniosde de saída.
-    * @throws IllegalArgumentException se o valor de epochs for menor que um.
+    * @throws IllegalArgumentException se o tamanho dos dados de saída for diferente do tamanho dos neurônios de saída da rede.
+    * @throws IllegalArgumentException se o valor de épocas for menor que um.
     */
    public void treinar(double[][] dados, double[][] saida, int epochs){
       modeloValido();
 
+      if(dados.length != saida.length){
+         throw new IllegalArgumentException("A quantidade de dados de entrada e saída são diferentes");
+      }
       if(dados[0].length != (this.entrada.neuronios.length-BIAS)){
          throw new IllegalArgumentException("Incompatibilidade entre os dados de entrada e os neurônios de entrada da rede");
       }
@@ -394,31 +397,28 @@ public class RedeNeural implements Cloneable, Serializable{
 
 
    /**
-    * <p>
-    *    <strong>Em teste</strong>, funciona bem mas não ta sabendo lidar com mais de uma oculta
-    * </p>
-    * Retropropaga o erro da rede de acordo com o dado aplicado e a saída esperada, depois
-    * corrige os pesos com a técnica de gradiente descendente.
-    * @param dados array com os dados de entrada.
-    * @param saidaEsperada array com as saídas esperadas
+    * Retropropaga o erro da rede neural de acordo com os dados de entrada e saída esperados, depois atualiza os pesos usando a técnica de gradiente descendente.
+    *
+    * @param entrada array com os dados de entrada das amostras.
+    * @param saida array com as saídas esperadas das amostras.
     * @throws IllegalArgumentException se o modelo não foi compilado previamente.
     * @throws IllegalArgumentException se o tamanho dos dados de entrada for diferente do tamanho dos neurônios de entrada, excluindo o bias.
-    * @throws IllegalArgumentException se o tamanho dos dados de saída for diferente do tamanho dos neurôniosde de saída.
+    * @throws IllegalArgumentException se o tamanho dos dados de saída for diferente do tamanho dos neurônios de saída da rede.
     */
-   public void backpropagation(double[] dados, double[] saidaEsperada){
+   private void backpropagation(double[] entrada, double[] saida){
       modeloValido();
 
-      if(dados.length != (this.entrada.neuronios.length-BIAS)){
+      if(entrada.length != (this.entrada.neuronios.length-BIAS)){
          throw new IllegalArgumentException("O tamanho dos dados de entrada não corresponde ao tamanho dos neurônios de entrada da rede, com exceção dos bias");
       }
-      if(saidaEsperada.length != this.saida.neuronios.length){
+      if(saida.length != this.saida.neuronios.length){
          throw new IllegalArgumentException("O tamanho dos dados de saída não corresponde ao tamanho dos neurônios de saída da rede");
       }
 
       //calcular saída para aplicar o erro
-      this.calcularSaida(dados);
+      this.calcularSaida(entrada);
 
-      //transformar a rede num vetor de camadas
+      //transformar a rede num vetor de camadas pra facilitar minha vida
       ArrayList<Camada> redec = new ArrayList<>();
       redec.add(this.entrada);
       for(Camada camada : this.ocultas) redec.add(camada);
@@ -427,10 +427,11 @@ public class RedeNeural implements Cloneable, Serializable{
       //erro da saída
       for(int i = 0; i < this.saida.neuronios.length; i++){
          Neuronio neuronio = this.saida.neuronios[i];
-         neuronio.erro = ((saidaEsperada[i] - neuronio.saida) * this.saida.funcaoAtivacaoDx(neuronio.somatorio));
+         neuronio.erro = ((saida[i] - neuronio.saida) * this.saida.funcaoAtivacaoDx(neuronio.somatorio));
       }
 
       double somaErros = 0.0;
+      //começar da ultima oculta
       for(int i = redec.size()-2; i >= 1; i--){// percorrer camadas ocultas de trás pra frente
          
          Camada camadaAtual = redec.get(i);
@@ -440,24 +441,27 @@ public class RedeNeural implements Cloneable, Serializable{
          
             Neuronio neuronio = camadaAtual.neuronios[j];
             somaErros = 0.0;
-            for(Neuronio neuronioProximo : redec.get(i+1).neuronios){ // percorrer neurônios da camada seguinte
-               somaErros += neuronioProximo.pesos[j] * neuronioProximo.erro;//algum problema relacionado ao bias
+            for(Neuronio neuronioProximo : redec.get(i+1).neuronios){//percorrer neurônios da camada seguinte
+               somaErros += neuronioProximo.pesos[j] * neuronioProximo.erro;
             }
             neuronio.erro = somaErros * camadaAtual.funcaoAtivacaoDx(neuronio.somatorio);
          }
      }
 
-      for(int i = 1; i < redec.size(); i++){// percorrer camadas da entrada até a saída
+      for(int i = 1; i < redec.size(); i++){//percorrer rede 
+         
          Camada camadaAtual = redec.get(i);
          Camada camadaAnterior = redec.get(i-1);
-         for(int j = 0; j < camadaAtual.neuronios.length; j++){ // percorrer neurônios da camada atual
+         for(int j = 0; j < camadaAtual.neuronios.length; j++){//percorrer neurônios da camada atual
+            
             Neuronio neuronio = camadaAtual.neuronios[j];
-            for(int k = 0; k < neuronio.pesos.length; k++){ // percorrer pesos do neurônio atual
-               neuronio.pesos[k] += TAXA_APRENDIZAGEM * neuronio.erro * camadaAnterior.neuronios[k].saida;
+            for(int k = 0; k < neuronio.pesos.length; k++){//percorrer pesos do neurônio atual
+               neuronio.pesos[k] += (TAXA_APRENDIZAGEM * neuronio.erro * camadaAnterior.neuronios[k].saida);
             }
          }
       } 
    }
+
 
    /**
     * Método alternativo no treino da rede neural usando diferenciação finita (finite difference), que calcula a "derivada" da função de custo levando

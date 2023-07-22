@@ -13,14 +13,9 @@ class Main{
    public static void main(String[] args){
       limparConsole();
 
-      //calcular diferença de tempo 
-      long tempo1Bp, tempo2Bp;
-      long tempo1Df, tempo2Df;
-      double tempofinalBp, tempoFinalDf;
-
       double[][] dados = Dados.dadosXorCascata;//escolher os dados
-      int qEntradas = 3;
-      int qSaidas = 1;
+      int qEntradas = 3;//quantidade de dados de entrada
+      int qSaidas = 1;//quantidade de dados de saída
 
       // separar para o treino
       double[][] dadosEntrada = new double[dados.length][qEntradas];
@@ -28,60 +23,24 @@ class Main{
       dadosEntrada = separarDadosEntrada(dados, dados.length, qEntradas);
       dadosSaida = separarDadosSaida(dados, dadosEntrada, dadosSaida);
       
-      RedeNeural redeDf = criarRede(qEntradas, qSaidas);
-      RedeNeural redeBp = redeDf.clone();
-
-      double custo1Bp, custo2Bp, custo1Df, custo2Df;
-
-      custo1Df = redeDf.funcaoDeCusto(dadosEntrada, dadosSaida);
-      custo1Bp = redeBp.funcaoDeCusto(dadosEntrada, dadosSaida);
-
-
-      //calculando tempo com diferenças finitas
-      tempo1Df = System.nanoTime();
-      redeDf.diferencaFinita(dadosEntrada, dadosSaida, 0.001, epocas, 0.0001);
-      tempo2Df = System.nanoTime();
-      tempoFinalDf = (double)(tempo2Df - tempo1Df)/1_000_000_000;
-
-      //calculando tempo com backpropagation
-      tempo1Bp = System.nanoTime();
-      redeBp.treinar(dadosEntrada, dadosSaida, epocas);
-      tempo2Bp = System.nanoTime();
-      tempofinalBp = (double)(tempo2Bp - tempo1Bp)/1_000_000_000;
-
-      //custos após o treino
-      custo2Df = redeDf.funcaoDeCusto(dadosEntrada, dadosSaida);
-      custo2Bp = redeBp.funcaoDeCusto(dadosEntrada, dadosSaida);
-
-      System.out.println("Custo antes com Diferenças Finitas: " + custo1Df + "\nCusto depois com Diferenças Finitas: " + custo2Df);
-      System.out.println("\nCusto antes com Backpropagation: " + custo1Bp + "\nCusto depois com Backpropagation: " + custo2Bp);
-
-
-      compararSaidaRede(redeDf, dadosEntrada, dadosSaida, "Rede treinada com Diferenças Finitas");
-      compararSaidaRede(redeBp, dadosEntrada, dadosSaida, "Rede treinada com Backpropagation");
-
-      double precisaoDf = redeDf.calcularPrecisao(dadosEntrada, dadosSaida)*100;
-      double precisaoBp = redeBp.calcularPrecisao(dadosEntrada, dadosSaida)*100;
-
-      System.out.println();
-      System.out.println("Precisão com Diferenças Finitas = " + formatarFloat(precisaoDf) + "%");
-      System.out.println("Precisão com Backpropagation = " + formatarFloat(precisaoBp) + "%");
-
-      System.out.println("\nTempo treinando com Diferenças Finitas = " + tempoFinalDf + " s");
-      System.out.println("Tempo treinando com Backpropagation = " + tempofinalBp + " s");
-
-
+      RedeNeural rede = criarRede(qEntradas, qSaidas);
+      rede.treinar(dadosEntrada, dadosSaida, epocas);
+      double precisao = rede.calcularPrecisao(dadosEntrada, dadosSaida);
+      
+      compararSaidaRede(rede, dadosEntrada, dadosSaida, "Rede treinada");
+      System.out.println("\nCusto = " + rede.funcaoDeCusto(dadosEntrada, dadosSaida));
+      System.out.println("Precisão = " + (formatarFloat(precisao*100)) + "%");
    }
 
 
    public static RedeNeural criarRede(int qEntradas, int qSaidas){
-      int[] arquitetura = {qEntradas, 5, 5, qSaidas};
+      int[] arquitetura = {qEntradas, 4, 4, qSaidas};
       RedeNeural rede = new RedeNeural(arquitetura);
 
-      rede.configurarAlcancePesos(1);
-      rede.configurarTaxaAprendizagem(0.2);
+      rede.configurarAlcancePesos(3);
+      rede.configurarTaxaAprendizagem(0.02);
       rede.compilar();
-      rede.configurarFuncaoAtivacao(3);
+      rede.configurarFuncaoAtivacao(4);
 
       return rede;
    }
@@ -215,5 +174,55 @@ class Main{
       valorFormatado = df.format(valor);
 
       return valorFormatado;
+   }
+
+
+   public static void compararTreinos(double[][] dadosEntrada, double[][] dadosSaida, int qEntradas, int qSaidas){
+      //calcular diferença de tempo 
+      long tempo1Bp, tempo2Bp;
+      long tempo1Df, tempo2Df;
+      double tempofinalBp, tempoFinalDf;
+
+      RedeNeural redeDf = criarRede(qEntradas, qSaidas);
+      RedeNeural redeBp = redeDf.clone();
+
+      double custo1Bp, custo2Bp, custo1Df, custo2Df;
+
+      custo1Df = redeDf.funcaoDeCusto(dadosEntrada, dadosSaida);
+      custo1Bp = redeBp.funcaoDeCusto(dadosEntrada, dadosSaida);
+
+
+      //calculando tempo com diferenças finitas
+      tempo1Df = System.nanoTime();
+      redeDf.diferencaFinita(dadosEntrada, dadosSaida, 0.001, epocas, 0.0001);
+      tempo2Df = System.nanoTime();
+      tempoFinalDf = (double)(tempo2Df - tempo1Df)/1_000_000_000;
+
+      //calculando tempo com backpropagation
+      tempo1Bp = System.nanoTime();
+      redeBp.treinar(dadosEntrada, dadosSaida, epocas);
+      tempo2Bp = System.nanoTime();
+      tempofinalBp = (double)(tempo2Bp - tempo1Bp)/1_000_000_000;
+
+      //custos após o treino
+      custo2Df = redeDf.funcaoDeCusto(dadosEntrada, dadosSaida);
+      custo2Bp = redeBp.funcaoDeCusto(dadosEntrada, dadosSaida);
+
+      System.out.println("Custo antes com Diferenças Finitas: " + custo1Df + "\nCusto depois com Diferenças Finitas: " + custo2Df);
+      System.out.println("\nCusto antes com Backpropagation: " + custo1Bp + "\nCusto depois com Backpropagation: " + custo2Bp);
+
+
+      compararSaidaRede(redeDf, dadosEntrada, dadosSaida, "Rede treinada com Diferenças Finitas");
+      compararSaidaRede(redeBp, dadosEntrada, dadosSaida, "Rede treinada com Backpropagation");
+
+      double precisaoDf = redeDf.calcularPrecisao(dadosEntrada, dadosSaida)*100;
+      double precisaoBp = redeBp.calcularPrecisao(dadosEntrada, dadosSaida)*100;
+
+      System.out.println();
+      System.out.println("Precisão com Diferenças Finitas = " + formatarFloat(precisaoDf) + "%");
+      System.out.println("Precisão com Backpropagation = " + formatarFloat(precisaoBp) + "%");
+
+      System.out.println("\nTempo treinando com Diferenças Finitas = " + tempoFinalDf + " s");
+      System.out.println("Tempo treinando com Backpropagation = " + tempofinalBp + " s");
    }
 }
