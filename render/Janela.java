@@ -10,13 +10,15 @@ import rna.RedeNeural;
 
 public class Janela extends JFrame{
 
-   public Painel painel = new Painel();
+   public Painel painel;
 
    public Janela(){
       try{
          BufferedImage icone = ImageIO.read(new File("./imagens/inteligencia-artificial.png"));
          setIconImage(icone);
       }catch(Exception e){}
+
+      this.painel = new Painel();
       
       setTitle("Rede neural");
       add(painel);

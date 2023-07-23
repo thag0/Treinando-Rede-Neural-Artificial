@@ -85,16 +85,15 @@ public class Ativacoes{
    }
 
 
-   //corrigir para nova arquitetura
    public static void argmax(Camada camada){
       int indiceMaior = 0;
-      double maiorValor = camada.neuronios[0].saida;
+      double maiorValor = camada.neuronios[0].somatorio;
 
       //procurar maior valor da saída
       for(int i = 0; i < camada.neuronios.length; i++){
          if(camada.neuronios[i].saida > maiorValor){
             indiceMaior = i;
-            maiorValor = camada.neuronios[i].saida;
+            maiorValor = camada.neuronios[i].somatorio;
          }
       }
 
@@ -106,18 +105,18 @@ public class Ativacoes{
    }
 
 
-   //corrigir para nova arquitetura
+   //corrigir para nova arquitetura----------------
    public static void softmax(Camada camada){
       double somaExponencial = 0.0;
 
       //soma exponencial da saída
-      for (int i = 0; i < camada.neuronios.length; i++){
-         somaExponencial += Math.exp(camada.neuronios[i].saida);
+      for(int i = 0; i < camada.neuronios.length; i++){
+         somaExponencial += Math.exp(camada.neuronios[i].somatorio);
       }
 
       //aplicar softmax
       for (int i = 0; i < camada.neuronios.length; i++){
-         double valorExponencial = Math.exp(camada.neuronios[i].saida);
+         double valorExponencial = Math.exp(camada.neuronios[i].somatorio);
          camada.neuronios[i].saida = (valorExponencial / somaExponencial);
       }
    }

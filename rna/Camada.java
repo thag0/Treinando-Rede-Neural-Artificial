@@ -13,7 +13,7 @@ public class Camada implements Serializable{
    private int b = 1;
 
    //melhor controle das funções de ativação
-   private enum FuncaoAtivacao{
+   public enum FuncaoAtivacao{
       RELU,
       SIGMOID,
       TANH,

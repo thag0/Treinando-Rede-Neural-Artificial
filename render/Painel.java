@@ -80,6 +80,10 @@ public class Painel extends JPanel{
       setDoubleBuffered(true);
       setEnabled(true);
       setVisible(true);
+
+      int arq[] = {1, 1, 1};
+      this.rede = new RedeNeural(arq);
+      this.rede.compilar();
    }
 
 
@@ -313,7 +317,7 @@ public class Painel extends JPanel{
 
       //levar em consideração o tamanho da fonte
       int xTexto = x + (g2.getFont().getSize()/2);
-      int yTexto = y + g2.getFont().getSize() + 2;
+      int yTexto = y + g2.getFont().getSize() + 3;
       
       g2.drawString("B", xTexto, yTexto);
       g2.drawString("B", xTexto, yTexto+1);//deixar o desenho mais espesso

@@ -7,15 +7,15 @@ import rna.RedeNeural;
 
 
 class Main{
-   static final int epocas = 20*1000;
+   static final int epocas = 30*1000;
 
 
    public static void main(String[] args){
       limparConsole();
 
-      double[][] dados = Dados.dadosXorCascata;//escolher os dados
-      int qEntradas = 3;//quantidade de dados de entrada
-      int qSaidas = 1;//quantidade de dados de saída
+      double[][] dados = Dados.dadosSomador2bits;//escolher os dados
+      int qEntradas = 4;//quantidade de dados de entrada
+      int qSaidas = 3;//quantidade de dados de saída
 
       // separar para o treino
       double[][] dadosEntrada = new double[dados.length][qEntradas];
@@ -30,17 +30,19 @@ class Main{
       compararSaidaRede(rede, dadosEntrada, dadosSaida, "Rede treinada");
       System.out.println("\nCusto = " + rede.funcaoDeCusto(dadosEntrada, dadosSaida));
       System.out.println("Precisão = " + (formatarFloat(precisao*100)) + "%");
+
+      testarRede(rede, qEntradas);
    }
 
 
    public static RedeNeural criarRede(int qEntradas, int qSaidas){
-      int[] arquitetura = {qEntradas, 4, 4, qSaidas};
+      int[] arquitetura = {qEntradas, 7, 7, qSaidas};
       RedeNeural rede = new RedeNeural(arquitetura);
 
-      rede.configurarAlcancePesos(3);
-      rede.configurarTaxaAprendizagem(0.02);
+      rede.configurarAlcancePesos(2);
+      rede.configurarTaxaAprendizagem(0.15);
       rede.compilar();
-      rede.configurarFuncaoAtivacao(4);
+      rede.configurarFuncaoAtivacao(2);
 
       return rede;
    }
@@ -68,6 +70,9 @@ class Main{
 
 
    public static void testarRede(RedeNeural rede, int tamanhoEntrada){
+      Janela janela = new Janela();
+      janela.desenhar(rede);
+
       String entrada = "";
       while(true){
          System.out.print("\nFazer uma predição ? [s/n]: ");
@@ -86,13 +91,15 @@ class Main{
          for(int i = 0; i < testeRede.length; i++) System.out.print("[" + testeRede[i] + "]");
          System.out.print(" -> ");
          rede.calcularSaida(testeRede);
+
+         janela.desenhar(rede);
+
          for(int i = 0; i < rede.saida.neuronios.length; i++) System.out.print("[" + rede.saida.neuronios[i].saida + "]");
          System.out.println();
       }
    }
 
 
-   //public static double[][] separarDadosEntrada(double[][] dadosEntrada, double[][] dados)
    public static double[][] separarDadosEntrada(double[][] dados, int linhas, int colunas){
       double[][] dadosEntrada = new double[linhas][colunas];
       for(int i = 0; i < linhas; i++){
@@ -131,7 +138,10 @@ class Main{
          rede.calcularSaida(entrada_rede);
          saida_rede = rede.obterSaidas();
 
-         System.out.print("Dado " + i + " |");
+         //apenas formatação
+         if(i < 10) System.out.print("Dado 00" + i + " |");
+         else if(i < 100) System.out.print("Dado 0" + i + " |");
+         else System.out.print("Dado " + i + " |");
          for(int j = 0; j < entrada_rede.length; j++){
             System.out.print(" " + entrada_rede[j] + " ");
          }
@@ -142,7 +152,7 @@ class Main{
          }
          System.out.print(" | Rede ->");
          for(int j = 0; j < rede.saida.neuronios.length; j++){
-            System.out.print(" " + formatarFloat(saida_rede[j]));
+            System.out.print("  " + formatarFloat(saida_rede[j]));
          }
          System.out.println();
       }
