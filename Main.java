@@ -1,21 +1,28 @@
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 
 import render.Janela;
 import rna.RedeNeural;
+import utilitarios.ConversorDados;
+import utilitarios.LeitorCsv;
 
 
 class Main{
-   static final int epocas = 30*1000;
-
+   static final int epocas = 20*1000;
+   static final String caminhoCsv = "./dados/xorCascata.csv";
 
    public static void main(String[] args){
       limparConsole();
 
-      double[][] dados = Dados.dadosSomador2bits;//escolher os dados
-      int qEntradas = 4;//quantidade de dados de entrada
-      int qSaidas = 3;//quantidade de dados de saída
+      LeitorCsv leitor = new LeitorCsv();
+      ConversorDados conversor = new ConversorDados();
+      ArrayList<String[]> lista = leitor.lerCsv(caminhoCsv);
+
+      double[][] dados = conversor.listaParaDadosDouble(lista);//escolher os dados
+      int qEntradas = 3;//quantidade de dados de entrada
+      int qSaidas = 1;//quantidade de dados de saída
 
       // separar para o treino
       double[][] dadosEntrada = new double[dados.length][qEntradas];
@@ -24,7 +31,7 @@ class Main{
       dadosSaida = separarDadosSaida(dados, dadosEntrada, dadosSaida);
       
       RedeNeural rede = criarRede(qEntradas, qSaidas);
-      rede.treinar(dadosEntrada, dadosSaida, epocas);
+      rede.treinoGradienteEstocastico(dadosEntrada, dadosSaida, epocas);
       double precisao = rede.calcularPrecisao(dadosEntrada, dadosSaida);
       
       compararSaidaRede(rede, dadosEntrada, dadosSaida, "Rede treinada");
@@ -36,11 +43,11 @@ class Main{
 
 
    public static RedeNeural criarRede(int qEntradas, int qSaidas){
-      int[] arquitetura = {qEntradas, 7, 7, qSaidas};
+      int[] arquitetura = {qEntradas, 4, 4, qSaidas};
       RedeNeural rede = new RedeNeural(arquitetura);
 
       rede.configurarAlcancePesos(2);
-      rede.configurarTaxaAprendizagem(0.15);
+      rede.configurarTaxaAprendizagem(0.2);
       rede.compilar();
       rede.configurarFuncaoAtivacao(2);
 
@@ -77,25 +84,28 @@ class Main{
       while(true){
          System.out.print("\nFazer uma predição ? [s/n]: ");
          entrada = pegarEntrada();
-         if(entrada.equalsIgnoreCase("n")) break;
 
-         double[] testeRede = new double[tamanhoEntrada];
+         if(entrada.equalsIgnoreCase("s") || entrada.equalsIgnoreCase("sim")){
+            double[] testeRede = new double[tamanhoEntrada];
 
-         for(int i = 0; i < testeRede.length; i++){
-            System.out.print("valor " + i + ": ");
-            entrada = pegarEntrada();
-            testeRede[i] = Double.parseDouble(entrada);
-         }
+            for(int i = 0; i < testeRede.length; i++){
+               System.out.print("Entrada " + i + ": ");
+               entrada = pegarEntrada();
+               testeRede[i] = Double.parseDouble(entrada);
+            }
 
-         System.out.print("Predição da rede para ");
-         for(int i = 0; i < testeRede.length; i++) System.out.print("[" + testeRede[i] + "]");
-         System.out.print(" -> ");
-         rede.calcularSaida(testeRede);
+            System.out.print("Predição da rede para ");
+            for(int i = 0; i < testeRede.length; i++) System.out.print("[" + testeRede[i] + "]");
+            System.out.print(" -> ");
+            rede.calcularSaida(testeRede);
 
-         janela.desenhar(rede);
+            janela.desenhar(rede);
 
-         for(int i = 0; i < rede.saida.neuronios.length; i++) System.out.print("[" + rede.saida.neuronios[i].saida + "]");
-         System.out.println();
+            for(int i = 0; i < rede.saida.neuronios.length; i++) System.out.print("[" + rede.saida.neuronios[i].saida + "]");
+            System.out.println();
+         
+         }else break;
+
       }
    }
 
@@ -187,12 +197,16 @@ class Main{
    }
 
 
-   public static void compararTreinos(double[][] dadosEntrada, double[][] dadosSaida, int qEntradas, int qSaidas){
+   /**
+    * Compara o treino entre backpropagation e diferenças finitas 
+    */
+   public static void compararBpDf(double[][] dadosEntrada, double[][] dadosSaida, int qEntradas, int qSaidas){
       //calcular diferença de tempo 
       long tempo1Bp, tempo2Bp;
       long tempo1Df, tempo2Df;
       double tempofinalBp, tempoFinalDf;
 
+      //usando exatamente o mesmo modelo de rede
       RedeNeural redeDf = criarRede(qEntradas, qSaidas);
       RedeNeural redeBp = redeDf.clone();
 
@@ -210,7 +224,7 @@ class Main{
 
       //calculando tempo com backpropagation
       tempo1Bp = System.nanoTime();
-      redeBp.treinar(dadosEntrada, dadosSaida, epocas);
+      redeBp.treinoBackpropagation(dadosEntrada, dadosSaida, epocas);
       tempo2Bp = System.nanoTime();
       tempofinalBp = (double)(tempo2Bp - tempo1Bp)/1_000_000_000;
 
@@ -234,5 +248,56 @@ class Main{
 
       System.out.println("\nTempo treinando com Diferenças Finitas = " + tempoFinalDf + " s");
       System.out.println("Tempo treinando com Backpropagation = " + tempofinalBp + " s");
+   }
+
+
+   /**
+    * Compara o treino entre backpropagation e gradiente estocástico
+    */   
+   public static void compararBpGe(double[][] dadosEntrada, double[][] dadosSaida, int qEntradas, int qSaidas){
+      //calcular diferença de tempo 
+      long tempo1Bp, tempo2Bp;
+      long tempo1Ge, tempo2Ge;
+      double tempofinalBp, tempoFinalGe;
+
+      //usando exatamente o mesmo modelo de rede
+      RedeNeural redeBp = criarRede(qEntradas, qSaidas);
+      RedeNeural redeGe = redeBp.clone();
+
+      double custo1Bp, custo2Bp, custo1Ge, custo2Ge;
+
+      custo1Bp = redeBp.funcaoDeCusto(dadosEntrada, dadosSaida);
+      custo1Ge = redeGe.funcaoDeCusto(dadosEntrada, dadosSaida);
+
+      //calculando tempo com backpropagation
+      tempo1Bp = System.nanoTime();
+      redeBp.treinoBackpropagation(dadosEntrada, dadosSaida, epocas);
+      tempo2Bp = System.nanoTime();
+      tempofinalBp = (double)(tempo2Bp - tempo1Bp)/1_000_000_000;
+
+      //calculando tempo com gradiente estocástico
+      tempo1Ge = System.nanoTime();
+      redeGe.treinoGradienteEstocastico(dadosEntrada, dadosSaida, epocas);
+      tempo2Ge = System.nanoTime();
+      tempoFinalGe = (double)(tempo2Ge - tempo1Ge)/1_000_000_000;
+
+      //custos após o treino
+      custo2Bp = redeBp.funcaoDeCusto(dadosEntrada, dadosSaida);
+      custo2Ge = redeGe.funcaoDeCusto(dadosEntrada, dadosSaida);
+
+      System.out.println("\nCusto antes com Backpropagation: " + custo1Bp + "\nCusto depois com Backpropagation: " + custo2Bp);
+      System.out.println("Custo antes com Gradiente Estocástico: " + custo1Ge + "\nCusto depois com Gradiente Estocástico: " + custo2Ge);
+
+      // compararSaidaRede(redeBp, dadosEntrada, dadosSaida, "Rede treinada com Backpropagation");
+      // compararSaidaRede(redeGe, dadosEntrada, dadosSaida, "Rede treinada com Gradiente Estocástico");
+
+      double precisaoBp = redeBp.calcularPrecisao(dadosEntrada, dadosSaida)*100;
+      double precisaoGe = redeGe.calcularPrecisao(dadosEntrada, dadosSaida)*100;
+
+      System.out.println("\nPrecisão com Backpropagation = " + formatarFloat(precisaoBp) + "%");
+      System.out.println("Precisão com Gradiente Estocástico = " + formatarFloat(precisaoGe) + "%");
+
+      System.out.println("\nTempo treinando com Backpropagation = " + tempofinalBp + " s");
+      System.out.println("Tempo treinando com Gradiente Estocástico = " + tempoFinalGe + " s");
    }
 }

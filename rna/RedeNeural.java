@@ -6,6 +6,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class RedeNeural implements Cloneable, Serializable{
    public Camada entrada;
@@ -23,7 +24,6 @@ public class RedeNeural implements Cloneable, Serializable{
    private int BIAS = 1;
    private double alcancePeso = 1.0;
    private boolean modeloCompilado = false;
-
 
    /**
     * <p>
@@ -361,7 +361,7 @@ public class RedeNeural implements Cloneable, Serializable{
     * @throws IllegalArgumentException se o tamanho dos dados de saída for diferente do tamanho dos neurônios de saída da rede.
     * @throws IllegalArgumentException se o valor de épocas for menor que um.
     */
-   public void treinar(double[][] dados, double[][] saida, int epochs){
+   public void treinoBackpropagation(double[][] dados, double[][] saida, int epochs){
       modeloValido();
 
       if(dados.length != saida.length){
@@ -392,6 +392,68 @@ public class RedeNeural implements Cloneable, Serializable{
 
             this.backpropagation(dadosEntrada, dadosSaida);
          }      
+      }
+   }
+
+
+   /**
+    * Treina a rede com a técinica do gradiente estocástico, onde embaralhamos os dados de entrada para tornar o treino "aleatório" mas que tende a
+    * convergir mais rápido.
+    * @param dados matriz de dados de entrada. Cada linha representa um exemplo de entrada.
+    * @param saida matriz de dados de saída esperados. Cada linha representa o valor de saída correspondente ao exemplo de entrada.
+    * @param epochs número de épocas de treinamento. Uma época é um ciclo completo de treinamento em que todos os exemplos de treinamento são apresentados para a rede.
+    * @throws IllegalArgumentException se o modelo não foi compilado previamente.
+    * @throws IllegalArgumentException se a quantidade de amostras dos dados de entrada for diferente da quantidade de amostras da saída.
+    * @throws IllegalArgumentException se o tamanho dos dados de entrada for diferente do tamanho dos neurônios de entrada, excluindo o bias.
+    * @throws IllegalArgumentException se o tamanho dos dados de saída for diferente do tamanho dos neurônios de saída da rede.
+    * @throws IllegalArgumentException se o valor de épocas for menor que um.
+    */
+   public void treinoGradienteEstocastico(double[][] dados, double[][] saida, int epochs){
+      modeloValido();
+   
+      if(dados.length != saida.length){
+         throw new IllegalArgumentException("A quantidade de dados de entrada e saída são diferentes");
+      }
+      if(dados[0].length != (this.entrada.neuronios.length - BIAS)){
+        throw new IllegalArgumentException("Incompatibilidade entre os dados de entrada e os neurônios de entrada da rede");
+      }
+      if(saida[0].length != this.saida.neuronios.length){
+        throw new IllegalArgumentException("Incompatibilidade entre os dados de saída e os neurônios de saída da rede");
+      }
+      if(epochs < 1){
+        throw new IllegalArgumentException("O valor de epochs não pode ser menor que um");
+      }
+   
+      double[] dadosEntrada = new double[dados[0].length];//tamanho de colunas da entrada
+      double[] dadosSaida = new double[saida[0].length];//tamanho de colunas da saída
+      
+      Random random = new Random();
+      int[] indices = new int[dados.length];
+   
+      for(int i = 0; i < epochs; i++){// quantidade de épocas
+         //embaralhar os dados antes de cada época
+         for(int j = 0; j < dados.length; j++){
+            indices[j] = j;
+         }
+         for(int j = 0; j < dados.length; j++){
+            int indiceAleatorio = random.nextInt(dados.length);
+            int temp = indices[j];
+            indices[j] = indices[indiceAleatorio];
+            indices[indiceAleatorio] = temp;
+         }
+
+         //treinar com os dados embaralhados
+         for(int j = 0; j < dados.length; j++){
+            int indiceDados = indices[j];
+            for(int k = 0; k < dados[0].length; k++){// preencher dados de entrada
+               dadosEntrada[k] = dados[indiceDados][k];
+            }
+            for(int k = 0; k < dadosSaida.length; k++){// preencher dados de saída
+               dadosSaida[k] = saida[indiceDados][k];
+            }
+
+            this.backpropagation(dadosEntrada, dadosSaida);
+         }
       }
    }
 
