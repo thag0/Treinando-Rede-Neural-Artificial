@@ -11,7 +11,7 @@ import utilitarios.LeitorCsv;
 
 class Main{
    static final int epocas = 20*1000;
-   static final String caminhoCsv = "./dados/xorCascata.csv";
+   static final String caminhoCsv = "./dados/xnor.csv";
 
    public static void main(String[] args){
       limparConsole();
@@ -21,7 +21,7 @@ class Main{
       ArrayList<String[]> lista = leitor.lerCsv(caminhoCsv);
 
       double[][] dados = conversor.listaParaDadosDouble(lista);//escolher os dados
-      int qEntradas = 3;//quantidade de dados de entrada
+      int qEntradas = 2;//quantidade de dados de entrada
       int qSaidas = 1;//quantidade de dados de saída
 
       // separar para o treino
