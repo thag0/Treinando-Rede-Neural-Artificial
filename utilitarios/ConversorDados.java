@@ -62,7 +62,7 @@ public class ConversorDados{
    /**
     * Converte a lista lida em csv para uma matriz bidimensional com os valores numéricos
     * @param lista lista com os dados 
-    * @return matriz convertida para valores tipo double
+    * @return matriz convertida para valores tipo double.
     */
    public double[][] listaParaDadosDouble(ArrayList<String[]> lista){
       double[][] dados = new double[lista.size()][lista.get(0).length];

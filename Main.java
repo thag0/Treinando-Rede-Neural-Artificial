@@ -6,50 +6,57 @@ import java.util.ArrayList;
 import render.Janela;
 import rna.RedeNeural;
 import utilitarios.ConversorDados;
+import utilitarios.GerenciadorDados;
 import utilitarios.LeitorCsv;
 
 
 class Main{
-   static final int epocas = 20*1000;
-   static final String caminhoCsv = "./dados/xnor.csv";
-
+   static final int epocas = 300;
+   static final String caminhoCsv = "./dados/PhishingData.csv";
+   
+   //auxiliares
+   static LeitorCsv leitor = new LeitorCsv();
+   static ConversorDados conversor = new ConversorDados();
+   static GerenciadorDados gerenciador = new GerenciadorDados();  
+   
    public static void main(String[] args){
       limparConsole();
-
-      LeitorCsv leitor = new LeitorCsv();
-      ConversorDados conversor = new ConversorDados();
+ 
+      //lendo os dados de entrada
       ArrayList<String[]> lista = leitor.lerCsv(caminhoCsv);
 
+      gerenciador.removerLinhaDados(lista, 0);
+      lista = gerenciador.removerColunaDados(lista, 0);
+
       double[][] dados = conversor.listaParaDadosDouble(lista);//escolher os dados
-      int qEntradas = 2;//quantidade de dados de entrada
+      int qEntradas = 9;//quantidade de dados de entrada
       int qSaidas = 1;//quantidade de dados de saída
 
       // separar para o treino
-      double[][] dadosEntrada = new double[dados.length][qEntradas];
-      double[][] dadosSaida = new double[dados.length][qSaidas];
-      dadosEntrada = separarDadosEntrada(dados, dados.length, qEntradas);
-      dadosSaida = separarDadosSaida(dados, dadosEntrada, dadosSaida);
-      
+      double[][] dadosEntrada = gerenciador.separarDadosEntrada(dados, qEntradas);
+      double[][] dadosSaida = gerenciador.separarDadosSaida(dados, qSaidas);
+
       RedeNeural rede = criarRede(qEntradas, qSaidas);
       rede.treinoGradienteEstocastico(dadosEntrada, dadosSaida, epocas);
       double precisao = rede.calcularPrecisao(dadosEntrada, dadosSaida);
       
-      compararSaidaRede(rede, dadosEntrada, dadosSaida, "Rede treinada");
+      // compararSaidaRede(rede, dadosEntrada, dadosSaida, "Rede treinada");
       System.out.println("\nCusto = " + rede.funcaoDeCusto(dadosEntrada, dadosSaida));
       System.out.println("Precisão = " + (formatarFloat(precisao*100)) + "%");
 
-      testarRede(rede, qEntradas);
+      desenharRede(rede);
+      // testarRede(rede, qEntradas);
    }
 
 
    public static RedeNeural criarRede(int qEntradas, int qSaidas){
-      int[] arquitetura = {qEntradas, 4, 4, qSaidas};
+      int[] arquitetura = {qEntradas, 10, 4, qSaidas};
       RedeNeural rede = new RedeNeural(arquitetura);
 
-      rede.configurarAlcancePesos(2);
-      rede.configurarTaxaAprendizagem(0.2);
+      rede.configurarAlcancePesos(1);
+      rede.configurarTaxaAprendizagem(0.05);
       rede.compilar();
-      rede.configurarFuncaoAtivacao(2);
+      rede.configurarFuncaoAtivacao(3);
 
       return rede;
    }
@@ -107,27 +114,6 @@ class Main{
          }else break;
 
       }
-   }
-
-
-   public static double[][] separarDadosEntrada(double[][] dados, int linhas, int colunas){
-      double[][] dadosEntrada = new double[linhas][colunas];
-      for(int i = 0; i < linhas; i++){
-         for(int j = 0; j < colunas; j++){
-            dadosEntrada[i][j] = dados[i][j];
-         }
-      }
-      return dadosEntrada;
-   }
-
-
-   public static double[][] separarDadosSaida(double[][] dados, double[][] dadosEntrada, double[][] dadosSaida){
-      for(int i = 0; i < dadosSaida.length; i++){
-         for(int j = 0; j < dadosSaida[0].length; j++){
-            dadosSaida[i][j] = dados[i][dadosEntrada[0].length + j];
-         }
-      }
-      return dadosSaida;
    }
 
 
