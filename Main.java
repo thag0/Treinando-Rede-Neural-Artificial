@@ -13,9 +13,10 @@ import utilitarios.LeitorCsv;
 
 
 class Main{
-   static final int epocas = 300;
+   static final int epocas = 400;
    // static final String caminhoCsv = "./dados/PhishingData.csv";
    static final String caminhoCsv = "./dados/iris.csv";
+
    
    //auxiliares
    static LeitorCsv leitor = new LeitorCsv();
@@ -33,9 +34,10 @@ class Main{
 
       //gerenciamento dos dados
       gerenciador.removerLinhaDados(lista, 0);
-      gerenciador.editarValorDados(lista, 4, "Iris-setosa", "-1");
-      gerenciador.editarValorDados(lista, 4, "Iris-versicolor", "0");
-      gerenciador.editarValorDados(lista, 4, "Iris-virginica", "1");
+      int ultimaColuna = lista.get(0).length-1;
+      gerenciador.editarValorDados(lista, ultimaColuna, "Iris-setosa", "-1");
+      gerenciador.editarValorDados(lista, ultimaColuna, "Iris-versicolor", "0");
+      gerenciador.editarValorDados(lista, ultimaColuna, "Iris-virginica", "1");
 
       double[][] dados = conversor.listaParaDadosDouble(lista);//escolher os dados
       int qEntradas = 4;//quantidade de dados de entrada / entrada da rede
@@ -54,17 +56,16 @@ class Main{
       System.out.println("Custo = " + rede.funcaoDeCusto(dadosEntrada, dadosSaida));
       System.out.println("Precisão = " + (formatarFloat(precisao*100)) + "%");
 
-
       desenharRede(rede);
    }
 
 
    public static RedeNeural criarRede(int qEntradas, int qSaidas){
-      int[] arquitetura = {qEntradas, 6, 2, qSaidas};
+      int[] arquitetura = {qEntradas, 8, 4, qSaidas};
       RedeNeural rede = new RedeNeural(arquitetura);
 
       rede.configurarAlcancePesos(2);
-      rede.configurarTaxaAprendizagem(0.01);
+      rede.configurarTaxaAprendizagem(0.008);
       rede.compilar();
       rede.configurarFuncaoAtivacao(3);
 
@@ -95,6 +96,7 @@ class Main{
 
    public static void testarRede(RedeNeural rede, int tamanhoEntrada){
       Janela janela = new Janela();
+      janela.painel.configurarRede(rede);
       janela.desenhar(rede);
 
       String entrada = "";
@@ -121,7 +123,10 @@ class Main{
             for(int i = 0; i < rede.saida.neuronios.length; i++) System.out.print("[" + rede.saida.neuronios[i].saida + "]");
             System.out.println();
          
-         }else break;
+         }else{
+            janela.dispose();
+            break;
+         }
 
       }
    }

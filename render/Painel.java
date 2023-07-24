@@ -98,6 +98,12 @@ public class Painel extends JPanel{
       repaint();
    }
 
+
+   public void configurarRede(RedeNeural rede){
+      this.rede = rede;
+      this.yCamadaOculta = new int[rede.ocultas.length];
+   }
+
    
    @Override
    protected void paintComponent(Graphics g){
