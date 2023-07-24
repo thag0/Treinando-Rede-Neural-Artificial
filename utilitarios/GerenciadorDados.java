@@ -11,7 +11,20 @@ public class GerenciadorDados{
 
    }
 
+
+   /**
+    * Remove uma linha inteira do conjunto de dados
+    * @param lista lista com os dados.
+    * @param indice índice da coluna que será removida.
+    * @throws IllegalArgumentException se o indice lista for nula.
+    * @throws IllegalArgumentException se o indice estiver fora de alcance da lista.
+    */
    public void removerLinhaDados(ArrayList<String[]> lista, int indice){
+      if(lista == null) throw new IllegalArgumentException("A lista de dados é nula.");
+      if((indice < 0) || (indice > lista.get(0).length-1)){
+         throw new IllegalArgumentException("Índice fornecido para remoção é inválido");
+      }
+
       lista.remove(indice);
    }
 
@@ -21,8 +34,11 @@ public class GerenciadorDados{
     * @param lista lista com os dados.
     * @param indice índice da coluna que será removida.
     * @return nova lista com a coluna removida.
+    * @throws IllegalArgumentException se o indice lista for nula.
+    * @throws IllegalArgumentException se o indice estiver fora de alcance da lista.
     */
    public ArrayList<String[]> removerColunaDados(ArrayList<String[]> lista, int indice){
+      if(lista == null) throw new IllegalArgumentException("A lista de dados é nula.");
       if((indice < 0) || (indice > lista.get(0).length-1)){
          throw new IllegalArgumentException("Índice fornecido para remoção é inválido");
       }
@@ -54,12 +70,44 @@ public class GerenciadorDados{
 
 
    /**
+    * Substitui todas as linhas dos dados pelo valor fornecido, caso na coluna fornecida tenha o valor buscado.
+    * @param lista lista com os dados lidos.
+    * @param indice índice da coluna alvo para a alteração dos dados.
+    * @param valorBusca valor que será procurado para ser substituído.
+    * @param novoValor novo valor que será colocado.
+    */
+   public void editarValorDados(ArrayList<String[]> lista, int indice, String valorBusca, String novoValor){
+      if(lista == null) throw new IllegalArgumentException("A lista de dados é nula.");
+      if(indice < 0 || (indice > lista.get(0).length-1)){
+         throw new IllegalArgumentException("Valor do índice está fora de alcance dos índices da lista.");
+      }
+      if(valorBusca == null) throw new IllegalArgumentException("O valor de busca é nulo");
+      if(novoValor == null) throw new IllegalArgumentException("O novo valor para substituição é nulo");
+
+      for(String[] linha : lista){
+         if(linha[indice].contains(valorBusca)){
+            linha[indice] = novoValor;
+         }
+      }
+   }
+
+
+   /**
     * Separa os dados que serão usados como entrada de acordo com os valores fornecidos.
     * @param dados conjunto de dados completo.
     * @param colunas quantidade de colunas que serão preservadas, começando pela primeira até o valor fornecido.
     * @return nova matriz de dados apenas com as colunas desejadas.
+    * @throws IllegalArgumentException Se o número de colunas for maior que o número de colunas disponíveis nos dados.
+    * @throws IllegalArgumentException Se o número de colunas for menor que um.
     */
    public double[][] separarDadosEntrada(double[][] dados, int colunas){
+      if (colunas > dados[0].length) {
+         throw new IllegalArgumentException("O número de colunas fornecido é maior do que o número de colunas disponíveis nos dados.");
+      }
+      if(colunas < 1){
+         throw new IllegalArgumentException("A quantidade de colunas extraídas não pode ser menor que um");
+      }
+
       double[][] dadosEntrada = new double[dados.length][colunas];
       for(int i = 0; i < dadosEntrada.length; i++){
          for(int j = 0; j < colunas; j++){
@@ -71,27 +119,37 @@ public class GerenciadorDados{
 
 
    /**
-    * 
-    * @param dados
-    * @param dadosEntrada
-    * @param dadosSaida
-    * @return
+    * Extrai os dados de saída do conjunto de dados e devolve um novo conjunto de dados contendo apenas as 
+    * colunas de dados de saída especificadas.
+    * @param dados O conjunto de dados com as informações completas.
+    * @param colunas O número de colunas de dados de saída que serão extraídas.
+    * @return novo conjunto de dados com apenas as colunas de dados de saída.
+    * @throws IllegalArgumentException Se o número de colunas for maior que o número de colunas disponíveis nos dados.
+    * @throws IllegalArgumentException Se o número de colunas for menor que um.
     */
    public double[][] separarDadosSaida(double[][] dados, int colunas){
-      double[][] dadosSaida = new double[dados.length][colunas];
-      
-      int indiceInicial = (dados[0].length) - colunas;
+      if (colunas > dados[0].length) {
+         throw new IllegalArgumentException("O número de colunas fornecido é maior do que o número de colunas disponíveis nos dados.");
+      }
+      if(colunas < 1){
+         throw new IllegalArgumentException("A quantidade de colunas extraídas não pode ser menor que um");
+      }
 
-      for(int i = 0; i < dados.length; i++){// percorrer linhas dos dados
-         int contador1 = indiceInicial;// contador coluna dados
-         int contador2 = 0;// contador coluna saída
-         
-         while(contador2 < (dadosSaida[0].length)){
+      double[][] dadosSaida = new double[dados.length][colunas];
+      int indiceInicial = dados[0].length - colunas;
+
+      for (int i = 0; i < dados.length; i++) { // percorrer linhas dos dados
+         int contador1 = indiceInicial; // contador coluna dados
+         int contador2 = 0; // contador coluna saída
+
+         // copiando os valores 
+         while (contador2 < colunas) {
             dadosSaida[i][contador2] = dados[i][contador1];
             contador1++;
             contador2++;
          }
       }
+
       return dadosSaida;
    }
 }

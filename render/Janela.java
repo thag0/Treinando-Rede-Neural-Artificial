@@ -14,7 +14,7 @@ public class Janela extends JFrame{
 
    public Janela(){
       try{
-         BufferedImage icone = ImageIO.read(new File("./imagens/inteligencia-artificial.png"));
+         BufferedImage icone = ImageIO.read(new File("./render/rede-neural.png"));
          setIconImage(icone);
       }catch(Exception e){}
 

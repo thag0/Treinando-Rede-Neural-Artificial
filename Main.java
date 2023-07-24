@@ -1,10 +1,12 @@
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import render.Janela;
 import rna.RedeNeural;
+
 import utilitarios.ConversorDados;
 import utilitarios.GerenciadorDados;
 import utilitarios.LeitorCsv;
@@ -12,12 +14,16 @@ import utilitarios.LeitorCsv;
 
 class Main{
    static final int epocas = 300;
-   static final String caminhoCsv = "./dados/PhishingData.csv";
+   // static final String caminhoCsv = "./dados/PhishingData.csv";
+   static final String caminhoCsv = "./dados/iris.csv";
    
    //auxiliares
    static LeitorCsv leitor = new LeitorCsv();
    static ConversorDados conversor = new ConversorDados();
-   static GerenciadorDados gerenciador = new GerenciadorDados();  
+   static GerenciadorDados gerenciador = new GerenciadorDados();
+
+   // Sempre lembrar de quando mudar o dataset, também mudar a quantidade de dados de entrada e saída.
+
    
    public static void main(String[] args){
       limparConsole();
@@ -25,12 +31,15 @@ class Main{
       //lendo os dados de entrada
       ArrayList<String[]> lista = leitor.lerCsv(caminhoCsv);
 
+      //gerenciamento dos dados
       gerenciador.removerLinhaDados(lista, 0);
-      lista = gerenciador.removerColunaDados(lista, 0);
+      gerenciador.editarValorDados(lista, 4, "Iris-setosa", "-1");
+      gerenciador.editarValorDados(lista, 4, "Iris-versicolor", "0");
+      gerenciador.editarValorDados(lista, 4, "Iris-virginica", "1");
 
       double[][] dados = conversor.listaParaDadosDouble(lista);//escolher os dados
-      int qEntradas = 9;//quantidade de dados de entrada
-      int qSaidas = 1;//quantidade de dados de saída
+      int qEntradas = 4;//quantidade de dados de entrada / entrada da rede
+      int qSaidas = 1;//quantidade de dados de saída / saída da rede
 
       // separar para o treino
       double[][] dadosEntrada = gerenciador.separarDadosEntrada(dados, qEntradas);
@@ -41,20 +50,21 @@ class Main{
       double precisao = rede.calcularPrecisao(dadosEntrada, dadosSaida);
       
       // compararSaidaRede(rede, dadosEntrada, dadosSaida, "Rede treinada");
-      System.out.println("\nCusto = " + rede.funcaoDeCusto(dadosEntrada, dadosSaida));
+      System.out.println(rede.obterInformacoes());
+      System.out.println("Custo = " + rede.funcaoDeCusto(dadosEntrada, dadosSaida));
       System.out.println("Precisão = " + (formatarFloat(precisao*100)) + "%");
 
+
       desenharRede(rede);
-      // testarRede(rede, qEntradas);
    }
 
 
    public static RedeNeural criarRede(int qEntradas, int qSaidas){
-      int[] arquitetura = {qEntradas, 10, 4, qSaidas};
+      int[] arquitetura = {qEntradas, 6, 2, qSaidas};
       RedeNeural rede = new RedeNeural(arquitetura);
 
-      rede.configurarAlcancePesos(1);
-      rede.configurarTaxaAprendizagem(0.05);
+      rede.configurarAlcancePesos(2);
+      rede.configurarTaxaAprendizagem(0.01);
       rede.compilar();
       rede.configurarFuncaoAtivacao(3);
 
@@ -120,6 +130,7 @@ class Main{
    public static void compararSaidaRede(RedeNeural rede, double[][] dadosEntrada, double[][] dadosSaida, String texto){
       int nEntrada = rede.entrada.neuronios.length;
       nEntrada -= (rede.entrada.temBias) ? 1 : 0; 
+
       double[] entrada_rede = new double[nEntrada];
       double[] saida_rede = new double[rede.saida.neuronios.length];
 
@@ -157,18 +168,18 @@ class Main{
 
    public static void limparConsole(){
       try{
-          String nomeSistema = System.getProperty("os.name");
+         String nomeSistema = System.getProperty("os.name");
 
-          if(nomeSistema.contains("Windows")){
-          new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
-              return;
-          }else{
-              for (int i = 0; i < 100; i++){
-                  System.out.println();
-              }
-          }
+         if(nomeSistema.contains("Windows")){
+         new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+            return;
+         }else{
+            for (int i = 0; i < 100; i++){
+               System.out.println();
+            }
+         }
       }catch(Exception e){
-          return;
+         return;
       }
    }
 
@@ -221,15 +232,13 @@ class Main{
       System.out.println("Custo antes com Diferenças Finitas: " + custo1Df + "\nCusto depois com Diferenças Finitas: " + custo2Df);
       System.out.println("\nCusto antes com Backpropagation: " + custo1Bp + "\nCusto depois com Backpropagation: " + custo2Bp);
 
-
-      compararSaidaRede(redeDf, dadosEntrada, dadosSaida, "Rede treinada com Diferenças Finitas");
-      compararSaidaRede(redeBp, dadosEntrada, dadosSaida, "Rede treinada com Backpropagation");
+      // compararSaidaRede(redeDf, dadosEntrada, dadosSaida, "Rede treinada com Diferenças Finitas");
+      // compararSaidaRede(redeBp, dadosEntrada, dadosSaida, "Rede treinada com Backpropagation");
 
       double precisaoDf = redeDf.calcularPrecisao(dadosEntrada, dadosSaida)*100;
       double precisaoBp = redeBp.calcularPrecisao(dadosEntrada, dadosSaida)*100;
 
-      System.out.println();
-      System.out.println("Precisão com Diferenças Finitas = " + formatarFloat(precisaoDf) + "%");
+      System.out.println("\nPrecisão com Diferenças Finitas = " + formatarFloat(precisaoDf) + "%");
       System.out.println("Precisão com Backpropagation = " + formatarFloat(precisaoBp) + "%");
 
       System.out.println("\nTempo treinando com Diferenças Finitas = " + tempoFinalDf + " s");
