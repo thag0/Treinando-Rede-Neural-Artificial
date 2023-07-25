@@ -14,9 +14,9 @@ import utilitarios.LeitorCsv;
 
 class Main{
    static final int epocas = 400;
-   // static final String caminhoCsv = "./dados/PhishingData.csv";
+   static final String caminhoCsv = "./dados/PhishingData.csv";
    // static final String caminhoCsv = "./dados/iris.csv";
-   static final String caminhoCsv = "./dados/breast-cancer-wisconsin.csv";
+   // static final String caminhoCsv = "./dados/breast-cancer-wisconsin.csv";
 
    
    //auxiliares
@@ -32,14 +32,8 @@ class Main{
  
       //lendo os dados de entrada
       ArrayList<String[]> lista = leitor.lerCsv(caminhoCsv);
-      
-      //gerenciamento dos dados
-      gerenciador.removerLinhaDados(lista, 0);
-      lista = gerenciador.removerColunaDados(lista, 0);
-      gerenciador.removerNaoNumericos(lista);
-      int ultimaColuna = lista.get(0).length-1;
-      gerenciador.editarValorDados(lista, ultimaColuna, "2", "-1");
-      gerenciador.editarValorDados(lista, ultimaColuna, "4", "1");
+
+      lista = tratarDados(lista);
 
       double[][] dados = conversor.listaParaDadosDouble(lista);//escolher os dados
       int qEntradas = 9;//quantidade de dados de entrada / entrada da rede
@@ -53,7 +47,6 @@ class Main{
       rede.treinoGradienteEstocastico(dadosEntrada, dadosSaida, epocas);
       double precisao = rede.calcularPrecisao(dadosEntrada, dadosSaida);
       
-      // compararSaidaRede(rede, dadosEntrada, dadosSaida, "Rede treinada");
       System.out.println(rede.obterInformacoes());
       System.out.println("Custo = " + rede.funcaoDeCusto(dadosEntrada, dadosSaida));
       System.out.println("Precisão = " + (formatarFloat(precisao*100)) + "%");
@@ -63,7 +56,7 @@ class Main{
 
 
    public static RedeNeural criarRede(int qEntradas, int qSaidas){
-      int[] arquitetura = {qEntradas, 8, 8, qSaidas};
+      int[] arquitetura = {qEntradas, 7, 6, qSaidas};
       RedeNeural rede = new RedeNeural(arquitetura);
 
       rede.configurarAlcancePesos(1);
@@ -72,6 +65,14 @@ class Main{
       rede.configurarFuncaoAtivacao(3);
 
       return rede;
+   }
+
+
+   public static ArrayList<String[]> tratarDados(ArrayList<String[]> lista){
+      lista = gerenciador.removerColunaDados(lista, 0);
+      gerenciador.removerLinhaDados(lista, 0);
+
+      return lista;
    }
 
 

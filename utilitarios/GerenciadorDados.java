@@ -2,11 +2,12 @@ package utilitarios;
 
 import java.util.ArrayList;
 
+/**
+ * Responsável pelo manuseio do conjunto de dados
+*/
 public class GerenciadorDados{
 
-   /**
-    * Responsável pelo manuseio do conjunto de dados
-    */
+   
    public GerenciadorDados(){
 
    }
@@ -75,6 +76,10 @@ public class GerenciadorDados{
     * @param indice índice da coluna alvo para a alteração dos dados.
     * @param valorBusca valor que será procurado para ser substituído.
     * @param novoValor novo valor que será colocado.
+    * @throws IllegalArgumentException se a lista estiver nula.
+    * @throws IllegalArgumentException se o valor do índice fornecido estiver fora de alcance.
+    * @throws IllegalArgumentException se o valor de busca for nulo.
+    * @throws IllegalArgumentException se o novo valor de substituição for nulo;
     */
    public void editarValorDados(ArrayList<String[]> lista, int indice, String valorBusca, String novoValor){
       if(lista == null) throw new IllegalArgumentException("A lista de dados é nula.");
@@ -93,8 +98,13 @@ public class GerenciadorDados{
 
 
    /**
-    * 
-    * @param lista
+    * Remove a linha inteira dos dados caso exista algum valor nas colunas que não consiga ser convertido para
+    * um valor numérico.
+    * <p>
+    *    É importante verificar e ter certeza se os dados não possuem nenhuma coluna com caracteres, caso isso seja verdade
+    *    o método irá remover todas as colunas como consequência.
+    * </p>
+    * @param lista lista com os dados;
     */
    public void removerNaoNumericos(ArrayList<String[]> lista){
    int indiceInicial = 0;
@@ -104,7 +114,10 @@ public class GerenciadorDados{
             removerLinha = false;
 
             for(int j = 0; j < lista.get(indiceInicial).length; j++){
-               if (!valorNumerico(lista.get(indiceInicial)[j])){
+               if((valorInt(lista.get(indiceInicial)[j]) == false) || 
+                  (valorFloat(lista.get(indiceInicial)[j]) == false) || 
+                  (valorDouble(lista.get(indiceInicial)[j]) == false)
+               ){
                   removerLinha = true;
                   break;
                }
@@ -114,10 +127,47 @@ public class GerenciadorDados{
          else indiceInicial++;
             
       }
-   }  
+   }
 
 
-   private boolean valorNumerico(String valor){
+   /**
+    * Tenta converter o valor para um numérico do tipo double
+    * @param valor valor que será testado.
+    * @return resultado da verificação, verdadeiro se foi convertido ou false se não
+    */
+   private boolean valorInt(String valor){
+      try{
+         Integer.parseInt(valor);
+         return true;
+      
+      }catch(Exception e){
+         return false;
+      }
+   }
+
+
+   /**
+    * Tenta converter o valor para um numérico do tipo float.
+    * @param valor valor que será testado.
+    * @return resultado da verificação, verdadeiro se foi convertido ou false se não
+    */
+   private boolean valorFloat(String valor){
+      try{
+         Float.parseFloat(valor);
+         return true;
+      
+      }catch(Exception e){
+         return false;
+      }
+   }
+
+
+   /**
+    * Tenta converter o valor para um numérico do tipo double
+    * @param valor valor que será testado.
+    * @return resultado da verificação, verdadeiro se foi convertido ou false se não
+    */
+   private boolean valorDouble(String valor){
       try{
          Double.parseDouble(valor);
          return true;
@@ -129,11 +179,17 @@ public class GerenciadorDados{
 
 
    /**
-    * 
-    * @param lista
-    * @return
+    * Descreve as dimensões da lista, tanto em questão de quantidade de linhas qunanto quantidade de colunas.
+    * @param lista lista com os dados
+    * @return array contendo as informações das dimensões da lista, o primeiro elemento corresponde a quantidade de 
+    * linhas e o segundo elemento corresponde a quantidade de colunas.
+    * @throws IllegalArgumentException se a lista estiver nula.
+v se a lista estiver vazia.
     */
    public int[] obterShapeLista(ArrayList<String[]> lista){
+      if(lista == null) throw new IllegalArgumentException("A lista fornecida é nula.");
+      if(lista.size() == 0) throw new IllegalArgumentException("A lista fornecida está vazia.");
+
       int[] shape = new int[2];
       shape[0] = lista.size();
       shape[1] = lista.get(0).length;
@@ -177,7 +233,7 @@ public class GerenciadorDados{
     * @throws IllegalArgumentException Se o número de colunas for menor que um.
     */
    public double[][] separarDadosSaida(double[][] dados, int colunas){
-      if (colunas > dados[0].length) {
+      if(colunas > dados[0].length){
          throw new IllegalArgumentException("O número de colunas fornecido é maior do que o número de colunas disponíveis nos dados.");
       }
       if(colunas < 1){
