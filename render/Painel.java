@@ -33,8 +33,8 @@ public class Painel extends JPanel{
    //desenho
    int contador = 0;
    int contador2 = 0;
-   int x0 = 50;//posição x base de desenho da rede
-   int y0 = 40;//posição y base de desenho da rede
+   int x0 = 0;//posição x base de desenho da rede
+   int y0 = 0;//posição y base de desenho da rede
    int x = 0;
    int y = 0;
    int yCamadaEntrada = 0;
@@ -42,7 +42,7 @@ public class Painel extends JPanel{
    int yCamadaSaida = 0;
    int larguraDesenho = 26;
    int alturaDesenho = larguraDesenho;
-   int espacoVerticalEntreNeuronio = 8;
+   int espacoVerticalEntreNeuronio = 7;
    int espacoHorizontalEntreCamadas = (int)(larguraDesenho * 2.8);
    String texto = "";
 
@@ -91,10 +91,21 @@ public class Painel extends JPanel{
       this.rede = rede;
       yCamadaOculta = new int[rede.ocultas.length];
 
+      //isso aqui com certeza pode ser melhorado
+
       int quantidadeCamadas = 2 + rede.ocultas.length;
-      int tamanhoRede = (quantidadeCamadas*(larguraDesenho));//quantidade de neuronios
-      tamanhoRede += (espacoHorizontalEntreCamadas*(quantidadeCamadas-1));//quantidade de espaços entre as camadas
-      x0 = 10 + (this.largura/2) - (tamanhoRede/2);
+      int tamanhoRede = (quantidadeCamadas * larguraDesenho) + (2*larguraDesenho/3);//quantidade de neuronios
+      tamanhoRede += (espacoHorizontalEntreCamadas * (quantidadeCamadas-2));//quantidade de espaços entre as camadas
+      x0 = (this.largura/2) - (tamanhoRede/2);
+
+      //centralizar o desenho dos neuronios com base na altura da tela, no tamanho dos neuronios das camadas desenhadas
+      //incluir o espaçamento estre os neurinios no calculo
+      yCamadaEntrada = y0 + (altura/2) - (alturaDesenho * (rede.entrada.neuronios.length)) + (espacoVerticalEntreNeuronio * (rede.entrada.neuronios.length+2));
+      for(int i = 0; i < rede.ocultas.length; i++){
+         yCamadaOculta[i] = y0 + (altura/2) - (alturaDesenho * (rede.ocultas[i].neuronios.length)) + (espacoVerticalEntreNeuronio * (rede.ocultas[i].neuronios.length+2));
+      }
+      yCamadaSaida = y0 + (altura/2) - (alturaDesenho * (rede.saida.neuronios.length)) + (espacoVerticalEntreNeuronio * (rede.saida.neuronios.length+1));
+
       repaint();
    }
 
@@ -109,14 +120,6 @@ public class Painel extends JPanel{
    protected void paintComponent(Graphics g){
       super.paintComponent(g);
       g2 = (Graphics2D) g;
-
-      //centralizar o desenho dos neuronios com base na altura da tela, no tamanho dos neuronios das camadas desenhadas
-      //incluir o espaçamento estre os neurinios no calculo
-      yCamadaEntrada = y0 + (altura/2) - (larguraDesenho * (rede.entrada.neuronios.length+1)) + (espacoVerticalEntreNeuronio * (rede.entrada.neuronios.length-1));
-      for(int i = 0; i < rede.ocultas.length; i++){
-         yCamadaOculta[i] = y0 + (altura/2) - (larguraDesenho * (rede.ocultas[i].neuronios.length+1)) + (espacoVerticalEntreNeuronio * (rede.ocultas[i].neuronios.length-1));
-      }
-      yCamadaSaida = y0 + (altura/2) - (larguraDesenho * (rede.saida.neuronios.length+1)) + (espacoVerticalEntreNeuronio * (rede.saida.neuronios.length-1));
 
       g2.setFont(getFont().deriveFont(14.f));
 

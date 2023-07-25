@@ -64,7 +64,7 @@ public class GerenciadorDados{
 
          novaLista.add(novaLinha);
       }
-
+      
       return novaLista;
    }
 
@@ -89,6 +89,55 @@ public class GerenciadorDados{
             linha[indice] = novoValor;
          }
       }
+   }
+
+
+   /**
+    * 
+    * @param lista
+    */
+   public void removerNaoNumericos(ArrayList<String[]> lista){
+   int indiceInicial = 0;
+   boolean removerLinha = false;
+   
+      while (indiceInicial < lista.size()){
+            removerLinha = false;
+
+            for(int j = 0; j < lista.get(indiceInicial).length; j++){
+               if (!valorNumerico(lista.get(indiceInicial)[j])){
+                  removerLinha = true;
+                  break;
+               }
+            }
+
+         if(removerLinha) lista.remove(indiceInicial);
+         else indiceInicial++;
+            
+      }
+   }  
+
+
+   private boolean valorNumerico(String valor){
+      try{
+         Double.parseDouble(valor);
+         return true;
+      
+      }catch(Exception e){
+         return false;
+      }
+   }
+
+
+   /**
+    * 
+    * @param lista
+    * @return
+    */
+   public int[] obterShapeLista(ArrayList<String[]> lista){
+      int[] shape = new int[2];
+      shape[0] = lista.size();
+      shape[1] = lista.get(0).length;
+      return shape;
    }
 
 

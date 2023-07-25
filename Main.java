@@ -15,7 +15,8 @@ import utilitarios.LeitorCsv;
 class Main{
    static final int epocas = 400;
    // static final String caminhoCsv = "./dados/PhishingData.csv";
-   static final String caminhoCsv = "./dados/iris.csv";
+   // static final String caminhoCsv = "./dados/iris.csv";
+   static final String caminhoCsv = "./dados/breast-cancer-wisconsin.csv";
 
    
    //auxiliares
@@ -31,16 +32,17 @@ class Main{
  
       //lendo os dados de entrada
       ArrayList<String[]> lista = leitor.lerCsv(caminhoCsv);
-
+      
       //gerenciamento dos dados
       gerenciador.removerLinhaDados(lista, 0);
+      lista = gerenciador.removerColunaDados(lista, 0);
+      gerenciador.removerNaoNumericos(lista);
       int ultimaColuna = lista.get(0).length-1;
-      gerenciador.editarValorDados(lista, ultimaColuna, "Iris-setosa", "-1");
-      gerenciador.editarValorDados(lista, ultimaColuna, "Iris-versicolor", "0");
-      gerenciador.editarValorDados(lista, ultimaColuna, "Iris-virginica", "1");
+      gerenciador.editarValorDados(lista, ultimaColuna, "2", "-1");
+      gerenciador.editarValorDados(lista, ultimaColuna, "4", "1");
 
       double[][] dados = conversor.listaParaDadosDouble(lista);//escolher os dados
-      int qEntradas = 4;//quantidade de dados de entrada / entrada da rede
+      int qEntradas = 9;//quantidade de dados de entrada / entrada da rede
       int qSaidas = 1;//quantidade de dados de saída / saída da rede
 
       // separar para o treino
@@ -61,11 +63,11 @@ class Main{
 
 
    public static RedeNeural criarRede(int qEntradas, int qSaidas){
-      int[] arquitetura = {qEntradas, 8, 4, qSaidas};
+      int[] arquitetura = {qEntradas, 8, 8, qSaidas};
       RedeNeural rede = new RedeNeural(arquitetura);
 
-      rede.configurarAlcancePesos(2);
-      rede.configurarTaxaAprendizagem(0.008);
+      rede.configurarAlcancePesos(1);
+      rede.configurarTaxaAprendizagem(0.005);
       rede.compilar();
       rede.configurarFuncaoAtivacao(3);
 
