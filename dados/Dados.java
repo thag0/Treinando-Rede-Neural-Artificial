@@ -1,6 +1,7 @@
 package dados;
 /**
  * Dados gerados por mim para usar no treino da rede
+ * Obsoleto
  */
 public class Dados{
 

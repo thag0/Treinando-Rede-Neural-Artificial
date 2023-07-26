@@ -1,3 +1,4 @@
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
@@ -9,20 +10,16 @@ import rna.RedeNeural;
 
 import utilitarios.ConversorDados;
 import utilitarios.GerenciadorDados;
-import utilitarios.LeitorCsv;
+import utilitarios.GerenciadorImagem;
 
 
 class Main{
-   static final int epocas = 400;
-   static final String caminhoCsv = "./dados/PhishingData.csv";
-   // static final String caminhoCsv = "./dados/iris.csv";
-   // static final String caminhoCsv = "./dados/breast-cancer-wisconsin.csv";
-
-   
    //auxiliares
-   static LeitorCsv leitor = new LeitorCsv();
    static ConversorDados conversor = new ConversorDados();
    static GerenciadorDados gerenciador = new GerenciadorDados();
+   static GerenciadorImagem gi = new GerenciadorImagem();
+   
+   static final int epocas = 15*1000;
 
    // Sempre lembrar de quando mudar o dataset, também mudar a quantidade de dados de entrada e saída.
 
@@ -31,12 +28,9 @@ class Main{
       limparConsole();
  
       //lendo os dados de entrada
-      ArrayList<String[]> lista = leitor.lerCsv(caminhoCsv);
-
-      lista = tratarDados(lista);
-
-      double[][] dados = conversor.listaParaDadosDouble(lista);//escolher os dados
-      int qEntradas = 9;//quantidade de dados de entrada / entrada da rede
+      BufferedImage imagemTeste = gi.lerImagem("/dados/mnist/4.png");
+      double[][] dados = gi.imagemParaDadosTreinoEscalaCinza(gi, imagemTeste);//escolher os dados
+      int qEntradas = 2;//quantidade de dados de entrada / entrada da rede
       int qSaidas = 1;//quantidade de dados de saída / saída da rede
 
       // separar para o treino
@@ -51,18 +45,20 @@ class Main{
       System.out.println("Custo = " + rede.funcaoDeCusto(dadosEntrada, dadosSaida));
       System.out.println("Precisão = " + (formatarFloat(precisao*100)) + "%");
 
+      gi.ampliarImagem(imagemTeste, rede, 30);// precisa treinar bastante
+
       desenharRede(rede);
    }
 
 
    public static RedeNeural criarRede(int qEntradas, int qSaidas){
-      int[] arquitetura = {qEntradas, 7, 6, qSaidas};
+      int[] arquitetura = {qEntradas, 9, 9, qSaidas};
       RedeNeural rede = new RedeNeural(arquitetura);
 
-      rede.configurarAlcancePesos(1);
-      rede.configurarTaxaAprendizagem(0.005);
+      rede.configurarAlcancePesos(2);
+      rede.configurarTaxaAprendizagem(0.4);
       rede.compilar();
-      rede.configurarFuncaoAtivacao(3);
+      rede.configurarFuncaoAtivacao(2);
 
       return rede;
    }
@@ -195,7 +191,7 @@ class Main{
    public static String formatarFloat(double valor){
       String valorFormatado = "";
 
-      DecimalFormat df = new DecimalFormat("#.######");
+      DecimalFormat df = new DecimalFormat("#.####");
       valorFormatado = df.format(valor);
 
       return valorFormatado;
@@ -303,4 +299,5 @@ class Main{
       System.out.println("\nTempo treinando com Backpropagation = " + tempofinalBp + " s");
       System.out.println("Tempo treinando com Gradiente Estocástico = " + tempoFinalGe + " s");
    }
+
 }
