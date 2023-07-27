@@ -20,7 +20,7 @@ class Main{
    static GerenciadorDados gerenciador = new GerenciadorDados();
    static GerenciadorImagem gi = new GerenciadorImagem();
    
-   static final int epocas = 20*1000;
+   static final int epocas = 50*1000;
 
    // Sempre lembrar de quando mudar o dataset, também mudar a quantidade de dados de entrada e saída.
 
@@ -31,10 +31,11 @@ class Main{
       long horas,  minutos, segundos;
 
       //lendo os dados de entrada
-      BufferedImage imagemTeste = gi.lerImagem("/dados/mnist/6.png");
-      double[][] dados = gi.imagemParaDadosTreinoEscalaCinza(gi, imagemTeste);//escolher os dados
+      // BufferedImage imagem = gi.lerImagem("/dados/imagens/arco-iris.png");
+      BufferedImage imagem = gi.lerImagem("/dados/imagens/arco-iris.png");
+      double[][] dados = gi.imagemParaDadosTreinoRGB(imagem);//escolher os dados
       int qEntradas = 2;//quantidade de dados de entrada / entrada da rede
-      int qSaidas = 1;//quantidade de dados de saída / saída da rede
+      int qSaidas = 3;//quantidade de dados de saída / saída da rede
 
       // separar para o treino
       double[][] dadosEntrada = gerenciador.separarDadosEntrada(dados, qEntradas);
@@ -58,14 +59,14 @@ class Main{
       System.out.println("Precisão = " + (formatarFloat(precisao*100)) + "%");
       System.out.println("Tempo de treinamento: " + horas + "h " + minutos + "m " + segundos + "s");
 
-      gi.ampliarImagem(imagemTeste, rede, 20f, "./Imagem-ampliada");// precisa treinar bastante
+      gi.ampliarImagemRGB(imagem, rede, 50f, "./Imagem-ampliada");// precisa treinar bastante
 
-      // desenharRede(rede);
+      desenharRede(rede);
    }
 
 
    public static RedeNeural criarRede(int qEntradas, int qSaidas){
-      int[] arquitetura = {qEntradas, 9, 9, qSaidas};
+      int[] arquitetura = {qEntradas, 10, 10, qSaidas};
       RedeNeural rede = new RedeNeural(arquitetura);
 
       rede.configurarAlcancePesos(1);

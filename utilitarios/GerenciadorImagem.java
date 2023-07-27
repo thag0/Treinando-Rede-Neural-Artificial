@@ -209,28 +209,89 @@ public class GerenciadorImagem{
    }
 
 
-   public double[][] imagemParaDadosTreinoEscalaCinza(GerenciadorImagem gi, BufferedImage imagem){
+   /**
+    * Converte a imagem que deverá estar na escala de cinza em uma matriz de dados para treino.
+    * A matriz terá três colunas, correspondente a posição x normalizada, posição y normalizada e valor da escala de cinza normalizada.
+    * <p>
+    *    Os valores são normalizados numa escala entre 0 e 1, onde quanto mais próximo de 1 o valor for, mais próximo do tamanho original ele
+    *    está.
+    * </p>
+    * <p> 
+    *    Exemplificando que temos uma imagem 10x10 e o valor x  do pixel é igual a 5, o valor normalizado será de 0.5 ou 50% do tamanho 
+    *    normalizado na direção horizontal.
+    * </p>
+    * A organização da matriz seguirá a seguinte estrutura, tendo x, y e escala de cinza normalizados:
+    * <p>
+    *    [x pixel][y pixel][escala de cinza]
+    * </p>
+    * @param imagem imagem iriginal em escala de cinza.
+    * @return matriz da estrutura de dados da imagem, com os valores normalizados da posição x e y do pixel e escala de cinza.
+    * @throws IllegalArgumentException se a imagem for nula.   
+    */
+   public double[][] imagemParaDadosTreinoEscalaCinza(BufferedImage imagem){
+      if(imagem == null) throw new IllegalArgumentException("A imagem fornecida é nula.");
+
       int larguraImagem = imagem.getWidth();
       int alturaImagem = imagem.getHeight();
 
       double[][] dadosImagem = new double[larguraImagem * alturaImagem][3];
 
       int contador = 0;
-
-      for (int y = 0; y < alturaImagem; y++) {
-         for (int x = 0; x < larguraImagem; x++) {
-            int r = gi.getR(imagem, x, y);
-            int g = gi.getG(imagem, x, y);
-            int b = gi.getB(imagem, x, y);
+      for(int y = 0; y < alturaImagem; y++){
+         for(int x = 0; x < larguraImagem; x++){
+            int r = this.getR(imagem, x, y);
+            int g = this.getG(imagem, x, y);
+            int b = this.getB(imagem, x, y);
 
             double escalaCinza = (r + g + b) / 3.0;
 
-            // Preencha os dados na matriz
+            // preenchendo os dados na matriz
             double xNormalizado = (double) x / (larguraImagem-1);
             double yNormalizado = (double) y / (alturaImagem-1);
             dadosImagem[contador][0] =  xNormalizado;// x
             dadosImagem[contador][1] =  yNormalizado;// y
             dadosImagem[contador][2] = escalaCinza/255;// escala de cinza
+
+            contador++;
+         }
+      }
+
+      return dadosImagem;
+   }
+
+
+   /**
+    * 
+    * @param imagem
+    * @return
+    */
+   public double[][] imagemParaDadosTreinoRGB(BufferedImage imagem){
+      int larguraImagem = imagem.getWidth();
+      int alturaImagem = imagem.getHeight();
+
+      double[][] dadosImagem = new double[larguraImagem * alturaImagem][5];
+
+      int contador = 0;
+
+      for (int y = 0; y < alturaImagem; y++) {
+         for (int x = 0; x < larguraImagem; x++) {
+            int r = this.getR(imagem, x, y);
+            int g = this.getG(imagem, x, y);
+            int b = this.getB(imagem, x, y);
+
+            // Preencha os dados na matriz
+            double xNormalizado = (double) x / (larguraImagem-1);
+            double yNormalizado = (double) y / (alturaImagem-1);
+            
+            double rNormalizado = (double) r / 255;
+            double gNormalizado = (double) g / 255;
+            double bNormalizado = (double) b / 255;
+
+            dadosImagem[contador][0] =  xNormalizado;// x
+            dadosImagem[contador][1] =  yNormalizado;// y
+            dadosImagem[contador][2] = rNormalizado;// vermelho
+            dadosImagem[contador][3] = gNormalizado;// vermelho
+            dadosImagem[contador][4] = bNormalizado;// vermelho
 
             contador++;
          }
@@ -255,7 +316,7 @@ public class GerenciadorImagem{
     * @throws IllegalArgumentException se a imagem for nula.
     * @throws IllegalArgumentException se o valor de escala for menor que 1.
     */
-   public void ampliarImagem(BufferedImage imagem, RedeNeural rede, float escala, String caminho){
+   public void ampliarImagemEscalaCinza(BufferedImage imagem, RedeNeural rede, float escala, String caminho){
       if(imagem == null) throw new IllegalArgumentException("A imagem fornecida é nula.");
       if(escala < 0) throw new IllegalArgumentException("O valor de escala não pode ser menor que 1.");
 
@@ -281,6 +342,49 @@ public class GerenciadorImagem{
 
             saidaRede[0] = rede.saida.neuronios[0].saida * 255;
            this.configurarCor(imagemAmpliada, x, y, (int)saidaRede[0], (int)saidaRede[0], (int)saidaRede[0]);
+         }
+      }
+
+      this.exportarImagemPng(caminho, imagemAmpliada);
+   }
+
+
+   /**
+    * @param imagem imagem que será ampliada.
+    * @param rede rede neural treinada para lidar com a imagem.
+    * @param escala escala de ampliação da nova imagem.
+    * @param caminho caminho onde o arquivo será salvo, deve conter o nome do arquivo que será gerado e não deve conter a extensão
+    * @throws IllegalArgumentException se a imagem for nula.
+    * @throws IllegalArgumentException se o valor de escala for menor que 1.
+    */
+   public void ampliarImagemRGB(BufferedImage imagem, RedeNeural rede, float escala, String caminho){
+      if(imagem == null) throw new IllegalArgumentException("A imagem fornecida é nula.");
+      if(escala < 0) throw new IllegalArgumentException("O valor de escala não pode ser menor que 1.");
+
+      int nEntrada = rede.obterCamadaEntrada().neuronios.length;
+      nEntrada -= (rede.obterCamadaEntrada().temBias) ? 1 : 0;
+
+      double[] entradaRede = new double[nEntrada];
+      double[] saidaRede = new double[rede.saida.neuronios.length];
+      int larguraFinal = (int)(imagem.getWidth()*escala);
+      int alturaFinal = (int)(imagem.getHeight()*escala);
+      ArrayList<ArrayList<Integer[]>> imagemAmpliada =this.gerarEstruturaImagem(larguraFinal, alturaFinal);
+      
+      int alturaImagem = imagemAmpliada.size();
+      int larguraImagem = imagemAmpliada.get(0).size();
+
+      for(int y = 0; y < alturaImagem; y++){
+         for(int x = 0; x < larguraImagem; x++){
+
+            entradaRede[0] = (double)x / (larguraImagem-1);
+            entradaRede[1] = (double)y / (alturaImagem-1);
+
+            rede.calcularSaida(entradaRede);
+
+            saidaRede[0] = rede.saida.neuronios[0].saida * 255;
+            saidaRede[1] = rede.saida.neuronios[1].saida * 255;
+            saidaRede[2] = rede.saida.neuronios[2].saida * 255;
+           this.configurarCor(imagemAmpliada, x, y, (int)saidaRede[0], (int)saidaRede[1], (int)saidaRede[2]);
          }
       }
 
