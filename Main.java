@@ -3,7 +3,6 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 import render.Janela;
@@ -16,8 +15,8 @@ import utilitarios.GerenciadorImagem;
 
 class Main{
    //auxiliares
-   static ConversorDados conversor = new ConversorDados();
-   static GerenciadorDados gerenciador = new GerenciadorDados();
+   static ConversorDados cd = new ConversorDados();
+   static GerenciadorDados gd = new GerenciadorDados();
    static GerenciadorImagem gi = new GerenciadorImagem();
    
    static final int epocas = 50*1000;
@@ -38,11 +37,12 @@ class Main{
       int qSaidas = 3;//quantidade de dados de saída / saída da rede
 
       // separar para o treino
-      double[][] dadosEntrada = gerenciador.separarDadosEntrada(dados, qEntradas);
-      double[][] dadosSaida = gerenciador.separarDadosSaida(dados, qSaidas);
+      double[][] dadosEntrada = gd.separarDadosEntrada(dados, qEntradas);
+      double[][] dadosSaida = gd.separarDadosSaida(dados, qSaidas);
 
       RedeNeural rede = criarRede(qEntradas, qSaidas);
 
+      //treinar e marcar tempo
       t1 = System.nanoTime();
       System.out.println("treinando a rede.");
       rede.treinoGradienteEstocastico(dadosEntrada, dadosSaida, epocas);
@@ -75,14 +75,6 @@ class Main{
       rede.configurarFuncaoAtivacao(2);
 
       return rede;
-   }
-
-
-   public static ArrayList<String[]> tratarDados(ArrayList<String[]> lista){
-      lista = gerenciador.removerColunaDados(lista, 0);
-      gerenciador.removerLinhaDados(lista, 0);
-
-      return lista;
    }
 
 

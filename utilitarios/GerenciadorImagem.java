@@ -8,15 +8,32 @@ import javax.imageio.ImageIO;
 
 import rna.RedeNeural;
 
+
+/**
+ * Oferece utilitários para manipulação e processamento de imagens em formato RGB ou escala de cinza.
+ * Permite ler imagens, gerar estruturas de dados a partir das imagens, configurar cores, exibir informações de cores, exportar imagens em formato PNG
+ * e ampliar imagens usando uma rede neural treinada.
+ * <p>
+ *   Fornece métodos para trabalhar com imagens tanto no padrão de cor RGB como em escala de cinza.
+ *   Pode ser usada para ler imagens de um arquivo, gerar uma estrutura de dados correspondente à imagem,
+ *   configurar valores de cor em pontos específicos da estrutura de imagem, exibir informações sobre as cores,
+ *   exportar imagens em formato PNG e ampliar imagens usando uma rede neural treinada.
+ * </p>
+ */
 public class GerenciadorImagem{
 
+
+   /**
+    * Objeto responsável por fazer operações com imagens
+    */
    public GerenciadorImagem(){}
 
 
    /**
-    * lê imagem 
-    * @param caminho
-    * @return
+    * Lê uma imagem do caminho fornecido e retorna a imagem como um objeto BufferedImage.
+    * @param caminho o caminho da imagem a ser lida. Deve ser um caminho relativo ou absoluto para o arquivo de imagem.
+    * @return a imagem lida como um objeto BufferedImage.
+    * @throws IllegalArgumentException se ocorrer um erro durante a leitura da imagem ou se a imagem não puder ser encontrada.
     */
    public BufferedImage lerImagem(String caminho){
       BufferedImage imagem = null;
@@ -222,7 +239,7 @@ public class GerenciadorImagem{
     * </p>
     * A organização da matriz seguirá a seguinte estrutura, tendo x, y e escala de cinza normalizados:
     * <p>
-    *    [x pixel][y pixel][escala de cinza]
+    *    [ x pixel ][ y pixel ][ escala de cinza ]
     * </p>
     * @param imagem imagem iriginal em escala de cinza.
     * @return matriz da estrutura de dados da imagem, com os valores normalizados da posição x e y do pixel e escala de cinza.
@@ -243,11 +260,11 @@ public class GerenciadorImagem{
             int g = this.getG(imagem, x, y);
             int b = this.getB(imagem, x, y);
 
-            double escalaCinza = (r + g + b) / 3.0;
-
             // preenchendo os dados na matriz
             double xNormalizado = (double) x / (larguraImagem-1);
             double yNormalizado = (double) y / (alturaImagem-1);
+            double escalaCinza = (r + g + b) / 3.0;
+            
             dadosImagem[contador][0] =  xNormalizado;// x
             dadosImagem[contador][1] =  yNormalizado;// y
             dadosImagem[contador][2] = escalaCinza/255;// escala de cinza
@@ -261,9 +278,26 @@ public class GerenciadorImagem{
 
 
    /**
-    * 
-    * @param imagem
-    * @return
+    * Converte a imagem com o padrão de cor RGB em uma matriz de dados para treino.
+    * A matriz terá cinco colunas, correspondente a posição x normalizada, posição y normalizada e valor rgb decomposto na cor vermelha, verde e azul normalizados.
+    * <p>
+    *    Os valores são normalizados numa escala entre 0 e 1, onde quanto mais próximo de 1 o valor for, mais próximo do tamanho original ele
+    *    está.
+    * </p>
+    * <p>
+    *    Para cada cor, será usado o valor de máximo e mínimo como 255.
+    * </p>
+    * <p> 
+    *    Exemplificando que temos uma imagem 10x10 e o valor x  do pixel é igual a 5, o valor normalizado será de 0.5 ou 50% do tamanho 
+    *    normalizado na direção horizontal.
+    * </p>
+    *    A organização da matriz seguirá a seguinte estrutura, tendo x, y e as cores rgb normalizadas:
+    * <p>
+    *    [ x pixel ][ y pixel ][ vermelho ][ verde ][ azul ]
+    * </p>
+    * @param imagem imagem iriginal em escala de cinza.
+    * @return matriz da estrutura de dados da imagem, com os valores normalizados da posição x e y, além dos valores de cor rgb do pixel.
+    * @throws IllegalArgumentException se a imagem for nula.   
     */
    public double[][] imagemParaDadosTreinoRGB(BufferedImage imagem){
       int larguraImagem = imagem.getWidth();
@@ -279,10 +313,9 @@ public class GerenciadorImagem{
             int g = this.getG(imagem, x, y);
             int b = this.getB(imagem, x, y);
 
-            // Preencha os dados na matriz
+            // preenchendo os dados na matriz
             double xNormalizado = (double) x / (larguraImagem-1);
-            double yNormalizado = (double) y / (alturaImagem-1);
-            
+            double yNormalizado = (double) y / (alturaImagem-1);  
             double rNormalizado = (double) r / 255;
             double gNormalizado = (double) g / 255;
             double bNormalizado = (double) b / 255;
@@ -290,8 +323,8 @@ public class GerenciadorImagem{
             dadosImagem[contador][0] =  xNormalizado;// x
             dadosImagem[contador][1] =  yNormalizado;// y
             dadosImagem[contador][2] = rNormalizado;// vermelho
-            dadosImagem[contador][3] = gNormalizado;// vermelho
-            dadosImagem[contador][4] = bNormalizado;// vermelho
+            dadosImagem[contador][3] = gNormalizado;// verde
+            dadosImagem[contador][4] = bNormalizado;// azul
 
             contador++;
          }
@@ -302,23 +335,23 @@ public class GerenciadorImagem{
 
 
    /**
-    * <p>
-    *    Amplia a imagem e salva num arquivo .png externo usando uma rede neural. 
-    * </p>
-    * O processo acontece normalizando as coordenadas dos pixels numa escala entre 0 e 1, onde quanto mais próximo de 1 o valor for
-    * maior o x ou y se aproxima da largura ou altura da imagem.
-    * A rede deve ser treianda previamente para lidar com as entradas normalizadas, assim ela consegue normalizar também os valores 
-    * de brilho da imagem em resolução maior.
-    * @param imagem imagem que será ampliada.
+    * Amplia a imagem em escala de cinza usando uma rede neural treinada.
+    * A nova imagem ampliada será salva em um arquivo .png no caminho especificado.
+    *
+    * @param imagem imagem original em escala de cinza que será ampliada.
     * @param rede rede neural treinada para lidar com a imagem.
     * @param escala escala de ampliação da nova imagem.
-    * @param caminho caminho onde o arquivo será salvo, deve conter o nome do arquivo que será gerado e não deve conter a extensão
+    * @param caminho caminho onde o arquivo será salvo, incluindo nome, sem a extensão .png.
     * @throws IllegalArgumentException se a imagem for nula.
-    * @throws IllegalArgumentException se o valor de escala for menor que 1.
+    * @throws IllegalArgumentException se o valor de escala for menor ou igual a 0.
+    * @throws IllegalArgumentException se a rede tiver um neurônio na camada de saída para tratar a escala de cinza.
     */
    public void ampliarImagemEscalaCinza(BufferedImage imagem, RedeNeural rede, float escala, String caminho){
       if(imagem == null) throw new IllegalArgumentException("A imagem fornecida é nula.");
-      if(escala < 0) throw new IllegalArgumentException("O valor de escala não pode ser menor que 1.");
+      if(escala <= 0) throw new IllegalArgumentException("O valor de escala não pode ser menor que 1.");
+      if(rede.obterCamadaSaida().neuronios.length != 1){
+         throw new IllegalArgumentException("A rede deve trabalhar apenas com um neurônio na camada de saída para a escala de cinza.");
+      }
 
       int nEntrada = rede.obterCamadaEntrada().neuronios.length;
       nEntrada -= (rede.obterCamadaEntrada().temBias) ? 1 : 0;
@@ -350,22 +383,32 @@ public class GerenciadorImagem{
 
 
    /**
-    * @param imagem imagem que será ampliada.
+    * Amplia a imagem RGB usando uma rede neural treinada.
+    * A nova imagem ampliada será salva em um arquivo .png no caminho especificado.
+    *
+    * @param imagem imagem original em RGB que será ampliada.
     * @param rede rede neural treinada para lidar com a imagem.
     * @param escala escala de ampliação da nova imagem.
-    * @param caminho caminho onde o arquivo será salvo, deve conter o nome do arquivo que será gerado e não deve conter a extensão
+    * @param caminho caminho onde o arquivo será salvo, incluindo nome, sem a extensão .png.
     * @throws IllegalArgumentException se a imagem for nula.
-    * @throws IllegalArgumentException se o valor de escala for menor que 1.
+    * @throws IllegalArgumentException se o valor de escala for menor ou igual a 0.
+    * @throws IllegalArgumentException se a rede não tiver três neurônios na camada de saída para tratar RGB.
     */
    public void ampliarImagemRGB(BufferedImage imagem, RedeNeural rede, float escala, String caminho){
       if(imagem == null) throw new IllegalArgumentException("A imagem fornecida é nula.");
-      if(escala < 0) throw new IllegalArgumentException("O valor de escala não pode ser menor que 1.");
+      if(escala <= 0) throw new IllegalArgumentException("O valor de escala não pode ser menor que 1.");
+      if(rede.obterCamadaSaida().neuronios.length != 3){
+         throw new IllegalArgumentException("A rede deve trabalhar apenas com três neurônios na saída para RGB.");
+      }
 
+      //quantidade de neuronios de entrada
       int nEntrada = rede.obterCamadaEntrada().neuronios.length;
       nEntrada -= (rede.obterCamadaEntrada().temBias) ? 1 : 0;
 
       double[] entradaRede = new double[nEntrada];
-      double[] saidaRede = new double[rede.saida.neuronios.length];
+      double[] saidaRede = new double[rede.obterCamadaSaida().neuronios.length];
+
+      //estrutura de dados da imagem
       int larguraFinal = (int)(imagem.getWidth()*escala);
       int alturaFinal = (int)(imagem.getHeight()*escala);
       ArrayList<ArrayList<Integer[]>> imagemAmpliada =this.gerarEstruturaImagem(larguraFinal, alturaFinal);
@@ -376,15 +419,17 @@ public class GerenciadorImagem{
       for(int y = 0; y < alturaImagem; y++){
          for(int x = 0; x < larguraImagem; x++){
 
+            //posição do pixel
             entradaRede[0] = (double)x / (larguraImagem-1);
             entradaRede[1] = (double)y / (alturaImagem-1);
 
             rede.calcularSaida(entradaRede);
 
+            //cor do pixel em rgb
             saidaRede[0] = rede.saida.neuronios[0].saida * 255;
             saidaRede[1] = rede.saida.neuronios[1].saida * 255;
             saidaRede[2] = rede.saida.neuronios[2].saida * 255;
-           this.configurarCor(imagemAmpliada, x, y, (int)saidaRede[0], (int)saidaRede[1], (int)saidaRede[2]);
+            this.configurarCor(imagemAmpliada, x, y, (int)saidaRede[0], (int)saidaRede[1], (int)saidaRede[2]);
          }
       }
 

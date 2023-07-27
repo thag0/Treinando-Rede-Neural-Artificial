@@ -235,7 +235,7 @@ public class GerenciadorDados{
     * @return array contendo as informações das dimensões da lista, o primeiro elemento corresponde a quantidade de 
     * linhas e o segundo elemento corresponde a quantidade de colunas.
     * @throws IllegalArgumentException se a lista estiver nula.
-v se a lista estiver vazia.
+    * @throws IllegalArgumentException se a lista estiver vazia.
     */
    public int[] obterShapeLista(ArrayList<String[]> lista){
       if(lista == null) throw new IllegalArgumentException("A lista fornecida é nula.");
