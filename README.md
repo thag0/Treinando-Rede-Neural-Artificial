@@ -16,3 +16,11 @@ Consegui testar a rede em um cenário que ela deve ampliar imagens e também con
 
 A rede consegue lidar com dados gerados por uma imagem pequena, desde que eles estejam normalizados para isso. Normalizei eles fazendo a rede trabalhar em intervalos entre
 0 e 1 para x e y, onde quanto mais próximo de 1 o valor for, mais próximo ele vai estar do limite de altura e largura da imagem, então a rede trabalha com "porcentagens de coordenadas".
+
+# Imagens com cor
+
+Uma evolução agora foi converter os dados de imagem na escala rgb ao invés de só um valor de brilho como era na escala de cinza, não foi necessário criar funcionalidades novas para a rede, apenas adaptar novos neurônios para ela trabalhar.
+
+![imagemArcoIrisAmpliada](https://github.com/thag0/Treinando-Rede-Neural-Artificial/assets/91092364/66028643-dba6-4f46-a711-e561eb0c7515)
+
+*imagem original comparada com imagem criada pela rede neural, agora com cores.*
