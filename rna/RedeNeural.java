@@ -111,7 +111,7 @@ public class RedeNeural implements Cloneable, Serializable{
 
    /**
     * Configura a função de ativação da camada correspondente, a função de ativação padrão é a ReLU. É preciso
-    * compilar o modelo previamente para poder configurar suas funções de ativação
+    * compilar o modelo previamente para poder configurar suas funções de ativação.
     * <p>segue a lista das funções disponíveis:</p>
     * <ul>
     *    <li>1 - ReLU.</li>
@@ -130,6 +130,7 @@ public class RedeNeural implements Cloneable, Serializable{
     */
    public void configurarFuncaoAtivacao(Camada camada, int funcaoAtivacao){
       modeloValido();
+      if(camada.equals(this.entrada)) throw new IllegalArgumentException("Não é possível configurar função de ativação para a camada de entrada.");
       
       camada.configurarAtivacao(funcaoAtivacao);
    }

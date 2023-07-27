@@ -4,6 +4,7 @@ import java.io.InputStreamReader;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 import render.Janela;
 import rna.RedeNeural;
@@ -19,16 +20,18 @@ class Main{
    static GerenciadorDados gerenciador = new GerenciadorDados();
    static GerenciadorImagem gi = new GerenciadorImagem();
    
-   static final int epocas = 15*1000;
+   static final int epocas = 20*1000;
 
    // Sempre lembrar de quando mudar o dataset, também mudar a quantidade de dados de entrada e saída.
 
    
    public static void main(String[] args){
       limparConsole();
- 
+      long t1, t2;
+      long horas,  minutos, segundos;
+
       //lendo os dados de entrada
-      BufferedImage imagemTeste = gi.lerImagem("/dados/mnist/4.png");
+      BufferedImage imagemTeste = gi.lerImagem("/dados/mnist/6.png");
       double[][] dados = gi.imagemParaDadosTreinoEscalaCinza(gi, imagemTeste);//escolher os dados
       int qEntradas = 2;//quantidade de dados de entrada / entrada da rede
       int qSaidas = 1;//quantidade de dados de saída / saída da rede
@@ -38,16 +41,26 @@ class Main{
       double[][] dadosSaida = gerenciador.separarDadosSaida(dados, qSaidas);
 
       RedeNeural rede = criarRede(qEntradas, qSaidas);
+
+      t1 = System.nanoTime();
+      System.out.println("treinando a rede.");
       rede.treinoGradienteEstocastico(dadosEntrada, dadosSaida, epocas);
-      double precisao = rede.calcularPrecisao(dadosEntrada, dadosSaida);
+      t2 = System.nanoTime();
+      long tempoDecorrido = t2 - t1;
+      long segundosTotais = TimeUnit.NANOSECONDS.toSeconds(tempoDecorrido);
+      horas = segundosTotais / 3600;
+      minutos = (segundosTotais % 3600) / 60;
+      segundos = segundosTotais % 60;
       
+      double precisao = rede.calcularPrecisao(dadosEntrada, dadosSaida);
       System.out.println(rede.obterInformacoes());
       System.out.println("Custo = " + rede.funcaoDeCusto(dadosEntrada, dadosSaida));
       System.out.println("Precisão = " + (formatarFloat(precisao*100)) + "%");
+      System.out.println("Tempo de treinamento: " + horas + "h " + minutos + "m " + segundos + "s");
 
-      gi.ampliarImagem(imagemTeste, rede, 30);// precisa treinar bastante
+      gi.ampliarImagem(imagemTeste, rede, 20f, "./Imagem-ampliada");// precisa treinar bastante
 
-      desenharRede(rede);
+      // desenharRede(rede);
    }
 
 
@@ -55,8 +68,8 @@ class Main{
       int[] arquitetura = {qEntradas, 9, 9, qSaidas};
       RedeNeural rede = new RedeNeural(arquitetura);
 
-      rede.configurarAlcancePesos(2);
-      rede.configurarTaxaAprendizagem(0.4);
+      rede.configurarAlcancePesos(1);
+      rede.configurarTaxaAprendizagem(0.1);
       rede.compilar();
       rede.configurarFuncaoAtivacao(2);
 

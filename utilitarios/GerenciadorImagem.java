@@ -251,19 +251,22 @@ public class GerenciadorImagem{
     * @param imagem imagem que será ampliada.
     * @param rede rede neural treinada para lidar com a imagem.
     * @param escala escala de ampliação da nova imagem.
+    * @param caminho caminho onde o arquivo será salvo, deve conter o nome do arquivo que será gerado e não deve conter a extensão
     * @throws IllegalArgumentException se a imagem for nula.
     * @throws IllegalArgumentException se o valor de escala for menor que 1.
     */
-   public void ampliarImagem(BufferedImage imagem, RedeNeural rede, int escala){
+   public void ampliarImagem(BufferedImage imagem, RedeNeural rede, float escala, String caminho){
       if(imagem == null) throw new IllegalArgumentException("A imagem fornecida é nula.");
-      if(escala < 1) throw new IllegalArgumentException("O valor de escala não pode ser menor que 1.");
+      if(escala < 0) throw new IllegalArgumentException("O valor de escala não pode ser menor que 1.");
 
       int nEntrada = rede.obterCamadaEntrada().neuronios.length;
       nEntrada -= (rede.obterCamadaEntrada().temBias) ? 1 : 0;
 
       double[] entradaRede = new double[nEntrada];
       double[] saidaRede = new double[rede.saida.neuronios.length];
-      ArrayList<ArrayList<Integer[]>> imagemAmpliada =this.gerarEstruturaImagem(imagem.getHeight()*escala, imagem.getWidth()*escala);
+      int larguraFinal = (int)(imagem.getWidth()*escala);
+      int alturaFinal = (int)(imagem.getHeight()*escala);
+      ArrayList<ArrayList<Integer[]>> imagemAmpliada =this.gerarEstruturaImagem(larguraFinal, alturaFinal);
       
       int alturaImagem = imagemAmpliada.size();
       int larguraImagem = imagemAmpliada.get(0).size();
@@ -281,6 +284,6 @@ public class GerenciadorImagem{
          }
       }
 
-      this.exportarImagemPng("./imagem-ampliada", imagemAmpliada);
+      this.exportarImagemPng(caminho, imagemAmpliada);
    }
 }
