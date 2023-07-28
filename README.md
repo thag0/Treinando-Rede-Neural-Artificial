@@ -9,7 +9,7 @@ Aos poucos criando um pequeno ambiente de trabalho em volta disso
 
 # Resultados
 
-Até o momento já consegui usar a rede em testes menores, como pegar alguns conjuntos de dados para testar o desempenho dela e tive bons resultados com precições
+Até o momento já consegui usar a rede em testes menores, como pegar alguns conjuntos de dados para testar o desempenho dela e tive bons resultados com precisões
 entre 80% e 95%
 
 Consegui testar a rede em um cenário que ela deve ampliar imagens e também consegui bons resultados como é possível ver a seguir:
