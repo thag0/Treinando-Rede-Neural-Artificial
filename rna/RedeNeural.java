@@ -431,12 +431,13 @@ public class RedeNeural implements Cloneable, Serializable{
       Random random = new Random();
       int[] indices = new int[dados.length];
    
-      for(int i = 0; i < epochs; i++){// quantidade de épocas
+      int i, j, k;
+      for(i = 0; i < epochs; i++){// quantidade de épocas
          //embaralhar os dados antes de cada época
-         for(int j = 0; j < dados.length; j++){
+         for(j = 0; j < dados.length; j++){
             indices[j] = j;
          }
-         for(int j = 0; j < dados.length; j++){
+         for(j = 0; j < dados.length; j++){
             int indiceAleatorio = random.nextInt(dados.length);
             int temp = indices[j];
             indices[j] = indices[indiceAleatorio];
@@ -444,12 +445,12 @@ public class RedeNeural implements Cloneable, Serializable{
          }
 
          //treinar com os dados embaralhados
-         for(int j = 0; j < dados.length; j++){
+         for(j = 0; j < dados.length; j++){
             int indiceDados = indices[j];
-            for(int k = 0; k < dados[0].length; k++){// preencher dados de entrada
+            for(k = 0; k < dados[0].length; k++){// preencher dados de entrada
                dadosEntrada[k] = dados[indiceDados][k];
             }
-            for(int k = 0; k < dadosSaida.length; k++){// preencher dados de saída
+            for(k = 0; k < dadosSaida.length; k++){// preencher dados de saída
                dadosSaida[k] = saida[indiceDados][k];
             }
 

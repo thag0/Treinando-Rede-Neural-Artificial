@@ -27,7 +27,6 @@ public class Neuronio implements Serializable{
       if(alcancePeso <= 0) throw new IllegalArgumentException("O valor de alcance do peso deve ser positivo e diferente de zero.");
 
       this.entradas = new double[ligacoes];
-      
       this.pesos = new double[ligacoes];
       for(int i = 0; i < pesos.length; i++){
          pesos[i] = random.nextDouble(-alcancePeso, alcancePeso);

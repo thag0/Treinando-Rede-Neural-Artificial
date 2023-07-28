@@ -6,6 +6,7 @@ import java.text.DecimalFormat;
 import java.util.concurrent.TimeUnit;
 
 import render.Janela;
+import render.JanelaTreino;
 import rna.RedeNeural;
 
 import utilitarios.ConversorDados;
@@ -19,7 +20,9 @@ class Main{
    static GerenciadorDados gd = new GerenciadorDados();
    static GerenciadorImagem gi = new GerenciadorImagem();
    
-   static final int epocas = 50*1000;
+   static final int epocas = 10*1000;
+   static final float escalaRender = 30f;
+   static final float escalaImagemExportada = 1.2f;
 
    // Sempre lembrar de quando mudar o dataset, também mudar a quantidade de dados de entrada e saída.
 
@@ -30,7 +33,6 @@ class Main{
       long horas,  minutos, segundos;
 
       //lendo os dados de entrada
-      // BufferedImage imagem = gi.lerImagem("/dados/imagens/arco-iris.png");
       BufferedImage imagem = gi.lerImagem("/dados/imagens/arco-iris.png");
       double[][] dados = gi.imagemParaDadosTreinoRGB(imagem);//escolher os dados
       int qEntradas = 2;//quantidade de dados de entrada / entrada da rede
@@ -39,13 +41,16 @@ class Main{
       // separar para o treino
       double[][] dadosEntrada = gd.separarDadosEntrada(dados, qEntradas);
       double[][] dadosSaida = gd.separarDadosSaida(dados, qSaidas);
+      System.out.println("Tamanho dos dados [" + dadosEntrada.length + ", " + (dadosEntrada[0].length + dadosSaida[0].length) + "]");
 
       RedeNeural rede = criarRede(qEntradas, qSaidas);
 
       //treinar e marcar tempo
       t1 = System.nanoTime();
       System.out.println("treinando a rede.");
-      rede.treinoGradienteEstocastico(dadosEntrada, dadosSaida, epocas);
+
+      treinoEmPainel(rede, imagem, dadosEntrada, dadosSaida);
+      
       t2 = System.nanoTime();
       long tempoDecorrido = t2 - t1;
       long segundosTotais = TimeUnit.NANOSECONDS.toSeconds(tempoDecorrido);
@@ -59,21 +64,37 @@ class Main{
       System.out.println("Precisão = " + (formatarFloat(precisao*100)) + "%");
       System.out.println("Tempo de treinamento: " + horas + "h " + minutos + "m " + segundos + "s");
 
-      gi.ampliarImagemRGB(imagem, rede, 50f, "./Imagem-ampliada");// precisa treinar bastante
+      gi.ampliarImagemRGB(imagem, rede, escalaImagemExportada, "./Imagem-ampliada");// precisa treinar bastante
 
-      desenharRede(rede);
+   }
+
+
+   public static void treinoEmPainel(RedeNeural rede, BufferedImage imagem, double[][] dadosEntrada, double[][] dadosSaida){
+      JanelaTreino jt = new JanelaTreino(imagem.getWidth(), imagem.getHeight(), escalaRender);
+
+      int i = 0;
+      while(i < epocas){
+         rede.treinoGradienteEstocastico(dadosEntrada, dadosSaida, 1);
+         jt.desenharTreino(rede);
+
+         try{
+            Thread.sleep(16);
+         }catch(Exception e){}
+
+         i++;
+      }
    }
 
 
    public static RedeNeural criarRede(int qEntradas, int qSaidas){
-      int[] arquitetura = {qEntradas, 10, 10, qSaidas};
+      int[] arquitetura = {qEntradas, 12, 12, qSaidas};
       RedeNeural rede = new RedeNeural(arquitetura);
 
-      rede.configurarAlcancePesos(1);
-      rede.configurarTaxaAprendizagem(0.1);
+      rede.configurarAlcancePesos(2);
+      rede.configurarTaxaAprendizagem(0.15);
       rede.compilar();
       rede.configurarFuncaoAtivacao(2);
-
+      
       return rede;
    }
 
