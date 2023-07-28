@@ -20,9 +20,8 @@ public class JanelaTreino extends JFrame{
 
       this.painelTreino = new PainelTreino(larguraImagem, alturaImagem, escala);
       
-      setTitle("Rede neural");
+      setTitle("Treinamento rede");
       add(painelTreino);
-      setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
       setVisible(true);
       pack();
       setResizable(false);
@@ -30,7 +29,7 @@ public class JanelaTreino extends JFrame{
    }
 
 
-   public void desenharTreino(RedeNeural rede){
-      painelTreino.desenhar(rede);
+   public void desenharTreino(RedeNeural rede, int epocasPorFrame){
+      painelTreino.desenhar(rede, epocasPorFrame);
    }
 }

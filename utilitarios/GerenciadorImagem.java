@@ -335,10 +335,9 @@ public class GerenciadorImagem{
 
 
    /**
-    * Amplia a imagem em escala de cinza usando uma rede neural treinada.
-    * A nova imagem ampliada será salva em um arquivo .png no caminho especificado.
+    * Salva a imagem em escala de cinza a partir de uma rede neural treianda em um arquivo .png no caminho especificado.
     *
-    * @param imagem imagem original em escala de cinza que será ampliada.
+    * @param imagem imagem original em escala de cinza que será salva.
     * @param rede rede neural treinada para lidar com a imagem.
     * @param escala escala de ampliação da nova imagem.
     * @param caminho caminho onde o arquivo será salvo, incluindo nome, sem a extensão .png.
@@ -346,7 +345,7 @@ public class GerenciadorImagem{
     * @throws IllegalArgumentException se o valor de escala for menor ou igual a 0.
     * @throws IllegalArgumentException se a rede tiver um neurônio na camada de saída para tratar a escala de cinza.
     */
-   public void ampliarImagemEscalaCinza(BufferedImage imagem, RedeNeural rede, float escala, String caminho){
+   public void exportarImagemEscalaCinza(BufferedImage imagem, RedeNeural rede, float escala, String caminho){
       if(imagem == null) throw new IllegalArgumentException("A imagem fornecida é nula.");
       if(escala <= 0) throw new IllegalArgumentException("O valor de escala não pode ser menor que 1.");
       if(rede.obterCamadaSaida().neuronios.length != 1){
@@ -383,10 +382,9 @@ public class GerenciadorImagem{
 
 
    /**
-    * Amplia a imagem RGB usando uma rede neural treinada.
-    * A nova imagem ampliada será salva em um arquivo .png no caminho especificado.
+    * Salva a imagem com padrão de cor rgb a partir de uma rede neural treianda em um arquivo .png no caminho especificado.
     *
-    * @param imagem imagem original em RGB que será ampliada.
+    * @param imagem imagem original em RGB que será salva.
     * @param rede rede neural treinada para lidar com a imagem.
     * @param escala escala de ampliação da nova imagem.
     * @param caminho caminho onde o arquivo será salvo, incluindo nome, sem a extensão .png.
@@ -394,7 +392,7 @@ public class GerenciadorImagem{
     * @throws IllegalArgumentException se o valor de escala for menor ou igual a 0.
     * @throws IllegalArgumentException se a rede não tiver três neurônios na camada de saída para tratar RGB.
     */
-   public void ampliarImagemRGB(BufferedImage imagem, RedeNeural rede, float escala, String caminho){
+   public void exportarImagemRGB(BufferedImage imagem, RedeNeural rede, float escala, String caminho){
       if(imagem == null) throw new IllegalArgumentException("A imagem fornecida é nula.");
       if(escala <= 0) throw new IllegalArgumentException("O valor de escala não pode ser menor que 1.");
       if(rede.obterCamadaSaida().neuronios.length != 3){

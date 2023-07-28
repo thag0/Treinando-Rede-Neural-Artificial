@@ -17,6 +17,7 @@ public class PainelTreino extends JPanel{
    double[] entradaRede;
 
    BufferedImage imagem;
+   int epocaAtual = 0;
    
    public PainelTreino(int larguraImagem, int alturaImagem, float escala){
       this.largura = (int) (larguraImagem*escala);
@@ -35,7 +36,7 @@ public class PainelTreino extends JPanel{
    }
 
 
-   public void desenhar(RedeNeural rede){
+   public void desenhar(RedeNeural rede, int epocasPorFrame){
       this.rede = rede;
       
       int nEntrada = rede.entrada.neuronios.length;
@@ -44,10 +45,10 @@ public class PainelTreino extends JPanel{
 
       imagem = new BufferedImage(this.largura, this.altura, BufferedImage.TYPE_INT_RGB);
       int r, b, g, rgb;
-      for(int y = 0; y < this.altura; y++){
-         for(int x = 0; x < this.largura; x++){
-      
-            if(rede.saida.neuronios.length == 1){//escala de cinza
+
+      if(rede.saida.neuronios.length == 1){
+         for(int y = 0; y < this.altura; y++){
+            for(int x = 0; x < this.largura; x++){
                entradaRede[0] = (double)x / this.largura;
                entradaRede[1] = (double)y / this.altura;
                rede.calcularSaida(entradaRede);
@@ -58,8 +59,11 @@ public class PainelTreino extends JPanel{
                b = cinza;
                rgb = (r << 16) | (g << 8) | b;
                imagem.setRGB(x, y, rgb);
-            
-            }else if(rede.saida.neuronios.length == 3){//rgb
+            }
+         } 
+      }else if(rede.saida.neuronios.length == 3){//rgb
+         for(int y = 0; y < this.altura; y++){
+            for(int x = 0; x < this.largura; x++){
                entradaRede[0] = (double)x / this.largura;
                entradaRede[1] = (double)y / this.altura;
                rede.calcularSaida(entradaRede);
@@ -72,6 +76,8 @@ public class PainelTreino extends JPanel{
          }
       }
 
+      epocaAtual = epocasPorFrame;
+
       repaint();
    }
 
@@ -82,6 +88,9 @@ public class PainelTreino extends JPanel{
       Graphics2D g2 = (Graphics2D) g;
 
       g2.drawImage(imagem, 0, 0, null);
+
+      g2.setColor(Color.WHITE);
+      g2.drawString(("Época: " + epocaAtual), 5, 14);
 
       g2.dispose();
    }
