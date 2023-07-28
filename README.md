@@ -1,4 +1,8 @@
 # Treinando Rede Neural Artificial
+
+![gifTreinamentoTempoReal](https://github.com/thag0/Treinando-Rede-Neural-Artificial/assets/91092364/6f06f83b-e4cd-46d5-b323-5d4e263da568)
+*vídeo acelerado em 10x*
+
 Tentando implementar um algortimo de treino e ferramentas para masuear os dados.
 
 Aos poucos criando um pequeno ambiente de trabalho em volta disso
