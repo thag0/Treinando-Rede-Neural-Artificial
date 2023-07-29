@@ -20,9 +20,11 @@ class Main{
    static GerenciadorDados gd = new GerenciadorDados();
    static GerenciadorImagem gi = new GerenciadorImagem();
    
-   static final int epocas = 40*1000;
-   static final float escalaRender = 12f;
-   static final float escalaImagemExportada = 30f;
+   // static final String caminhoArquivo = "/dados/imagens/meme.png";
+   static final String caminhoArquivo = "/dados/mnist/8.png";
+   static final int epocas = 100*1000;
+   static final float escalaRender = 10f;
+   static final float escalaImagemExportada = 20f;
 
    // Sempre lembrar de quando mudar o dataset, também mudar a quantidade de dados de entrada e saída.
 
@@ -33,7 +35,7 @@ class Main{
       long horas,  minutos, segundos;
 
       //lendo os dados de entrada
-      BufferedImage imagem = gi.lerImagem("/dados/mnist/7.png");
+      BufferedImage imagem = gi.lerImagem(caminhoArquivo);
       double[][] dados = gi.imagemParaDadosTreinoEscalaCinza(imagem);//escolher os dados
       int qEntradas = 2;//quantidade de dados de entrada / entrada da rede
       int qSaidas = 1;//quantidade de dados de saída / saída da rede
@@ -74,7 +76,7 @@ class Main{
 
       JanelaTreino jt = new JanelaTreino(imagem.getWidth(), imagem.getHeight(), escalaRender);
 
-      int epocasPorFrame = 3;
+      int epocasPorFrame = 6;
       int i = 0;
       jt.desenharTreino(rede, epocasPorFrame);
 
@@ -105,11 +107,12 @@ class Main{
 
 
    public static RedeNeural criarRede(int qEntradas, int qSaidas){
-      int[] arquitetura = {qEntradas, 12, 12, qSaidas};
+      int[] arquitetura = {qEntradas, 10, 10, qSaidas};
       RedeNeural rede = new RedeNeural(arquitetura);
 
       rede.configurarAlcancePesos(1);
-      rede.configurarTaxaAprendizagem(0.1);
+      rede.configurarTaxaAprendizagem(0.05);
+      rede.configurarMomentum(0.65);
       rede.compilar();
       rede.configurarFuncaoAtivacao(2);
       

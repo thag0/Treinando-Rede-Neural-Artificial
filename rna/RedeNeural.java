@@ -8,6 +8,21 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
 
+
+/**
+ * Modelo de Rede Neural Multilayer Perceptron baseado em feedforward criado do zero. Possui um conjunto de camadas 
+ * e cada camada possui um conjunto de neurônios artificiais.
+ * <p>
+ *    O modelo pode ser usado para problemas de regressão e classificação, contando com algoritmos de treino 
+ *    atualmente baseados no backpropagation com adição da ideia de momentum na atualização dos pesos.
+ * </p>
+ * Possui opções de configuração tanto para hiperparâmetros como taxa de aprendizagem e momentun, quanto para
+ * funções de ativações de camadas individuais e valor de alcance máximo e mínimo na aleatorização dos pesos iniciais. 
+ * <p>
+ * Após configurar as propriedades da rede, o modelo precisará ser compilado para efetivamente poder ser utilizado.
+ * </p>
+ * @author Thiago Barroso, acadêmico de Engenharia da Computação pela Universidade Federal do Pará, Campus Tucuruí.
+ */
 public class RedeNeural implements Cloneable, Serializable{
    public Camada entrada;
    public Camada[] ocultas;
@@ -21,9 +36,11 @@ public class RedeNeural implements Cloneable, Serializable{
    private int quantidadeOcultas;
 
    private double TAXA_APRENDIZAGEM = 0.01;
+   private double MOMENTUM = 0;
    private int BIAS = 1;
    private double alcancePeso = 1.0;
    private boolean modeloCompilado = false;
+
 
    /**
     * <p>
@@ -71,12 +88,16 @@ public class RedeNeural implements Cloneable, Serializable{
    /**
     * Define o valor máximo e mínimo na hora de aleatorizar os pesos da rede 
     * para a compilação, os novos valores não podem ser menores ou iguais a zero.
-    * <p>O valor padrão de alcance é 1.</p>
+    * <p>
+    *    O valor padrão de alcance é 1.
+    * </p>
     * @param alcancePesos novo valor máximo e mínimo.
     * @throws IllegalArgumentException se o novo valor for menor ou igual a zero.
     */
    public void configurarAlcancePesos(double alcancePesos){
-      if(alcancePesos <= 0) throw new IllegalArgumentException("Os novos valores de alcance dos pesos não podem ser menores ou iguais a zero.");
+      if(alcancePesos <= 0){
+         throw new IllegalArgumentException("Os novos valores de alcance dos pesos não podem ser menores ou iguais a zero.");
+      }
       this.alcancePeso = alcancePesos;
    }
 
@@ -95,17 +116,44 @@ public class RedeNeural implements Cloneable, Serializable{
 
    /**
     * Define o novo valor de taxa de aprendizagem da rede. O valor é usado durante o método de treino.
+    * O valor da taxa de aprendizagem difine "o quanto a rede vai aprender com o erro durante o treinamento".
     * Certifique-se de não usar valores muito altos ou muito baixos para não gerar valores inesperados 
     * durante o treino.
-    * <p>O valor padrão é 0.1</p>
+    * <p>
+    *    O valor padrão é 0.1.
+    * </p>
     * @param taxaAprendizagem novo valor de taxa de aprendizagem.
     * @throws IllegalArgumentException caso o novo valor de taxa de aprendizagem seja igual a zero.
     */
    public void configurarTaxaAprendizagem(double taxaAprendizagem){
-      if(taxaAprendizagem == 0){
-         throw new IllegalArgumentException("O valor da nova taxa de aprendizagem não pode ser igual a zero.");
+      if(taxaAprendizagem <= 0){
+         throw new IllegalArgumentException("O valor da nova taxa de aprendizagem não pode ser menor ou igual a zero.");
       }
       this.TAXA_APRENDIZAGEM = taxaAprendizagem;
+   }
+
+
+   /**
+    * Define o novo valor do momentum que vai ser usado no treinamento da rede.
+    * <p>
+    *    O momentum é uma técnica utilizada no treinamento de redes neurais para acelerar a convergência e
+    *    melhorar a estabilidade das atualizações dos pesos. Ele introduz um termo de momento nas atualizações
+    *    dos pesos, permitindo que as atualizações tenham inércia, acumulando uma fração dos gradientes das
+    *    iterações anteriores.
+    * </p>
+    * Normalmente esse valor fica entre 0 e 1, onde 0 significa que o momentum não terá efeito  e 1 
+    * significa que o momentum terá o máximo de inércia, acumulando totalmente os gradientes anteriores. 
+    * <p>
+    *    O valor padrão é 0.0, onde o momentum não é aplicado no treino.
+    * </p>
+    * @param momentum novo valor de momentum.
+    * @throws IllegalArgumentException se o valor de momentum for menor que zero.
+    */
+   public void configurarMomentum(double momentum){
+      if(momentum < 0){
+         throw new IllegalArgumentException("O valor de momentum não pode ser menor que zero.");
+      }
+      this.MOMENTUM = momentum;
    }
 
 
@@ -126,13 +174,15 @@ public class RedeNeural implements Cloneable, Serializable{
     *    <li>10 - Argmax.</li>
     *    <li>11 - Softmax.</li>
     * </ul>
-    * @param camada camada que será configurada
+    * @param camada camada que será configurada.
     * @param funcaoAtivacao valor relativo a lista de ativações disponíveis.
     * @throws IllegalArgumentException se o modelo não foi compilado previamente.
     */
    public void configurarFuncaoAtivacao(Camada camada, int funcaoAtivacao){
       modeloValido();
-      if(camada.equals(this.entrada)) throw new IllegalArgumentException("Não é possível configurar função de ativação para a camada de entrada.");
+      if(camada.equals(this.entrada)){
+         throw new IllegalArgumentException("Não é possível configurar função de ativação para a camada de entrada.");
+      } 
       
       camada.configurarAtivacao(funcaoAtivacao);
    }
@@ -174,6 +224,7 @@ public class RedeNeural implements Cloneable, Serializable{
     *    <li>Funções de ativação para as camadas ocultas e para a camada de saída.</li>
     *    <li>Neurônios adicionais nas camadas atuando como bias.</li>
     *    <li>Taxa de aprendizagem.</li>
+    *    <li>Taxa de momentum.</li>
     * </ul>
     * <p>
     *    Caso nenhuma configuração seja feita, a rede será inicializada com os valores padrão. 
@@ -218,16 +269,18 @@ public class RedeNeural implements Cloneable, Serializable{
          saida.neuronios[i] = new Neuronio(arquitetura[arquitetura.length-2], alcancePeso);
       }
 
-      modeloCompilado = true;
+      modeloCompilado = true;//modelo pode ser usado
    }
 
 
    /**
-    * Verifica se o modelo já foi compilado para evitar problemas de uso indevido.
-    * @return resultado da verificação.
+    * Verifica se o modelo já foi compilado para evitar problemas de uso indevido, bem como componentes nulos.
+    * @throws IllegalArgumentException se o modelo não foi compilado.
     */
    private void modeloValido(){
-      if(!this.modeloCompilado) throw new IllegalArgumentException("O modelo ainda não foi compilado");
+      if(!this.modeloCompilado){
+         throw new IllegalArgumentException("O modelo ainda não foi compilado");
+      }
    }
 
 
@@ -244,7 +297,7 @@ public class RedeNeural implements Cloneable, Serializable{
          throw new IllegalArgumentException("As dimensões dos dados de entrada com os neurônios de entrada da rede não são iguais");
       }
 
-      //carregar dados na entrada
+      //carregar dados na camada de entrada
       for(int i = 0; i < (this.entrada.neuronios.length-BIAS); i++){
          this.entrada.neuronios[i].saida = dados[i];
       }
@@ -255,7 +308,7 @@ public class RedeNeural implements Cloneable, Serializable{
          else this.ocultas[i].ativarNeuronios(this.ocultas[i-1]);
       }
 
-      //oculta n -> saída
+      //saída
       this.saida.ativarNeuronios(this.ocultas[this.ocultas.length-1]);
    }
 
@@ -524,7 +577,11 @@ public class RedeNeural implements Cloneable, Serializable{
             
             Neuronio neuronio = camadaAtual.neuronios[j];
             for(int k = 0; k < neuronio.pesos.length; k++){//percorrer pesos do neurônio atual
-               neuronio.pesos[k] += (TAXA_APRENDIZAGEM * neuronio.erro * camadaAnterior.neuronios[k].saida);
+               // neuronio.pesos[k] += (TAXA_APRENDIZAGEM * neuronio.erro * camadaAnterior.neuronios[k].saida);
+               //atualização com momentum
+               double gradiente = TAXA_APRENDIZAGEM * neuronio.erro * camadaAnterior.neuronios[k].saida;
+               neuronio.momentum[k] = (MOMENTUM * neuronio.momentum[k]) + gradiente;
+               neuronio.pesos[k] += neuronio.momentum[k];
             }
          }
       } 
@@ -731,10 +788,12 @@ public class RedeNeural implements Cloneable, Serializable{
    
    /**
     * Clona a instância da rede.
+    * @throws IllegalArgumentException se o modelo não foi compilado previamente.
     * @return Clone da rede
     */
    @Override
    public RedeNeural clone(){
+      modeloValido();
       try{
          RedeNeural clone = (RedeNeural) super.clone();
 
@@ -822,7 +881,7 @@ public class RedeNeural implements Cloneable, Serializable{
     * @param caminho caminho do arquivo de rede salvo
     * @return Rede lida pelo arquivo.
     */
-   public RedeNeural lerArquivoRede(String caminho){
+   public static RedeNeural lerArquivoRede(String caminho){
       RedeNeural rede = null;
 
       try{
@@ -875,8 +934,10 @@ public class RedeNeural implements Cloneable, Serializable{
       buffer += espacamento + "Saída = [\n";
       for(int i = 0; i < this.saida.neuronios.length; i++){
          for(int j = 0; j < this.saida.neuronios[i].pesos.length; j++){
-            if(j == this.saida.neuronios[i].pesos.length-1 && (this.BIAS == 1)) buffer += espacamentoDuplo + "pb" + " = " + this.saida.neuronios[i].pesos[j] + "\n";
-            else buffer += espacamentoDuplo + "p" + j + " = " + this.saida.neuronios[i].pesos[j] + "\n";
+            if(j == this.saida.neuronios[i].pesos.length-1 && (this.BIAS == 1)){
+               buffer += espacamentoDuplo + "pb" + " = " + this.saida.neuronios[i].pesos[j] + "\n";
+            
+            }else buffer += espacamentoDuplo + "p" + j + " = " + this.saida.neuronios[i].pesos[j] + "\n";
          }
       }
       buffer += espacamento + "]\n";
