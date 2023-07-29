@@ -21,8 +21,8 @@ class Main{
    static GerenciadorImagem gi = new GerenciadorImagem();
    
    static final int epocas = 40*1000;
-   static final float escalaRender = 11f;
-   static final float escalaImagemExportada = 20f;
+   static final float escalaRender = 12f;
+   static final float escalaImagemExportada = 30f;
 
    // Sempre lembrar de quando mudar o dataset, também mudar a quantidade de dados de entrada e saída.
 
@@ -33,7 +33,7 @@ class Main{
       long horas,  minutos, segundos;
 
       //lendo os dados de entrada
-      BufferedImage imagem = gi.lerImagem("/dados/mnist/5.png");
+      BufferedImage imagem = gi.lerImagem("/dados/mnist/7.png");
       double[][] dados = gi.imagemParaDadosTreinoEscalaCinza(imagem);//escolher os dados
       int qEntradas = 2;//quantidade de dados de entrada / entrada da rede
       int qSaidas = 1;//quantidade de dados de saída / saída da rede
@@ -70,32 +70,45 @@ class Main{
 
 
    public static void treinoEmPainel(RedeNeural rede, BufferedImage imagem, double[][] dadosEntrada, double[][] dadosSaida){
-      long delay = 17;
+      final int fps = 60;
 
       JanelaTreino jt = new JanelaTreino(imagem.getWidth(), imagem.getHeight(), escalaRender);
 
-      int epocasPorFrame = 1;
+      int epocasPorFrame = 3;
       int i = 0;
       jt.desenharTreino(rede, epocasPorFrame);
-      while(i < epocas && jt.isActive()){
+
+      //trabalhar com o tempo de renderização baseado no fps
+      double intervaloDesenho = 1000000000/fps;
+      double proximoTempoDesenho = System.nanoTime() + intervaloDesenho;
+      double tempoRestante;
+
+      while(i < epocas && jt.isVisible()){
          rede.treinoGradienteEstocastico(dadosEntrada, dadosSaida, epocasPorFrame);
          jt.desenharTreino(rede, (i*epocasPorFrame));
 
          try{
-            Thread.sleep(delay);
-         }catch(Exception e){}
+            tempoRestante = proximoTempoDesenho - System.nanoTime();
+            tempoRestante /= 1000000;
+            if(tempoRestante < 0) tempoRestante = 0;
+
+            Thread.sleep((long)tempoRestante);
+            proximoTempoDesenho += intervaloDesenho;
+
+         }catch(Exception e){ }
 
          i++;
       }
+
       jt.dispose();
    }
 
 
    public static RedeNeural criarRede(int qEntradas, int qSaidas){
-      int[] arquitetura = {qEntradas, 13, 13, qSaidas};
+      int[] arquitetura = {qEntradas, 12, 12, qSaidas};
       RedeNeural rede = new RedeNeural(arquitetura);
 
-      rede.configurarAlcancePesos(2);
+      rede.configurarAlcancePesos(1);
       rede.configurarTaxaAprendizagem(0.1);
       rede.compilar();
       rede.configurarFuncaoAtivacao(2);

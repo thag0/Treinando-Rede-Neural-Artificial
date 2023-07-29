@@ -18,10 +18,16 @@ public class PainelTreino extends JPanel{
 
    BufferedImage imagem;
    int epocaAtual = 0;
+
+   //evitar inicializações durante a renderização
+   int r, b, g, rgb;
+   int x, y;
    
    public PainelTreino(int larguraImagem, int alturaImagem, float escala){
       this.largura = (int) (larguraImagem*escala);
       this.altura = (int)  (alturaImagem*escala);
+
+      imagem = new BufferedImage(this.largura, this.altura, BufferedImage.TYPE_INT_RGB);
 
       int arq[] = {1, 1, 1};
       this.rede = new RedeNeural(arq);
@@ -43,12 +49,9 @@ public class PainelTreino extends JPanel{
       nEntrada -= (rede.entrada.temBias) ? 1 : 0;
       entradaRede = new double[nEntrada];
 
-      imagem = new BufferedImage(this.largura, this.altura, BufferedImage.TYPE_INT_RGB);
-      int r, b, g, rgb;
-
-      if(rede.saida.neuronios.length == 1){
-         for(int y = 0; y < this.altura; y++){
-            for(int x = 0; x < this.largura; x++){
+      if(rede.saida.neuronios.length == 1){//escala de cinza
+         for(y = 0; y < this.altura; y++){
+            for(x = 0; x < this.largura; x++){
                entradaRede[0] = (double)x / this.largura;
                entradaRede[1] = (double)y / this.altura;
                rede.calcularSaida(entradaRede);
@@ -61,9 +64,10 @@ public class PainelTreino extends JPanel{
                imagem.setRGB(x, y, rgb);
             }
          } 
+
       }else if(rede.saida.neuronios.length == 3){//rgb
-         for(int y = 0; y < this.altura; y++){
-            for(int x = 0; x < this.largura; x++){
+         for(y = 0; y < this.altura; y++){
+            for(x = 0; x < this.largura; x++){
                entradaRede[0] = (double)x / this.largura;
                entradaRede[1] = (double)y / this.altura;
                rede.calcularSaida(entradaRede);

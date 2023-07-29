@@ -19,6 +19,8 @@ public class Camada implements Serializable{
       TANH,
       LEAKY_RELU,
       ELU,
+      SWISH,
+      GELU,
       LINEAR,
       SENO,
       ARGMAX,
@@ -70,6 +72,7 @@ public class Camada implements Serializable{
       }
    }
 
+
    /**
     * Configura a função de ativação da camada
     * @param ativacao valor da nova função de ativação.
@@ -82,10 +85,12 @@ public class Camada implements Serializable{
          case 3: this.ativacao = FuncaoAtivacao.TANH; break;
          case 4: this.ativacao = FuncaoAtivacao.LEAKY_RELU; break;
          case 5: this.ativacao = FuncaoAtivacao.ELU; break;
-         case 6: this.ativacao = FuncaoAtivacao.LINEAR; break;
-         case 7: this.ativacao = FuncaoAtivacao.SENO; break;
-         case 8: this.ativacao = FuncaoAtivacao.ARGMAX; break;
-         case 9: this.ativacao = FuncaoAtivacao.SOFTMAX; break;
+         case 6: this.ativacao = FuncaoAtivacao.SWISH; break;
+         case 7: this.ativacao = FuncaoAtivacao.GELU; break;
+         case 8: this.ativacao = FuncaoAtivacao.LINEAR; break;
+         case 9: this.ativacao = FuncaoAtivacao.SENO; break;
+         case 10: this.ativacao = FuncaoAtivacao.ARGMAX; break;
+         case 11: this.ativacao = FuncaoAtivacao.SOFTMAX; break;
          default: throw new IllegalArgumentException("Valor fornecido para a função de ativação está fora de alcance.");
       }
    }
@@ -103,6 +108,8 @@ public class Camada implements Serializable{
       if(this.ativacao == FuncaoAtivacao.TANH) return Ativacoes.tanH(valor);
       if(this.ativacao == FuncaoAtivacao.LEAKY_RELU) return Ativacoes.leakyRelu(valor);
       if(this.ativacao == FuncaoAtivacao.ELU) return Ativacoes.elu(valor);
+      if(this.ativacao == FuncaoAtivacao.SWISH) return Ativacoes.swish(valor);
+      if(this.ativacao == FuncaoAtivacao.GELU) return Ativacoes.gelu(valor);
       if(this.ativacao == FuncaoAtivacao.LINEAR) return Ativacoes.linear(valor);
       if(this.ativacao == FuncaoAtivacao.SENO) return Ativacoes.seno(valor);
 
@@ -123,6 +130,8 @@ public class Camada implements Serializable{
       if(this.ativacao == FuncaoAtivacao.TANH) return Ativacoes.tanHDx(valor);
       if(this.ativacao == FuncaoAtivacao.LEAKY_RELU) return Ativacoes.leakyReluDx(valor);
       if(this.ativacao == FuncaoAtivacao.ELU) return Ativacoes.eluDx(valor);
+      if(this.ativacao == FuncaoAtivacao.SWISH) return Ativacoes.swishDx(valor);
+      if(this.ativacao == FuncaoAtivacao.GELU) return Ativacoes.geluDx(valor);
       if(this.ativacao == FuncaoAtivacao.LINEAR) return Ativacoes.linearDx(valor);
       if(this.ativacao == FuncaoAtivacao.SENO) return Ativacoes.senoDx(valor);
 

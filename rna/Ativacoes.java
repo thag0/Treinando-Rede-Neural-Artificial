@@ -7,81 +7,103 @@ public class Ativacoes{
    private static double alfaLeakyRelu = 0.01;
    private static double alfaElu = 0.01;
 
-   public static double relu(double valor){
-      if(valor < 0) return 0;
-      return valor;
+   public static double relu(double x){
+      if(x > 0) return x;
+      return 0;
    }
 
 
-   public static double reluDx(double valor){
-      if(valor < 0) return 0;
-      return 1;     
+   public static double reluDx(double x){
+      if(x > 0) return 1;
+      return 0;
    }
 
 
-   public static double sigmoid(double valor){
-      return (1 / (1 + Math.exp(-valor)));
+   public static double sigmoid(double x){
+      return (1 / (1 + Math.exp(-x)) );
    }
 
 
-   public static double sigmoidDx(double valor){
-      double sig = sigmoid(valor);
+   public static double sigmoidDx(double x){
+      double sig = sigmoid(x);
       return (sig * (1-sig));
    }
 
 
-   public static double tanH(double valor){
-      return Math.tanh(valor);
+   public static double tanH(double x){
+      return Math.tanh(x);
    }
 
 
-   public static double tanHDx(double valor){
-      double resultado = Math.tanh(valor);
+   public static double tanHDx(double x){
+      double resultado = Math.tanh(x);
       return (1 - Math.pow(resultado, 2));
    }
 
 
-   public static double leakyRelu(double valor){
-      if(valor > 0) return valor;
-      else return ((alfaLeakyRelu) * valor);
+   public static double leakyRelu(double x){
+      if(x > 0) return x;
+      else return ((alfaLeakyRelu) * x);
    }
 
 
-   public static double leakyReluDx(double valor){
-      if(valor > 0) return 1;
+   public static double leakyReluDx(double x){
+      if(x > 0) return 1;
       else return alfaLeakyRelu;
    }
 
 
-   public static double elu(double valor){
-      if(valor > 0) return valor;
-      else return (alfaElu * (Math.exp(valor)-1));
+   public static double elu(double x){
+      if(x > 0) return x;
+      else return (alfaElu * (Math.exp(x)-1));
    }
 
 
-   public static double eluDx(double valor){
-      if(valor > 0) return 1;
-      else return (alfaElu * Math.exp(valor));
+   public static double eluDx(double x){
+      if(x > 0) return 1;
+      else return (alfaElu * Math.exp(x));
    }
 
 
-   public static double linear(double valor){
-      return valor;
+   public static double swish(double x){
+      return (x * sigmoid(x));
    }
 
 
-   public static double linearDx(double valor){
+   public static double swishDx(double x){
+      double sig = sigmoid(x);
+      return (x * sig + sigmoidDx(x));
+  }
+
+
+   public static double gelu(double x){
+      return 0.5 * x * (1.0 + Math.tanh(Math.sqrt(2.0 / Math.PI) * (x + 0.044715 * Math.pow(x, 3))));      
+   }
+
+
+   public static double geluDx(double x){
+      double cdf = 0.5 * (1.0 + Math.tanh(Math.sqrt(2.0 / Math.PI) * (x + 0.044715 * Math.pow(x, 3))));
+      return 0.5 + 0.5 * Math.tanh(Math.sqrt(2.0 / Math.PI) * (x + 0.044715 * Math.pow(x, 3))) + x * cdf;
+   }
+
+
+   public static double linear(double x){
+      return x;
+   }
+
+
+   public static double linearDx(double x){
       return 1;
    }
 
 
-   public static double seno(double valor){
-      return Math.sin(valor);
+   public static double seno(double x){
+      return Math.sin(x);
    }
 
 
-   public static double senoDx(double valor){
-      return Math.cos(valor);
+   public static double senoDx(double x){
+      return Math.cos(x);
    }
 
 
