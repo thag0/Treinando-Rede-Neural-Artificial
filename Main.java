@@ -31,6 +31,7 @@ class Main{
    
    public static void main(String[] args){
       limparConsole();
+
       long t1, t2;
       long horas,  minutos, segundos;
 

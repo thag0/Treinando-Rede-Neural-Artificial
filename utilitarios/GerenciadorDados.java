@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * Responsável pelo manuseio do conjunto de dados
@@ -249,6 +250,28 @@ public class GerenciadorDados{
 
 
    /**
+    * Embaralha o conjunto de dados aleatoriamente.
+    * <p>
+    *    A alteração irá afetar o conteúdo dos dados recebidos.
+    *    Caso queira manter os dados originais, é recomendado fazer uma cópia previmanete.
+    * </p>
+    * @param dados O conjunto de dados completo.
+    */
+   public void embaralharDados(double[][] dados){
+      Random random = new Random();
+      int linhas = dados.length;
+
+      for(int i = linhas - 1; i > 0; i--){
+         int j = random.nextInt(i + 1);
+
+         double[] temp = dados[i];
+         dados[i] = dados[j];
+         dados[j] = temp;
+      }
+   }
+
+
+   /**
     * Separa os dados que serão usados como entrada de acordo com os valores fornecidos.
     * @param dados conjunto de dados completo.
     * @param colunas quantidade de colunas que serão preservadas, começando pela primeira até o valor fornecido.
@@ -309,4 +332,46 @@ public class GerenciadorDados{
       return dadosSaida;
    }
 
+
+   /**
+    * Separa o conjunto de dados em dados de treino e dados de teste, de acordo com o tamanho do teste fornecido.
+    * 
+    * <p>
+    * A função recebe um conjunto de dados completo e separa ele em duas matrizes, uma para treino e outra para teste.
+    * A quantidade de dados para o conjunto de teste é determinada pelo parâmetro tamanhoTeste.
+    * </p>
+    * 
+    * <p>
+    * Exemplo de uso:
+    * </p>
+    * <pre>{@code
+    * double[][][] treinoTeste = separarTreinoTeste(dados, 0.25f);
+    * double[][] treino = treinoTeste[0];
+    * double[][] teste = treinoTeste[1];
+    * }</pre>
+    * 
+    * @param dados O conjunto de dados completo.
+    * @param tamanhoTeste O tamanho relativo do conjunto de teste (entre 0 e 1).
+    * @return Um array de duas matrizes contendo os dados de treino e teste, respectivamente.
+    * @throws IllegalArgumentException caso o conjunto de dados for nulo ou o tamanho de teste estiver fora do intervalo (0, 1).
+    */
+   public double[][][] separarTreinoTeste(double[][] dados, float tamanhoTeste){
+      if(dados == null) throw new IllegalArgumentException("O conjunto de dados é nulo.");
+      if(tamanhoTeste < 0 || tamanhoTeste > 1){
+         throw new IllegalArgumentException("O tamanho dos dados de teste deve ser maior que zero e menor que um.");
+      }
+
+      int linhasTeste = (int) (dados.length*tamanhoTeste);
+      int linhasTreino = dados.length - linhasTeste;
+      int colunas = dados[0].length;
+
+      double[][] treino = new double[linhasTreino][colunas];
+      double[][] teste = new double[linhasTeste][colunas];
+
+      //método nativo, parece ser mais rápido que uma cópia manual
+      System.arraycopy(dados, 0, treino, 0, linhasTreino);// copiar treino
+      System.arraycopy(dados, linhasTreino, teste, 0, linhasTeste);// copiar teste
+
+      return new double[][][]{treino, teste};
+   }
 }
