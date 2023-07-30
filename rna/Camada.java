@@ -2,6 +2,7 @@ package rna;
 
 import java.io.Serializable;
 
+
 /**
  * Representa uma camada de neurônios em uma rede neural.
  * Cada camada possui um conjunto de neurônios e uma função de ativação que pode ser configurada.
@@ -31,7 +32,9 @@ public class Camada implements Serializable{
 
 
    /**
-    * Inicializa uma instância de camada de RedeNeural. Ainda é preciso configurar a quantidade de neurõnios dela.
+    * Inicializa uma instância de camada de RedeNeural.
+    *
+    * Após instanciar a camada é preciso inicialiar os neurônios dela.
     * @param temBias define se a camada possui um neurônio de bias. Se true, será adicionado um neurônio adicional
     * que a saída é sempre 1.
     */

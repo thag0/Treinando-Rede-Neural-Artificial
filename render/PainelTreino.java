@@ -92,8 +92,10 @@ public class PainelTreino extends JPanel{
 
       g2.drawImage(imagem, 0, 0, null);
 
+      g2.setColor(Color.BLACK);
+      g2.drawString(("Época: " + epocaAtual), 6, 16);
       g2.setColor(Color.WHITE);
-      g2.drawString(("Época: " + epocaAtual), 5, 14);
+      g2.drawString(("Época: " + epocaAtual), 5, 15);
 
       g2.dispose();
    }

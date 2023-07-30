@@ -21,10 +21,10 @@ class Main{
    static GerenciadorImagem gi = new GerenciadorImagem();
    
    // static final String caminhoArquivo = "/dados/imagens/meme.png";
-   static final String caminhoArquivo = "/dados/mnist/8.png";
+   static final String caminhoArquivo = "/dados/mnist/5.png";
    static final int epocas = 100*1000;
-   static final float escalaRender = 10f;
-   static final float escalaImagemExportada = 20f;
+   static final float escalaRender = 11f;
+   static final float escalaImagemExportada = 40f;
 
    // Sempre lembrar de quando mudar o dataset, também mudar a quantidade de dados de entrada e saída.
 
@@ -46,10 +46,11 @@ class Main{
       System.out.println("Tamanho dos dados [" + dadosEntrada.length + ", " + (dadosEntrada[0].length + dadosSaida[0].length) + "]");
 
       RedeNeural rede = criarRede(qEntradas, qSaidas);
+      System.out.println(rede.obterInformacoes());
 
       //treinar e marcar tempo
       t1 = System.nanoTime();
-      System.out.println("treinando a rede.");
+      System.out.println("Treinando.");
 
       treinoEmPainel(rede, imagem, dadosEntrada, dadosSaida);
       
@@ -67,7 +68,22 @@ class Main{
       System.out.println("Tempo de treinamento: " + horas + "h " + minutos + "m " + segundos + "s");
 
       System.out.println("\nSalvando imagem");
-      gi.exportarImagemEscalaCinza(imagem, rede, escalaImagemExportada, "./Imagem-ampliada");// precisa treinar bastante
+      // precisa treinar bastante
+      gi.exportarImagemEscalaCinza(imagem, rede, escalaImagemExportada, "./resultados/imagem-ampliada");
+   }
+
+
+   public static RedeNeural criarRede(int qEntradas, int qSaidas){
+      int[] arquitetura = {qEntradas, 12, 12, qSaidas};
+      RedeNeural rede = new RedeNeural(arquitetura);
+
+      rede.configurarAlcancePesos(1);
+      rede.configurarTaxaAprendizagem(0.05);
+      rede.configurarMomentum(0.6);
+      rede.compilar();
+      rede.configurarFuncaoAtivacao(2);
+      
+      return rede;
    }
 
 
@@ -76,7 +92,7 @@ class Main{
 
       JanelaTreino jt = new JanelaTreino(imagem.getWidth(), imagem.getHeight(), escalaRender);
 
-      int epocasPorFrame = 6;
+      int epocasPorFrame = 1;
       int i = 0;
       jt.desenharTreino(rede, epocasPorFrame);
 
@@ -103,20 +119,6 @@ class Main{
       }
 
       jt.dispose();
-   }
-
-
-   public static RedeNeural criarRede(int qEntradas, int qSaidas){
-      int[] arquitetura = {qEntradas, 10, 10, qSaidas};
-      RedeNeural rede = new RedeNeural(arquitetura);
-
-      rede.configurarAlcancePesos(1);
-      rede.configurarTaxaAprendizagem(0.05);
-      rede.configurarMomentum(0.65);
-      rede.compilar();
-      rede.configurarFuncaoAtivacao(2);
-      
-      return rede;
    }
 
 
