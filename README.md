@@ -10,9 +10,9 @@ Aos poucos criando um pequeno ambiente de trabalho em volta disso
 # Resultados
 
 Até o momento já consegui usar a rede em testes menores, como pegar alguns conjuntos de dados para testar o desempenho dela e tive bons resultados com precisões
-entre 80% e 95%
+entre 80% e 95%. Depois de ter adicionado novas ferramentas para evitar o overfitting da rede, a precisão dela não caiu tanto assim. 
 
-Consegui testar a rede em um cenário que ela deve ampliar imagens e também consegui bons resultados como é possível ver a seguir:
+Já consegui testar a rede em um cenário que ela deve ampliar imagens e também consegui bons resultados como é possível ver a seguir:
 
 ![imagemApliadaPelaRede](https://github.com/thag0/Treinando-Rede-Neural-Artificial/assets/91092364/8610fd77-b739-4a5d-a976-085eddaf8a15)
 
