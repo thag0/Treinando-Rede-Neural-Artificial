@@ -28,3 +28,9 @@ Uma evolução agora foi converter os dados de imagem na escala rgb ao invés de
 ![imagemArcoIrisAmpliada](https://github.com/thag0/Treinando-Rede-Neural-Artificial/assets/91092364/66028643-dba6-4f46-a711-e561eb0c7515)
 
 *imagem original comparada com imagem criada pela rede neural, agora com cores.*
+
+# Algumas dificuldades
+
+Pelo que to vendo na experiência de uso, o treino da rede neural fica muito lento quando uso conjunto de dados muito grandes. Testei ela no mesmo cenário de ampliar imagens mas com imagens maiores que as do mnist (28x28), além de que com imagens coloridas o resultado ficou pior ainda. 
+Acredito que o maior problema seja o grande volume de dados que as imagens geram (as vezes mais de 100,000 amostras) e mesmo usando o SGD com momentum para treinar a rede, ela ainda tem muita dificuldade de convergir para resultados bons.
+
