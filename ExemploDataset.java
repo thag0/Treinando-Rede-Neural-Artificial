@@ -1,10 +1,12 @@
 import java.util.ArrayList;
 
 import rna.RedeNeural;
+
 import utilitarios.ConversorDados;
 import utilitarios.GerenciadorDados;
 
 public class ExemploDataset{
+
    public static void main(String[] args) {
       GerenciadorDados gd = new GerenciadorDados();
       ConversorDados cd = new ConversorDados();
@@ -39,6 +41,7 @@ public class ExemploDataset{
       testeX = gd.separarDadosEntrada(teste, colunasDados);
       testeY = gd.separarDadosSaida(teste, colunasClasses);
 
+
       // criando, configurando e treinando a rede neural.
       // os valores de configuração não devem ser tomados como regra e 
       // devem se adaptar ao problema e os dados apresentados.
@@ -50,9 +53,11 @@ public class ExemploDataset{
       rede.configurarFuncaoAtivacao(3);
       rede.treinoGradienteEstocastico(treinoX, treinoY, 1_000);
 
+
       // avaliando os resultados da rede neural
       double precisao = rede.calcularPrecisao(testeX, testeY);
       double custo = rede.funcaoDeCusto(testeX, testeY);
+      System.out.println(rede.obterInformacoes());
       System.out.println("Custo: " + custo);
       System.out.println("Precisão: " + (precisao * 100) + "%");
    }
