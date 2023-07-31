@@ -13,7 +13,7 @@ import javax.swing.JPanel;
 import rna.RedeNeural;
 
 public class Painel extends JPanel{
-   final int largura = 500;
+   final int largura = 600;
    final int altura = 400;
    Graphics2D g2;
    
@@ -38,12 +38,12 @@ public class Painel extends JPanel{
    int x = 0;
    int y = 0;
    int yCamadaEntrada = 0;
-   int[] yCamadaOculta;
+   int[] yCamadaOculta = new int[1];
    int yCamadaSaida = 0;
    int larguraDesenho = 26;
    int alturaDesenho = larguraDesenho;
    int espacoVerticalEntreNeuronio = 7;
-   int espacoHorizontalEntreCamadas = (int)(larguraDesenho * 2.8);
+   int espacoHorizontalEntreCamadas = (int)(larguraDesenho * 2.3);
    String texto = "";
 
    //informações

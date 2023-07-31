@@ -20,7 +20,7 @@ public class ExemploDataset{
       gd.editarValorDados(iris, ultimoIndice, "Iris-setosa", "-1");
       gd.editarValorDados(iris, ultimoIndice, "Iris-versicolor", "0");
       gd.editarValorDados(iris, ultimoIndice, "Iris-virginica", "1");
-      
+
 
       // converter os dados da estrutura de texto em valores numéricos para o 
       // treino da rede neural.
@@ -47,11 +47,11 @@ public class ExemploDataset{
       // devem se adaptar ao problema e os dados apresentados.
       int[] arq = {colunasDados, 6, 4, colunasClasses};
       RedeNeural rede = new RedeNeural(arq);
-      rede.configurarTaxaAprendizagem(0.001);
+      rede.configurarTaxaAprendizagem(0.01);
       rede.configurarMomentum(0.9);
       rede.compilar();
       rede.configurarFuncaoAtivacao(3);
-      rede.treinoGradienteEstocastico(treinoX, treinoY, 1_000);
+      rede.treinoGradienteEstocastico(treinoX, treinoY, 3_000);
 
 
       // avaliando os resultados da rede neural
