@@ -21,7 +21,7 @@ class Main{
    static GerenciadorImagem gi = new GerenciadorImagem();
    
    // static final String caminhoArquivo = "/dados/imagens/meme.png";
-   static final String caminhoArquivo = "/dados/mnist/5.png";
+   static final String caminhoArquivo = "/dados/mnist/3.png";
    static final int epocas = 100*1000;
    static final float escalaRender = 11f;
    static final float escalaImagemExportada = 40f;
@@ -44,7 +44,7 @@ class Main{
       // separar para o treino
       double[][] dadosEntrada = gd.separarDadosEntrada(dados, qEntradas);
       double[][] dadosSaida = gd.separarDadosSaida(dados, qSaidas);
-      System.out.println("Tamanho dos dados [" + dadosEntrada.length + ", " + (dadosEntrada[0].length + dadosSaida[0].length) + "]");
+      System.out.println("Tamanho dos dados [" + dados.length + ", " + dados[0].length + "]");
 
       RedeNeural rede = criarRede(qEntradas, qSaidas);
       System.out.println(rede.obterInformacoes());
@@ -75,12 +75,12 @@ class Main{
 
 
    public static RedeNeural criarRede(int qEntradas, int qSaidas){
-      int[] arquitetura = {qEntradas, 12, 12, qSaidas};
+      int[] arquitetura = {qEntradas, 10, 10, qSaidas};
       RedeNeural rede = new RedeNeural(arquitetura);
 
       rede.configurarAlcancePesos(1);
-      rede.configurarTaxaAprendizagem(0.05);
-      rede.configurarMomentum(0.6);
+      rede.configurarTaxaAprendizagem(0.01);
+      rede.configurarMomentum(0.95);
       rede.compilar();
       rede.configurarFuncaoAtivacao(2);
       
@@ -93,7 +93,7 @@ class Main{
 
       JanelaTreino jt = new JanelaTreino(imagem.getWidth(), imagem.getHeight(), escalaRender);
 
-      int epocasPorFrame = 1;
+      int epocasPorFrame = 3;
       int i = 0;
       jt.desenharTreino(rede, epocasPorFrame);
 

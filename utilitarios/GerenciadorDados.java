@@ -19,9 +19,14 @@ public class GerenciadorDados{
 
    /**
     * Lê o arquivo .csv de acordo com o caminho especificado.
-    * @param caminho caminha absoluto ou relativo do arquivo
-    * @return arquivo lido
-    * @throws IllegalArgumentException caso não encontre o diretório fornecido
+    *
+    * <p>
+    *    O formato da estrutura de dados será um objeto do tipo 
+    *    {@code ArrayList<String[]>}, contendo as linhas e colunas das informações lidas.
+    * </p>
+    * @param caminho caminho relativo do arquivo.
+    * @return objeto contendo as informações do arquivo lido.
+    * @throws IllegalArgumentException caso não encontre o diretório fornecido.
     */
    public ArrayList<String[]> lerCsv(String caminho){
       ArrayList<String[]> dados = new ArrayList<>();
@@ -50,8 +55,8 @@ public class GerenciadorDados{
 
 
    /**
-    * Exibe os elementos contidos na lista 
-    * @param lista lista com os dados
+    * Exibe pelo console as informações contidas na lista.
+    * @param lista lista com os dados.
     */
    public void imprimirCsv(ArrayList<String[]> lista){
       String separador = ",";
@@ -83,11 +88,11 @@ public class GerenciadorDados{
 
 
    /**
-    * Remove a coluna dos dados de acordo com o índice fornecido
+    * Remove todas as colunas dos dados de acordo com o índice fornecido.
     * @param lista lista com os dados.
     * @param indice índice da coluna que será removida.
     * @return nova lista com a coluna removida.
-    * @throws IllegalArgumentException se o indice lista for nula.
+    * @throws IllegalArgumentException se a lista for nula.
     * @throws IllegalArgumentException se o indice estiver fora de alcance da lista.
     */
    public ArrayList<String[]> removerColunaDados(ArrayList<String[]> lista, int indice){
@@ -154,36 +159,36 @@ public class GerenciadorDados{
     * um valor numérico.
     * <p>
     *    É importante verificar e ter certeza se os dados não possuem nenhuma coluna com caracteres, caso isso seja verdade
-    *    o método irá remover todas as colunas como consequência.
+    *    o método irá remover todas as colunas como consequência e a lista ficará vazia.
     * </p>
     * @param lista lista com os dados;
     */
    public void removerNaoNumericos(ArrayList<String[]> lista){
-   int indiceInicial = 0;
-   boolean removerLinha = false;
+      int indiceInicial = 0;
+      boolean removerLinha = false;
    
-      while (indiceInicial < lista.size()){
-            removerLinha = false;
+      while(indiceInicial < lista.size()){
+         removerLinha = false;
 
-            for(int j = 0; j < lista.get(indiceInicial).length; j++){
-               if((valorInt(lista.get(indiceInicial)[j]) == false) || 
-                  (valorFloat(lista.get(indiceInicial)[j]) == false) || 
-                  (valorDouble(lista.get(indiceInicial)[j]) == false)
-               ){
-                  removerLinha = true;
-                  break;
-               }
+         for(int j = 0; j < lista.get(indiceInicial).length; j++){
+            //verificar se existe algum valor que não possa ser convertido para número.
+            if((valorInt(lista.get(indiceInicial)[j]) == false) || 
+               (valorFloat(lista.get(indiceInicial)[j]) == false) || 
+               (valorDouble(lista.get(indiceInicial)[j]) == false)
+            ){
+               removerLinha = true;
+               break;
             }
+         }
 
          if(removerLinha) lista.remove(indiceInicial);
-         else indiceInicial++;
-            
+         else indiceInicial++; 
       }
    }
 
 
    /**
-    * Tenta converter o valor para um numérico do tipo double
+    * Tenta converter o valor para um numérico do tipo int
     * @param valor valor que será testado.
     * @return resultado da verificação, verdadeiro se foi convertido ou false se não
     */
@@ -232,7 +237,7 @@ public class GerenciadorDados{
 
    /**
     * Descreve as dimensões da lista, tanto em questão de quantidade de linhas qunanto quantidade de colunas.
-    * @param lista lista com os dados
+    * @param lista lista com os dados.
     * @return array contendo as informações das dimensões da lista, o primeiro elemento corresponde a quantidade de 
     * linhas e o segundo elemento corresponde a quantidade de colunas.
     * @throws IllegalArgumentException se a lista estiver nula.
@@ -253,9 +258,9 @@ public class GerenciadorDados{
     * Embaralha o conjunto de dados aleatoriamente.
     * <p>
     *    A alteração irá afetar o conteúdo dos dados recebidos.
-    *    Caso queira manter os dados originais, é recomendado fazer uma cópia previmanete.
+    *    Caso queira manter os dados originais, é recomendado fazer uma cópia previamente.
     * </p>
-    * @param dados O conjunto de dados completo.
+    * @param dados conjunto de dados completo.
     */
    public void embaralharDados(double[][] dados){
       Random random = new Random();
@@ -272,6 +277,10 @@ public class GerenciadorDados{
 
 
    /**
+    * <p>
+    *    Método para treino da rede neural.
+    * </p>
+    *
     * Separa os dados que serão usados como entrada de acordo com os valores fornecidos.
     * @param dados conjunto de dados completo.
     * @param colunas quantidade de colunas que serão preservadas, começando pela primeira até o valor fornecido.
@@ -298,6 +307,10 @@ public class GerenciadorDados{
 
 
    /**
+    * <p>
+    *    Método para treino da rede neural.
+    * </p>
+    *
     * Extrai os dados de saída do conjunto de dados e devolve um novo conjunto de dados contendo apenas as 
     * colunas de dados de saída especificadas.
     * @param dados O conjunto de dados com as informações completas.
@@ -337,19 +350,18 @@ public class GerenciadorDados{
     * Separa o conjunto de dados em dados de treino e dados de teste, de acordo com o tamanho do teste fornecido.
     * 
     * <p>
-    * A função recebe um conjunto de dados completo e separa ele em duas matrizes, uma para treino e outra para teste.
-    * A quantidade de dados para o conjunto de teste é determinada pelo parâmetro tamanhoTeste.
+    *    A função recebe um conjunto de dados completo e separa ele em duas matrizes, uma para treino e outra para teste.
+    *    A quantidade de dados para o conjunto de teste é determinada pelo parâmetro tamanhoTeste.
     * </p>
     * 
     * <p>
-    * Exemplo de uso:
+    *    Exemplo de uso:
     * </p>
-    * <pre>{@code
+    * <pre>{@code 
     * double[][][] treinoTeste = separarTreinoTeste(dados, 0.25f);
     * double[][] treino = treinoTeste[0];
-    * double[][] teste = treinoTeste[1];
-    * }</pre>
-    * 
+    * double[][] teste = treinoTeste[1];}
+    * </pre>
     * @param dados O conjunto de dados completo.
     * @param tamanhoTeste O tamanho relativo do conjunto de teste (entre 0 e 1).
     * @return Um array de duas matrizes contendo os dados de treino e teste, respectivamente.

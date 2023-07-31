@@ -5,7 +5,8 @@ import java.util.ArrayList;
 public class ConversorDados{
    
    /**
-    * Objeto responsável por interpretar arquivos csv já lidos e convertê-los em dados numéricos.
+    * Objeto responsável por interpretar arquivos csv já lidos no formato 
+    * {@code ArrayList<String[]>} e convertê-los em dados numéricos.
     */
    public ConversorDados(){
 
