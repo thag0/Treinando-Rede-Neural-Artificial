@@ -176,7 +176,7 @@ public class Geim{
     * @param caminho caminho relativo, deve conter o nome do arquivo, sem extensão
     * @param dadosRGB estrutura de dados da imagem.
     */
-   public void exportarImagemPng(String caminho, ArrayList<ArrayList<Integer[]>> dadosRGB){
+   public void exportarImagemPng(ArrayList<ArrayList<Integer[]>> dadosRGB, String caminho){
       int larguraImagem = dadosRGB.get(0).size();
       int alguraImagem = dadosRGB.size();
 
@@ -380,7 +380,7 @@ public class Geim{
          }
       }
 
-      this.exportarImagemPng(caminho, imagemAmpliada);
+      this.exportarImagemPng(imagemAmpliada, caminho);
    }
 
 
@@ -434,6 +434,6 @@ public class Geim{
          }
       }
 
-      this.exportarImagemPng(caminho, imagemAmpliada);
+      this.exportarImagemPng(imagemAmpliada, caminho);
    }
 }

@@ -1,5 +1,7 @@
 *Diretório dedicado para as ferramentas auxiliares na manipulação de dados*
 
+Ambos os gerenciados trabalham com os dados brutos, mas eu preferi separar em dois quando comecei a mexer com imagens para organizar melhor as ideias. Publicamente são duas blibiotecas, uma dos dados e uma para as imagens, especificamente para os dados (como criei muitas funções e o arquivo já tava ficando enorme) decidi separar mais ainda as ideias em conjuntos menores pra facilitar a legibilidade e manutenção do código.
+
 # Gerenciador de Dados (Ged)
 
 <p>
@@ -15,7 +17,7 @@
 Segue a lista das atuais funcionalidades presentes no Ged:
 <ul>
    <li>Imprimir, via console, a lista de dados no formato csv.</li>
-   <li>Verificar se a lista de dados é simétrica, ou seja, se a quantidade de de colunas é a mesma para todas as linhas.</li>
+   <li>Verificar se a lista de dados é simétrica, ou seja, se a quantidade de colunas é a mesma para todas as linhas.</li>
    <li>Adicionar uma nova coluna no conjuntos de dados, tanto no final, quanto por um índice específicado.</li>
    <li>Remover uma linha do conjunto de dados de acordo com um índice especificado.</li>
    <li>Remover uma coluna do conjunto de dados de acordo com um índice especificado, todas as linhas sofrão a mesma alteração.</li>
@@ -24,7 +26,8 @@ Segue a lista das atuais funcionalidades presentes no Ged:
    <li>Gerar colunas categóricas de acorod com os dados da coluna especificada.</li>
    <li>Ler e exportar arquivos no formato csv.</li>
 </ul>
-Adicionalmente possui algumas ferramentas para lidar com dados para o treino da rede neural que eu modelei:
+
+Adicionalmente, possui algumas ferramentas para lidar com dados para o treino da rede neural que eu modelei:
 <ul>
    <li>Embaralhar conjunto de dados.</li>
    <li>Separar dados específicos para a entrada da rede neural.</li>
@@ -34,3 +37,22 @@ Adicionalmente possui algumas ferramentas para lidar com dados para o treino da 
 </ul>
 
 # Gerenciador de imagem (Geim)
+
+<p>
+   O Geim possui um conjunto menor de ferramentas porque não tive necessidade até o momento de criar mais coisa pra ele.
+</p>
+
+Funcionalidades do Geim:
+<ul>
+   <li>Ler uma imagem e transformar num objeto BufferedImage (só testei com png).</li>
+   <li>Gerar uma estrutura de imagem, a estrutura e baseada numa matriz em que cada elemento possui um array de inteiros correspondente ao valor RGB de cada pixel da imagem. Os valores de cor dos pixel serão automaticamente copiados para a nova estrutura</li>
+   <li>Gerar uma estrutura de imagem vazia, sem os valores de cor RGB, de acordo com as dimensões fornecidas.</li>
+   <li>Editar o valor da cor de um pixel numa esrtutura de imagem.</li>
+   <li>Exibir, pelo terminal, o valor contido na estrutura de imagem.</li>
+   <li>Exportar a estrutura de imagem para um arquivo png.</li>
+   <li>Transformar a imagem carregada tanto em escala de cinza, quanto em rgb.</li>
+   <li>Exportar as imagens, tanto em escala de cinza quanto em rgb, usando a rede neural que eu modelei de acordo com um valor de escala.</li>
+</ul>
+
+Importante destacar que quando os dados da imagem são convertido para treino da rede, eles são normalizados numa escala de 0-1, tantos as posições x e y, 
+quanto o valor das cores (tomando como máximo e mínimo do padrão rgb que vai de 0-255).
