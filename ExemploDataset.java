@@ -2,14 +2,12 @@ import java.util.ArrayList;
 
 import rna.RedeNeural;
 
-import utilitarios.ConversorDados;
 import utilitarios.GerenciadorDados;
 
 public class ExemploDataset{
 
    public static void main(String[] args) {
       GerenciadorDados gd = new GerenciadorDados();
-      ConversorDados cd = new ConversorDados();
 
       // manusear dados
       // tratamento específico para os dados do iris com adaptação
@@ -25,7 +23,7 @@ public class ExemploDataset{
       // converter os dados da estrutura de texto em valores numéricos para o 
       // treino da rede neural.
       // separar em treino e teste para evitar overfitting
-      double[][] dados = cd.listaParaDadosDouble(iris);
+      double[][] dados = gd.listaParaDadosDouble(iris);
       double[][][] treinoTeste = gd.separarTreinoTeste(dados, 0.25f);
       double[][] treino = treinoTeste[0];
       double[][] teste = treinoTeste[1];

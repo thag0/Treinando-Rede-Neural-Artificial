@@ -9,14 +9,12 @@ import render.Janela;
 import render.JanelaTreino;
 import rna.RedeNeural;
 
-import utilitarios.ConversorDados;
 import utilitarios.GerenciadorDados;
 import utilitarios.GerenciadorImagem;
 
 
 class Main{
    //auxiliares
-   static ConversorDados cd = new ConversorDados();
    static GerenciadorDados gd = new GerenciadorDados();
    static GerenciadorImagem gi = new GerenciadorImagem();
    
