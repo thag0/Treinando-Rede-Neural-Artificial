@@ -15,11 +15,10 @@ import utilitarios.Geim;
 
 class Main{
    //auxiliares
-   static Ged gd = new Ged();
-   static Geim gi = new Geim();
+   static Ged ged = new Ged();
+   static Geim geim = new Geim();
    
-   // static final String caminhoArquivo = "/dados/imagens/meme.png";
-   static final String caminhoArquivo = "/dados/mnist/3.png";
+   static final String caminhoArquivo = "/dados/mnist/8.png";
    static final int epocas = 100*1000;
    static final float escalaRender = 11f;
    static final float escalaImagemExportada = 40f;
@@ -34,14 +33,14 @@ class Main{
       long horas,  minutos, segundos;
 
       //lendo os dados de entrada
-      BufferedImage imagem = gi.lerImagem(caminhoArquivo);
-      double[][] dados = gi.imagemParaDadosTreinoEscalaCinza(imagem);//escolher os dados
+      BufferedImage imagem = geim.lerImagem(caminhoArquivo);
+      double[][] dados = geim.imagemParaDadosTreinoEscalaCinza(imagem);//escolher os dados
       int qEntradas = 2;//quantidade de dados de entrada / entrada da rede
       int qSaidas = 1;//quantidade de dados de saída / saída da rede
 
       // separar para o treino
-      double[][] dadosEntrada = gd.separarDadosEntrada(dados, qEntradas);
-      double[][] dadosSaida = gd.separarDadosSaida(dados, qSaidas);
+      double[][] dadosEntrada = ged.separarDadosEntrada(dados, qEntradas);
+      double[][] dadosSaida = ged.separarDadosSaida(dados, qSaidas);
       System.out.println("Tamanho dos dados [" + dados.length + ", " + dados[0].length + "]");
 
       RedeNeural rede = criarRede(qEntradas, qSaidas);
@@ -61,14 +60,13 @@ class Main{
       segundos = segundosTotais % 60;
       
       double precisao = rede.calcularPrecisao(dadosEntrada, dadosSaida);
-      System.out.println(rede.obterInformacoes());
       System.out.println("Custo = " + rede.funcaoDeCusto(dadosEntrada, dadosSaida));
       System.out.println("Precisão = " + (formatarFloat(precisao*100)) + "%");
       System.out.println("Tempo de treinamento: " + horas + "h " + minutos + "m " + segundos + "s");
 
-      System.out.println("\nSalvando imagem");
       // precisa treinar bastante
-      gi.exportarImagemEscalaCinza(imagem, rede, escalaImagemExportada, "./resultados/imagem-ampliada");
+      System.out.println("\nSalvando imagem");
+      geim.exportarImagemEscalaCinza(imagem, rede, escalaImagemExportada, "./resultados/imagem-ampliada");
    }
 
 
@@ -77,8 +75,8 @@ class Main{
       RedeNeural rede = new RedeNeural(arquitetura);
 
       rede.configurarAlcancePesos(1);
-      rede.configurarTaxaAprendizagem(0.01);
-      rede.configurarMomentum(0.95);
+      rede.configurarTaxaAprendizagem(0.002);
+      rede.configurarMomentum(0.99);
       rede.compilar();
       rede.configurarFuncaoAtivacao(2);
       
