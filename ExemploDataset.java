@@ -2,22 +2,22 @@ import java.util.ArrayList;
 
 import rna.RedeNeural;
 
-import utilitarios.GerenciadorDados;
+import utilitarios.Ged;
 
 public class ExemploDataset{
 
    public static void main(String[] args) {
-      GerenciadorDados gd = new GerenciadorDados();
+      Ged gd = new Ged();
 
       // manusear dados
       // tratamento específico para os dados do iris com adaptação
       // para usar a tangente hiperbolica como função de ativação
       ArrayList<String[]> iris = gd.lerCsv("./dados/datasets-maiores/iris.csv");
-      gd.removerLinhaDados(iris, 0);
+      gd.removerLinha(iris, 0);
       int ultimoIndice = (iris.get(0).length-1);
-      gd.editarValorDados(iris, ultimoIndice, "Iris-setosa", "-1");
-      gd.editarValorDados(iris, ultimoIndice, "Iris-versicolor", "0");
-      gd.editarValorDados(iris, ultimoIndice, "Iris-virginica", "1");
+      gd.editarValor(iris, ultimoIndice, "Iris-setosa", "-1");
+      gd.editarValor(iris, ultimoIndice, "Iris-versicolor", "0");
+      gd.editarValor(iris, ultimoIndice, "Iris-virginica", "1");
 
 
       // converter os dados da estrutura de texto em valores numéricos para o 

@@ -9,14 +9,14 @@ import render.Janela;
 import render.JanelaTreino;
 import rna.RedeNeural;
 
-import utilitarios.GerenciadorDados;
-import utilitarios.GerenciadorImagem;
+import utilitarios.Ged;
+import utilitarios.Geim;
 
 
 class Main{
    //auxiliares
-   static GerenciadorDados gd = new GerenciadorDados();
-   static GerenciadorImagem gi = new GerenciadorImagem();
+   static Ged gd = new Ged();
+   static Geim gi = new Geim();
    
    // static final String caminhoArquivo = "/dados/imagens/meme.png";
    static final String caminhoArquivo = "/dados/mnist/3.png";
