@@ -147,6 +147,22 @@ public class Ged{
 
 
    /**
+    * Troca os valores das colunas na lista de dados de acordo os com índicer fornecidos.
+    * @param lista A lista de dados.
+    * @param idColuna1 índice da primeira coluna que será trocada.
+    * @param idColuna2 índice da segunda coluna que será trocada.
+    * @throws IllegalArgumentException se a lista estiver nula.
+    * @throws IllegalArgumentException se a lista não for simétrica.
+    * @throws IllegalArgumentException se a lista não tiver pelo menos duas colunas.
+    * @throws IllegalArgumentException se os índices fornecidos estiverem fora de alcance do tamanho das colunas.
+    * @throws IllegalArgumentException se as colunas fornecidas forem iguais.
+    */
+   public void trocarColunas(ArrayList<String[]> lista, int idColuna1, int idColuna2){
+      md.trocarColunas(lista, idColuna1, idColuna2);
+   }
+
+
+   /**
     * Remove a linha inteira dos dados caso exista algum valor nas colunas que não consiga ser convertido para
     * um valor numérico.
     * <p>
@@ -203,6 +219,7 @@ public class Ged{
 
    /**
     * Lê o arquivo .csv de acordo com o caminho especificado.
+    * Espaços contidos serão removidos.
     *
     * <p>
     *    O formato da estrutura de dados será um objeto do tipo 

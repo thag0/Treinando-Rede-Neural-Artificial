@@ -132,6 +132,23 @@ class ManipuladorDados{
    }
 
 
+   public void trocarColunas(ArrayList<String[]> lista, int idColuna1, int idColuna2){
+      if(lista == null) throw new IllegalArgumentException("A lista fornicida está nula.");
+      if(lista.size() < 2) throw new IllegalArgumentException("É necessário que a lista tenha pelo menos duas colunas.");
+      if(!(dadosSimetricos(lista))) throw new IllegalArgumentException("A lista deve ser simétrica.");
+
+      if(idColuna1 < 0 || idColuna1 >= lista.get(0).length) throw new IllegalArgumentException("O índice fornecido da coluna 1 é inválido.");
+      if(idColuna2 < 0 || idColuna2 >= lista.get(0).length) throw new IllegalArgumentException("O índice fornecido da coluna 2 é inválido.");
+      if(idColuna1 == idColuna2) throw new IllegalArgumentException("Os índices fornecidos devem ser diferentes.");
+
+      for(String[] linha : lista){
+         String intermediario = linha[idColuna1];
+         linha[idColuna1] = linha[idColuna2];
+         linha[idColuna2] = intermediario;
+      }
+   }
+
+
    public void removerNaoNumericos(ArrayList<String[]> lista){
       int indiceInicial = 0;
       boolean removerLinha = false;

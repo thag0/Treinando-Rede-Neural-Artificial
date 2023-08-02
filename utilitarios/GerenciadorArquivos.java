@@ -28,10 +28,20 @@ class GerenciadorArquivos{
          throw new IllegalArgumentException("O caminho especificado não existe ou não foi encontrado.");
       }
 
+      //extensão não é .csv
+      if(new File(caminho).getClass().getName().toLowerCase().endsWith(".csv")){
+         throw new IllegalArgumentException("O arquivo especificado não contém as extensão .csv");
+      }
+
       try{
          BufferedReader br = new BufferedReader(new FileReader(caminho));
          while((linha = br.readLine()) != null){
             String linhaDados[] = linha.split(separador);
+
+            for(int i = 0; i < linhaDados.length; i++){
+               linhaDados[i] = linhaDados[i].replaceAll(" ", "");
+            }
+            
             dados.add(linhaDados);
          }
          br.close();

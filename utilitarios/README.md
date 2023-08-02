@@ -22,6 +22,7 @@ Segue a lista das atuais funcionalidades presentes no Ged:
    <li>Remover uma linha do conjunto de dados de acordo com um índice especificado.</li>
    <li>Remover uma coluna do conjunto de dados de acordo com um índice especificado, todas as linhas sofrão a mesma alteração.</li>
    <li>Editar um valor dentro do conjunto de dados, tanto especificando apenas a coluna e alterando todas as linhas, tanto especificando a linha e coluna desejada.</li>
+   <li>Trocas duas colunas de lugar entre si.</li>
    <li>Remover valores que não sejam numéricos, tanto int, como float e double.</li>
    <li>Gerar colunas categóricas de acorod com os dados da coluna especificada.</li>
    <li>Ler e exportar arquivos no formato csv.</li>
