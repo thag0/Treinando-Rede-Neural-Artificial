@@ -277,7 +277,7 @@ public class RedeNeural implements Cloneable, Serializable{
     * Verifica se o modelo já foi compilado para evitar problemas de uso indevido, bem como componentes nulos.
     * @throws IllegalArgumentException se o modelo não foi compilado.
     */
-   private void modeloValido(){
+   public void modeloValido(){
       if(!this.modeloCompilado){
          throw new IllegalArgumentException("O modelo ainda não foi compilado");
       }
@@ -526,7 +526,8 @@ public class RedeNeural implements Cloneable, Serializable{
 
 
    /**
-    * Retropropaga o erro da rede neural de acordo com os dados de entrada e saída esperados, depois atualiza os pesos usando a técnica de gradiente descendente.
+    * Retropropaga o erro da rede neural de acordo com os dados de entrada e saída esperados, 
+    * depois atualiza os pesos usando a técnica de gradiente descendente com momentum.
     *
     * @param entrada array com os dados de entrada das amostras.
     * @param saida array com as saídas esperadas das amostras.
@@ -585,8 +586,8 @@ public class RedeNeural implements Cloneable, Serializable{
             
             Neuronio neuronio = camadaAtual.neuronios[j];
             for(int k = 0; k < neuronio.pesos.length; k++){//percorrer pesos do neurônio atual
-               double gradiente = TAXA_APRENDIZAGEM * neuronio.erro * camadaAnterior.neuronios[k].saida;
-               neuronio.momentum[k] = (TAXA_MOMENTUM * neuronio.momentum[k]) + gradiente;
+               neuronio.gradiente = TAXA_APRENDIZAGEM * neuronio.erro * camadaAnterior.neuronios[k].saida; 
+               neuronio.momentum[k] = (TAXA_MOMENTUM * neuronio.momentum[k]) + neuronio.gradiente;
                neuronio.pesos[k] += neuronio.momentum[k];
             }
          }
@@ -682,6 +683,22 @@ public class RedeNeural implements Cloneable, Serializable{
          }
       }
 
+   }
+
+
+   /**
+    * @return valor de taxa de aprendizagem da rede.
+    */
+   public double obterTaxaAprendizagem(){
+      return this.TAXA_APRENDIZAGEM;
+   }
+
+
+   /**
+    * @return valor de taxa de momentum da rede.
+    */
+   public double obterTaxaMomentum(){
+      return this.TAXA_MOMENTUM;
    }
 
 

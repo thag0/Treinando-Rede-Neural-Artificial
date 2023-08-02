@@ -5,7 +5,7 @@ import java.io.InputStreamReader;
 import java.text.DecimalFormat;
 import java.util.concurrent.TimeUnit;
 
-import render.Janela;
+import render.JanelaRede;
 import render.JanelaTreino;
 import rna.RedeNeural;
 
@@ -18,10 +18,10 @@ class Main{
    static Ged ged = new Ged();
    static Geim geim = new Geim();
    
-   static final String caminhoArquivo = "/dados/mnist/8.png";
+   static final String caminhoArquivo = "/dados/mnist/5.png";
    static final int epocas = 100*1000;
    static final float escalaRender = 11f;
-   static final float escalaImagemExportada = 40f;
+   static final float escalaImagemExportada = 50f;
 
    // Sempre lembrar de quando mudar o dataset, também mudar a quantidade de dados de entrada e saída.
 
@@ -75,8 +75,8 @@ class Main{
       RedeNeural rede = new RedeNeural(arquitetura);
 
       rede.configurarAlcancePesos(1);
-      rede.configurarTaxaAprendizagem(0.002);
-      rede.configurarMomentum(0.99);
+      rede.configurarTaxaAprendizagem(0.01);
+      rede.configurarMomentum(0.95);
       rede.compilar();
       rede.configurarFuncaoAtivacao(2);
       
@@ -135,13 +135,13 @@ class Main{
 
 
    public static void desenharRede(RedeNeural rede){
-      Janela janela = new Janela();
+      JanelaRede janela = new JanelaRede();
       janela.desenhar(rede);
    }
 
 
    public static void testarRede(RedeNeural rede, int tamanhoEntrada){
-      Janela janela = new Janela();
+      JanelaRede janela = new JanelaRede();
       janela.painel.configurarRede(rede);
       janela.desenhar(rede);
 
