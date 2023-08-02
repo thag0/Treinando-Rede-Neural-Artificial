@@ -13,6 +13,7 @@ public class Neuronio implements Serializable{
    public double[] pesos;
    public double[] momentum;
    public double[] acumuladorGradiente;//adagrad
+   public double[] acumuladorSegundaOrdem;//adam
    public double somatorio;
    public double saida;
    public double erro;//backpropagation
@@ -32,6 +33,8 @@ public class Neuronio implements Serializable{
       this.entradas = new double[ligacoes];
       this.momentum = new double[ligacoes];
       this.acumuladorGradiente = new double[ligacoes];
+      this.acumuladorSegundaOrdem = new double[ligacoes];
+
       this.pesos = new double[ligacoes];
       for(int i = 0; i < pesos.length; i++){
          pesos[i] = random.nextDouble(-alcancePeso, alcancePeso);
