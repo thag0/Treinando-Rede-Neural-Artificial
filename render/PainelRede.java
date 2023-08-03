@@ -13,7 +13,7 @@ import javax.swing.JPanel;
 import rna.RedeNeural;
 
 public class PainelRede extends JPanel{
-   final int largura = 600;
+   final int largura = 500;
    final int altura = 400;
    Graphics2D g2;
    

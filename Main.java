@@ -18,10 +18,12 @@ class Main{
    static Ged ged = new Ged();
    static Geim geim = new Geim();
    
-   static final String caminhoArquivo = "/dados/mnist/5.png";
+   // static final String caminhoArquivo = "/dados/imagens/my-honest-reaction.png";
+   static final String caminhoArquivo = "/dados/imagens/eu.png";
+   static final String caminhoImagemExportada = "./resultados/imagem-ampliada";
    static final int epocas = 100*1000;
-   static final float escalaRender = 11f;
-   static final float escalaImagemExportada = 50f;
+   static final float escalaRender = 1f;
+   static final float escalaImagemExportada = 2.5f;
 
    // Sempre lembrar de quando mudar o dataset, também mudar a quantidade de dados de entrada e saída.
 
@@ -34,9 +36,9 @@ class Main{
 
       //lendo os dados de entrada
       BufferedImage imagem = geim.lerImagem(caminhoArquivo);
-      double[][] dados = geim.imagemParaDadosTreinoEscalaCinza(imagem);//escolher os dados
+      double[][] dados = geim.imagemParaDadosTreinoRGB(imagem);//escolher os dados
       int qEntradas = 2;//quantidade de dados de entrada / entrada da rede
-      int qSaidas = 1;//quantidade de dados de saída / saída da rede
+      int qSaidas = 3;//quantidade de dados de saída / saída da rede
 
       // separar para o treino
       double[][] dadosEntrada = ged.separarDadosEntrada(dados, qEntradas);
@@ -66,30 +68,30 @@ class Main{
 
       // precisa treinar bastante
       System.out.println("\nSalvando imagem");
-      geim.exportarImagemEscalaCinza(imagem, rede, escalaImagemExportada, "./resultados/imagem-ampliada");
+      geim.exportarImagemRGB(imagem, rede, escalaImagemExportada, caminhoImagemExportada);
    }
 
 
    public static RedeNeural criarRede(int qEntradas, int qSaidas){
-      int[] arquitetura = {qEntradas, 10, 10, qSaidas};
+      int[] arquitetura = {qEntradas, 26, 15, 15, qSaidas};
       RedeNeural rede = new RedeNeural(arquitetura);
 
       rede.configurarAlcancePesos(1);
-      rede.configurarTaxaAprendizagem(0.01);
-      rede.configurarMomentum(0.95);
+      rede.configurarTaxaAprendizagem(0.002);
+      rede.configurarMomentum(0.99);
+      rede.configurarOtimizador(4);
       rede.compilar();
       rede.configurarFuncaoAtivacao(2);
-      
       return rede;
    }
 
 
    public static void treinoEmPainel(RedeNeural rede, BufferedImage imagem, double[][] dadosEntrada, double[][] dadosSaida){
-      final int fps = 60;
+      final int fps = 30;
 
       JanelaTreino jt = new JanelaTreino(imagem.getWidth(), imagem.getHeight(), escalaRender);
 
-      int epocasPorFrame = 3;
+      int epocasPorFrame = 1;
       int i = 0;
       jt.desenharTreino(rede, epocasPorFrame);
 
@@ -99,7 +101,7 @@ class Main{
       double tempoRestante;
 
       while(i < epocas && jt.isVisible()){
-         rede.treinoGradienteEstocastico(dadosEntrada, dadosSaida, epocasPorFrame);
+         rede.treinar(dadosEntrada, dadosSaida, epocasPorFrame);
          jt.desenharTreino(rede, (i*epocasPorFrame));
 
          try{
@@ -257,6 +259,7 @@ class Main{
       //usando exatamente o mesmo modelo de rede
       RedeNeural redeDf = criarRede(qEntradas, qSaidas);
       RedeNeural redeBp = redeDf.clone();
+      redeBp.configurarOtimizador(1);
 
       double custo1Bp, custo2Bp, custo1Df, custo2Df;
 
@@ -272,7 +275,7 @@ class Main{
 
       //calculando tempo com backpropagation
       tempo1Bp = System.nanoTime();
-      redeBp.treinoBackpropagation(dadosEntrada, dadosSaida, epocas);
+      redeBp.treinar(dadosEntrada, dadosSaida, epocas);
       tempo2Bp = System.nanoTime();
       tempofinalBp = (double)(tempo2Bp - tempo1Bp)/1_000_000_000;
 
@@ -317,13 +320,15 @@ class Main{
 
       //calculando tempo com backpropagation
       tempo1Bp = System.nanoTime();
-      redeBp.treinoBackpropagation(dadosEntrada, dadosSaida, epocas);
+      redeBp.configurarOtimizador(1);
+      redeBp.treinar(dadosEntrada, dadosSaida, epocas);
       tempo2Bp = System.nanoTime();
       tempofinalBp = (double)(tempo2Bp - tempo1Bp)/1_000_000_000;
 
       //calculando tempo com gradiente estocástico
       tempo1Ge = System.nanoTime();
-      redeGe.treinoGradienteEstocastico(dadosEntrada, dadosSaida, epocas);
+      redeGe.configurarOtimizador(2);
+      redeGe.treinar(dadosEntrada, dadosSaida, epocas);
       tempo2Ge = System.nanoTime();
       tempoFinalGe = (double)(tempo2Ge - tempo1Ge)/1_000_000_000;
 
