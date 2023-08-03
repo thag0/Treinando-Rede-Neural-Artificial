@@ -45,11 +45,13 @@ public class RedeNeural implements Cloneable, Serializable{
       BACKPROPAGATION,
       SGD,
       ADAGRAD,
+      RMSPROP,
       ADAM
    };
 
    private Otimizador otimizadorAtual = Otimizador.SGD;
 
+   Random random = new Random();//treino embaralhado
 
    /**
     * <p>
@@ -233,7 +235,8 @@ public class RedeNeural implements Cloneable, Serializable{
     *    <li>1 - Backpropagation: Método clássico de retropropagação de erro para treinamento de redes neurais.</li>
     *    <li>2 - SGD (Gradiente Descendente Estocástico): Atualiza os pesos usando o conjunto de treino embaralhado.</li>
     *    <li>3 - AdaGrad: Um otimizador que adapta a taxa de aprendizado para cada parâmetro da rede com base em iterações anteriores.</li>
-    *    <li>4 - Adam: Um otimizador que combina o AdaGrad e o Momentum para convergência rápida e estável.</li>
+    *    <li>4 - RMSProp: Um otimizador que utiliza a média móvel dos quadrados dos gradientes acumulados para ajustar a taxa de aprendizado.</li>
+    *    <li>5 - Adam: Um otimizador que combina o AdaGrad e o Momentum para convergência rápida e estável.</li>
     * </ul>
     * @param otimizador valor do novo otimizador.
     * @throws IllegalArgumentException se o valor fornecido do otimizador estiver fora da lista dos disponíveis.
@@ -243,7 +246,8 @@ public class RedeNeural implements Cloneable, Serializable{
          case 1: this.otimizadorAtual = Otimizador.BACKPROPAGATION; break;
          case 2: this.otimizadorAtual = Otimizador.SGD; break;
          case 3: this.otimizadorAtual = Otimizador.ADAGRAD; break;
-         case 4: this.otimizadorAtual = Otimizador.ADAM; break;
+         case 4: this.otimizadorAtual = Otimizador.RMSPROP; break;
+         case 5: this.otimizadorAtual = Otimizador.ADAM; break;
          default: throw new IllegalArgumentException("Valor fornecido do otimizador é inválido.");
       }
    }
@@ -460,13 +464,7 @@ public class RedeNeural implements Cloneable, Serializable{
       modeloValido();
 
       if(otimizadorAtual == Otimizador.BACKPROPAGATION) treinoSequencial(dados, saida, epochs);
-      else if(
-         otimizadorAtual == Otimizador.SGD || 
-         otimizadorAtual == Otimizador.ADAGRAD || 
-         otimizadorAtual == Otimizador.ADAM){
-         treinoEmbaralhado(dados, saida, epochs);
-      }
-      else throw new IllegalArgumentException("ero");
+      else treinoEmbaralhado(dados, saida, epochs);
    }
 
 
@@ -543,7 +541,6 @@ public class RedeNeural implements Cloneable, Serializable{
       double[] dadosEntrada = new double[dados[0].length];//tamanho de colunas da entrada
       double[] dadosSaida = new double[saida[0].length];//tamanho de colunas da saída
       
-      Random random = new Random();
       int[] indices = new int[dados.length];
    
       int i, j, k;
@@ -573,6 +570,7 @@ public class RedeNeural implements Cloneable, Serializable{
             if(otimizadorAtual == Otimizador.SGD) Otimizadores.sgdMomentum(this, dadosEntrada, dadosSaida);
             else if(otimizadorAtual == Otimizador.ADAGRAD) Otimizadores.adagrad(this, dadosEntrada, dadosSaida);
             else if(otimizadorAtual == Otimizador.ADAM) Otimizadores.adam(this, dadosEntrada, dadosSaida);
+            else if(otimizadorAtual == Otimizador.RMSPROP) Otimizadores.rmsprop(this, dadosEntrada, dadosSaida);
          }
       }
    }

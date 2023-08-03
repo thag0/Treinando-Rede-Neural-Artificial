@@ -19,11 +19,11 @@ class Main{
    static Geim geim = new Geim();
    
    // static final String caminhoArquivo = "/dados/imagens/my-honest-reaction.png";
-   static final String caminhoArquivo = "/dados/imagens/eu.png";
+   static final String caminhoArquivo = "/dados/imagens/teste.png";
    static final String caminhoImagemExportada = "./resultados/imagem-ampliada";
    static final int epocas = 100*1000;
-   static final float escalaRender = 1f;
-   static final float escalaImagemExportada = 2.5f;
+   static final float escalaRender = 6f;
+   static final float escalaImagemExportada = 20f;
 
    // Sempre lembrar de quando mudar o dataset, também mudar a quantidade de dados de entrada e saída.
 
@@ -73,13 +73,13 @@ class Main{
 
 
    public static RedeNeural criarRede(int qEntradas, int qSaidas){
-      int[] arquitetura = {qEntradas, 26, 15, 15, qSaidas};
+      int[] arquitetura = {qEntradas, 36, 18, qSaidas};
       RedeNeural rede = new RedeNeural(arquitetura);
 
       rede.configurarAlcancePesos(1);
-      rede.configurarTaxaAprendizagem(0.002);
-      rede.configurarMomentum(0.99);
-      rede.configurarOtimizador(4);
+      rede.configurarTaxaAprendizagem(0.01);
+      rede.configurarMomentum(0.9);
+      rede.configurarOtimizador(5);
       rede.compilar();
       rede.configurarFuncaoAtivacao(2);
       return rede;
@@ -87,11 +87,11 @@ class Main{
 
 
    public static void treinoEmPainel(RedeNeural rede, BufferedImage imagem, double[][] dadosEntrada, double[][] dadosSaida){
-      final int fps = 30;
+      final int fps = 60;
 
       JanelaTreino jt = new JanelaTreino(imagem.getWidth(), imagem.getHeight(), escalaRender);
 
-      int epocasPorFrame = 1;
+      int epocasPorFrame = 7;
       int i = 0;
       jt.desenharTreino(rede, epocasPorFrame);
 

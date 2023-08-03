@@ -13,7 +13,7 @@ public class Neuronio implements Serializable{
    public double[] pesos;
    public double[] momentum;
    public double[] acumuladorGradiente;//adagrad
-   public double[] acumuladorSegundaOrdem;//adam
+   public double[] acumuladorSegundaOrdem;//adam / rmsprop
    public double somatorio;
    public double saida;
    public double erro;//backpropagation

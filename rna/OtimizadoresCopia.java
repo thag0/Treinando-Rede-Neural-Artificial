@@ -3,29 +3,39 @@ package rna;
 import java.util.ArrayList;
 
 /**
- * <p>Em teste ainda.</p>
- * Os que eu entendi melhor mesmo foram o backpropagation e o sgd, 
- * de resto to estudando melhor.
+ * Apenas um backup que posso precisar enquanto mexo no arquivo original.
  */
-public class Otimizadores{
-
+public class OtimizadoresCopia{
 
    /**
-    * Calcula o erro de cada neurônio na rede neural.
-    *
-    * O método percorre a rede neural de trás para frente, calculando o erro de cada neurônio
-    * na camada de saída e propagando esse erro para as camadas ocultas. 
-    * @param redec lista de camadas da rede neural.
-    * @param entrada dados de entrada do treinamento.
-    * @param saida dados de saída correspondente aos valores de entrada.
+    * Otimizador padrão usando gradiente descendente para atualizar diretamente os pesos
+    * @param rede rede neural que será treinada.
+    * @param entrada dados de entrada do treino.
+    * @param saida dados de valores de saída correspondente aos valores de entrada.
+    * @throws IllegalArgumentException se a quantidade de dados de entrada for diferente da quantidade de neurônios da camada de entrada, excluindo o bias.
+    * @throws IllegalArgumentException se a quantidade de dados de saída for diferente da quantidade de neurônios da camada de saída.
     */
-   private static void calcularErro(ArrayList<Camada> redec, double[] entrada, double[] saida){
-      
+   static void backpropagation(RedeNeural rede, double[] entrada, double[] saida){
+      if(entrada.length != (rede.entrada.neuronios.length - ((rede.entrada.temBias) ? 1 : 0) )){
+         throw new IllegalArgumentException("O tamanho dos dados de entrada não corresponde ao tamanho dos neurônios de entrada da rede, com exceção dos bias");
+      }
+      if(saida.length != rede.saida.neuronios.length){
+         throw new IllegalArgumentException("O tamanho dos dados de saída não corresponde ao tamanho dos neurônios de saída da rede");
+      }
+
+      //calcular saída para aplicar o erro
+      rede.calcularSaida(entrada);
+
+      //transformar a rede num vetor de camadas pra facilitar minha vida
+      ArrayList<Camada> redec = new ArrayList<>();
+      redec.add(rede.entrada);
+      for(Camada camada : rede.ocultas) redec.add(camada);
+      redec.add(rede.saida);
+
       //erro da saída
-      Camada saidaRede = redec.get(redec.size()-1);
-      for(int i = 0; i < saidaRede.neuronios.length; i++){
-         Neuronio neuronio = saidaRede.neuronios[i];
-         neuronio.erro = ((saida[i] - neuronio.saida) * saidaRede.funcaoAtivacaoDx(neuronio.somatorio));
+      for(int i = 0; i < rede.saida.neuronios.length; i++){
+         Neuronio neuronio = rede.saida.neuronios[i];
+         neuronio.erro = ((saida[i] - neuronio.saida) * rede.saida.funcaoAtivacaoDx(neuronio.somatorio));
       }
 
       double somaErros = 0.0;
@@ -44,34 +54,7 @@ public class Otimizadores{
             }
             neuronio.erro = somaErros * camadaAtual.funcaoAtivacaoDx(neuronio.somatorio);
          }
-      }
-   }
-
-   /**
-    * Otimizador padrão usando gradiente descendente para atualizar diretamente os pesos
-    * @param rede rede neural que será treinada.
-    * @param entrada dados de entrada do treino.
-    * @param saida dados de valores de saída correspondente aos valores de entrada.
-    * @throws IllegalArgumentException se a quantidade de dados de entrada for diferente da quantidade de neurônios da camada de entrada, excluindo o bias.
-    * @throws IllegalArgumentException se a quantidade de dados de saída for diferente da quantidade de neurônios da camada de saída.
-    */
-   static void backpropagation(RedeNeural rede, double[] entrada, double[] saida){
-      if(entrada.length != (rede.entrada.neuronios.length - ((rede.entrada.temBias) ? 1 : 0) )){
-         throw new IllegalArgumentException("O tamanho dos dados de entrada não corresponde ao tamanho dos neurônios de entrada da rede, com exceção dos bias");
-      }
-      if(saida.length != rede.saida.neuronios.length){
-         throw new IllegalArgumentException("O tamanho dos dados de saída não corresponde ao tamanho dos neurônios de saída da rede");
-      }
-
-      rede.calcularSaida(entrada);
-
-      //transformar a rede num vetor de camadas pra facilitar minha vida
-      ArrayList<Camada> redec = new ArrayList<>();
-      redec.add(rede.entrada);
-      for(Camada camada : rede.ocultas) redec.add(camada);
-      redec.add(rede.saida);
-
-      calcularErro(redec, entrada, saida);
+     }
 
       for(int i = 1; i < redec.size(); i++){//percorrer rede 
          
@@ -114,7 +97,29 @@ public class Otimizadores{
       for(Camada camada : rede.ocultas) redec.add(camada);
       redec.add(rede.saida);
 
-      calcularErro(redec, entrada, saida);
+      //erro da saída
+      for(int i = 0; i < rede.saida.neuronios.length; i++){
+         Neuronio neuronio = rede.saida.neuronios[i];
+         neuronio.erro = ((saida[i] - neuronio.saida) * rede.saida.funcaoAtivacaoDx(neuronio.somatorio));
+      }
+
+      double somaErros = 0.0;
+      //começar da ultima oculta
+      for(int i = redec.size()-2; i >= 1; i--){// percorrer camadas ocultas de trás pra frente
+         
+         Camada camadaAtual = redec.get(i);
+         int qNeuronioAtual = camadaAtual.neuronios.length;
+         if(redec.get(i).temBias) qNeuronioAtual -= 1;
+         for (int j = 0; j < qNeuronioAtual; j++){//percorrer neurônios da camada atual
+         
+            Neuronio neuronio = camadaAtual.neuronios[j];
+            somaErros = 0.0;
+            for(Neuronio neuronioProximo : redec.get(i+1).neuronios){//percorrer neurônios da camada seguinte
+               somaErros += neuronioProximo.pesos[j] * neuronioProximo.erro;
+            }
+            neuronio.erro = somaErros * camadaAtual.funcaoAtivacaoDx(neuronio.somatorio);
+         }
+     }
 
       for(int i = 1; i < redec.size(); i++){//percorrer rede 
          
@@ -158,7 +163,29 @@ public class Otimizadores{
       for (Camada camada : rede.ocultas) redec.add(camada);
       redec.add(rede.saida);
   
-      calcularErro(redec, entrada, saida);
+      //erro da saída
+      for(int i = 0; i < rede.saida.neuronios.length; i++){
+         Neuronio neuronio = rede.saida.neuronios[i];
+         neuronio.erro = ((saida[i] - neuronio.saida) * rede.saida.funcaoAtivacaoDx(neuronio.somatorio));
+      }
+  
+      double somaErros = 0.0;
+      // Começar da última oculta
+      for(int i = redec.size() - 2; i >= 1; i--){//percorrer camadas ocultas de trás pra frente
+  
+         Camada camadaAtual = redec.get(i);
+         int qNeuronioAtual = camadaAtual.neuronios.length;
+         if (redec.get(i).temBias) qNeuronioAtual -= 1;
+         for(int j = 0; j < qNeuronioAtual; j++){//percorrer neurônios da camada atual
+
+            Neuronio neuronio = camadaAtual.neuronios[j];
+            somaErros = 0.0;
+            for (Neuronio neuronioProximo : redec.get(i + 1).neuronios) {//percorrer neurônios da camada seguinte
+               somaErros += neuronioProximo.pesos[j] * neuronioProximo.erro;
+            }
+            neuronio.erro = somaErros * camadaAtual.funcaoAtivacaoDx(neuronio.somatorio);
+         }
+      }
   
       double epsilon = 1e-8;//evitar divisão por zero
       //atualizar pesos
@@ -172,54 +199,6 @@ public class Otimizadores{
             for(int k = 0; k < neuronio.pesos.length; k++){//percorrer pesos do neurônio atual
                neuronio.gradiente = neuronio.erro * camadaAnterior.neuronios[k].saida;
                neuronio.acumuladorGradiente[k] += neuronio.gradiente * neuronio.gradiente;
-               neuronio.pesos[k] += (rede.obterTaxaAprendizagem() / Math.sqrt(neuronio.acumuladorGradiente[k] + epsilon)) * neuronio.gradiente;
-            }
-         }
-      }
-   }
-
-
-   /**
-    * Treina uma rede neural utilizando o algoritmo RMSprop para atualização dos pesos.
-    * @param rede rede neural que será treinada.
-    * @param entrada dados de entrada do treino.
-    * @param saida dados de valores de saída correspondente aos valores de entrada.
-    * @throws IllegalArgumentException se a quantidade de dados de entrada for diferente da quantidade de neurônios da camada de entrada, excluindo o bias.
-    * @throws IllegalArgumentException se a quantidade de dados de saída for diferente da quantidade de neurônios da camada de saída.
-    */
-   public static void rmsprop(RedeNeural rede, double[] entrada, double[] saida){
-      if(entrada.length != (rede.entrada.neuronios.length - ((rede.entrada.temBias) ? 1 : 0))){
-         throw new IllegalArgumentException("O tamanho dos dados de entrada não corresponde ao tamanho dos neurônios de entrada da rede, com exceção dos bias");
-      }
-      if(saida.length != rede.saida.neuronios.length){
-         throw new IllegalArgumentException("O tamanho dos dados de saída não corresponde ao tamanho dos neurônios de saída da rede");
-      }
-
-      //calcular saída para aplicar o erro
-      rede.calcularSaida(entrada);
-
-      //transformar a rede em um vetor de camadas pra facilitar minha vida
-      ArrayList<Camada> redec = new ArrayList<>();
-      redec.add(rede.entrada);
-      for (Camada camada : rede.ocultas) redec.add(camada);
-      redec.add(rede.saida);
-
-      calcularErro(redec, entrada, saida);
-
-      double epsilon = 1e-8;//evitar divisão por zero
-      double decayRate = 0.9;//fator de decaimento do RMSprop
-
-      //atualizar pesos
-      for(int i = 1; i < redec.size(); i++){//percorrer rede
-
-         Camada camadaAtual = redec.get(i);
-         Camada camadaAnterior = redec.get(i - 1);
-         for(int j = 0; j < camadaAtual.neuronios.length; j++){//percorrer neurônios da camada atual
-
-            Neuronio neuronio = camadaAtual.neuronios[j];
-            for(int k = 0; k < neuronio.pesos.length; k++){//percorrer pesos do neurônio atual
-               neuronio.gradiente = neuronio.erro * camadaAnterior.neuronios[k].saida;
-               neuronio.acumuladorGradiente[k] = (decayRate * neuronio.acumuladorGradiente[k]) + ((1 - decayRate) * neuronio.gradiente * neuronio.gradiente);
                neuronio.pesos[k] += (rede.obterTaxaAprendizagem() / Math.sqrt(neuronio.acumuladorGradiente[k] + epsilon)) * neuronio.gradiente;
             }
          }
@@ -252,7 +231,29 @@ public class Otimizadores{
       for (Camada camada : rede.ocultas) redec.add(camada);
       redec.add(rede.saida);
 
-      calcularErro(redec, entrada, saida);
+      //erro da saída
+      for(int i = 0; i < rede.saida.neuronios.length; i++){
+         Neuronio neuronio = rede.saida.neuronios[i];
+         neuronio.erro = ((saida[i] - neuronio.saida) * rede.saida.funcaoAtivacaoDx(neuronio.somatorio));
+      }
+
+      double somaErros = 0.0;
+      //começar da última oculta
+      for(int i = redec.size() - 2; i >= 1; i--){//percorrer camadas ocultas de trás pra frente
+
+         Camada camadaAtual = redec.get(i);
+         int qNeuronioAtual = camadaAtual.neuronios.length;
+         if(redec.get(i).temBias) qNeuronioAtual -= 1;
+         for(int j = 0; j < qNeuronioAtual; j++){//percorrer neurônios da camada atual
+
+            Neuronio neuronio = camadaAtual.neuronios[j];
+            somaErros = 0.0;
+            for(Neuronio neuronioProximo : redec.get(i + 1).neuronios){//percorrer neurônios da camada seguinte
+               somaErros += neuronioProximo.pesos[j] * neuronioProximo.erro;
+            }
+            neuronio.erro = somaErros * camadaAtual.funcaoAtivacaoDx(neuronio.somatorio);
+         }
+      }
 
       //acumuladores do momento e da segunda ordem
       double beta1 = 0.9; //fator de decaimento do momento
