@@ -1,6 +1,6 @@
 # Treinando Rede Neural Artificial
 
-![gifAprendizado](https://github.com/thag0/Treinando-Rede-Neural-Artificial/assets/91092364/76300520-0f79-4cc7-9835-1effc38ce0cd)
+![gifAprendizado](https://github.com/thag0/Treinando-Rede-Neural-Artificial/assets/91092364/7e100fdf-b84b-4751-8270-ca7b3f2d270b)
 *vídeo acelerado*
 
 Tentando implementar um algortimo de treino e ferramentas para masuear os dados.
