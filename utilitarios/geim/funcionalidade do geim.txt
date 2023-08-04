@@ -1,0 +1,12 @@
+funcionalidades do derenciador de imagem
+
+public BufferedImage lerImagem(String caminho);
+public Pixel[][] gerarEstruturaImagem(BufferedImage imagem);
+public Pixel[][] gerarEstruturaImagem(int largura, int altura);
+public void configurarCor(Pixel[][] estruturaImagem, int x, int y, int r, int g, int b);
+public void exibirImagemRGB(Pixel[][] estruturaImagem);
+public void exportarImagemPng(Pixel[][] estruturaImagem, String caminho);
+public double[][] imagemParaDadosTreinoEscalaCinza(BufferedImage imagem);
+public double[][] imagemParaDadosTreinoRGB(BufferedImage imagem);
+public void exportarImagemEscalaCinza(BufferedImage imagem, RedeNeural rede, float escala, String caminho);
+public void exportarImagemRGB(BufferedImage imagem, RedeNeural rede, float escala, String caminho);
