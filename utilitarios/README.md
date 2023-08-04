@@ -42,11 +42,14 @@ Adicionalmente, possui algumas ferramentas para lidar com dados para o treino da
 <p>
    O Geim possui um conjunto menor de ferramentas porque não tive necessidade até o momento de criar mais coisa pra ele.
 </p>
+<p>
+   Diferente do Ged, resolvi começar já organizando melhor a estrutura de dados do Geim, ele trabalha com pixels, que é a menor unidade de dados que a imagem pode ter, por enquanto contendo apenas os valores de cor rgb. O Geim trabalha com uma estrutura de matrizes de pixels e tem suas funcionalidades baseadas nela.
+</p>
 
 Funcionalidades do Geim:
 <ul>
    <li>Ler uma imagem e transformar num objeto BufferedImage (só testei com png).</li>
-   <li>Gerar uma estrutura de imagem, a estrutura e baseada numa matriz em que cada elemento possui um array de inteiros correspondente ao valor RGB de cada pixel da imagem. Os valores de cor dos pixel serão automaticamente copiados para a nova estrutura</li>
+   <li>Gerar uma estrutura de imagem, a estrutura é baseada numa matriz de pixels contendo as informações de cor da imagem. Os valores de cor dos pixel serão automaticamente copiados para a nova estrutura</li>
    <li>Gerar uma estrutura de imagem vazia, sem os valores de cor RGB, de acordo com as dimensões fornecidas.</li>
    <li>Editar o valor da cor de um pixel numa esrtutura de imagem.</li>
    <li>Exibir, pelo terminal, o valor contido na estrutura de imagem.</li>
