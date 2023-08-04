@@ -3,8 +3,7 @@ import java.util.ArrayList;
 
 import render.JanelaRede;
 import rna.RedeNeural;
-
-import utilitarios.Ged;
+import utilitarios.ged.Ged;
 
 public class ExemploPhising{
 

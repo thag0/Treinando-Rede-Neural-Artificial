@@ -18,6 +18,9 @@ public class Geim{
    private GerenciadorArquivos ga;
    private GerenciadorDadosImagem gdi;
 
+   // TODO converter estrutura de dados Pixel[][] em dados de treino
+   // TODO talvez deixar a classe pixel como pública
+
    /**
     * Objeto responsável por fazer operações com imagens.
     * <p>

@@ -7,11 +7,11 @@ import java.util.concurrent.TimeUnit;
 
 import render.JanelaRede;
 import render.JanelaTreino;
+
 import rna.RedeNeural;
 
-import utilitarios.Ged;
-import utilitarios.Geim;
-
+import utilitarios.ged.Ged;
+import utilitarios.geim.Geim;
 
 class Main{
    //auxiliares
@@ -31,7 +31,7 @@ class Main{
       limparConsole();
 
       long t1, t2;
-      long horas,  minutos, segundos;
+      long horas, minutos, segundos;
 
       //lendo os dados de entrada
       BufferedImage imagem = geim.lerImagem(caminhoArquivo);
@@ -73,7 +73,7 @@ class Main{
 
 
    public static RedeNeural criarRede(int qEntradas, int qSaidas){
-      int[] arquitetura = {qEntradas, 42, 42, qSaidas};
+      int[] arquitetura = {qEntradas, 16, 16, qSaidas};
       RedeNeural rede = new RedeNeural(arquitetura);
 
       rede.configurarAlcancePesos(1);
