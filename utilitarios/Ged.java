@@ -244,6 +244,16 @@ public class Ged{
    }
 
 
+   /**
+    * Grava os dados no formato {@code double[][]} em um arquivo CSV.
+    * @param lista lista de arrays contendo os dados.
+    * @param filePath caminho do arquivo onde os dados serão gravados, excluindo a extensão .csv.
+    */
+   public void exportarCsv(double[][] dados, String caminho){
+      ga.exportarCsv(dados, caminho);
+   }
+
+
    // GERENCIADOR TREINO TESTE ---------------------
 
    /**

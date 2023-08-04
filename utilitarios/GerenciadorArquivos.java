@@ -78,4 +78,29 @@ class GerenciadorArquivos{
          e.printStackTrace();
       }
    }
+
+
+   public void exportarCsv(double[][] dados, String caminho) {
+      String separador = ",";
+  
+      try{
+         BufferedWriter bw = new BufferedWriter(new FileWriter(caminho + ".csv"));
+  
+         for (double[] linha : dados) {
+            for (int i = 0; i < linha.length; i++) {
+               bw.write(String.valueOf(linha[i])); // Convert double to string
+               if (i < linha.length - 1) {
+                  bw.write(separador);
+               }
+            }
+            bw.newLine();
+         }
+  
+         bw.close();
+  
+      }catch(Exception e){
+         System.out.println("Houve um erro ao exportar o arquivo.");
+         e.printStackTrace();
+      }
+   }
 }

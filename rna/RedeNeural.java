@@ -24,11 +24,12 @@ import rna.otimizadores.SGD;
  *    atualmente baseados no backpropagation com adição da ideia de momentum na atualização dos pesos.
  * </p>
  * Possui opções de configuração tanto para hiperparâmetros como taxa de aprendizagem e momentun, quanto para
- * funções de ativações de camadas individuais e valor de alcance máximo e mínimo na aleatorização dos pesos iniciais. 
+ * funções de ativações de camadas individuais, valor de alcance máximo e mínimo na aleatorização dos pesos iniciais e 
+ * otimizadores que serão usados durante o treino. 
  * <p>
- * Após configurar as propriedades da rede, o modelo precisará ser compilado para efetivamente poder ser utilizado.
+ *    Após configurar as propriedades da rede, o modelo precisará ser compilado para efetivamente poder ser utilizado.
  * </p>
- * @author Thiago Barroso, acadêmico de Engenharia da Computação pela Universidade Federal do Pará, Campus Tucuruí.
+ * @author Thiago Barroso, acadêmico de Engenharia da Computação pela Universidade Federal do Pará, Campus Tucuruí. Ano de 2023.
  */
 public class RedeNeural implements Cloneable, Serializable{
    public Camada entrada;
@@ -61,14 +62,18 @@ public class RedeNeural implements Cloneable, Serializable{
     *    A camada de entrada deverá ser especificada pelo indice 0, a camada de saída 
     *    será representada pelo último valor do array e as camadas ocultas serão representadas pelos valores intermediários.
     * </p>
-    * Os valores de todos os parâmetros pedidos <strong>NÃO devem</strong> ser menores que 1.
     * <p>
-    *    Após instanciar o modelo, é necessário compilar por meio da função "compilar()", certifique-se 
-    *    de configurar as propriedades da rede por meio das funções de configuração fornecidas como, alcance
-    *    dos pesos iniciais, taxa de aprendizagem e uso de bias. Caso não seja usada nenhuma das funções 
-    *    de configuração, a rede será compilada com os valores padrão.
+    *   Os valores de todos os parâmetros pedidos <strong>NÃO devem</strong> ser menores que 1.
     * </p>
-    * @author Thiago Barroso, acadêmico de Engenharia da Computação pela Universidade Federal do Pará, Campus Tucuruí.
+    * <p>
+    *    Após instanciar o modelo, é necessário compilar por meio da função <pre>compilar()</pre>
+    * </p>
+    * <p>
+    *    Certifique-se de configurar as propriedades da rede por meio das funções de configuração fornecidas
+    *    como, alcance dos pesos iniciais, taxa de aprendizagem e uso de bias. Caso não seja usada nenhuma 
+    *    das funções de configuração, a rede será compilada com os valores padrão.
+    * </p>
+    * @author Thiago Barroso, acadêmico de Engenharia da Computação pela Universidade Federal do Pará, Campus Tucuruí. Ano de 2023.
     * @param arquitetura modelo de arquitetura específico da rede.
     * @throws IllegalArgumentException se o array de arquitetura não possuir, pelo menos, três elementos.
     * @throws IllegalArgumentException se os valores fornecidos forem menores que um.
@@ -115,7 +120,9 @@ public class RedeNeural implements Cloneable, Serializable{
    /**
     * Define se a rede neural usará um neurônio adicional como bias nas camadas da rede.
     * O bias não é adicionado na camada de saída.
-    * <p>O valor padrão para uso do bias é true.</p>
+    * <p>
+    *    O valor padrão para uso do bias é true.
+    * </p>
     * @param usarBias novo valor para o uso do bias.
     */
    public void configurarBias(boolean usarBias){
@@ -170,7 +177,9 @@ public class RedeNeural implements Cloneable, Serializable{
    /**
     * Configura a função de ativação da camada correspondente, a função de ativação padrão é a ReLU. É preciso
     * compilar o modelo previamente para poder configurar suas funções de ativação.
-    * <p>segue a lista das funções disponíveis:</p>
+    * <p>
+    *    segue a lista das funções disponíveis:
+    * </p>
     * <ul>
     *    <li>1 - ReLU.</li>
     *    <li>2 - Sigmoid.</li>
@@ -201,7 +210,9 @@ public class RedeNeural implements Cloneable, Serializable{
    /**
     * Configura a função de ativação de todas as camadas da rede, a função de ativação padrão é a ReLU. É preciso
     * compilar o modelo previamente para poder configurar suas funções de ativação
-    * <p>segue a lista das funções disponíveis:</p>
+    * <p>
+    *    segue a lista das funções disponíveis:
+    * </p>
     * <ul>
     *    <li>1 - ReLU.</li>
     *    <li>2 - Sigmoid.</li>
@@ -228,8 +239,12 @@ public class RedeNeural implements Cloneable, Serializable{
 
    /**
     * Configura o otimizador usado durante o treino da rede neural.
-    * <p>O otimizador padrão é o SGD (Gradiente Descendente Estocástico).</p>
-    * <p>Os otimizadores disponíveis são:</p>
+    * <p>
+    *    O otimizador padrão é o SGD (Gradiente Descendente Estocástico).
+    * </p>
+    * <p>
+    *    Os otimizadores disponíveis são:
+    * </p>
     * <ul>
     *    <li>1 - Backpropagation: Método clássico de retropropagação de erro para treinamento de redes neurais.</li>
     *    <li>2 - SGD (Gradiente Descendente Estocástico): Atualiza os pesos usando o conjunto de treino embaralhado.</li>
@@ -261,11 +276,12 @@ public class RedeNeural implements Cloneable, Serializable{
     *    <li>Neurônios adicionais nas camadas atuando como bias.</li>
     *    <li>Taxa de aprendizagem.</li>
     *    <li>Taxa de momentum.</li>
+    *    <li>Otimizador.</li>
     * </ul>
     * <p>
     *    Caso nenhuma configuração seja feita, a rede será inicializada com os valores padrão. 
     * </p>
-    * Após a compilação o modelo está pronto para ser usado.
+    * Após a compilação o modelo está pronto para ser usado, mas deverá ser treinado.
     */
    public void compilar(){
       boolean temBias = (this.BIAS == 1) ? true : false;
@@ -313,7 +329,7 @@ public class RedeNeural implements Cloneable, Serializable{
     * Verifica se o modelo já foi compilado para evitar problemas de uso indevido, bem como componentes nulos.
     * @throws IllegalArgumentException se o modelo não foi compilado.
     */
-   public void modeloValido(){
+   private void modeloValido(){
       if(!this.modeloCompilado){
          throw new IllegalArgumentException("O modelo ainda não foi compilado");
       }
@@ -453,7 +469,11 @@ public class RedeNeural implements Cloneable, Serializable{
 
 
    /**
-    * Treina a rede de acordo com as configurações predefinidas.
+    * <p>
+    *    Treina a rede de acordo com as configurações predefinidas.
+    * </p>
+    * Certifique-se de configurar adequadamente o modelo para obter os 
+    * melhores resultados.
     * @param dados dados de entrada do treino (features).
     * @param saida dados de saída correspondente a entrada (class).
     * @param epochs quantidade de épocas.
@@ -480,35 +500,8 @@ public class RedeNeural implements Cloneable, Serializable{
       }
 
       if(otimizadorAtual.getClass().equals(rna.otimizadores.Backpropagation.class)){
-         treinoSequencial(entradas, saidas, epochs);
-      
-      }else treinoEmbaralhado(entradas, saidas, epochs);
-   }
-
-
-   /**
-    * Treina a rede neural usando o algoritmo Backpropagation, sem a técnica de embaralhar os dados de treino.
-    * @param dados matriz de dados de entrada. Cada linha representa um exemplo de entrada.
-    * @param saida matriz de dados de saída esperados. Cada linha representa o valor de saída correspondente ao exemplo de entrada.
-    * @param epochs número de épocas de treinamento. Uma época é um ciclo completo de treinamento em que todos os exemplos de treinamento são apresentados para a rede.
-    */
-   private void treinoSequencial(double[][] dados, double[][] saida, int epochs){
-      double[] dadosEntrada = new double[dados[0].length];//tamanho de colunas da entrada
-      double[] dadosSaida = new double[saida[0].length];//tamanho de colunas da saída
-
-      for(int i = 0; i < epochs; i++){//quantidade de épocas
-         for(int j = 0; j < dados.length; j++){//percorrer linhas dos dados
-
-            for(int k = 0; k < dados[0].length; k++){//preencher dados de entrada
-               dadosEntrada[k] = dados[j][k];
-            }
-            for(int k = 0; k < dadosSaida.length; k++){//preencher dados de saída
-               dadosSaida[k] = saida[j][k];
-            }
-
-            otimizadorAtual.atualizar(this, dadosEntrada, dadosSaida);
-         }      
-      }
+         treino(entradas, saidas, epochs, false);
+      }else treino(entradas, saidas, epochs, true);
    }
 
 
@@ -518,45 +511,83 @@ public class RedeNeural implements Cloneable, Serializable{
     * @param dados matriz de dados de entrada. Cada linha representa um exemplo de entrada.
     * @param saida matriz de dados de saída esperados. Cada linha representa o valor de saída correspondente ao exemplo de entrada.
     * @param epochs número de épocas de treinamento. Uma época é um ciclo completo de treinamento em que todos os exemplos de treinamento são apresentados para a rede.
-    * @throws IllegalArgumentException se o modelo não foi compilado previamente.
-    * @throws IllegalArgumentException se a quantidade de linhas dos dados fornecidos for diferente da quantidade de linhas das saídas fornecidas.
-    * @throws IllegalArgumentException se o tamanho dos dados de entrada for diferente do tamanho dos neurônios de entrada, excluindo o bias.
-    * @throws IllegalArgumentException se o tamanho dos dados de saída for diferente do tamanho dos neurônios de saída da rede.
-    * @throws IllegalArgumentException se o valor de épocas for menor que um.
+    * @param embaralhar define se os índices dos dados serão embaralhados para aplicar o gradiente estocástico.
     */
-   private void treinoEmbaralhado(double[][] dados, double[][] saida, int epochs){   
-      double[] dadosEntrada = new double[dados[0].length];//tamanho de colunas da entrada
-      double[] dadosSaida = new double[saida[0].length];//tamanho de colunas da saída
+   private void treino(double[][] entradas, double[][] saidas, int epochs, boolean embaralhar){
+      double[] dadosEntrada = new double[entradas[0].length];//tamanho de colunas da entrada
+      double[] dadosSaida = new double[saidas[0].length];//tamanho de colunas da saída
       
-      int[] indices = new int[dados.length];
-   
-      int i, j, k;
-      int indiceAleatorio, aux;
-      for(i = 0; i < epochs; i++){// quantidade de épocas
-         //embaralhar os dados antes de cada época
-         //usando índices aleatórios
-         for(j = 0; j < dados.length; j++){
-            indices[j] = j;
-         }
-         for(j = 0; j < dados.length; j++){
-            indiceAleatorio = random.nextInt(dados.length);
-            aux = indices[j];
-            indices[j] = indices[indiceAleatorio];
-            indices[indiceAleatorio] = aux;
-         }
+      int[] indices = new int[entradas.length];
+      for(int i = 0; i < indices.length; i++) indices[i] = i;
 
-         //treinar com os dados embaralhados
-         for(j = 0; j < dados.length; j++){
-            int indiceDados = indices[j];
-            for(k = 0; k < dados[0].length; k++){// preencher dados de entrada
-               dadosEntrada[k] = dados[indiceDados][k];
+      int i, j, k;
+      for(i = 0; i < epochs; i++){//quantidade de épocas
+         if(embaralhar) embaralharDados(entradas, saidas);
+
+         for(j = 0; j < entradas.length; j++){//preencher dados de entrada e saída
+            for(k = 0; k < entradas[0].length; k++){
+               dadosEntrada[k] = entradas[j][k];
             }
-            for(k = 0; k < dadosSaida.length; k++){// preencher dados de saída
-               dadosSaida[k] = saida[indiceDados][k];
+            for(k = 0; k < saidas[0].length; k++){
+               dadosSaida[k] = saidas[j][k];
             }
 
             otimizadorAtual.atualizar(this, dadosEntrada, dadosSaida);
          }
+      }
+   }
+
+
+   /**
+    * Dedicado para treino em lote e multithread em implementações futuras.
+    * @param dados conjunto de dados completo.
+    * @param inicio índice de inicio do lote.
+    * @param fim índice final do lote.
+    * @return lote contendo os dados de acordo com os índices fornecidos.
+    */
+    @SuppressWarnings("unused")
+   private double[][] obterSubMatriz(double[][] dados, int inicio, int fim){
+      if(inicio < 0 || fim > dados.length || inicio >= fim){
+         throw new IllegalArgumentException("Índices de início ou fim inválidos.");
+      }
+
+      int linhas = fim - inicio;
+      int colunas = dados[0].length;
+      double[][] subMatriz = new double[linhas][colunas];
+
+      for(int i = 0; i < linhas; i++){
+         for(int j = 0; j < colunas; j++){
+            subMatriz[i][j] = dados[inicio + i][j];
+         }
+      }
+
+      return subMatriz;
+   }
+
+
+   /**
+    * Embaralha os dados da matriz usando o algoritmo Fisher-Yates.
+    * @param entradas matriz com os dados de entrada.
+    * @param saidas matriz com os dados de saída.
+    */
+   private void embaralharDados(double[][] entradas, double[][] saidas){
+      int linhas = entradas.length;
+  
+      //evitar muitas inicializações
+      double tempDados[];
+      double tempSaidas[];
+      int i, indiceAleatorio;
+
+      for(i = linhas - 1; i > 0; i--){
+         indiceAleatorio = random.nextInt(i + 1);
+  
+         tempDados = entradas[i];
+         entradas[i] = entradas[indiceAleatorio];
+         entradas[indiceAleatorio] = tempDados;
+
+         tempSaidas = saidas[i];
+         saidas[i] = saidas[indiceAleatorio];
+         saidas[indiceAleatorio] = tempSaidas;
       }
    }
 
@@ -724,6 +755,7 @@ public class RedeNeural implements Cloneable, Serializable{
 
 
    /**
+    * Informa o valor do hiperparâmetro de traxa de aprendizagem da Rede Neural.
     * @return valor de taxa de aprendizagem da rede.
     */
    public double obterTaxaAprendizagem(){
@@ -732,6 +764,7 @@ public class RedeNeural implements Cloneable, Serializable{
 
 
    /**
+    * Informa o valor do hiperparâmetro de traxa de momentum da Rede Neural.
     * @return valor de taxa de momentum da rede.
     */
    public double obterTaxaMomentum(){
@@ -740,6 +773,7 @@ public class RedeNeural implements Cloneable, Serializable{
 
 
    /**
+    * Informa qual tipo de otmizador está sendo usado para o treio da Rede Neural.
     * @return otimizador atual da rede.
     */
    public Otimizador obterOtimizador(){
@@ -759,7 +793,7 @@ public class RedeNeural implements Cloneable, Serializable{
 
 
    /**
-    * Retorna a camada oculta correspondente a ao índice fornecido.
+    * Retorna a camada oculta correspondente ao índice fornecido.
     * @param indice índice da busca.
     * @return camada oculta baseada na busca.
     * @throws IllegalArgumentException se o modelo não foi compilado previamente.
@@ -805,8 +839,13 @@ public class RedeNeural implements Cloneable, Serializable{
 
 
    /**
-    * Cria um array contendo os valores dos neuônios de cada camada da rede neural. Cada elementos do 
-    * array representa uma camada da rede.
+    * Cria um array que representa a estrutura da Rede Neural. Nele cada elemento indica uma camada 
+    * da rede e cada valor contido nesse elementos indica a quantidade de neurônios daquela camada
+    * correspondente.
+    * <p>
+    *    Os valores podem sofrer alteração caso a rede possua o bias adicionado na hora da compilação, 
+    *    incluindo um neurônio a mais em cada elementos do array.
+    * </p>
     * @return array com a arquitetura da rede.
     * @throws IllegalArgumentException se o modelo não foi compilado previamente.
     */
@@ -819,8 +858,10 @@ public class RedeNeural implements Cloneable, Serializable{
    /**
     * Exibe as informações importantes da rede neural como:
     * <ul>
-    *    <li>Contém bias como neurônio adicional.</li>
+    *    <li>Otimizador atual.</li>
     *    <li>Valor da taxa de aprendizagem.</li>
+    *    <li>Valor da taxa de momentum.</li>
+    *    <li>Contém bias como neurônio adicional.</li>
     *    <li>Função de ativação de todas as camadas ocultas.</li>
     *    <li>Função de ativação da camada de saída.</li>
     *    <li>Arquitetura da rede.</li>
@@ -876,8 +917,10 @@ public class RedeNeural implements Cloneable, Serializable{
          clone.neuroniosOcultas = this.neuroniosOcultas;
          clone.neuroniosSaida = this.neuroniosSaida;
          clone.quantidadeOcultas = this.quantidadeOcultas;
-         clone.BIAS = this.BIAS;
          clone.TAXA_APRENDIZAGEM = this.TAXA_APRENDIZAGEM;
+         clone.TAXA_MOMENTUM = this.TAXA_MOMENTUM;
+         clone.BIAS = this.BIAS;
+         clone.arquitetura = this.arquitetura;
 
          boolean temBias = (this.BIAS == 1) ? true : false;
          // Clonar camada de entrada
@@ -923,6 +966,9 @@ public class RedeNeural implements Cloneable, Serializable{
       }
 
       clone.pesos = pesosClone;
+      clone.momentum = neuronio.momentum;
+      clone.acumuladorGradiente = neuronio.acumuladorGradiente;
+      clone.acumuladorSegundaOrdem = neuronio.acumuladorSegundaOrdem;
 
       return clone;
    }

@@ -18,8 +18,7 @@ class Main{
    static Ged ged = new Ged();
    static Geim geim = new Geim();
    
-   // static final String caminhoArquivo = "/dados/imagens/my-honest-reaction.png";
-   static final String caminhoArquivo = "/dados/imagens/teste.png";
+   static final String caminhoArquivo = "/dados/32x32/bloco.png";
    static final String caminhoImagemExportada = "./resultados/imagem-ampliada";
    static final int epocas = 100*1000;
    static final float escalaRender = 6f;
@@ -40,7 +39,7 @@ class Main{
       int qEntradas = 2;//quantidade de dados de entrada / entrada da rede
       int qSaidas = 3;//quantidade de dados de saída / saída da rede
 
-      // separar para o treino
+      //separar para o treino
       double[][] dadosEntrada = ged.separarDadosEntrada(dados, qEntradas);
       double[][] dadosSaida = ged.separarDadosSaida(dados, qSaidas);
       System.out.println("Tamanho dos dados [" + dados.length + ", " + dados[0].length + "]");
@@ -60,7 +59,8 @@ class Main{
       horas = segundosTotais / 3600;
       minutos = (segundosTotais % 3600) / 60;
       segundos = segundosTotais % 60;
-      
+
+      //avaliar resultados
       double precisao = rede.calcularPrecisao(dadosEntrada, dadosSaida);
       System.out.println("Custo = " + rede.funcaoDeCusto(dadosEntrada, dadosSaida));
       System.out.println("Precisão = " + (formatarFloat(precisao*100)) + "%");
@@ -73,7 +73,7 @@ class Main{
 
 
    public static RedeNeural criarRede(int qEntradas, int qSaidas){
-      int[] arquitetura = {qEntradas, 36, 18, qSaidas};
+      int[] arquitetura = {qEntradas, 42, 42, qSaidas};
       RedeNeural rede = new RedeNeural(arquitetura);
 
       rede.configurarAlcancePesos(1);
@@ -91,18 +91,18 @@ class Main{
 
       JanelaTreino jt = new JanelaTreino(imagem.getWidth(), imagem.getHeight(), escalaRender);
 
+      jt.desenharTreino(rede, 0);
       int epocasPorFrame = 7;
-      int i = 0;
-      jt.desenharTreino(rede, epocasPorFrame);
-
+      
       //trabalhar com o tempo de renderização baseado no fps
       double intervaloDesenho = 1000000000/fps;
       double proximoTempoDesenho = System.nanoTime() + intervaloDesenho;
       double tempoRestante;
-
+      
+      int i = 0;
       while(i < epocas && jt.isVisible()){
          rede.treinar(dadosEntrada, dadosSaida, epocasPorFrame);
-         jt.desenharTreino(rede, (i*epocasPorFrame));
+         jt.desenharTreino(rede, i);
 
          try{
             tempoRestante = proximoTempoDesenho - System.nanoTime();
@@ -114,7 +114,7 @@ class Main{
 
          }catch(Exception e){ }
 
-         i++;
+         i += 1*epocasPorFrame;
       }
 
       jt.dispose();
