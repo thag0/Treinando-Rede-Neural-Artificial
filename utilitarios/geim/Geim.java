@@ -10,14 +10,8 @@ import rna.RedeNeural;
  *    Gerenciador de Imagens.
  * </p>
  * Oferece utilitários para manipulação e processamento de imagens em formato RGB ou escala de cinza.
- * Permite ler imagens, gerar estruturas de dados a partir das imagens, configurar cores, exibir informações de cores, exportar imagens em formato PNG
- * e ampliar imagens usando uma rede neural treinada.
- * <p>
- *   Fornece métodos para trabalhar com imagens tanto no padrão de cor RGB como em escala de cinza.
- *   Pode ser usada para ler imagens de um arquivo, gerar uma estrutura de dados correspondente à imagem,
- *   configurar valores de cor em pontos específicos da estrutura de imagem, exibir informações sobre as cores,
- *   exportar imagens em formato PNG e ampliar imagens usando uma rede neural treinada.
- * </p>
+ * Permite ler imagens, gerar estruturas de dados a partir das imagens, configurar cores, exibir informações 
+ * de cores, exportar imagens em formato PNG e ampliar imagens usando uma rede neural treinada.
  */
 public class Geim{
 
