@@ -18,7 +18,7 @@ class Main{
    static Ged ged = new Ged();
    static Geim geim = new Geim();
    
-   static final String caminhoArquivo = "/dados/32x32/bloco.png";
+   static final String caminhoArquivo = "/dados/32x32/circulos.png";
    static final String caminhoImagemExportada = "./resultados/imagem-ampliada";
    static final int epocas = 100*1000;
    static final float escalaRender = 10f;
@@ -80,13 +80,13 @@ class Main{
 
 
    public static RedeNeural criarRede(int qEntradas, int qSaidas){
-      int[] arquitetura = {qEntradas, 46, 46, 12, qSaidas};
+      int[] arquitetura = {qEntradas, 42, 42, qSaidas};
       RedeNeural rede = new RedeNeural(arquitetura);
 
       rede.configurarAlcancePesos(1);
       rede.configurarTaxaAprendizagem(0.01);
-      rede.configurarMomentum(0.99);
-      rede.configurarOtimizador(2);
+      rede.configurarMomentum(0.9);
+      rede.configurarOtimizador(2, true);
       rede.compilar();
       rede.configurarFuncaoAtivacao(2);
       return rede;
@@ -109,7 +109,7 @@ class Main{
       double tempoRestante;
       
       int i = 0;
-      int epocasPorFrame = 10;
+      int epocasPorFrame = 5;
       while(i < epocas && jt.isVisible()){
          rede.treinar(dadosEntrada, dadosSaida, epocasPorFrame);
          // jt.desenharTreino(rede, i);

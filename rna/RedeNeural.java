@@ -50,7 +50,7 @@ public class RedeNeural implements Cloneable, Serializable{
    private boolean modeloCompilado = false;
 
    private Otimizador otimizadorAtual = new SGD();//otimizador padrão
-
+   private boolean nesterov = false;// acelerador de nesterov
    Random random = new Random();//treino embaralhado
 
    /**
@@ -264,6 +264,39 @@ public class RedeNeural implements Cloneable, Serializable{
          case 5: this.otimizadorAtual = new Adam(); break;
          default: throw new IllegalArgumentException("Valor fornecido do otimizador é inválido.");
       }
+   }
+
+
+   /**
+    * Configura o otimizador usado durante o treino da rede neural.
+    * <p>
+    *    O otimizador padrão é o SGD (Gradiente Descendente Estocástico).
+    * </p>
+    * <p>
+    *    Os otimizadores disponíveis são:
+    * </p>
+    * <ul>
+    *    <li>1 - Backpropagation: Método clássico de retropropagação de erro para treinamento de redes neurais.</li>
+    *    <li>2 - SGD (Gradiente Descendente Estocástico): Atualiza os pesos usando o conjunto de treino embaralhado.</li>
+    *    <li>3 - AdaGrad: Um otimizador que adapta a taxa de aprendizado para cada parâmetro da rede com base em iterações anteriores.</li>
+    *    <li>4 - RMSProp: Um otimizador que utiliza a média móvel dos quadrados dos gradientes acumulados para ajustar a taxa de aprendizado.</li>
+    *    <li>5 - Adam: Um otimizador que combina o AdaGrad e o Momentum para convergência rápida e estável.</li>
+    * </ul>
+    * @param otimizador valor do novo otimizador.
+    * @param nesterov configura se o otimizador vai usar o acelerador de Nesterov (Por enquanto só pro SGD)
+    * @throws IllegalArgumentException se o valor fornecido do otimizador estiver fora da lista dos disponíveis.
+    */
+   public void configurarOtimizador(int otimizador, boolean nesterov){
+      switch(otimizador){
+         case 1: this.otimizadorAtual = new Backpropagation(); break;
+         case 2: this.otimizadorAtual = new SGD(nesterov); break;
+         case 3: this.otimizadorAtual = new AdaGrad(); break;
+         case 4: this.otimizadorAtual = new RMSProp(); break;
+         case 5: this.otimizadorAtual = new Adam(); break;
+         default: throw new IllegalArgumentException("Valor fornecido do otimizador é inválido.");
+      }
+
+      this.nesterov = nesterov;
    }
 
 
@@ -876,8 +909,12 @@ public class RedeNeural implements Cloneable, Serializable{
       String espacamento = "    ";
       System.out.println("\nInformações " + this.getClass().getSimpleName() + " = [");
 
-      
-      buffer += espacamento + "Otimizador: " + this.otimizadorAtual.getClass().getSimpleName() + "\n";
+      //otimizador
+      buffer += espacamento + "Otimizador: " + this.otimizadorAtual.getClass().getSimpleName();
+      if(nesterov) buffer += " (Acelerador de Nesterov)";
+      buffer += "\n";
+
+      //hiperparâmetros
       buffer += espacamento + "Taxa de aprendizgem: " + TAXA_APRENDIZAGEM + "\n";
       buffer += espacamento + "Taxa de momentum: " + TAXA_MOMENTUM + "\n";
 

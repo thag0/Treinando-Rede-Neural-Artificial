@@ -11,8 +11,17 @@ import rna.RedeNeural;
  * Atualiza os pesos usando o gradiente e momentum para ajudar a otimizar o aprendizado.
  */
 public class SGD implements Otimizador{
+   boolean nesterov = false;//TODO implementar nesterov
 
+
+   public SGD(boolean nesterov){
+      this.nesterov = nesterov;
+   }
+
+
+   public SGD(){}
    
+
    public void calcularErro(ArrayList<Camada> redec, double[] entrada, double[] saida){
       //erro da saída
       Camada saidaRede = redec.get(redec.size()-1);
@@ -66,9 +75,18 @@ public class SGD implements Otimizador{
             
             Neuronio neuronio = camadaAtual.neuronios[j];
             for(int k = 0; k < neuronio.pesos.length; k++){//percorrer pesos do neurônio atual
-               neuronio.gradiente = rede.obterTaxaAprendizagem() * neuronio.erro * camadaAnterior.neuronios[k].saida; 
-               neuronio.momentum[k] = (rede.obterTaxaMomentum() * neuronio.momentum[k]) + neuronio.gradiente;
-               neuronio.pesos[k] += neuronio.momentum[k];
+               if(nesterov){
+                  double momentumAnterior = neuronio.momentum[k];
+                  neuronio.pesos[k] += rede.obterTaxaMomentum() * momentumAnterior;
+                  neuronio.gradiente = rede.obterTaxaAprendizagem() * neuronio.erro * camadaAnterior.neuronios[k].saida;
+                  neuronio.momentum[k] = rede.obterTaxaMomentum() * momentumAnterior + neuronio.gradiente;
+                  neuronio.pesos[k] -= rede.obterTaxaAprendizagem() * neuronio.momentum[k];
+                  
+               }else{
+                  neuronio.gradiente = rede.obterTaxaAprendizagem() * neuronio.erro * camadaAnterior.neuronios[k].saida;
+                  neuronio.momentum[k] = (rede.obterTaxaMomentum() * neuronio.momentum[k]) + neuronio.gradiente;
+                  neuronio.pesos[k] += neuronio.momentum[k];
+               }
             }
          }
       } 
