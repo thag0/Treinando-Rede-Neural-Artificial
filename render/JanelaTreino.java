@@ -32,4 +32,9 @@ public class JanelaTreino extends JFrame{
    public void desenharTreino(RedeNeural rede, int epocasPorFrame){
       painelTreino.desenhar(rede, epocasPorFrame);
    }
+
+
+   public void desenharTreino(RedeNeural rede, int epocasPorFrame, int numThreads){
+      painelTreino.desenharMultithread(rede, epocasPorFrame, numThreads);
+   }
 }

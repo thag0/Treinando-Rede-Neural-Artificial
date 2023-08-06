@@ -5,7 +5,7 @@ import java.util.Random;
 
 /**
  * Representa um neurônio individual dentro da estrutura da rede neural.
- * Cada neurônio possui um conjunto de pesos para suas conexões com os neurônios da próxima camada,
+ * Cada neurônio possui um conjunto de pesos para suas conexões com os neurônios da camada anterior,
  * além de valores de entrada e saída.
  */
 public class Neuronio implements Serializable{

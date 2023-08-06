@@ -21,7 +21,7 @@ class Main{
    static final String caminhoArquivo = "/dados/32x32/bloco.png";
    static final String caminhoImagemExportada = "./resultados/imagem-ampliada";
    static final int epocas = 100*1000;
-   static final float escalaRender = 6f;
+   static final float escalaRender = 10f;
    static final float escalaImagemExportada = 20f;
 
    // Sempre lembrar de quando mudar o dataset, também mudar a quantidade de dados de entrada e saída.
@@ -34,10 +34,15 @@ class Main{
       long horas, minutos, segundos;
 
       //lendo os dados de entrada
-      BufferedImage imagem = geim.lerImagem(caminhoArquivo);
-      double[][] dados = geim.imagemParaDadosTreinoRGB(imagem);//escolher os dados
       int qEntradas = 2;//quantidade de dados de entrada / entrada da rede
       int qSaidas = 3;//quantidade de dados de saída / saída da rede
+      BufferedImage imagem = geim.lerImagem(caminhoArquivo);
+      double[][] dados;
+
+      //escolher a forma de importação dos dados
+      if(qSaidas == 1) dados = geim.imagemParaDadosTreinoEscalaCinza(imagem);
+      else if(qSaidas == 3) dados = geim.imagemParaDadosTreinoRGB(imagem);
+      else return;
 
       //separar para o treino
       double[][] dadosEntrada = ged.separarDadosEntrada(dados, qEntradas);
@@ -68,18 +73,20 @@ class Main{
 
       // precisa treinar bastante
       System.out.println("\nSalvando imagem");
-      geim.exportarImagemRGB(imagem, rede, escalaImagemExportada, caminhoImagemExportada);
+      if(qSaidas == 1)geim.exportarImagemEscalaCinza(imagem, rede, escalaImagemExportada, caminhoImagemExportada);
+      else if(qSaidas == 3) geim.exportarImagemRGB(imagem, rede, escalaImagemExportada, caminhoImagemExportada);
+      else System.out.println("Não é possível exportar a imagem");
    }
 
 
    public static RedeNeural criarRede(int qEntradas, int qSaidas){
-      int[] arquitetura = {qEntradas, 16, 16, qSaidas};
+      int[] arquitetura = {qEntradas, 46, 46, 12, qSaidas};
       RedeNeural rede = new RedeNeural(arquitetura);
 
       rede.configurarAlcancePesos(1);
       rede.configurarTaxaAprendizagem(0.01);
-      rede.configurarMomentum(0.9);
-      rede.configurarOtimizador(5);
+      rede.configurarMomentum(0.99);
+      rede.configurarOtimizador(2);
       rede.compilar();
       rede.configurarFuncaoAtivacao(2);
       return rede;
@@ -89,10 +96,12 @@ class Main{
    public static void treinoEmPainel(RedeNeural rede, BufferedImage imagem, double[][] dadosEntrada, double[][] dadosSaida){
       final int fps = 60;
 
-      JanelaTreino jt = new JanelaTreino(imagem.getWidth(), imagem.getHeight(), escalaRender);
+      //acelerar o processo de desenho
+      //bom em situações de janelas muito grandes
+      int numThreads = Runtime.getRuntime().availableProcessors()/2;
 
-      jt.desenharTreino(rede, 0);
-      int epocasPorFrame = 7;
+      JanelaTreino jt = new JanelaTreino(imagem.getWidth(), imagem.getHeight(), escalaRender);
+      jt.desenharTreino(rede, 0, numThreads);
       
       //trabalhar com o tempo de renderização baseado no fps
       double intervaloDesenho = 1000000000/fps;
@@ -100,9 +109,11 @@ class Main{
       double tempoRestante;
       
       int i = 0;
+      int epocasPorFrame = 10;
       while(i < epocas && jt.isVisible()){
          rede.treinar(dadosEntrada, dadosSaida, epocasPorFrame);
-         jt.desenharTreino(rede, i);
+         // jt.desenharTreino(rede, i);
+         jt.desenharTreino(rede, i, numThreads);
 
          try{
             tempoRestante = proximoTempoDesenho - System.nanoTime();

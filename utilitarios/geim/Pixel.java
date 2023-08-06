@@ -5,7 +5,7 @@ package utilitarios.geim;
  * Classe responsável por representar o valor de cor de um pixel de acordo com o padrão
  * de cor rgb.
  */
-class Pixel{
+public class Pixel{
    private int r;
    private int g;
    private int b;

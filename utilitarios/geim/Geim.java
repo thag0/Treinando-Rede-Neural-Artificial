@@ -35,7 +35,8 @@ public class Geim{
 
    /**
     * Lê uma imagem do caminho fornecido e retorna a imagem como um objeto BufferedImage.
-    * @param caminho o caminho da imagem a ser lida. Deve ser um caminho relativo ou absoluto para o arquivo de imagem.
+    * @param caminho o caminho da imagem a ser lida. Deve ser um caminho relativo ou absoluto para o arquivo de imagem, deve
+    * conter a extensão do arquivo.
     * @return a imagem lida como um objeto BufferedImage.
     * @throws IllegalArgumentException se ocorrer um erro durante a leitura da imagem ou se a imagem não puder ser encontrada.
     */

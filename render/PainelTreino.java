@@ -85,6 +85,115 @@ public class PainelTreino extends JPanel{
    }
 
 
+   public void desenharMultithread(RedeNeural rede, int epocasPorFrame, int numThreads){
+      this.rede = rede;
+      
+      int nEntrada = rede.entrada.neuronios.length;
+      nEntrada -= (rede.entrada.temBias) ? 1 : 0;
+      entradaRede = new double[nEntrada];
+
+      //organizar
+      Thread[] threads = new Thread[numThreads];
+
+      RedeNeural[] clonesRedes = new RedeNeural[numThreads];
+      for(int i = 0; i < clonesRedes.length; i++) clonesRedes[i] = rede.clone();
+
+      int alturaPorThread = this.altura / numThreads;
+      int restoAltura = this.altura % numThreads;
+
+      if(rede.saida.neuronios.length == 1){//escala de cinza
+         for(int i = 0; i < numThreads; i++){
+            final int indice = i;
+            int inicioY = i * alturaPorThread;
+            int fimY = inicioY + alturaPorThread + ((i == numThreads - 1) ? restoAltura : 0);
+
+            threads[i] = new Thread(() -> {
+               calcularParteImagemEscalaCinza(clonesRedes[indice], inicioY, fimY);
+            });
+
+            threads[i].start();
+         }
+
+         try{
+            for(Thread thread : threads){
+               thread.join();
+            }
+         }catch(Exception e){
+
+         }
+
+      }else if(rede.saida.neuronios.length == 3){//rgb
+         for(int i = 0; i < numThreads; i++){
+            final int indice = i;
+            int inicioY = i * alturaPorThread;
+            int fimY = inicioY + alturaPorThread + ((i == numThreads - 1) ? restoAltura : 0);
+
+            threads[i] = new Thread(() -> {
+               calcularParteImagemRGB(clonesRedes[indice], inicioY, fimY);
+            });
+
+            threads[i].start();
+         }
+
+         try{
+            for(Thread thread : threads){
+               thread.join();
+            }
+         }catch(Exception e){
+
+         }
+      }
+
+      epocaAtual = epocasPorFrame;
+      repaint();
+   }
+
+
+   private void calcularParteImagemEscalaCinza(RedeNeural rede, int startY, int endY){
+      int nEntrada = rede.entrada.neuronios.length;
+      nEntrada -= rede.entrada.temBias ? 1 : 0;
+      double[] entradaRede = new double[nEntrada];
+      int cinza;
+
+      for (int y = startY; y < endY; y++) {
+         for (int x = 0; x < this.largura; x++){
+            entradaRede[0] = (double) x / this.largura;
+            entradaRede[1] = (double) y / this.altura;
+
+            rede.calcularSaida(entradaRede);
+            cinza = (int)(rede.saida.neuronios[0].saida * 255);
+
+            r = cinza;
+            g = cinza;
+            b = cinza;
+            rgb = (r << 16) | (g << 8) | b;
+            imagem.setRGB(x, y, rgb);
+         }
+      }
+   }
+
+
+   private void calcularParteImagemRGB(RedeNeural rede, int startY, int endY){
+      int nEntrada = rede.entrada.neuronios.length;
+      nEntrada -= rede.entrada.temBias ? 1 : 0;
+      double[] entradaRede = new double[nEntrada];
+      int r, g, b, rgb;
+
+      for (int y = startY; y < endY; y++) {
+         for (int x = 0; x < this.largura; x++){
+            entradaRede[0] = (double) x / this.largura;
+            entradaRede[1] = (double) y / this.altura;
+            rede.calcularSaida(entradaRede);
+            r = (int) (rede.saida.neuronios[0].saida * 255);
+            g = (int) (rede.saida.neuronios[1].saida * 255);
+            b = (int) (rede.saida.neuronios[2].saida * 255);
+            rgb = (r << 16) | (g << 8) | b;
+            imagem.setRGB(x, y, rgb);
+         }
+      }
+   }
+
+
    @Override
    protected void paintComponent(Graphics g){
       super.paintComponent(g);
@@ -100,3 +209,4 @@ public class PainelTreino extends JPanel{
       g2.dispose();
    }
 }
+
