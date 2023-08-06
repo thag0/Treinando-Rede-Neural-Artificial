@@ -34,7 +34,15 @@ public class JanelaTreino extends JFrame{
    }
 
 
+   /**
+    * Acelera o processo de desenho do painel usando o número de threads fornecidas.
+    * @param rede
+    * @param epocasPorFrame
+    * @param numThreads
+    */
    public void desenharTreino(RedeNeural rede, int epocasPorFrame, int numThreads){
+      if(numThreads <= 0) throw new IllegalArgumentException("O valor do número de threads deve ser maior que 1.");
+      
       painelTreino.desenharMultithread(rede, epocasPorFrame, numThreads);
    }
 }

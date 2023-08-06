@@ -18,10 +18,11 @@ class Main{
    static Ged ged = new Ged();
    static Geim geim = new Geim();
    
-   static final String caminhoArquivo = "/dados/32x32/circulos.png";
+   // static final String caminhoArquivo = "/dados/32x32/circulos.png";
+   static final String caminhoArquivo = "/dados/mnist/8.png";
    static final String caminhoImagemExportada = "./resultados/imagem-ampliada";
    static final int epocas = 100*1000;
-   static final float escalaRender = 10f;
+   static final float escalaRender = 15f;
    static final float escalaImagemExportada = 20f;
 
    // Sempre lembrar de quando mudar o dataset, também mudar a quantidade de dados de entrada e saída.
@@ -35,7 +36,7 @@ class Main{
 
       //lendo os dados de entrada
       int qEntradas = 2;//quantidade de dados de entrada / entrada da rede
-      int qSaidas = 3;//quantidade de dados de saída / saída da rede
+      int qSaidas = 1;//quantidade de dados de saída / saída da rede
       BufferedImage imagem = geim.lerImagem(caminhoArquivo);
       double[][] dados;
 
@@ -80,7 +81,8 @@ class Main{
 
 
    public static RedeNeural criarRede(int qEntradas, int qSaidas){
-      int[] arquitetura = {qEntradas, 42, 42, qSaidas};
+      // int[] arquitetura = {qEntradas, 46, 32, 16, qSaidas};
+      int[] arquitetura = {qEntradas, 11, 11, qSaidas};
       RedeNeural rede = new RedeNeural(arquitetura);
 
       rede.configurarAlcancePesos(1);
@@ -109,7 +111,7 @@ class Main{
       double tempoRestante;
       
       int i = 0;
-      int epocasPorFrame = 5;
+      int epocasPorFrame = 10;
       while(i < epocas && jt.isVisible()){
          rede.treinar(dadosEntrada, dadosSaida, epocasPorFrame);
          // jt.desenharTreino(rede, i);
