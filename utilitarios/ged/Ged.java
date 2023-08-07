@@ -193,6 +193,20 @@ public class Ged{
    }
 
 
+   /**
+    * Retorna uma matriz menor contendo as mesmas informações da matriz original, apenas
+    * com os dados do ponto de inínio e fim.
+    * @param dados matriz contendo os dados completos.
+    * @param inicio índice inicial do corte (inclusivo).
+    * @param fim índice final do corte (exclusivo).
+    * @return submatriz contendo o conteúdo da matriz original, com os dados selecionados.
+    * @throws IllegalArgumentException se os índices fornecidos forem inválidos.
+    */
+   public double[][] obterSubMatriz(double[][] dados, int inicio, int fim){
+      return md.obterSubMatriz(dados, inicio, fim);
+   }
+
+
 
    /**
     * Descreve as dimensões da lista, tanto em questão de quantidade de linhas qunanto quantidade de colunas.

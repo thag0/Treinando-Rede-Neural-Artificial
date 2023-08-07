@@ -236,6 +236,25 @@ class ManipuladorDados{
    }
 
 
+   public double[][] obterSubMatriz(double[][] dados, int inicio, int fim){
+      if(inicio < 0 || fim > dados.length || inicio >= fim){
+         throw new IllegalArgumentException("Índices de início ou fim inválidos.");
+      }
+
+      int linhas = fim - inicio;
+      int colunas = dados[0].length;
+      double[][] subMatriz = new double[linhas][colunas];
+
+      for(int i = 0; i < linhas; i++){
+         for(int j = 0; j < colunas; j++){
+            subMatriz[i][j] = dados[inicio + i][j];
+         }
+      }
+
+      return subMatriz;
+   }
+
+
    /**
     * Tenta converter o valor para um numérico do tipo int
     * @param valor valor que será testado.

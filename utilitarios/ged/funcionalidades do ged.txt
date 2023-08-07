@@ -10,6 +10,7 @@ public void trocarColunas(ArrayList<String[]> lista, int idColuna1, int idColuna
 public void editarValor(ArrayList<String[]> lista, int indice, String valorBusca, String novoValor)
 public void removerNaoNumericos(ArrayList<String[]> lista)
 public void categorizar(ArrayList<String[]> lista, int indice)
+public double[][] obterSubMatriz(double[][] dados, int inicio, int fim)
 public int[] obterShapeLista(ArrayList<String[]> lista)
 public ArrayList<String[]> lerCsv(String caminho)
 public void exportarCsv(ArrayList<String[]> lista, String caminho)

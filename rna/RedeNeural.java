@@ -469,6 +469,7 @@ public class RedeNeural implements Cloneable, Serializable{
    }
 
 
+
    /**
     * Calcula o erro de cada neurônio na rede neural.
     *

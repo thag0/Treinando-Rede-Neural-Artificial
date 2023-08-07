@@ -19,11 +19,11 @@ class Main{
    static Ged ged = new Ged();
    static Geim geim = new Geim();
    
-   // static final String caminhoArquivo = "/dados/32x32/circulos.png";
-   static final String caminhoArquivo = "/dados/mnist/8.png";
+   static final String caminhoArquivo = "/dados/32x32/circulos.png";
+   // static final String caminhoArquivo = "/dados/mnist/3.png";
    static final String caminhoImagemExportada = "./resultados/imagem-ampliada";
-   static final int epocas = 10*1000;
-   static final float escalaRender = 15f;
+   static final int epocas = 100*1000;
+   static final float escalaRender = 15;
    static final float escalaImagemExportada = 20f;
 
    // Sempre lembrar de quando mudar o dataset, também mudar a quantidade de dados de entrada e saída.
@@ -37,7 +37,7 @@ class Main{
 
       //lendo os dados de entrada
       int qEntradas = 2;//quantidade de dados de entrada / entrada da rede
-      int qSaidas = 1;//quantidade de dados de saída / saída da rede
+      int qSaidas = 3;//quantidade de dados de saída / saída da rede
       BufferedImage imagem = geim.lerImagem(caminhoArquivo);
       double[][] dados;
 
@@ -83,13 +83,13 @@ class Main{
 
 
    public static RedeNeural criarRede(int qEntradas, int qSaidas){
-      int[] arquitetura = {qEntradas, 12, 12, qSaidas};
+      int[] arquitetura = {qEntradas, 46, 46, qSaidas};
       RedeNeural rede = new RedeNeural(arquitetura);
 
       rede.configurarAlcancePesos(1);
-      rede.configurarTaxaAprendizagem(0.001);
-      rede.configurarMomentum(0.99);
-      rede.configurarOtimizador(2);
+      rede.configurarTaxaAprendizagem(0.01);
+      rede.configurarMomentum(0.95);
+      rede.configurarOtimizador(2, false);
       rede.compilar();
       rede.configurarFuncaoAtivacao(2);
       rede.configurarHistoricoCusto(true);
@@ -116,7 +116,6 @@ class Main{
       int epocasPorFrame = 10;
       while(i < epocas && jt.isVisible()){
          rede.treinar(dadosEntrada, dadosSaida, epocasPorFrame);
-         // jt.desenharTreino(rede, i);
          jt.desenharTreino(rede, i, numThreads);
 
          try{
