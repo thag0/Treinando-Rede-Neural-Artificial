@@ -50,6 +50,11 @@ public class RedeNeural implements Cloneable, Serializable{
    
    Random random = new Random();//treino embaralhado
 
+   private boolean calcularHistoricoErro = false;
+   private boolean calcularHistoricoCusto = false;
+   ArrayList<Double> historicoErro = new ArrayList<>();
+   ArrayList<Double> historicoCusto = new ArrayList<>();
+
 
    //TODO
    //Implementar formas melhores de treinar com uma grande quantidade de dados.
@@ -332,6 +337,36 @@ public class RedeNeural implements Cloneable, Serializable{
       }
 
       this.nesterov = nesterov;
+   }
+
+
+   /**
+    * Define se durante o processor de treinamento, a rede vai salvar dados relacionados ao 
+    * erro médio de cada época.
+    * <p>
+    *    O valor padrão é false.
+    * </p>
+    * @param historicoErro se verdadeiro, a rede armazenara o histórico de erros de cada época.
+    */
+   public void configurarHistoricoErros(boolean historicoErro){
+      this.calcularHistoricoErro = historicoErro;
+   }
+
+
+   /**
+    * Define se durante o processor de treinamento, a rede vai salvar dados relacionados a 
+    * função de custo de cada época.
+    * <p>
+    *    Calcular o custo é uma operação que pode ser computacionalmente cara, então deve ser
+    *    bem avaliado querer ativar ou não esse recurso.
+    * </p>
+    * <p>
+    *    O valor padrão é false.
+    * </p>
+    * @param historicoCusto se verdadeiro, a rede armazenara o histórico de custo de cada época.
+    */
+   public void configurarHistoricoCusto(boolean historicoCusto){
+      this.calcularHistoricoCusto = historicoCusto;
    }
 
 
@@ -633,9 +668,11 @@ public class RedeNeural implements Cloneable, Serializable{
       redec.add(this.saida);
 
       int i, j, k;
+      double erroMedio;//salvar no historico
       for(i = 0; i < epochs; i++){//quantidade de épocas
          if(embaralhar) embaralharDados(entradas, saidas);
 
+         erroMedio = 0;
          for(j = 0; j < entradas.length; j++){//percorrer amostras
             //preencher dados de entrada e saída
             for(k = 0; k < entradas[0].length; k++){
@@ -647,7 +684,23 @@ public class RedeNeural implements Cloneable, Serializable{
 
             calcularSaida(dadosEntrada);
             calcularErro(redec, dadosEntrada, dadosSaida);
+            
+            if(calcularHistoricoErro){
+               erroMedio = 0;
+               for(k = 0; k < this.saida.neuronios.length; k++){
+                  erroMedio += this.saida.neuronios[k].erro;
+               }
+            }
+            
             otimizadorAtual.atualizar(redec, this.TAXA_APRENDIZAGEM, this.TAXA_MOMENTUM);
+         }
+
+         if(calcularHistoricoErro){
+            erroMedio /= (this.entrada.neuronios.length *this.saida.neuronios.length);
+            historicoErro.add(erroMedio);
+         }
+         if(calcularHistoricoCusto){
+            historicoCusto.add(funcaoDeCusto(entradas, saidas));
          }
       }
    }
@@ -1027,6 +1080,30 @@ public class RedeNeural implements Cloneable, Serializable{
       buffer += "\n]\n";
 
       return buffer;
+   }
+
+
+   /**
+    * @return lista contendo o histórico de erros durante o treinamento da rede.
+    * @throws IllegalArgumentException se não foi habilitado previamente o cálculo do histórico de erros.
+    */
+   public ArrayList<Double> obterHistoricoErro(){
+      if(!calcularHistoricoErro){
+         throw new IllegalArgumentException("Deve ser habilitado o cálculo do histórico de erros para obter os resultados.");
+      }
+      return this.historicoErro;
+   }
+
+
+   /**
+    * @return lista contendo o histórico de custos durante o treinamento da rede.
+    * @throws IllegalArgumentException se não foi habilitado previamente o cálculo do histórico de custos.
+    */
+   public ArrayList<Double> obterHistoricoCusto(){
+      if(!calcularHistoricoCusto){
+         throw new IllegalArgumentException("Deve ser habilitado o cálculo do histórico de custos para obter os resultados.");
+      }
+      return this.historicoCusto;
    }
 
    
