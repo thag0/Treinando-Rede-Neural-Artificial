@@ -23,7 +23,7 @@ class Main{
    // static final String caminhoArquivo = "/dados/mnist/3.png";
    static final String caminhoImagemExportada = "./resultados/imagem-ampliada";
    static final int epocas = 100*1000;
-   static final float escalaRender = 15;
+   static final float escalaRender = 12;
    static final float escalaImagemExportada = 20f;
 
    // Sempre lembrar de quando mudar o dataset, também mudar a quantidade de dados de entrada e saída.
