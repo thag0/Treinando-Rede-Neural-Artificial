@@ -371,7 +371,8 @@ public class RedeNeural implements Cloneable, Serializable{
 
 
    /**
-    * Compila o modelo de rede baseado nos valores fornecidos. Antes da compilação é possível
+    * Compila o modelo de rede inicializando as camadas, neurônios e pesos respectivos, 
+    * baseado nos valores fornecidos. Antes da compilação é possível
     * informar alguns valores ajustáveis na inicialização da rede, como:
     * <ul>
     *    <li>Valor máximo e mínimo para os pesos gerados aleatoriamente.</li>
@@ -380,19 +381,30 @@ public class RedeNeural implements Cloneable, Serializable{
     *    <li>Taxa de aprendizagem.</li>
     *    <li>Taxa de momentum.</li>
     *    <li>Otimizador.</li>
+    *    <li>Habilitar histórico de erros e custos durante o treino.</li>
     * </ul>
     * <p>
     *    Caso nenhuma configuração seja feita, a rede será inicializada com os valores padrão. 
     * </p>
     * Após a compilação o modelo está pronto para ser usado, mas deverá ser treinado.
+    * <p>
+    *    Para treinar o modelo deve-se fazer uso da função função {@code treinar()} informando os 
+    *    dados necessários para a rede.
+    * </p>
+    * <p>
+    *    Para usar as predições da rede basta usar a função {@code calcularSaida()} informando os
+    *    dados necessários. Após a predição pode-se obter o resultado da rede por meio da função 
+    *    {@code obterSaidas()};
+    * </p>
     */
    public void compilar(){
-      boolean temBias = (this.BIAS == 1) ? true : false;
-
       //adicionando bias como neuronio adicional nas camadas
       for(int i = 0; i < arquitetura.length-1; i++){
          arquitetura[i] += BIAS;
       }
+
+      //passar as informações do bias paras as camadas
+      boolean temBias = (this.BIAS == 1) ? true : false;
       
       //inicializar camada de entrada
       entrada = new Camada(temBias);
