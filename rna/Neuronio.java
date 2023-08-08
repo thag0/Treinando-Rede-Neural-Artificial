@@ -9,13 +9,13 @@ import java.util.Random;
  * além de valores de entrada e saída.
  */
 public class Neuronio implements Serializable{
-   public double[] entradas;
+   public double[] entradas;//saídas da camada anterior
    public double[] pesos;
    public double[] momentum;
    public double[] acumuladorGradiente;//adagrad
    public double[] acumuladorSegundaOrdem;//adam / rmsprop
-   public double somatorio;
-   public double saida;
+   public double somatorio;//entradas * pesos
+   public double saida;//resultado a ativação
    public double erro;//backpropagation
    public double gradiente;//backpropagation
 

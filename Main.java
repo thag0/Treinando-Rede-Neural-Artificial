@@ -19,8 +19,8 @@ class Main{
    static Ged ged = new Ged();
    static Geim geim = new Geim();
    
-   static final String caminhoArquivo = "/dados/32x32/circulos.png";
-   // static final String caminhoArquivo = "/dados/mnist/3.png";
+   // static final String caminhoArquivo = "/dados/32x32/circulos.png";
+   static final String caminhoArquivo = "/dados/mnist/3.png";
    static final String caminhoImagemExportada = "./resultados/imagem-ampliada";
    static final int epocas = 100*1000;
    static final float escalaRender = 12;
@@ -37,7 +37,7 @@ class Main{
 
       //lendo os dados de entrada
       int qEntradas = 2;//quantidade de dados de entrada / entrada da rede
-      int qSaidas = 3;//quantidade de dados de saída / saída da rede
+      int qSaidas = 1;//quantidade de dados de saída / saída da rede
       BufferedImage imagem = geim.lerImagem(caminhoArquivo);
       double[][] dados;
 
@@ -83,12 +83,13 @@ class Main{
 
 
    public static RedeNeural criarRede(int qEntradas, int qSaidas){
-      int[] arquitetura = {qEntradas, 48, 48, 18, qSaidas};
+      // int[] arquitetura = {qEntradas, 48, 48, 18, qSaidas};
+      int[] arquitetura = {qEntradas, 12, 12, qSaidas};
       RedeNeural rede = new RedeNeural(arquitetura);
 
       rede.configurarAlcancePesos(1);
-      rede.configurarTaxaAprendizagem(0.01);
-      rede.configurarMomentum(0.95);
+      rede.configurarTaxaAprendizagem(0.001);
+      rede.configurarMomentum(0.99);
       rede.configurarOtimizador(2, true);
       rede.compilar();
       rede.configurarFuncaoAtivacao(2);

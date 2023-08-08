@@ -16,6 +16,10 @@ import rna.otimizadores.Otimizador;
 import rna.otimizadores.RMSProp;
 import rna.otimizadores.SGD;
 
+//TODO
+//Implementar formas melhores de treinar com uma grande quantidade de dados.
+//Formas mais elaboradas de otmizadores.
+//Suporte ao treino da rede usando argmax ou softmax na saída
 
 /**
  * Modelo de Rede Neural Multilayer Perceptron baseado em feedforward criado do zero. Possui um conjunto de camadas 
@@ -54,12 +58,6 @@ public class RedeNeural implements Cloneable, Serializable{
    private boolean calcularHistoricoCusto = false;
    ArrayList<Double> historicoErro = new ArrayList<>();
    ArrayList<Double> historicoCusto = new ArrayList<>();
-
-
-   //TODO
-   //Implementar formas melhores de treinar com uma grande quantidade de dados.
-   //Formas mais elaboradas de otmizadores.
-   //Suporte ao treino da rede usando argmax ou softmax na saída
 
 
    /**
@@ -511,13 +509,10 @@ public class RedeNeural implements Cloneable, Serializable{
       double[] dadosSaida = new double[saida[0].length];
       double erroMedio = 0;
 
-      for(int i = 0; i < dados.length; i++){ // Percorrer linhas dos dados
-         for(int j = 0; j < dados[i].length; j++){ // Preencher dados de entrada
-            dadosEntrada[j] = dados[i][j];
-         }
-         for(int j = 0; j < saida[i].length; j++){ // Preencher dados de saída desejada
-            dadosSaida[j] = saida[i][j];
-         }
+      for(int i = 0; i < dados.length; i++){//percorrer linhas dos dados
+         //preencher dados de entrada e saída
+         dadosEntrada = dados[i];
+         dadosSaida = saida[i];
 
          this.calcularSaida(dadosEntrada);
 
@@ -528,6 +523,79 @@ public class RedeNeural implements Cloneable, Serializable{
 
       erroMedio /= dados.length;
       return (1 - erroMedio); // Converter em um valor relativo a porcentagem
+   }
+
+
+   /**
+    * Calcula a acurácia da rede neural com base nos dados fornecidos.
+    * Essa função é exclusiva para problemas de classificação.
+    * @param dados matriz com os dados de entrada.
+    * @param saida matriz com os dados de saída.
+    * @return acurária obtida com base nos dados fornecidos, um valor entre 0 e 1, onde 1 representa a máxima precisão.
+    * @throws IllegalArgumentException se o modelo não foi compilado previamente.
+    * @throws IllegalArgumentException se a quantidade de linhas dos dados fornecidos for diferente da quantidade de linhas das saídas fornecidas.
+    * @throws IllegalArgumentException se o tamanho dos dados de entrada for diferente do tamanho dos neurônios de entrada, excluindo o bias.
+    * @throws IllegalArgumentException se o tamanho dos dados de saída for diferente do tamanho dos neurônios de saída.
+    */
+   public double calcularAcuracia(double[][] dados, double[][] saida){
+      modeloValido();
+
+      if(dados.length != saida.length){
+         throw new IllegalArgumentException("A quantidade de linhas de dados e saídas são diferentes");
+      }
+      if(dados[0].length != (this.entrada.neuronios.length - BIAS)){
+         throw new IllegalArgumentException("Incompatibilidade entre os dados de entrada e os neurônios de entrada da rede");
+      }
+      if(saida[0].length != this.saida.neuronios.length){
+         throw new IllegalArgumentException("Incompatibilidade entre os dados de saída e os neurônios de saída da rede");
+      }
+   
+      int qAmostras = dados.length;
+      int acertos = 0;
+      double acuracia;
+      double[] dadosEntrada = new double[dados[0].length];
+      double[] dadosSaida = new double[saida[0].length];
+
+      for(int i = 0; i < qAmostras; i++){
+         //preencher dados de entrada e saída
+         dadosEntrada = dados[i];
+         dadosSaida = saida[i];
+
+         this.calcularSaida(dadosEntrada);
+
+         int indiceCalculado = indiceMaiorValor(this.obterSaidas());
+         int indiceEsperado = indiceMaiorValor(dadosSaida);
+
+         if(indiceCalculado == indiceEsperado){
+            acertos++;
+         }
+      }
+
+      acuracia = (double)acertos / qAmostras;
+
+      return acuracia;
+   }
+
+
+   /**
+    * <p>
+    *    Função auxiliar no cálculo de acurária do modelo.
+    * </p>
+    * @param dados array com dados para busca.
+    * @return indice contendo o maior valor dentro do array.
+    */
+   private int indiceMaiorValor(double[] vetor){
+      int indiceMaiorValor = 0;
+      double maiorValor = vetor[0];
+  
+      for(int i = 1; i < vetor.length; i++){
+         if (vetor[i] > maiorValor) {
+            maiorValor = vetor[i];
+            indiceMaiorValor = i;
+         }
+      }
+  
+      return indiceMaiorValor;
    }
    
 
@@ -613,6 +681,7 @@ public class RedeNeural implements Cloneable, Serializable{
       double[] dadosSaida = new double[saida[0].length];
   
       double custo = 0.0;
+      double epsilon = 1e-9;//evitar log 0
       for(int i = 0; i < dados.length; i++){//percorrer amostras
          //preencher dados de entrada e saída
          for(int j = 0; j < (this.entrada.neuronios.length - BIAS); j++){
@@ -630,7 +699,7 @@ public class RedeNeural implements Cloneable, Serializable{
             double dadoReal = dadosSaida[k];
             
             //fórmula da entropia cruzada para cada neurônio de saída
-            custoExemplo += -dadoReal * Math.log(dadoPrevisto);
+            custoExemplo += (-dadoReal * Math.log(dadoPrevisto + epsilon));
          }
          
          custo += custoExemplo;
@@ -716,7 +785,7 @@ public class RedeNeural implements Cloneable, Serializable{
             }
 
             calcularSaida(dadosEntrada);
-            backpropagation(redec, dadosEntrada, dadosSaida);
+            backpropagation(redec, dadosSaida);
 
             if(calcularHistoricoErro){
                erroMedio = 0;
@@ -795,30 +864,19 @@ public class RedeNeural implements Cloneable, Serializable{
 
 
    /**
-    * Retropropaga o erro da rede neural de acordo com os dados de entrada e saída esperados, 
-    * @param entrada array com os dados de entrada das amostras.
+    * Retropropaga o erro da rede neural de acordo com os dados de entrada e saída esperados.
     * @param saida array com as saídas esperadas das amostras.
-    * @throws IllegalArgumentException se o modelo não foi compilado previamente.
-    * @throws IllegalArgumentException se o tamanho dos dados de entrada for diferente do tamanho dos neurônios de entrada, excluindo o bias.
     * @throws IllegalArgumentException se o tamanho dos dados de saída for diferente do tamanho dos neurônios de saída da rede.
     */
-   private void backpropagation(ArrayList<Camada> redec, double[] entrada, double[] saida){
-      modeloValido();
-
-      if(entrada.length != (this.entrada.neuronios.length-BIAS)){
-         throw new IllegalArgumentException("O tamanho dos dados de entrada não corresponde ao tamanho dos neurônios de entrada da rede, com exceção dos bias");
-      }
-      if(saida.length != this.saida.neuronios.length){
+   private void backpropagation(ArrayList<Camada> redec, double[] saidas){
+      if(saidas.length != this.saida.neuronios.length){
          throw new IllegalArgumentException("O tamanho dos dados de saída não corresponde ao tamanho dos neurônios de saída da rede");
       }
 
       //erro da saída
-      for(int i = 0; i < this.saida.neuronios.length; i++){
-         Neuronio neuronio = this.saida.neuronios[i];
-         neuronio.erro = ((saida[i] - neuronio.saida) * this.saida.funcaoAtivacaoDx(neuronio.somatorio));
-      }
+      calcularErroSaida(saidas);
 
-      double somaErros = 0.0;
+      //erro ocultas
       //começar da ultima oculta
       for(int i = redec.size()-2; i >= 1; i--){// percorrer camadas ocultas de trás pra frente
          
@@ -828,11 +886,38 @@ public class RedeNeural implements Cloneable, Serializable{
          for (int j = 0; j < qNeuronioAtual; j++){//percorrer neurônios da camada atual
          
             Neuronio neuronio = camadaAtual.neuronios[j];
-            somaErros = 0.0;
+            double somaErros = 0.0;
             for(Neuronio neuronioProximo : redec.get(i+1).neuronios){//percorrer neurônios da camada seguinte
                somaErros += neuronioProximo.pesos[j] * neuronioProximo.erro;
             }
             neuronio.erro = somaErros * camadaAtual.funcaoAtivacaoDx(neuronio.somatorio);
+         }
+      }
+   }
+
+
+   /**
+    * Método exclusivo para separar a forma de calcular os erros da camda de saída.
+    * Dando suporte não apenas para problemas de regressão.
+    * <p>
+    *    Isso ainda ta em teste para problemas de classificação, para regressão funciona normalmente.
+    * </p>
+    * @param saidas array com as saídas esperadas
+    */
+   private void calcularErroSaida(double[] saidas){
+      if(this.saida.argmax){//classificação
+
+
+      }else if(this.saida.softmax){//classificação
+         for(int i = 0; i < this.saida.neuronios.length; i++){
+            Neuronio neuronio = this.saida.neuronios[i];
+            neuronio.erro = (saidas[i] - neuronio.saida);
+         }
+      
+      }else{//regressão
+         for(int i = 0; i < this.saida.neuronios.length; i++){
+            Neuronio neuronio = this.saida.neuronios[i];
+            neuronio.erro = ((saidas[i] - neuronio.saida) * this.saida.funcaoAtivacaoDx(neuronio.somatorio));
          }
       }
    }
