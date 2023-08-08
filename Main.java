@@ -69,7 +69,7 @@ class Main{
 
       //avaliar resultados
       double precisao = rede.calcularPrecisao(dadosEntrada, dadosSaida);
-      System.out.println("Custo = " + rede.funcaoDeCusto(dadosEntrada, dadosSaida));
+      System.out.println("Custo = " + rede.erroMedioQuadrado(dadosEntrada, dadosSaida));
       System.out.println("Precisão = " + (formatarFloat(precisao*100)) + "%");
       System.out.println("Tempo de treinamento: " + horas + "h " + minutos + "m " + segundos + "s");
 
@@ -92,7 +92,6 @@ class Main{
       rede.configurarOtimizador(2, true);
       rede.compilar();
       rede.configurarFuncaoAtivacao(2);
-      rede.configurarHistoricoCusto(true);
       return rede;
    }
 

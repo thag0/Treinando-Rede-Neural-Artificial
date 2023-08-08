@@ -1,16 +1,17 @@
 package rna.ativacoes;
 
-public class TanH extends FuncaoAtivacao{
-
+public class ReLU extends FuncaoAtivacao{
+   
    @Override
    public double ativar(double x){
-      return Math.tanh(x);
+      if(x > 0) return x;
+      return 0;
    }
 
 
    @Override
    public double derivada(double x){
-      double tanh = Math.tanh(x);
-      return (1 - (tanh * tanh));
+      if(x > 0) return 1;
+      return 0;
    }
 }

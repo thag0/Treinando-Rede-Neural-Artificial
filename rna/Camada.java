@@ -5,9 +5,9 @@ import java.io.Serializable;
 import rna.ativacoes.ELU;
 import rna.ativacoes.FuncaoAtivacao;
 import rna.ativacoes.GELU;
-import rna.ativacoes.LeakyRelu;
+import rna.ativacoes.LeakyReLU;
 import rna.ativacoes.Linear;
-import rna.ativacoes.Relu;
+import rna.ativacoes.ReLU;
 import rna.ativacoes.Seno;
 import rna.ativacoes.Sigmoid;
 import rna.ativacoes.Swish;
@@ -17,16 +17,15 @@ import rna.ativacoes.TanH;
 /**
  * Representa uma camada de neurônios em uma rede neural.
  * Cada camada possui um conjunto de neurônios e uma função de ativação que pode ser configurada.
- * A função de ativação é aplicada aos valores de saída dos neurônios após a soma ponderada com os pesos.
  */
 public class Camada implements Serializable{
    public Neuronio[] neuronios;
    public boolean temBias = true;
    private int b = 1;
-   private boolean argmax = false;
-   private boolean softmax = false;
+   public boolean argmax = false;
+   public boolean softmax = false;
 
-   public FuncaoAtivacao ativacao = new Relu();
+   public FuncaoAtivacao ativacao = new ReLU();
 
    /**
     * Inicializa uma instância de camada de RedeNeural.
@@ -83,10 +82,10 @@ public class Camada implements Serializable{
     */
    public void configurarAtivacao(int ativacao){
       switch(ativacao){
-         case 1: this.ativacao = new Relu(); break;
+         case 1: this.ativacao = new ReLU(); break;
          case 2: this.ativacao = new Sigmoid(); break;
          case 3: this.ativacao = new TanH(); break;
-         case 4: this.ativacao = new LeakyRelu(); break;
+         case 4: this.ativacao = new LeakyReLU(); break;
          case 5: this.ativacao = new ELU(); break;
          case 6: this.ativacao = new Swish(); break;
          case 7: this.ativacao = new GELU(); break;
@@ -103,7 +102,6 @@ public class Camada implements Serializable{
     * Executa a função de ativação específica da camada.
     * @param valor valor de entrada do neurônio que será ativado.
     * @return valor resultante do cálculo da função de ativação.
-    * @throws IllegalArgumentException caso haja algum erro na seleção da função de ativação.
     */
    public double funcaoAtivacao(double valor){
       return ativacao.ativar(valor);
@@ -114,13 +112,16 @@ public class Camada implements Serializable{
     * Executa a função de ativação derivada específica da camada.
     * @param valor valor anterior do cálculo da função de ativação
     * @return valor resultante do cálculo da função de ativação derivada.
-    * @throws IllegalArgumentException se houver algum erro na seleção da função de ativação derivada.
     */
    public double funcaoAtivacaoDx(double valor){
+      if(softmax) return 1;//anular derivada no backpropagation
       return ativacao.derivada(valor);
    }
 
 
+   /**
+    * @return nome da função de ativação configurada para a camada.
+    */
    public String obterAtivacao(){
       if(argmax) return "Argmax";
       else if(softmax) return "Softmax";
@@ -159,11 +160,11 @@ public class Camada implements Serializable{
       double somaExp = 0.0;
       
       for(Neuronio neuronio : this.neuronios){
-         somaExp += Math.exp(neuronio.saida);
+         somaExp += Math.exp(neuronio.somatorio);
       }
 
       for(Neuronio neuronio : this.neuronios){
-         neuronio.saida = Math.exp(neuronio.saida) / somaExp;
+         neuronio.saida = Math.exp(neuronio.somatorio) / somaExp;
       }
    }
    

@@ -337,7 +337,8 @@ public class Ged{
     * @param dados O conjunto de dados completo.
     * @param tamanhoTeste O tamanho relativo do conjunto de teste (entre 0 e 1).
     * @return Um array de duas matrizes contendo os dados de treino e teste, respectivamente.
-    * @throws IllegalArgumentException caso o conjunto de dados for nulo ou o tamanho de teste estiver fora do intervalo (0, 1).
+    * @throws IllegalArgumentException caso o conjunto de dados for nulo.
+    * @throws IllegalArgumentException caso o tamanho de teste estiver fora do intervalo (0, 1).
     */
    public double[][][] separarTreinoTeste(double[][] dados, float tamanhoTeste){
       return gtt.separarTreinoTeste(dados, tamanhoTeste);

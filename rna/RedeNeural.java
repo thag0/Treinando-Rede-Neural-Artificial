@@ -58,8 +58,8 @@ public class RedeNeural implements Cloneable, Serializable{
 
    //TODO
    //Implementar formas melhores de treinar com uma grande quantidade de dados.
-   //Talvez implementar treino em lotes (batch) ou paralelizar com threads o treino.
    //Formas mais elaboradas de otmizadores.
+   //Suporte ao treino da rede usando argmax ou softmax na saída
 
 
    /**
@@ -532,16 +532,17 @@ public class RedeNeural implements Cloneable, Serializable{
    
 
    /**
-    * Calcula a função de custo baseada nos dados de entrada e na saída esperada para eles por meio do erro médio quadrado.
+    * Calcula a função de custo baseada nos dados de entrada e na saída esperada para eles por 
+    * meio do erro médio quadrado.
     * @param dados matriz de dados de entrada.
     * @param saida matriz dos dados de saída.
-    * @return valor de custo da rede.
+    * @return valor de custo da rede baseado no erro médio quadrado.
     * @throws IllegalArgumentException se o modelo não foi compilado previamente.
     * @throws IllegalArgumentException se a quantidade de linhas dos dados fornecidos for diferente da quantidade de linhas das saídas fornecidas.
     * @throws IllegalArgumentException se o tamanho dos dados de entrada for diferente do tamanho dos neurônios de entrada, excluindo o bias.
     * @throws IllegalArgumentException se o tamanho dos dados de saída for diferente do tamanho dos neurôniosde de saída.
     */
-   public double funcaoDeCusto(double[][] dados, double[][] saida){
+   public double erroMedioQuadrado(double[][] dados, double[][] saida){
       modeloValido();
       
       if(dados.length != saida.length){
@@ -554,26 +555,26 @@ public class RedeNeural implements Cloneable, Serializable{
          throw new IllegalArgumentException("Incompatibilidade entre os dados de saída e os neurônios de saída da rede");
       }
 
-      double[] dados_entrada = new double[dados[0].length];//tamanho das colunas da entrada
-      double[] dados_saida = new double[saida[0].length];//tamanho de colunas da saída
+      double[] dadosEntrada = new double[dados[0].length];//tamanho das colunas da entrada
+      double[] dadosSaida = new double[saida[0].length];//tamanho de colunas da saída
       
       int i, j, k;
       double diferenca;
       double custo = 0.0;
       for(i = 0; i < dados.length; i++){//percorrer as linhas da entrada
          for(j = 0; j < (this.entrada.neuronios.length - BIAS); j++){//passar os dados para a entrada da rede
-            dados_entrada[j] = dados[i][j];
+            dadosEntrada[j] = dados[i][j];
          }
          for(j = 0; j < this.saida.neuronios.length; j++){//passar os dados de saída desejada para o vetor
-            dados_saida[j] = saida[i][j];
+            dadosSaida[j] = saida[i][j];
          }
 
          //calcular saída com base nos dados passados
-         this.calcularSaida(dados_entrada);
+         this.calcularSaida(dadosEntrada);
 
          //calcular custo com base na saída
          for(k = 0; k < this.saida.neuronios.length; k++){
-            diferenca = dados_saida[k] - this.saida.neuronios[k].saida;
+            diferenca = dadosSaida[k] - this.saida.neuronios[k].saida;
             custo += (diferenca*diferenca);
          }
       }
@@ -583,6 +584,63 @@ public class RedeNeural implements Cloneable, Serializable{
       return custo;
    }
 
+
+   /**
+    * Calcula a função de custo baseada nos dados de entrada e na saída esperada para eles por 
+    * meio da entropia cruzada.
+    * @param dados matriz de dados de entrada.
+    * @param saida matriz dos dados de saída.
+    * @return valor de custo da rede baseado na entropia cruzada.
+    * @throws IllegalArgumentException se o modelo não foi compilado previamente.
+    * @throws IllegalArgumentException se a quantidade de linhas dos dados fornecidos for diferente da quantidade de linhas das saídas fornecidas.
+    * @throws IllegalArgumentException se o tamanho dos dados de entrada for diferente do tamanho dos neurônios de entrada, excluindo o bias.
+    * @throws IllegalArgumentException se o tamanho dos dados de saída for diferente do tamanho dos neurôniosde de saída.
+    */
+   public double entropiaCruzada(double[][] dados, double[][] saida){
+      modeloValido();
+  
+      if(dados.length != saida.length){
+         throw new IllegalArgumentException("A quantidade de linhas de dados e saídas são diferentes");
+      }
+      if(dados[0].length != (this.entrada.neuronios.length - BIAS)){
+         throw new IllegalArgumentException("Incompatibilidade entre os dados de entrada e os neurônios de entrada da rede");
+      }
+      if(saida[0].length != this.saida.neuronios.length){
+         throw new IllegalArgumentException("Incompatibilidade entre os dados de saída e os neurônios de saída da rede");
+      }
+  
+      double[] dadosEntrada = new double[dados[0].length];
+      double[] dadosSaida = new double[saida[0].length];
+  
+      double custo = 0.0;
+      for(int i = 0; i < dados.length; i++){//percorrer amostras
+         //preencher dados de entrada e saída
+         for(int j = 0; j < (this.entrada.neuronios.length - BIAS); j++){
+            dadosEntrada[j] = dados[i][j];
+         }
+         for(int j = 0; j < this.saida.neuronios.length; j++){
+            dadosSaida[j] = saida[i][j];
+         }
+  
+         this.calcularSaida(dadosEntrada);
+
+         double custoExemplo = 0.0;
+         for(int k = 0; k < this.saida.neuronios.length; k++){
+            double dadoPrevisto = this.saida.neuronios[k].saida;
+            double dadoReal = dadosSaida[k];
+            
+            //fórmula da entropia cruzada para cada neurônio de saída
+            custoExemplo += -dadoReal * Math.log(dadoPrevisto);
+         }
+         
+         custo += custoExemplo;
+      }
+  
+      custo /= dados.length;
+
+      return custo;
+   }
+  
 
    /**
     * <p>
@@ -675,7 +733,8 @@ public class RedeNeural implements Cloneable, Serializable{
             historicoErro.add(erroMedio);
          }
          if(calcularHistoricoCusto){
-            historicoCusto.add(funcaoDeCusto(entradas, saidas));
+            if(this.saida.softmax) historicoCusto.add(entropiaCruzada(entradas, saidas));
+            else historicoCusto.add(erroMedioQuadrado(entradas, saidas));
          }
       }
    }
@@ -775,7 +834,7 @@ public class RedeNeural implements Cloneable, Serializable{
             }
             neuronio.erro = somaErros * camadaAtual.funcaoAtivacaoDx(neuronio.somatorio);
          }
-     }
+      }
    }
 
 
@@ -841,7 +900,7 @@ public class RedeNeural implements Cloneable, Serializable{
       camadasGradiente.add(redeG.saida);
 
       for(int epocas = 0; epocas < epochs; epocas++){
-         double custo = this.funcaoDeCusto(treinoEntrada, treinoSaida);
+         double custo = this.erroMedioQuadrado(treinoEntrada, treinoSaida);
          if(custo < custoMinimo) break;
 
          double valorAnterior = 0;
@@ -851,7 +910,7 @@ public class RedeNeural implements Cloneable, Serializable{
                for(int k = 0; k < camadasRede.get(i).neuronios[j].pesos.length; k++){//percorrer pesos do neuronio
                   valorAnterior = camadasRede.get(i).neuronios[j].pesos[k];
                   camadasRede.get(i).neuronios[j].pesos[k] += eps;
-                  camadasGradiente.get(i).neuronios[j].pesos[k] = ((funcaoDeCusto(treinoEntrada, treinoSaida) - custo)/eps);//derivada da função de custo
+                  camadasGradiente.get(i).neuronios[j].pesos[k] = ((erroMedioQuadrado(treinoEntrada, treinoSaida) - custo)/eps);//derivada da função de custo
                   camadasRede.get(i).neuronios[j].pesos[k] = valorAnterior;
                }
             }

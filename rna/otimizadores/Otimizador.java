@@ -8,8 +8,7 @@ import rna.Camada;
 /**
  * Classe genérica para implementações de otimizadores do treino da rede neural.
  * <p>
- *      Para adicionar um novo otimizador, é preciso extender a classe Otimizador e implementar
- *      o método {@code atualizar()}.
+ *      Novos otimizadores devem implementar o método {@code atualizar()}.
  * </p>
  */
 public abstract class Otimizador{
