@@ -83,13 +83,13 @@ class Main{
 
 
    public static RedeNeural criarRede(int qEntradas, int qSaidas){
-      int[] arquitetura = {qEntradas, 46, 46, qSaidas};
+      int[] arquitetura = {qEntradas, 48, 48, 18, qSaidas};
       RedeNeural rede = new RedeNeural(arquitetura);
 
       rede.configurarAlcancePesos(1);
       rede.configurarTaxaAprendizagem(0.01);
       rede.configurarMomentum(0.95);
-      rede.configurarOtimizador(2, false);
+      rede.configurarOtimizador(2, true);
       rede.compilar();
       rede.configurarFuncaoAtivacao(2);
       rede.configurarHistoricoCusto(true);
@@ -113,7 +113,7 @@ class Main{
       double tempoRestante;
       
       int i = 0;
-      int epocasPorFrame = 10;
+      int epocasPorFrame = 5;
       while(i < epocas && jt.isVisible()){
          rede.treinar(dadosEntrada, dadosSaida, epocasPorFrame);
          jt.desenharTreino(rede, i, numThreads);
