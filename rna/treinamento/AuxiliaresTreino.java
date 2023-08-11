@@ -1,6 +1,10 @@
 package rna.treinamento;
 
+import java.util.ArrayList;
 import java.util.Random;
+
+import rna.Camada;
+import rna.Neuronio;
 
 /**
  * Operadores auxiliares para o treino da rede neural;
@@ -61,5 +65,26 @@ class AuxiliaresTreino{
       }
 
       return subMatriz;
+   }
+
+
+   /**
+    * Zera todos os gradientes para o cálculo do gradiente em lote.
+    * @param redec
+    */
+   public void zerarGradientesAcumulados(ArrayList<Camada> redec){
+         for(int i = 1; i < redec.size(); i++){ 
+            
+            Camada camadaAtual = redec.get(i);
+            int nNeuronios = camadaAtual.obterQuantidadeNeuronios();
+            nNeuronios -= (camadaAtual.temBias) ? 1 : 0;
+            for(int j = 0; j < nNeuronios; j++){//percorrer neurônios da camada atual
+               
+               Neuronio neuronio = camadaAtual.neuronios[j];
+               for(int k = 0; k < neuronio.pesos.length; k++){//percorrer pesos do neurônio atual
+                  neuronio.gradienteAcumulado[k] = 0;
+               }
+            }
+         }
    }
 }

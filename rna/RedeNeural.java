@@ -572,8 +572,8 @@ public class RedeNeural implements Cloneable, Serializable{
     * </p>
     * Certifique-se de configurar adequadamente o modelo para obter os 
     * melhores resultados.
-    * @param dados dados de entrada do treino (features).
-    * @param saida dados de saída correspondente a entrada (class).
+    * @param entradas dados de entrada do treino (features).
+    * @param saidas dados de saída correspondente a entrada (class).
     * @param epochs quantidade de épocas.
     * @throws IllegalArgumentException se o modelo não foi compilado previamente.
     * @throws IllegalArgumentException se houver alguma inconsistência dos dados de entrada e saída para a operação.
@@ -592,6 +592,44 @@ public class RedeNeural implements Cloneable, Serializable{
       
       }else{
          treino.treino(this, this.otimizadorAtual, entradas, saidas, epochs, true);
+      }
+   }
+
+
+   /**
+    * <p>
+    *    Treina a rede de acordo com as configurações predefinidas.
+    * </p>
+    * <p>
+    *    O modo de treinamento em lote ainda ta em teste e costuma demorar pra convergir
+    *    se forem usados os mesmo parâmetros do treino convencional.
+    * </p>
+    * Certifique-se de configurar adequadamente o modelo para obter os 
+    * melhores resultados.
+    * @param entradas dados de entrada do treino (features).
+    * @param saidas dados de saída correspondente a entrada (class).
+    * @param epochs quantidade de épocas.
+    * @param tamanhoLote tamanho que o lote vai assumir durante o treino.
+    * @throws IllegalArgumentException se o modelo não foi compilado previamente.
+    * @throws IllegalArgumentException se houver alguma inconsistência dos dados de entrada e saída para a operação.
+    * @throws IllegalArgumentException se o valor de épocas for menor que um.
+    */
+   public void treinar(double[][] entradas, double[][] saidas, int epochs, int tamanhoLote){
+      modeloCompilado();
+      consistenciaDados(entradas, saidas);
+
+      if(epochs < 1){
+         throw new IllegalArgumentException("O valor de epochs não pode ser menor que um");
+      }
+      if(tamanhoLote <= 0 || tamanhoLote > entradas.length){
+         throw new IllegalArgumentException("O valor de tamanho do lote é inválido.");
+      }
+
+      if(otimizadorAtual.getClass().equals(rna.otimizadores.GradientDescent.class)){
+         treino.treino(this, this.otimizadorAtual, entradas, saidas, epochs, false, tamanhoLote);
+      
+      }else{
+         treino.treino(this, this.otimizadorAtual, entradas, saidas, epochs, true, tamanhoLote);
       }
    }
 
@@ -920,6 +958,7 @@ public class RedeNeural implements Cloneable, Serializable{
       clone.momentum = neuronio.momentum;
       clone.acumuladorGradiente = neuronio.acumuladorGradiente;
       clone.acumuladorSegundaOrdem = neuronio.acumuladorSegundaOrdem;
+      clone.gradienteAcumulado = neuronio.gradienteAcumulado;
 
       return clone;
    }

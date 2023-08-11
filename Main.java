@@ -23,8 +23,8 @@ class Main{
    static final String caminhoArquivo = "/dados/32x32/circulos.png";
    // static final String caminhoArquivo = "/dados/mnist/3.png";
    static final String caminhoImagemExportada = "./resultados/imagem-ampliada";
-   static final int epocas = 100*1000;
-   static final float escalaRender = 8;
+   static final int epocas = 10*1000;
+   static final float escalaRender = 10;
    static final float escalaImagemExportada = 20f;
 
    // Sempre lembrar de quando mudar o dataset, também mudar a quantidade de dados de entrada e saída.
@@ -79,21 +79,21 @@ class Main{
       if(qSaidas == 1)geim.exportarImagemEscalaCinza(imagem, rede, escalaImagemExportada, caminhoImagemExportada);
       else if(qSaidas == 3) geim.exportarImagemRGB(imagem, rede, escalaImagemExportada, caminhoImagemExportada);
       else System.out.println("Não é possível exportar a imagem");
-
    }
 
 
    public static RedeNeural criarRede(int qEntradas, int qSaidas){
-      int[] arquitetura = {qEntradas, 24, 24, 24, qSaidas};//32x32
+      int[] arquitetura = {qEntradas, 48, 48, qSaidas};//32x32
       // int[] arquitetura = {qEntradas, 12, 12, qSaidas};//28x28
       RedeNeural rede = new RedeNeural(arquitetura);
 
       rede.configurarAlcancePesos(1);
       rede.configurarTaxaAprendizagem(0.001);
       rede.configurarMomentum(0.99);
-      rede.configurarOtimizador(2, false);
+      rede.configurarOtimizador(2, true);
       rede.compilar();
       rede.configurarFuncaoAtivacao(2);
+      rede.configurarHistoricoCusto(true);
       return rede;
    }
 
@@ -235,6 +235,7 @@ class Main{
 
 
    public static void exportarHistoricoCustos(RedeNeural rede, Ged ged){
+      System.out.println("Exportando histórico de custo");
       ArrayList<Double> custos = rede.obterHistoricoCusto();
       double[][] dadosErro = new double[custos.size()][1];
 

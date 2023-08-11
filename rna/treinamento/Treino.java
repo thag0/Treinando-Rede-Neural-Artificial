@@ -43,8 +43,6 @@ public class Treino{
     * @param embaralhar embaralhar dados de treino para cada época.
     */
    public void treino(RedeNeural rede, Otimizador otimizador, double[][] entradas, double[][] saidas, int epochs, boolean embaralhar){
-      if(calcularHistoricoCusto) this.historicoCusto.clear();//evitar acumulo de memória
-
       double[] dadosEntrada = new double[entradas[0].length];//tamanho de colunas da entrada
       double[] dadosSaida = new double[saidas[0].length];//tamanho de colunas da saída
 
@@ -64,6 +62,37 @@ public class Treino{
             //e atualizar os pesos
             rede.calcularSaida(dadosEntrada);
             backpropagation(redec, rede.obterTaxaAprendizagem(), dadosSaida);
+            otimizador.atualizar(redec, rede.obterTaxaAprendizagem(), rede.obterTaxaMomentum());
+         }
+
+         if(calcularHistoricoCusto){
+            if(rede.obterCamadaSaida().softmax) historicoCusto.add(rede.entropiaCruzada(entradas, saidas));
+            else historicoCusto.add(rede.erroMedioQuadrado(entradas, saidas));
+         }
+      }
+   }
+
+
+   public void treino(RedeNeural rede, Otimizador otimizador, double[][] entradas, double[][] saidas, int epochs, boolean embaralhar, int tamanhoLote){
+      ArrayList<Camada> redec = redeParaCamadas(rede);
+
+      for(int i = 0; i < epochs; i++){
+         if(embaralhar) auxiliarTreino.embaralharDados(entradas, saidas);
+
+         for(int j = 0; j < entradas.length; j += tamanhoLote){
+            int fimIndice = Math.min(j + tamanhoLote, entradas.length);
+            double[][] entradaLote = auxiliarTreino.obterSubMatriz(entradas, j, fimIndice);
+            double[][] saidaLote = auxiliarTreino.obterSubMatriz(saidas, j, fimIndice);
+
+            auxiliarTreino.zerarGradientesAcumulados(redec);
+            for(int k = 0; k < entradaLote.length; k++){
+               double[] entrada = entradaLote[k];
+               double[] saida = saidaLote[k];
+
+               rede.calcularSaida(entrada);
+               backpropagationLote(redec, rede.obterTaxaAprendizagem(), saida);
+            }
+            calcularMediaGradientesLote(redec, entradaLote.length);
             otimizador.atualizar(redec, rede.obterTaxaAprendizagem(), rede.obterTaxaMomentum());
          }
 
@@ -109,6 +138,17 @@ public class Treino{
       calcularErroOcultas(redec);
 
       calcularGradientes(redec, taxaAprendizagem);
+   }
+
+
+   private void backpropagationLote(ArrayList<Camada> redec, double taxaAprendizagem, double[] saidas){
+      //erro da saída
+      calcularErroSaida(redec, saidas);
+
+      //erro ocultas
+      calcularErroOcultas(redec);
+
+      calcularGradientesAcumulados(redec, taxaAprendizagem);
    }
 
 
@@ -187,6 +227,50 @@ public class Treino{
             Neuronio neuronio = camadaAtual.neuronios[j];
             for(int k = 0; k < neuronio.pesos.length; k++){//percorrer pesos do neurônio atual
                neuronio.gradiente[k] = taxaAprendizagem * neuronio.erro * camadaAnterior.neuronios[k].saida;
+            }
+         }
+      }
+   }
+
+
+   /**
+    * Método exclusivo para separar o cálculo dos gradientes em lote das conexões de cada
+    * neurônio dentro da rede.
+    * @param redec Rede Neural em formato de lista de camadas.
+    * @param taxaAprendizagem valor de taxa de aprendizagem da rede neural.
+    */
+   private void calcularGradientesAcumulados(ArrayList<Camada> redec, double taxaAprendizagem){
+      //percorrer rede, excluindo camada de entrada
+      for(int i = 1; i < redec.size(); i++){ 
+         
+         Camada camadaAtual = redec.get(i);
+         Camada camadaAnterior = redec.get(i-1);
+
+         //não precisa e nem faz diferença calcular os gradientes dos bias
+         int nNeuronios = camadaAtual.obterQuantidadeNeuronios();
+         nNeuronios -= (camadaAtual.temBias) ? 1 : 0;
+         for(int j = 0; j < nNeuronios; j++){//percorrer neurônios da camada atual
+            
+            Neuronio neuronio = camadaAtual.neuronios[j];
+            for(int k = 0; k < neuronio.pesos.length; k++){//percorrer pesos do neurônio atual
+               neuronio.gradienteAcumulado[k] += taxaAprendizagem * neuronio.erro * camadaAnterior.neuronios[k].saida;
+            }
+         }
+      }
+   }
+
+
+   private void calcularMediaGradientesLote(ArrayList<Camada> redec, int tamanhoLote){
+      for(int i = 1; i < redec.size(); i++){ 
+         
+         Camada camadaAtual = redec.get(i);
+         int nNeuronios = camadaAtual.obterQuantidadeNeuronios();
+         nNeuronios -= (camadaAtual.temBias) ? 1 : 0;
+         for(int j = 0; j < nNeuronios; j++){//percorrer neurônios da camada atual
+            
+            Neuronio neuronio = camadaAtual.neuronios[j];
+            for(int k = 0; k < neuronio.pesos.length; k++){//percorrer pesos do neurônio atual
+               neuronio.gradiente[k] = (neuronio.gradienteAcumulado[k] / (double)tamanhoLote);
             }
          }
       }
