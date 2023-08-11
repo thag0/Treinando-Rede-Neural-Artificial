@@ -36,17 +36,17 @@ class GerenciadorArquivos{
 
 
    public void exportarImagemPng(Pixel[][] estruturaImagem, String caminho){
-      int larguraImagem = estruturaImagem.length;
-      int alguraImagem = estruturaImagem[0].length;
+      int alturaImagem = estruturaImagem.length;
+      int larguraImagem = estruturaImagem[0].length;
 
-      BufferedImage imagem = new BufferedImage(larguraImagem, alguraImagem, BufferedImage.TYPE_INT_RGB);
+      BufferedImage imagem = new BufferedImage(larguraImagem, alturaImagem, BufferedImage.TYPE_INT_RGB);
 
       int r = 0;
       int g = 0;
       int b = 0;
       int rgb = 0;
 
-      for(int y = 0; y < alguraImagem; y++){
+      for(int y = 0; y < alturaImagem; y++){
          for(int x = 0; x < larguraImagem; x++){
             r = estruturaImagem[y][x].getR();
             g = estruturaImagem[y][x].getG();
