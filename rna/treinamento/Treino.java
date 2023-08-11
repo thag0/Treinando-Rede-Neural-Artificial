@@ -131,23 +131,22 @@ public class Treino{
     * @param saidas array com as saídas esperadas das amostras.
     */
    private void backpropagation(ArrayList<Camada> redec, double taxaAprendizagem, double[] saidas){
-      //erro da saída
       calcularErroSaida(redec, saidas);
-
-      //erro ocultas
       calcularErroOcultas(redec);
-
       calcularGradientes(redec, taxaAprendizagem);
    }
 
 
+   /**
+    * Retropropaga o erro da rede neural de acordo com os dados de entrada e saída esperados e calcula
+    * os gradientes acumulados de cada lote.
+    * @param redec Rede Neural em formato de lista de camadas.
+    * @param taxaAprendizagem valor de taxa de aprendizagem da rede neural.
+    * @param saidas array com as saídas esperadas das amostras.
+    */
    private void backpropagationLote(ArrayList<Camada> redec, double taxaAprendizagem, double[] saidas){
-      //erro da saída
       calcularErroSaida(redec, saidas);
-
-      //erro ocultas
       calcularErroOcultas(redec);
-
       calcularGradientesAcumulados(redec, taxaAprendizagem);
    }
 

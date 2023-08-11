@@ -83,7 +83,7 @@ class Main{
 
 
    public static RedeNeural criarRede(int qEntradas, int qSaidas){
-      int[] arquitetura = {qEntradas, 48, 48, qSaidas};//32x32
+      int[] arquitetura = {qEntradas, 23, 23, 23, qSaidas};//32x32
       // int[] arquitetura = {qEntradas, 12, 12, qSaidas};//28x28
       RedeNeural rede = new RedeNeural(arquitetura);
 
