@@ -79,6 +79,8 @@ class Main{
       if(qSaidas == 1)geim.exportarImagemEscalaCinza(imagem, rede, escalaImagemExportada, caminhoImagemExportada);
       else if(qSaidas == 3) geim.exportarImagemRGB(imagem, rede, escalaImagemExportada, caminhoImagemExportada);
       else System.out.println("Não é possível exportar a imagem");
+
+      desenharRede(rede);
    }
 
 
@@ -182,7 +184,9 @@ class Main{
 
             janela.desenhar(rede);
 
-            for(int i = 0; i < rede.saida.neuronios.length; i++) System.out.print("[" + rede.saida.neuronios[i].saida + "]");
+            for(int i = 0; i < rede.obterCamadaSaida().obterQuantidadeNeuronios(); i++){
+               System.out.print("[" + rede.obterCamadaSaida().neuronios[i].saida + "]");
+            } 
             System.out.println();
          
          }else{
@@ -195,11 +199,13 @@ class Main{
 
 
    public static void compararSaidaRede(RedeNeural rede, double[][] dadosEntrada, double[][] dadosSaida, String texto){
-      int nEntrada = rede.entrada.neuronios.length;
-      nEntrada -= (rede.entrada.temBias) ? 1 : 0; 
+      int nEntrada = rede.obterCamadaEntrada().obterQuantidadeNeuronios();
+      nEntrada -= (rede.obterCamadaEntrada().temBias) ? 1 : 0;
+
+      int nSaida = rede.obterCamadaSaida().obterQuantidadeNeuronios();
 
       double[] entrada_rede = new double[nEntrada];
-      double[] saida_rede = new double[rede.saida.neuronios.length];
+      double[] saida_rede = new double[nSaida];
 
       System.out.println("\n" + texto);
 
@@ -225,7 +231,7 @@ class Main{
             System.out.print(" " + dadosSaida[i][j]);
          }
          System.out.print(" | Rede ->");
-         for(int j = 0; j < rede.saida.neuronios.length; j++){
+         for(int j = 0; j < nSaida; j++){
             System.out.print("  " + formatarFloat(saida_rede[j]));
          }
          System.out.println();

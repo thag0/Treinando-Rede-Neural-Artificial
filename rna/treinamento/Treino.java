@@ -34,8 +34,8 @@ public class Treino{
    /**
     * Treina a rede neural calculando os erros dos neuronios, seus gradientes para cada peso e 
     * passando essas informações para o otimizador configurado ajustar os pesos.
-    * @param rede Instância da rede.
-    * @param otimizador Otimizador configurado da rede.
+    * @param rede instância da rede.
+    * @param otimizador otimizador configurado da rede.
     * @param entradas dados de entrada para o treino.
     * @param saidas dados de saída correspondente as entradas para o treino.
     * @param epochs quantidade de épocas de treinamento.
@@ -77,13 +77,13 @@ public class Treino{
    /**
     * Treina a rede neural calculando os erros dos neuronios, seus gradientes para cada peso e 
     * passando essas informações para o otimizador configurado ajustar os pesos.
-    * @param rede Instância da rede.
-    * @param otimizador Otimizador configurado da rede.
+    * @param rede instância da rede.
+    * @param otimizador otimizador configurado da rede.
     * @param entradas dados de entrada para o treino.
     * @param saidas dados de saída correspondente as entradas para o treino.
     * @param epochs quantidade de épocas de treinamento.
     * @param embaralhar embaralhar dados de treino para cada época.
-    * @param tamanhoLote
+    * @param tamanhoLote tamanho do lote.
     */
    public void treino(RedeNeural rede, Otimizador otimizador, double[][] entradas, double[][] saidas, int epochs, boolean embaralhar, int tamanhoLote){
       treinoLote.treino(rede, otimizador, entradas, saidas, epochs, embaralhar, tamanhoLote);

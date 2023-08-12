@@ -10,6 +10,7 @@ import java.util.ArrayList;
 
 import javax.swing.JPanel;
 
+import rna.Camada;
 import rna.RedeNeural;
 
 public class PainelRede extends JPanel{
@@ -89,22 +90,25 @@ public class PainelRede extends JPanel{
 
    public void desenhar(RedeNeural rede){
       this.rede = rede;
-      yCamadaOculta = new int[rede.ocultas.length];
+      yCamadaOculta = new int[rede.obterQuantidadeOcultas()];
+
+      Camada entrada = rede.obterCamadaEntrada();
+      Camada saida = rede.obterCamadaSaida();
 
       //isso aqui com certeza pode ser melhorado
 
-      int quantidadeCamadas = 2 + rede.ocultas.length;
+      int quantidadeCamadas = 1 + rede.obterQuantidadeOcultas() + 1;
       int tamanhoRede = (quantidadeCamadas * larguraDesenho) + (2*larguraDesenho/3);//quantidade de neuronios
       tamanhoRede += (espacoHorizontalEntreCamadas * (quantidadeCamadas-2));//quantidade de espaços entre as camadas
       x0 = (this.largura/2) - (tamanhoRede/2);
 
       //centralizar o desenho dos neuronios com base na altura da tela, no tamanho dos neuronios das camadas desenhadas
       //incluir o espaçamento estre os neurinios no calculo
-      yCamadaEntrada = y0 + (altura/2) - (alturaDesenho * (rede.entrada.neuronios.length)) + (espacoVerticalEntreNeuronio * (rede.entrada.neuronios.length+2));
-      for(int i = 0; i < rede.ocultas.length; i++){
-         yCamadaOculta[i] = y0 + (altura/2) - (alturaDesenho * (rede.ocultas[i].neuronios.length)) + (espacoVerticalEntreNeuronio * (rede.ocultas[i].neuronios.length+2));
+      yCamadaEntrada = y0 + (altura/2) - (alturaDesenho * (entrada.neuronios.length)) + (espacoVerticalEntreNeuronio * (entrada.neuronios.length+2));
+      for(int i = 0; i < rede.obterQuantidadeOcultas(); i++){
+         yCamadaOculta[i] = y0+(altura/2) - (alturaDesenho * (rede.obterCamadaOculta(i).neuronios.length)) + (espacoVerticalEntreNeuronio * (rede.obterCamadaOculta(i).neuronios.length+2));
       }
-      yCamadaSaida = y0 + (altura/2) - (alturaDesenho * (rede.saida.neuronios.length)) + (espacoVerticalEntreNeuronio * (rede.saida.neuronios.length+1));
+      yCamadaSaida = y0 + (altura/2) - (alturaDesenho * (saida.neuronios.length)) + (espacoVerticalEntreNeuronio * (saida.neuronios.length+1));
 
       repaint();
    }
@@ -112,7 +116,7 @@ public class PainelRede extends JPanel{
 
    public void configurarRede(RedeNeural rede){
       this.rede = rede;
-      this.yCamadaOculta = new int[rede.ocultas.length];
+      this.yCamadaOculta = new int[rede.obterQuantidadeOcultas()];
    }
 
    
@@ -141,7 +145,8 @@ public class PainelRede extends JPanel{
    private void desenharConexoesEntrada(Graphics2D g2){
       //evitar muitas instanciações
       int i, j;
-      int qNeuroniosOculta = (rede.ocultas[0].temBias) ? rede.ocultas[0].neuronios.length-1 : rede.ocultas[0].neuronios.length;
+      int qNeuroniosOculta = rede.obterCamadaOculta(0).obterQuantidadeNeuronios();
+      qNeuroniosOculta -= (rede.obterCamadaOculta(0).temBias) ? 1 : 0;
 
       //entrada -> primeira oculta
       for(i = 0; i < coordEntrada.size(); i++){//percorrer neuronios da entrada
@@ -178,8 +183,8 @@ public class PainelRede extends JPanel{
          for(j = 0; j < coordOcultas.get(i).size(); j++){//percorrer neuronios da camada oculta atual
 
             //evitar exluir conexões quando nao tem bias
-            if(rede.ocultas[i+1].temBias) qNeuroniosProxima = rede.ocultas[i+1].neuronios.length-1;
-            else qNeuroniosProxima = rede.ocultas[i+1].neuronios.length;
+            if(rede.obterCamadaOculta(i+1).temBias) qNeuroniosProxima = rede.obterCamadaOculta(i+1).obterQuantidadeNeuronios()-1;
+            else qNeuroniosProxima = rede.obterCamadaOculta(i+1).neuronios.length;
             for(k = 0; k < qNeuroniosProxima; k++){//percorrer neuronios da camada oculta na frente, excluir o bias
                c1 = coordOcultas.get(i).get(j);
                c2 = coordOcultas.get(i+1).get(k);
@@ -238,23 +243,25 @@ public class PainelRede extends JPanel{
    private void desenharCamadaEntrada(Graphics2D g2){
       x = x0;
       y = yCamadaEntrada;
+
+      Camada entrada = rede.obterCamadaEntrada();
       
       coordEntrada.clear();
-      for(contador = 0; contador < rede.entrada.neuronios.length; contador++){
+      for(contador = 0; contador < entrada.neuronios.length; contador++){
          
-         if(rede.entrada.neuronios[contador].saida > 0) g2.setColor(corNeuronioAtivo);
+         if(entrada.neuronios[contador].saida > 0) g2.setColor(corNeuronioAtivo);
          else g2.setColor(corNeuronioInativo);
          
          int xTexto = -30;
          int yTexto = 18;
-         if(rede.entrada.temBias && (contador < rede.entrada.neuronios.length-1)) g2.drawString(("e" + contador), (x+xTexto), (y+yTexto));
-         if((!rede.entrada.temBias)) g2.drawString(("e" + contador), (x+xTexto), (y+yTexto));
+         if(entrada.temBias && (contador < entrada.neuronios.length-1)) g2.drawString(("e" + contador), (x+xTexto), (y+yTexto));
+         if((!entrada.temBias)) g2.drawString(("e" + contador), (x+xTexto), (y+yTexto));
 
          //salvar coordenada do centro do desenho do neuronio
-         coordEntrada.add(new Coordenada(x+larguraDesenho, y+(larguraDesenho/2), rede.entrada.neuronios[contador].saida));
+         coordEntrada.add(new Coordenada(x+larguraDesenho, y+(larguraDesenho/2), entrada.neuronios[contador].saida));
 
-         if(rede.entrada.temBias && contador == rede.entrada.neuronios.length-1) desenharNeuronioBias(g2, x, y);
-         else desenharNeuronio(g2, x, y, rede.entrada.neuronios[contador].saida);
+         if(entrada.temBias && contador == entrada.neuronios.length-1) desenharNeuronioBias(g2, x, y);
+         else desenharNeuronio(g2, x, y, entrada.neuronios[contador].saida);
 
          y += larguraDesenho + espacoVerticalEntreNeuronio;
       }
@@ -266,18 +273,18 @@ public class PainelRede extends JPanel{
       x += espacoHorizontalEntreCamadas;
       
       coordOcultas.clear();
-      for(contador = 0; contador < rede.ocultas.length; contador++){//percorrer ocultas
+      for(contador = 0; contador < rede.obterQuantidadeOcultas(); contador++){//percorrer ocultas
          y = yCamadaOculta[contador];
          
          // coordOcultas.get(contador).clear();//limpar lista da camada atual pra não estourar a memória
          coordOcultas.add(new ArrayList<>());
-         for(contador2 = 0; contador2 < rede.ocultas[contador].neuronios.length; contador2++){//percorrer neuronios de uma oculta
+         for(contador2 = 0; contador2 < rede.obterCamadaOculta(contador).neuronios.length; contador2++){//percorrer neuronios de uma oculta
             
             //salvar coordenada do centro do desenho do neuronio
-            coordOcultas.get(contador).add(new Coordenada(x+larguraDesenho, y+(larguraDesenho/2), rede.ocultas[contador].neuronios[contador2].saida));
+            coordOcultas.get(contador).add(new Coordenada(x+larguraDesenho, y+(larguraDesenho/2), rede.obterCamadaOculta(contador).neuronios[contador2].saida));
             
-            if(rede.ocultas[contador].temBias && contador2 ==  rede.ocultas[contador].neuronios.length-1) desenharNeuronioBias(g2, x, y);
-            else desenharNeuronio(g2, x, y, rede.ocultas[contador].neuronios[contador2].saida);
+            if(rede.obterCamadaOculta(contador).temBias && contador2 ==  rede.obterCamadaOculta(contador).neuronios.length-1) desenharNeuronioBias(g2, x, y);
+            else desenharNeuronio(g2, x, y, rede.obterCamadaOculta(contador).neuronios[contador2].saida);
 
             y += larguraDesenho + espacoVerticalEntreNeuronio;
          }
@@ -289,12 +296,13 @@ public class PainelRede extends JPanel{
    private void desenharCamadaSaida(Graphics2D g2){
       y = yCamadaSaida;
       
+      Camada saida = rede.obterCamadaSaida();
       coordSaida.clear();
-      for(contador = 0; contador < rede.saida.neuronios.length; contador++){
-         coordSaida.add(new Coordenada(x+larguraDesenho, y+(larguraDesenho/2), rede.saida.neuronios[contador].saida));
-         desenharNeuronio(g2, x, y, rede.saida.neuronios[contador].saida);
+      for(contador = 0; contador < saida.neuronios.length; contador++){
+         coordSaida.add(new Coordenada(x+larguraDesenho, y+(larguraDesenho/2), saida.neuronios[contador].saida));
+         desenharNeuronio(g2, x, y, saida.neuronios[contador].saida);
          
-         g2.drawString(("s" + contador + " = " + (float)rede.saida.neuronios[contador].saida), (x+40), (y+16));
+         g2.drawString(("s" + contador + " = " + (float)saida.neuronios[contador].saida), (x+40), (y+16));
 
          y += larguraDesenho + espacoVerticalEntreNeuronio; 
       }

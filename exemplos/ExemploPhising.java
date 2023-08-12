@@ -11,18 +11,17 @@ public class ExemploPhising{
       limparConsole();
       Ged ged = new Ged();
 
-      // manusear dados
-      // tratamento específico para os dados do iris com adaptação
-      // para usar a tangente hiperbolica como função de ativação
+      //manusear dados
+      //tratamento específico para os dados de phishing
+      //removendo coluna de id e nomes das classes
       ArrayList<String[]> phishing = ged.lerCsv("./dados/datasets-maiores/PhishingData.csv");
       ged.removerLinha(phishing, 0);
       ged.removerColuna(phishing, 0);
       ged.removerNaoNumericos(phishing);
 
-
-      // converter os dados da estrutura de texto em valores numéricos para o 
-      // treino da rede neural.
-      // separar em treino e teste para evitar overfitting
+      //converter os dados da estrutura de texto em valores 
+      //numéricos para o treino da rede neural.
+      //separar em treino e teste para evitar overfitting
       double[][] dados = ged.listaParaDadosDouble(phishing);
       double[][][] treinoTeste = ged.separarTreinoTeste(dados, 0.3f);
       double[][] treino = treinoTeste[0];
@@ -39,10 +38,9 @@ public class ExemploPhising{
       testeX = ged.separarDadosEntrada(teste, colunasDados);
       testeY = ged.separarDadosSaida(teste, colunasClasses);
 
-
-      // criando, configurando e treinando a rede neural.
-      // os valores de configuração não devem ser tomados como regra e 
-      // devem se adaptar ao problema e os dados apresentados.
+      //criando, configurando e treinando a rede neural.
+      //os valores de configuração não devem ser tomados como regra e 
+      //devem se adaptar ao problema e os dados apresentados.
       int[] arq = {colunasDados, 18, 16, 12, colunasClasses};
       RedeNeural rede = new RedeNeural(arq);
       rede.configurarTaxaAprendizagem(0.01);
@@ -50,8 +48,8 @@ public class ExemploPhising{
       rede.configurarOtimizador(5);
       rede.compilar();
       rede.configurarFuncaoAtivacao(2);
-      rede.configurarFuncaoAtivacao(rede.saida, 3);
-      rede.treinar(treinoX, treinoY, 5_000);
+      rede.configurarFuncaoAtivacao(rede.obterCamadaSaida(), 3);
+      rede.treinar(treinoX, treinoY, 4_000);
 
 
       // avaliando os resultados da rede neural

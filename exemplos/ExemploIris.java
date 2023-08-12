@@ -51,7 +51,7 @@ public class ExemploIris{
       rede.configurarMomentum(0.7);
       rede.compilar();
       rede.configurarFuncaoAtivacao(2);
-      rede.configurarFuncaoAtivacao(rede.saida, 3);
+      rede.configurarFuncaoAtivacao(rede.obterCamadaSaida(), 3);
       rede.treinar(treinoX, treinoY, 10_000);
 
 

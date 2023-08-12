@@ -79,7 +79,7 @@ class GerenciadorArquivos{
       nEntrada -= (rede.obterCamadaEntrada().temBias) ? 1 : 0;
 
       double[] entradaRede = new double[nEntrada];
-      double[] saidaRede = new double[rede.saida.neuronios.length];
+      double[] saidaRede = new double[rede.obterCamadaSaida().obterQuantidadeNeuronios()];
       int larguraFinal = (int)(imagem.getWidth() * escala);
       int alturaFinal = (int)(imagem.getHeight() * escala);
 
@@ -96,7 +96,7 @@ class GerenciadorArquivos{
 
             rede.calcularSaida(entradaRede);
 
-            saidaRede[0] = rede.saida.neuronios[0].saida * 255;
+            saidaRede[0] = rede.obterCamadaSaida().neuronios[0].saida * 255;
            gdi.configurarCor(imagemAmpliada, x, y, (int)saidaRede[0], (int)saidaRede[0], (int)saidaRede[0]);
          }
       }
@@ -138,9 +138,9 @@ class GerenciadorArquivos{
             rede.calcularSaida(entradaRede);
 
             //cor do pixel em rgb
-            saidaRede[0] = rede.saida.neuronios[0].saida * 255;
-            saidaRede[1] = rede.saida.neuronios[1].saida * 255;
-            saidaRede[2] = rede.saida.neuronios[2].saida * 255;
+            saidaRede[0] = rede.obterCamadaSaida().neuronios[0].saida * 255;
+            saidaRede[1] = rede.obterCamadaSaida().neuronios[1].saida * 255;
+            saidaRede[2] = rede.obterCamadaSaida().neuronios[2].saida * 255;
             gdi.configurarCor(imagemAmpliada, x, y, (int)saidaRede[0], (int)saidaRede[1], (int)saidaRede[2]);
          }
       }

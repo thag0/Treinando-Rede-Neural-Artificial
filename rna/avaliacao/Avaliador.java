@@ -1,5 +1,6 @@
 package rna.avaliacao;
 
+import rna.Neuronio;
 import rna.RedeNeural;
 
 public class Avaliador{
@@ -21,6 +22,7 @@ public class Avaliador{
       double[] dadosEntrada = new double[dados[0].length];
       double[] dadosSaida = new double[saida[0].length];
       double erroMedio = 0;
+      int nSaida = rede.obterCamadaSaida().obterQuantidadeNeuronios();
 
       for(int i = 0; i < dados.length; i++){//percorrer linhas dos dados
          //preencher dados de entrada e saída
@@ -29,8 +31,9 @@ public class Avaliador{
 
          rede.calcularSaida(dadosEntrada);
 
-         for(int k = 0; k < rede.saida.neuronios.length; k++){
-            erroMedio += Math.abs(dadosSaida[k] - rede.saida.neuronios[k].saida);
+         for(int k = 0; k < nSaida; k++){
+            Neuronio neuronio = rede.obterCamadaSaida().neuronios[k];
+            erroMedio += Math.abs(dadosSaida[k] - neuronio.saida);
          }
       }
 
@@ -86,8 +89,10 @@ public class Avaliador{
       double[] dadosSaida = new double[saida[0].length];//tamanho de colunas da saída
       
       int i, j;
+      int nSaida = rede.obterCamadaSaida().obterQuantidadeNeuronios();
       double diferenca;
       double custo = 0.0;
+
       for(i = 0; i < dados.length; i++){//percorrer as linhas da entrada
          //preencher dados de entrada e saída
          dadosEntrada = dados[i];
@@ -96,8 +101,9 @@ public class Avaliador{
          rede.calcularSaida(dadosEntrada);
 
          //calcular custo com base na saída
-         for(j = 0; j < rede.saida.neuronios.length; j++){
-            diferenca = dadosSaida[j] - rede.saida.neuronios[j].saida;
+         for(j = 0; j < nSaida; j++){
+            Neuronio neuronio = rede.obterCamadaSaida().neuronios[j];
+            diferenca = dadosSaida[j] - neuronio.saida;
             custo += (diferenca * diferenca);
          }
       }
@@ -119,8 +125,10 @@ public class Avaliador{
       double[] dadosEntrada = new double[dados[0].length];
       double[] dadosSaida = new double[saida[0].length];
   
+      int nSaida = rede.obterCamadaSaida().obterQuantidadeNeuronios();
       double custo = 0.0;
       double epsilon = 1e-9;//evitar log 0
+
       for(int i = 0; i < dados.length; i++){//percorrer amostras
          //preencher dados de entrada e saída
          dadosEntrada = dados[i];
@@ -129,8 +137,9 @@ public class Avaliador{
          rede.calcularSaida(dadosEntrada);
 
          double custoExemplo = 0.0;
-         for(int k = 0; k < rede.saida.neuronios.length; k++){
-            double dadoPrevisto = rede.saida.neuronios[k].saida;
+         for(int k = 0; k < nSaida; k++){
+            Neuronio neuronio = rede.obterCamadaSaida().neuronios[k];
+            double dadoPrevisto = neuronio.saida;
             double dadoReal = dadosSaida[k];
             
             //fórmula da entropia cruzada para cada neurônio de saída

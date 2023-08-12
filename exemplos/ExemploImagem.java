@@ -18,7 +18,7 @@ public class ExemploImagem{
       BufferedImage imagem = geim.lerImagem(caminho);
       double[][] dados = geim.imagemParaDadosTreinoEscalaCinza(imagem);
       int nEntrada = 2;// posição x y do pixel
-      int nSaida = 1;// valor de escala de cinza/brilho do pixelzz
+      int nSaida = 1;// valor de escala de cinza/brilho do pixel
 
       //preparando dados para treinar a rede
       double[][] dadosEntrada = ged.separarDadosEntrada(dados, nEntrada);

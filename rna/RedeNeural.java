@@ -40,9 +40,9 @@ import rna.treinamento.Treino;
  */
 public class RedeNeural implements Cloneable, Serializable{
    //estrutura 
-   public Camada entrada;
-   public Camada[] ocultas;
-   public Camada saida;
+   private Camada entrada;
+   private Camada[] ocultas;
+   private Camada saida;
    private int[] arquitetura;
    
    //parâmertos importantes
