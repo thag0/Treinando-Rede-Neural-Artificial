@@ -956,7 +956,7 @@ public class RedeNeural implements Cloneable, Serializable{
       double pesosClone[] = new double[neuronio.pesos.length];
 
       for(int i = 0; i < pesosClone.length; i++){
-         pesosClone[i] = pesosClone[i];
+         pesosClone[i] = neuronio.pesos[i];
       }
 
       clone.pesos = pesosClone;
