@@ -473,16 +473,16 @@ public class RedeNeural implements Cloneable, Serializable{
     * @throws IllegalArgumentException se o modelo não foi compilado previamente.
     * @throws IllegalArgumentException se o tamanho dos dados de entrada for diferente do tamanho dos neurônios de entrada, excluindo o bias.
     */
-   public void calcularSaida(double[] dados){
+   public void calcularSaida(double[] entradas){
       modeloCompilado();
       
-      if(dados.length != (this.entrada.neuronios.length-BIAS)){
+      if(entradas.length != (this.entrada.neuronios.length-BIAS)){
          throw new IllegalArgumentException("As dimensões dos dados de entrada com os neurônios de entrada da rede não são iguais.");
       }
 
       //carregar dados na camada de entrada
       for(int i = 0; i < (this.entrada.neuronios.length-BIAS); i++){
-         this.entrada.neuronios[i].saida = dados[i];
+         this.entrada.neuronios[i].saida = entradas[i];
       }
       
       //ocultas
@@ -501,68 +501,68 @@ public class RedeNeural implements Cloneable, Serializable{
     * A precisão é calculada como a média do erro absoluto entre a saída prevista pela rede e a saída fornecida.
     * Esse método pode ser adequado para tarefas de regressão, mas não é uma boa abordagem em problemas de classificação
     * ou quando as saídas são valores discretos ou categóricos.
-    * @param dados matriz com os dados de entrada.
+    * @param entrada matriz com os dados de entrada.
     * @param saida matriz com os dados de saída.
     * @return precisão obtida com base nos dados fornecidos, um valor entre 0 e 1, onde 1 representa a máxima precisão.
     * @throws IllegalArgumentException se o modelo não foi compilado previamente.
     * @throws IllegalArgumentException se houver alguma inconsistência dos dados de entrada e saída para a operação.
     */
-   public double calcularPrecisao(double[][] dados, double[][] saida){
+   public double calcularPrecisao(double[][] entrada, double[][] saida){
       modeloCompilado();
-      consistenciaDados(dados, saida);
+      consistenciaDados(entrada, saida);
 
-      return this.avaliador.calcularPrecisao(this, dados, saida);
+      return this.avaliador.calcularPrecisao(this, entrada, saida);
    }
 
 
    /**
     * Calcula a acurácia da rede neural com base nos dados fornecidos.
     * Essa função é exclusiva para problemas de classificação.
-    * @param dados matriz com os dados de entrada.
+    * @param entrada matriz com os dados de entrada.
     * @param saida matriz com os dados de saída.
     * @return acurária obtida com base nos dados fornecidos, um valor entre 0 e 1, onde 1 representa a máxima precisão.
     * @throws IllegalArgumentException se o modelo não foi compilado previamente.
     * @throws IllegalArgumentException se houver alguma inconsistência dos dados de entrada e saída para a operação.
     */
-   public double calcularAcuracia(double[][] dados, double[][] saida){
+   public double calcularAcuracia(double[][] entrada, double[][] saida){
       modeloCompilado();
-      consistenciaDados(dados, saida);
+      consistenciaDados(entrada, saida);
 
-      return this.avaliador.calcularAcuracia(this, dados, saida);
+      return this.avaliador.calcularAcuracia(this, entrada, saida);
    }
    
 
    /**
     * Calcula a função de custo baseada nos dados de entrada e na saída esperada para eles por 
     * meio do erro médio quadrado.
-    * @param dados matriz de dados de entrada.
+    * @param entrada matriz de dados de entrada.
     * @param saida matriz dos dados de saída.
     * @return valor de custo da rede baseado no erro médio quadrado.
     * @throws IllegalArgumentException se o modelo não foi compilado previamente.
     * @throws IllegalArgumentException se houver alguma inconsistência dos dados de entrada e saída para a operação.
     */
-   public double erroMedioQuadrado(double[][] dados, double[][] saida){
+   public double erroMedioQuadrado(double[][] entrada, double[][] saida){
       modeloCompilado();
-      consistenciaDados(dados, saida);
+      consistenciaDados(entrada, saida);
 
-      return this.avaliador.erroMedioQuadrado(this, dados, saida);
+      return this.avaliador.erroMedioQuadrado(this, entrada, saida);
    }
 
 
    /**
     * Calcula a função de custo baseada nos dados de entrada e na saída esperada para eles por 
     * meio da entropia cruzada.
-    * @param dados matriz de dados de entrada.
+    * @param entrada matriz de dados de entrada.
     * @param saida matriz dos dados de saída.
     * @return valor de custo da rede baseado na entropia cruzada.
     * @throws IllegalArgumentException se o modelo não foi compilado previamente.
     * @throws IllegalArgumentException se houver alguma inconsistência dos dados de entrada e saída para a operação.
     */
-   public double entropiaCruzada(double[][] dados, double[][] saida){
+   public double entropiaCruzada(double[][] entrada, double[][] saida){
       modeloCompilado();
-      consistenciaDados(dados, saida);
+      consistenciaDados(entrada, saida);
 
-      return this.avaliador.entropiaCruzada(this, dados, saida);
+      return this.avaliador.entropiaCruzada(this, entrada, saida);
    }
   
 
@@ -938,20 +938,25 @@ public class RedeNeural implements Cloneable, Serializable{
       clone.temBias = camada.temBias;
 
       for (int i = 0; i < camada.neuronios.length; i++) {
-         clone.neuronios[i] = cloneNeuronio(camada.neuronios[i], camada.neuronios[i].pesos.length, camada.neuronios[i].pesos);
+         clone.neuronios[i] = cloneNeuronio(camada.neuronios[i]);
       }
 
       return clone;
    }
 
 
-   private Neuronio cloneNeuronio(Neuronio neuronio, int qtdLigacoes, double[] pesos){
+   /**
+    * Clona uma instância de neurônio da rede neural.
+    * @param neuronio neurônio original.
+    * @return clone do neurônio fornecido.
+    */
+   private Neuronio cloneNeuronio(Neuronio neuronio){
       Neuronio clone = new Neuronio(neuronio.pesos.length, this.alcancePeso);
 
-      double pesosClone[] = new double[qtdLigacoes];
+      double pesosClone[] = new double[neuronio.pesos.length];
 
-      for(int i = 0; i < pesos.length; i++){
-         pesosClone[i] = pesos[i];
+      for(int i = 0; i < pesosClone.length; i++){
+         pesosClone[i] = pesosClone[i];
       }
 
       clone.pesos = pesosClone;

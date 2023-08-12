@@ -22,7 +22,7 @@ public class ExemploClassificacao{
 
       //separando dados de treino e teste
       double[][] dados = ged.listaParaDadosDouble(dataset);
-      double[][][] treinoTeste = ged.separarTreinoTeste(dados, 0.2f);
+      double[][][] treinoTeste = ged.separarTreinoTeste(dados, 0.25f);
       double[][] treino = treinoTeste[0];
       double[][] teste = treinoTeste[1];
       int qEntradas = 4;// dados de entrada (features)
@@ -37,13 +37,13 @@ public class ExemploClassificacao{
       double[][] testeSaida = ged.separarDadosSaida(teste, qSaidas);
 
       //criando e configurando a rede neural
-      int[] arq = {qEntradas, 11, 11, qSaidas};
+      int[] arq = {qEntradas, 8, 4, qSaidas};
       RedeNeural rede = new RedeNeural(arq);
       rede.configurarMomentum(0.99);
       rede.configurarTaxaAprendizagem(0.0001);
       rede.configurarOtimizador(2, true);
       rede.compilar();
-      rede.configurarFuncaoAtivacao(1);
+      rede.configurarFuncaoAtivacao(2);
       rede.configurarFuncaoAtivacao(rede.obterCamadaSaida(), 11);//softmax
       
       //treinando e avaliando os resultados
