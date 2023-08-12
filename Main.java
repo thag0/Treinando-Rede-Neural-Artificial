@@ -23,7 +23,7 @@ class Main{
    static final String caminhoArquivo = "/dados/32x32/circulos.png";
    // static final String caminhoArquivo = "/dados/mnist/3.png";
    static final String caminhoImagemExportada = "./resultados/imagem-ampliada";
-   static final int epocas = 10*1000;
+   static final int epocas = 100*1000;
    static final float escalaRender = 10;
    static final float escalaImagemExportada = 20f;
 
@@ -93,7 +93,6 @@ class Main{
       rede.configurarOtimizador(2, true);
       rede.compilar();
       rede.configurarFuncaoAtivacao(2);
-      rede.configurarHistoricoCusto(true);
       return rede;
    }
 
