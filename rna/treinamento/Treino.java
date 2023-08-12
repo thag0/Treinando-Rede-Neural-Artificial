@@ -8,7 +8,7 @@ import rna.RedeNeural;
 import rna.otimizadores.Otimizador;
 
 //TODO 
-//implementar treino em lotes
+//implementar treino em lotes multithread
 
 /**
  * <p>
@@ -50,6 +50,7 @@ public class Treino{
       ArrayList<Camada> redec = redeParaCamadas(rede);
 
       for(int i = 0; i < epochs; i++){//quantidade de épocas
+         //aplicar gradiente estocástico
          if(embaralhar) auxiliarTreino.embaralharDados(entradas, saidas);
 
          for(int j = 0; j < entradas.length; j++){//percorrer amostras
@@ -65,6 +66,7 @@ public class Treino{
             otimizador.atualizar(redec, rede.obterTaxaAprendizagem(), rede.obterTaxaMomentum());
          }
 
+         //feedback de avanço da rede
          if(calcularHistoricoCusto){
             if(rede.obterCamadaSaida().softmax) historicoCusto.add(rede.entropiaCruzada(entradas, saidas));
             else historicoCusto.add(rede.erroMedioQuadrado(entradas, saidas));
@@ -73,6 +75,17 @@ public class Treino{
    }
 
 
+   /**
+    * Treina a rede neural calculando os erros dos neuronios, seus gradientes para cada peso e 
+    * passando essas informações para o otimizador configurado ajustar os pesos.
+    * @param rede Instância da rede.
+    * @param otimizador Otimizador configurado da rede.
+    * @param entradas dados de entrada para o treino.
+    * @param saidas dados de saída correspondente as entradas para o treino.
+    * @param epochs quantidade de épocas de treinamento.
+    * @param embaralhar embaralhar dados de treino para cada época.
+    * @param tamanhoLote
+    */
    public void treino(RedeNeural rede, Otimizador otimizador, double[][] entradas, double[][] saidas, int epochs, boolean embaralhar, int tamanhoLote){
       ArrayList<Camada> redec = redeParaCamadas(rede);
 
@@ -84,7 +97,7 @@ public class Treino{
             double[][] entradaLote = auxiliarTreino.obterSubMatriz(entradas, j, fimIndice);
             double[][] saidaLote = auxiliarTreino.obterSubMatriz(saidas, j, fimIndice);
 
-            auxiliarTreino.zerarGradientesAcumulados(redec);
+            auxiliarTreino.zerarGradientesAcumulados(redec);//reiniciar gradiente do lote
             for(int k = 0; k < entradaLote.length; k++){
                double[] entrada = entradaLote[k];
                double[] saida = saidaLote[k];
@@ -92,10 +105,12 @@ public class Treino{
                rede.calcularSaida(entrada);
                backpropagationLote(redec, rede.obterTaxaAprendizagem(), saida);
             }
+            //normalizar gradientes para enviar pro otimizador
             calcularMediaGradientesLote(redec, entradaLote.length);
             otimizador.atualizar(redec, rede.obterTaxaAprendizagem(), rede.obterTaxaMomentum());
          }
 
+         //feedback de avanço da rede
          if(calcularHistoricoCusto){
             if(rede.obterCamadaSaida().softmax) historicoCusto.add(rede.entropiaCruzada(entradas, saidas));
             else historicoCusto.add(rede.erroMedioQuadrado(entradas, saidas));
@@ -105,7 +120,7 @@ public class Treino{
 
 
    /**
-    * Serializa a rede no formato de lista de camadas pra facilitar
+    * Serializa a rede no formato de lista de camadas pra facilitar (a minha vida)
     * o manuseio e generalização das operações.
     * @param rede Rede Neural
     * @return lista de camadas da rede neural.
@@ -163,7 +178,7 @@ public class Treino{
    private void calcularErroSaida(ArrayList<Camada> redec, double[] saidas){
       Camada saida = redec.get(redec.size()-1);
       if(saida.argmax){//classificação
-
+         throw new java.lang.UnsupportedOperationException("Cálculo de erros da saída usando Argmax não implementado ainda.");
 
       }else if(saida.softmax){//classificação
          for(int i = 0; i < saida.neuronios.length; i++){
@@ -259,6 +274,11 @@ public class Treino{
    }
 
 
+   /**
+    * Método exlusivo para separar a forma de calcular a média dos gradientes do lote.
+    * @param redec Rede Neural em formato de lista de camadas.
+    * @param tamanhoLote tamanho do lote.
+    */
    private void calcularMediaGradientesLote(ArrayList<Camada> redec, int tamanhoLote){
       for(int i = 1; i < redec.size(); i++){ 
          
