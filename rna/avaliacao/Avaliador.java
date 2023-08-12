@@ -6,6 +6,9 @@ import rna.RedeNeural;
 public class Avaliador{
    AuxiliaresAvaliacao aux;
 
+   EntropiaCruzada entropiaCruzada = new EntropiaCruzada();
+   ErroMedioQuadrado erroMedioQuadrado = new ErroMedioQuadrado();
+
    public Avaliador(){
       this.aux = new AuxiliaresAvaliacao();
    }
@@ -85,30 +88,7 @@ public class Avaliador{
     * @return erro médio quadrado da rede em relação ao dados fornecidos (custo/perda).
     */
    public double erroMedioQuadrado(RedeNeural rede, double[][] entrada, double[][] saida){
-      double[] dadosEntrada = new double[entrada[0].length];//tamanho das colunas da entrada
-      double[] dadosSaida = new double[saida[0].length];//tamanho de colunas da saída
-      
-      double diferenca;
-      double custo = 0.0;
-      for(int i = 0; i < entrada.length; i++){//percorrer as linhas da entrada
-         //preencher dados de entrada e saída
-         //método nativo parece ser mais eficiente
-         System.arraycopy(entrada[i], 0, dadosEntrada, 0, entrada[i].length);
-         System.arraycopy(saida[i], 0, dadosSaida, 0, saida[i].length);
-
-         rede.calcularSaida(dadosEntrada);
-         double[] saidaRede = rede.obterSaidas();
-
-         //calcular custo com base na saída
-         for(int j = 0; j < saidaRede.length; j++){
-            diferenca = dadosSaida[j] - saidaRede[j];
-            custo += (diferenca * diferenca);
-         }
-      }
-
-      custo /= entrada.length;
-
-      return custo;
+      return erroMedioQuadrado.calcular(rede, entrada, saida);
    }
 
 
@@ -120,34 +100,6 @@ public class Avaliador{
     * @return entropia cruzada da rede em relação ao dados fornecidos (custo/perda).
     */
    public double entropiaCruzada(RedeNeural rede, double[][] entrada, double[][] saida){  
-      double[] dadosEntrada = new double[entrada[0].length];
-      double[] dadosSaida = new double[saida[0].length];
-  
-      double custo = 0.0;
-      double epsilon = 1e-9;//evitar log 0
-      for(int i = 0; i < entrada.length; i++){//percorrer amostras
-         //preencher dados de entrada e saída
-         //método nativo mais eficiente
-         System.arraycopy(entrada[i], 0, dadosEntrada, 0, entrada[i].length);
-         System.arraycopy(saida[i], 0, dadosSaida, 0, saida[i].length);
-  
-         rede.calcularSaida(dadosEntrada);
-         double[] saidaRede = rede.obterSaidas();
-         
-         double custoExemplo = 0.0;
-         for(int k = 0; k < saidaRede.length; k++){
-            double previsto = saidaRede[k];
-            double real = dadosSaida[k];
-            
-            //fórmula da entropia cruzada para cada neurônio de saída
-            custoExemplo += (-real * Math.log(previsto + epsilon));
-         }
-         
-         custo += custoExemplo;
-      }
-  
-      custo /= entrada.length;
-
-      return custo;
+      return entropiaCruzada.calcular(rede, entrada, saida);
    }
 }
