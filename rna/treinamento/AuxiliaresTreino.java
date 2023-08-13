@@ -59,9 +59,7 @@ class AuxiliaresTreino{
       double[][] subMatriz = new double[linhas][colunas];
 
       for(int i = 0; i < linhas; i++){
-         for(int j = 0; j < colunas; j++){
-            subMatriz[i][j] = dados[inicio + i][j];
-         }
+         System.arraycopy(dados[inicio + i], 0, subMatriz[i], 0, colunas);
       }
 
       return subMatriz;

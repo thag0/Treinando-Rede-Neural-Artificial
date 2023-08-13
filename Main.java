@@ -21,10 +21,10 @@ class Main{
    
    // static final String caminhoArquivo = "/dados/imagens/my-honest-reaction.png";
    static final String caminhoArquivo = "/dados/32x32/circulos.png";
-   // static final String caminhoArquivo = "/dados/mnist/3.png";
+   // static final String caminhoArquivo = "/dados/mnist/8.png";
    static final String caminhoImagemExportada = "./resultados/imagem-ampliada";
    static final int epocas = 100*1000;
-   static final float escalaRender = 10;
+   static final float escalaRender = 8;
    static final float escalaImagemExportada = 20f;
 
    // Sempre lembrar de quando mudar o dataset, também mudar a quantidade de dados de entrada e saída.
@@ -83,7 +83,7 @@ class Main{
 
 
    public static RedeNeural criarRede(int qEntradas, int qSaidas){
-      int[] arquitetura = {qEntradas, 23, 23, 23, qSaidas};//32x32
+      int[] arquitetura = {qEntradas, 25, 25, 25, qSaidas};//32x32
       // int[] arquitetura = {qEntradas, 12, 12, qSaidas};//28x28
       RedeNeural rede = new RedeNeural(arquitetura);
 
@@ -102,7 +102,7 @@ class Main{
 
       //acelerar o processo de desenho
       //bom em situações de janelas muito grandes
-      int numThreads = Runtime.getRuntime().availableProcessors()/2;
+      int numThreads = (int)(Runtime.getRuntime().availableProcessors() * 0.75);
 
       JanelaTreino jt = new JanelaTreino(imagem.getWidth(), imagem.getHeight(), escalaRender);
       jt.desenharTreino(rede, 0, numThreads);

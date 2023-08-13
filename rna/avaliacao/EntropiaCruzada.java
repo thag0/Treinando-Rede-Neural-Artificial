@@ -8,6 +8,7 @@ public class EntropiaCruzada extends FuncaoPerda{
    public double calcular(RedeNeural rede, double[][] entrada, double[][] saida){  
       double[] dadosEntrada = new double[entrada[0].length];
       double[] dadosSaida = new double[saida[0].length];
+      double[] saidaRede = new double[rede.obterCamadaSaida().obterQuantidadeNeuronios()];
   
       double perda = 0.0;
       double epsilon = 1e-9;//evitar log 0
@@ -18,7 +19,7 @@ public class EntropiaCruzada extends FuncaoPerda{
          System.arraycopy(saida[i], 0, dadosSaida, 0, saida[i].length);
   
          rede.calcularSaida(dadosEntrada);
-         double[] saidaRede = rede.obterSaidas();
+         saidaRede = rede.obterSaidas();
          
          double perdaExemplo = 0.0;
          for(int k = 0; k < saidaRede.length; k++){

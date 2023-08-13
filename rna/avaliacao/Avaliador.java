@@ -1,6 +1,5 @@
 package rna.avaliacao;
 
-import rna.Neuronio;
 import rna.RedeNeural;
 
 public class Avaliador{
@@ -25,18 +24,16 @@ public class Avaliador{
       double[] dadosEntrada = new double[entrada[0].length];
       double[] dadosSaida = new double[saida[0].length];
       double erroMedio = 0;
-      int nSaida = rede.obterCamadaSaida().obterQuantidadeNeuronios();
 
       for(int i = 0; i < entrada.length; i++){//percorrer linhas dos dados
-         //preencher dados de entrada e saída
-         dadosEntrada = entrada[i];
-         dadosSaida = saida[i];
+         System.arraycopy(entrada[i], 0, dadosEntrada, 0, entrada[i].length);
+         System.arraycopy(saida[i], 0, dadosSaida, 0, saida[i].length);
 
          rede.calcularSaida(dadosEntrada);
+         double[] saidaRede = rede.obterSaidas();
 
-         for(int k = 0; k < nSaida; k++){
-            Neuronio neuronio = rede.obterCamadaSaida().neuronios[k];
-            erroMedio += Math.abs(dadosSaida[k] - neuronio.saida);
+         for(int k = 0; k < saidaRede.length; k++){
+            erroMedio += Math.abs(dadosSaida[k] - saidaRede[k]);
          }
       }
 

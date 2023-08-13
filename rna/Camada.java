@@ -59,15 +59,15 @@ public class Camada implements Serializable{
       }
 
       //calculando o somatorio com os pesos
-      double somatorio;
       for(int i = 0; i < (this.neuronios.length-b); i++){
 
-         somatorio = 0.0;
+         Neuronio neuronio = this.neuronios[i];
+         neuronio.somatorio = 0.0;
          for(int j = 0; j < this.neuronios[i].entradas.length; j++){
-            somatorio += (this.neuronios[i].entradas[j] * this.neuronios[i].pesos[j]);
+            neuronio.somatorio += (neuronio.entradas[j] * neuronio.pesos[j]);
          }
-         this.neuronios[i].somatorio = somatorio;
-         this.neuronios[i].saida = funcaoAtivacao(somatorio);
+         neuronio.somatorio = neuronio.somatorio;
+         neuronio.saida = funcaoAtivacao(neuronio.somatorio);
       }
 
       if(argmax) argmax();

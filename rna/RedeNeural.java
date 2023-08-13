@@ -232,16 +232,16 @@ public class RedeNeural implements Cloneable, Serializable{
     *    <li>11 - Softmax.</li>
     * </ul>
     * @param camada camada que será configurada.
-    * @param funcaoAtivacao valor relativo a lista de ativações disponíveis.
+    * @param ativacao valor relativo a lista de ativações disponíveis.
     * @throws IllegalArgumentException se o modelo não foi compilado previamente.
     */
-   public void configurarFuncaoAtivacao(Camada camada, int funcaoAtivacao){
+   public void configurarFuncaoAtivacao(Camada camada, int ativacao){
       modeloCompilado();
       if(camada.equals(this.entrada)){
          throw new IllegalArgumentException("Não é possível configurar função de ativação para a camada de entrada.");
       } 
       
-      camada.configurarAtivacao(funcaoAtivacao);
+      camada.configurarAtivacao(ativacao);
    }
 
 
@@ -264,14 +264,14 @@ public class RedeNeural implements Cloneable, Serializable{
     *    <li>10 - Argmax.</li>
     *    <li>11 - Softmax.</li>
     * </ul>
-    * @param funcaoAtivacao valor relativo a lista de ativações disponíveis.
+    * @param ativacao valor relativo a lista de ativações disponíveis.
     * @throws IllegalArgumentException se o modelo não foi compilado previamente.
     */
-   public void configurarFuncaoAtivacao(int funcaoAtivacao){
+   public void configurarFuncaoAtivacao(int ativacao){
       modeloCompilado();
       
-      for(Camada camada : this.ocultas) camada.configurarAtivacao(funcaoAtivacao);
-      this.saida.configurarAtivacao(funcaoAtivacao);
+      for(Camada camada : this.ocultas) camada.configurarAtivacao(ativacao);
+      this.saida.configurarAtivacao(ativacao);
    }
 
 
@@ -468,8 +468,12 @@ public class RedeNeural implements Cloneable, Serializable{
 
 
    /**
-    * Propaga os dados de entrada pela rede neural pelo método de feedforward.
-    * @param dados dados usados para a camada de entrada.
+    * <p>
+    *    Propaga os dados de entrada pela rede neural pelo método de feedforward.
+    * </p>
+    * Os dados são alimentados para as entradas dos neurônios e é calculado o produto junto com os pesos.
+    * No final é aplicado a função de ativação da camada no neurônio e o resultado fica armazenado na saída dele.
+    * @param entradas dados usados para alimentar a camada de entrada.
     * @throws IllegalArgumentException se o modelo não foi compilado previamente.
     * @throws IllegalArgumentException se o tamanho dos dados de entrada for diferente do tamanho dos neurônios de entrada, excluindo o bias.
     */
@@ -485,13 +489,13 @@ public class RedeNeural implements Cloneable, Serializable{
          this.entrada.neuronios[i].saida = entradas[i];
       }
       
-      //ocultas
+      //ativar neurônios das ocultas
       for(int i = 0; i < this.ocultas.length; i++){
          if(i == 0) this.ocultas[i].ativarNeuronios(this.entrada);
          else this.ocultas[i].ativarNeuronios(this.ocultas[i-1]);
       }
 
-      //saída
+      //ativar neurônios da saída
       this.saida.ativarNeuronios(this.ocultas[this.ocultas.length-1]);
    }
 
@@ -516,8 +520,9 @@ public class RedeNeural implements Cloneable, Serializable{
 
 
    /**
-    * Calcula a acurácia da rede neural com base nos dados fornecidos.
-    * Essa função é exclusiva para problemas de classificação.
+    * Calcula a acurácia da rede neural com base nos dados fornecidos. Calcula comparando o índice
+    * de maior valor que a rede computou e avalia se corresponde ao valor desejado.
+    * Essa função é adequada para problemas de classificação.
     * @param entrada matriz com os dados de entrada.
     * @param saida matriz com os dados de saída.
     * @return acurária obtida com base nos dados fornecidos, um valor entre 0 e 1, onde 1 representa a máxima precisão.
@@ -583,9 +588,7 @@ public class RedeNeural implements Cloneable, Serializable{
       modeloCompilado();
       consistenciaDados(entradas, saidas);
 
-      if(epochs < 1){
-         throw new IllegalArgumentException("O valor de epochs não pode ser menor que um");
-      }
+      if(epochs < 1) throw new IllegalArgumentException("O valor de epochs deve ser maior que zero.");
 
       if(otimizadorAtual.getClass().equals(rna.otimizadores.GradientDescent.class)){
          treino.treino(this, this.otimizadorAtual, entradas, saidas, epochs, false);
@@ -644,8 +647,8 @@ public class RedeNeural implements Cloneable, Serializable{
     * <p>
     *    Ainda sim pode ser uma abordagem válida.
     * </p>
-    * @param treinoEntrada matriz com os dados de entrada 
-    * @param treinoSaida matriz com os dados de saída
+    * @param entradas matriz com os dados de entrada 
+    * @param saidas matriz com os dados de saída
     * @param eps valor de perturbação
     * @param epochs número de épocas do treinamento
     * @param custoMinimo valor de custo desejável, o treino será finalizado caso o valor de custo mínimo seja atingido. Caso o custo mínimo seja zero, o treino
@@ -656,9 +659,9 @@ public class RedeNeural implements Cloneable, Serializable{
     * @throws IllegalArgumentException se o valor de épocas for menor que um.
     * @throws IllegalArgumentException se o valor de custo mínimo for menor que zero.
     */
-   public void diferencaFinita(double[][] treinoEntrada, double[][] treinoSaida, double eps, int epochs, double custoMinimo){
+   public void diferencaFinita(double[][] entradas, double[][] saidas, double eps, int epochs, double custoMinimo){
       modeloCompilado();
-      consistenciaDados(treinoEntrada, treinoSaida);
+      consistenciaDados(entradas, saidas);
 
       if(eps == 0){
          throw new IllegalArgumentException("O valor de perturbação não pode ser igual a zero.");
@@ -686,7 +689,7 @@ public class RedeNeural implements Cloneable, Serializable{
       camadasGradiente.add(redeG.saida);
 
       for(int epocas = 0; epocas < epochs; epocas++){
-         double custo = this.erroMedioQuadrado(treinoEntrada, treinoSaida);
+         double custo = this.erroMedioQuadrado(entradas, saidas);
          if(custo < custoMinimo) break;
 
          double valorAnterior = 0;
@@ -696,7 +699,7 @@ public class RedeNeural implements Cloneable, Serializable{
                for(int k = 0; k < camadasRede.get(i).neuronios[j].pesos.length; k++){//percorrer pesos do neuronio
                   valorAnterior = camadasRede.get(i).neuronios[j].pesos[k];
                   camadasRede.get(i).neuronios[j].pesos[k] += eps;
-                  camadasGradiente.get(i).neuronios[j].pesos[k] = ((erroMedioQuadrado(treinoEntrada, treinoSaida) - custo)/eps);//derivada da função de custo
+                  camadasGradiente.get(i).neuronios[j].pesos[k] = ((erroMedioQuadrado(entradas, saidas) - custo)/eps);//derivada da função de custo
                   camadasRede.get(i).neuronios[j].pesos[k] = valorAnterior;
                }
             }
@@ -827,6 +830,8 @@ public class RedeNeural implements Cloneable, Serializable{
 
 
    /**
+    * Disponibiliza o histórico da função de custo da rede neural durante cada época
+    * de treinamento.
     * @return lista contendo o histórico de custos durante o treinamento da rede.
     * @throws IllegalArgumentException se não foi habilitado previamente o cálculo do histórico de custos.
     */
@@ -953,17 +958,14 @@ public class RedeNeural implements Cloneable, Serializable{
    private Neuronio cloneNeuronio(Neuronio neuronio){
       Neuronio clone = new Neuronio(neuronio.pesos.length, this.alcancePeso);
 
-      double pesosClone[] = new double[neuronio.pesos.length];
-
-      for(int i = 0; i < pesosClone.length; i++){
-         pesosClone[i] = neuronio.pesos[i];
-      }
-
-      clone.pesos = pesosClone;
-      clone.momentum = neuronio.momentum;
-      clone.acumuladorGradiente = neuronio.acumuladorGradiente;
-      clone.acumuladorSegundaOrdem = neuronio.acumuladorSegundaOrdem;
-      clone.gradienteAcumulado = neuronio.gradienteAcumulado;
+      //método nativo mais eficiente na cópia de vetores
+      System.arraycopy(neuronio.pesos, 0, clone.pesos, 0, clone.pesos.length);
+      System.arraycopy(neuronio.momentum, 0, clone.momentum, 0, clone.momentum.length);
+      System.arraycopy(neuronio.acumuladorGradiente, 0, clone.acumuladorGradiente, 0, clone.acumuladorGradiente.length);
+      System.arraycopy(neuronio.acumuladorSegundaOrdem, 0, clone.acumuladorSegundaOrdem, 0, clone.acumuladorSegundaOrdem.length);
+      System.arraycopy(neuronio.gradiente, 0, clone.gradiente, 0, clone.gradiente.length);
+      System.arraycopy(neuronio.gradienteAcumulado, 0, clone.gradienteAcumulado, 0, clone.gradienteAcumulado.length);
+      
 
       return clone;
    }

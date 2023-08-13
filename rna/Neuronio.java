@@ -6,16 +6,16 @@ import java.util.Random;
 /**
  * Representa um neurônio individual dentro da estrutura da rede neural.
  * Cada neurônio possui um conjunto de pesos para suas conexões com os neurônios da camada anterior,
- * além de valores de entrada e saída.
+ * além de valores de entrada, saída e alguns parâmetros adicionais para facilitar o uso dos otimizadores.
  */
 public class Neuronio implements Serializable{
    public double[] entradas;//saídas da camada anterior
    public double[] pesos;
-   public double[] momentum;
+   public double[] momentum;//ajudar na convergência
    public double[] acumuladorGradiente;//adagrad
    public double[] acumuladorSegundaOrdem;//adam / rmsprop
    public double somatorio;//entradas * pesos
-   public double saida;//resultado a ativação
+   public double saida;//resultado da ativação
    public double erro;//backpropagation
    public double[] gradiente;//backpropagation
    public double[] gradienteAcumulado;//treino lote
@@ -41,6 +41,7 @@ public class Neuronio implements Serializable{
       this.pesos = new double[ligacoes];
       for(int i = 0; i < pesos.length; i++){
          pesos[i] = random.nextDouble(-alcancePeso, alcancePeso);
+         momentum[i] = 0;//garantia
       }
 
       this.saida = 1;// considerar que pode ter bias aplicado ao modelo
