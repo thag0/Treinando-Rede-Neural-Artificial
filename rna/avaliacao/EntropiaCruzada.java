@@ -11,7 +11,7 @@ public class EntropiaCruzada extends FuncaoPerda{
       double[] saidaRede = new double[rede.obterCamadaSaida().obterQuantidadeNeuronios()];
   
       double perda = 0.0;
-      double epsilon = 1e-9;//evitar log 0
+      double epsilon = 1e-10;//evitar log 0
       for(int i = 0; i < entrada.length; i++){//percorrer amostras
          //preencher dados de entrada e saída
          //método nativo mais eficiente

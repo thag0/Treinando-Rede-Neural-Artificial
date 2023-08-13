@@ -1,5 +1,6 @@
 package exemplos;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import rna.RedeNeural;
@@ -37,23 +38,22 @@ public class ExemploClassificacao{
       double[][] testeSaida = ged.separarDadosSaida(teste, qSaidas);
 
       //criando e configurando a rede neural
-      int[] arq = {qEntradas, 8, 4, qSaidas};
+      int[] arq = {qEntradas, 5, 4, qSaidas};
       RedeNeural rede = new RedeNeural(arq);
       rede.configurarMomentum(0.99);
       rede.configurarTaxaAprendizagem(0.0001);
-      rede.configurarOtimizador(2, true);
+      rede.configurarOtimizador(5, true);
       rede.compilar();
-      rede.configurarFuncaoAtivacao(2);
+      rede.configurarFuncaoAtivacao(1);
       rede.configurarFuncaoAtivacao(rede.obterCamadaSaida(), 11);//softmax
       
       //treinando e avaliando os resultados
-      rede.treinar(treinoEntrada, treinoSaida, 10_000);
+      rede.treinar(treinoEntrada, treinoSaida, 4_000);
       System.out.println(rede.obterInformacoes());
       double acuraria = rede.calcularAcuracia(testeEntrada, testeSaida);
       double custo = rede.entropiaCruzada(testeEntrada, testeSaida);
       System.out.println("Acurácia = " + (acuraria * 100) + "%");
       System.out.println("Custo = " + custo);
-
    }
 
 
@@ -72,5 +72,56 @@ public class ExemploClassificacao{
       }catch(Exception e){
          return;
       }
+   }
+
+
+   public static void compararSaidaRede(RedeNeural rede, double[][] dadosEntrada, double[][] dadosSaida, String texto){
+      int nEntrada = rede.obterCamadaEntrada().obterQuantidadeNeuronios();
+      nEntrada -= (rede.obterCamadaEntrada().temBias) ? 1 : 0;
+
+      int nSaida = rede.obterCamadaSaida().obterQuantidadeNeuronios();
+
+      double[] entrada_rede = new double[nEntrada];
+      double[] saida_rede = new double[nSaida];
+
+      System.out.println("\n" + texto);
+
+      //mostrar saída da rede comparada aos dados
+      for(int i = 0; i < dadosEntrada.length; i++){
+         for(int j = 0; j < dadosEntrada[0].length; j++){
+            entrada_rede[j] = dadosEntrada[i][j];
+         }
+
+         rede.calcularSaida(entrada_rede);
+         saida_rede = rede.obterSaidas();
+
+         //apenas formatação
+         if(i < 10) System.out.print("Dado 00" + i + " |");
+         else if(i < 100) System.out.print("Dado 0" + i + " |");
+         else System.out.print("Dado " + i + " |");
+         for(int j = 0; j < entrada_rede.length; j++){
+            System.out.print(" " + entrada_rede[j] + " ");
+         }
+
+         System.out.print(" - ");
+         for(int j = 0; j < dadosSaida[0].length; j++){
+            System.out.print(" " + dadosSaida[i][j]);
+         }
+         System.out.print(" | Rede ->");
+         for(int j = 0; j < nSaida; j++){
+            System.out.print("  " + formatarFloat(saida_rede[j]));
+         }
+         System.out.println();
+      }
+   }
+
+
+   public static String formatarFloat(double valor){
+      String valorFormatado = "";
+
+      DecimalFormat df = new DecimalFormat("#.####");
+      valorFormatado = df.format(valor);
+
+      return valorFormatado;
    }
 }
