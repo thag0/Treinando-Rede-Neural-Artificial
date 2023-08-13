@@ -87,64 +87,9 @@ public class TreinoLote{
     * @param saidas array com as saídas esperadas das amostras.
     */
    private void backpropagationLote(ArrayList<Camada> redec, double taxaAprendizagem, double[] saidas){
-      calcularErroSaida(redec, saidas);
-      calcularErroOcultas(redec);
+      auxiliarTreino.calcularErroSaida(redec, saidas);
+      auxiliarTreino.calcularErroOcultas(redec);
       calcularGradientesAcumulados(redec, taxaAprendizagem);
-   }
-
-
-
-   /**
-    * Método exclusivo para separar a forma de calcular os erros da camada de saída.
-    * Dando suporte não apenas para problemas de regressão.
-    * <p>
-    *    Isso ainda ta em teste para problemas de classificação, para regressão funciona normalmente.
-    * </p>
-    * @param redec Rede Neural em formato de lista de camadas.
-    * @param saidas array com as saídas esperadas
-    */
-   private void calcularErroSaida(ArrayList<Camada> redec, double[] saidas){
-      Camada saida = redec.get(redec.size()-1);
-      if(saida.argmax){//classificação
-         throw new java.lang.UnsupportedOperationException("Cálculo de erros da saída usando Argmax não implementado ainda.");
-
-      }else if(saida.softmax){//classificação
-         for(int i = 0; i < saida.neuronios.length; i++){
-            Neuronio neuronio = saida.neuronios[i];
-            neuronio.erro = (saidas[i] - neuronio.saida);
-         }
-      
-      }else{//regressão
-         for(int i = 0; i < saida.neuronios.length; i++){
-            Neuronio neuronio = saida.neuronios[i];
-            neuronio.erro = ((saidas[i] - neuronio.saida) * saida.funcaoAtivacaoDx(neuronio.somatorio));
-         }
-      }
-   }
-
-
-   /**
-    * Método exclusivo para separar a forma de calcular os erros das camadas ocultas
-    * da rede neural.
-    * @param redec Rede Neural em formato de lista de camadas.
-    */
-   private void calcularErroOcultas(ArrayList<Camada> redec){
-      //começar da ultima oculta
-      for(int i = redec.size()-2; i >= 1; i--){// percorrer camadas ocultas de trás pra frente
-         
-         Camada camadaAtual = redec.get(i);
-         int qNeuronioAtual = camadaAtual.obterQuantidadeNeuronios();
-         if(camadaAtual.temBias) qNeuronioAtual -= 1;
-         for (int j = 0; j < qNeuronioAtual; j++){//percorrer neurônios da camada atual
-         
-            Neuronio neuronio = camadaAtual.neuronios[j];
-            double somaErros = 0.0;
-            for(Neuronio neuronioProximo : redec.get(i+1).neuronios){//percorrer neurônios da camada seguinte
-               somaErros += neuronioProximo.pesos[j] * neuronioProximo.erro;
-            }
-            neuronio.erro = somaErros * camadaAtual.funcaoAtivacaoDx(neuronio.somatorio);
-         }
-      }
    }
 
 

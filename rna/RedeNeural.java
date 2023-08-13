@@ -53,6 +53,8 @@ public class RedeNeural implements Cloneable, Serializable{
    private boolean modeloCompilado = false;
    private Otimizador otimizadorAtual = new SGD();//otimizador padrão
    private boolean nesterov = false;// acelerador de nesterov
+
+   private String nome = getClass().getSimpleName();
    
    private Avaliador avaliador = new Avaliador();
    private Treino treino = new Treino();
@@ -135,6 +137,28 @@ public class RedeNeural implements Cloneable, Serializable{
          this.arquitetura[i] = nOcultas;
       }
       this.arquitetura[this.arquitetura.length-1] = nSaida;
+   }
+
+
+   /**
+    * <p>
+    *    Altera o nome da rede neural.
+    * </p>
+    * O nome é apenas estético e não influencia na performance ou na 
+    * usabilidade da rede neural.
+    * <p>
+    *    O nome padrão é o mesmo nome da classe (RedeNeural).
+    * </p>
+    * @param nome novo nome da rede.
+    * @throws IllegalArgumentException se o novo nome for inválido.
+    */
+   public void configurarNome(String nome){
+      if(nome == null) throw new IllegalArgumentException("O novo nome da rede neural não pode ser nulo.");
+      if(nome.isBlank() || nome.isEmpty()){
+         throw new IllegalArgumentException("O novo nome da rede neural não pode estar vazio.");
+      }
+
+      this.nome = nome;
    }
 
 
@@ -830,6 +854,14 @@ public class RedeNeural implements Cloneable, Serializable{
 
 
    /**
+    * @return retorna o nome específico da rede.
+    */
+   public String obterNome(){
+      return this.nome;
+   }
+
+
+   /**
     * Disponibiliza o histórico da função de custo da rede neural durante cada época
     * de treinamento.
     * @return lista contendo o histórico de custos durante o treinamento da rede.
@@ -862,7 +894,7 @@ public class RedeNeural implements Cloneable, Serializable{
 
       String buffer = "";
       String espacamento = "    ";
-      System.out.println("\nInformações " + this.getClass().getSimpleName() + " = [");
+      System.out.println("\nInformações " + nome + " = [");
 
       //otimizador
       buffer += espacamento + "Otimizador: " + this.otimizadorAtual.getClass().getSimpleName();
@@ -1025,7 +1057,7 @@ public class RedeNeural implements Cloneable, Serializable{
       String espacamentoDuplo = espacamento + espacamento;
       String espacamentoTriplo = espacamento + espacamento + espacamento;
       
-      buffer += "\nArquitetura " + this.getClass().getSimpleName() + " = [\n";
+      buffer += "\nArquitetura " + nome + " = [\n";
 
       //ocultas
       for(int i = 0; i < this.ocultas.length; i++){

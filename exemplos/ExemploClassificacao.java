@@ -38,17 +38,17 @@ public class ExemploClassificacao{
       double[][] testeSaida = ged.separarDadosSaida(teste, qSaidas);
 
       //criando e configurando a rede neural
-      int[] arq = {qEntradas, 5, 4, qSaidas};
+      int[] arq = {qEntradas, 6, 6, qSaidas};
       RedeNeural rede = new RedeNeural(arq);
       rede.configurarMomentum(0.99);
       rede.configurarTaxaAprendizagem(0.0001);
-      rede.configurarOtimizador(5, true);
+      rede.configurarOtimizador(2, true);
       rede.compilar();
-      rede.configurarFuncaoAtivacao(1);
+      rede.configurarFuncaoAtivacao(4);
       rede.configurarFuncaoAtivacao(rede.obterCamadaSaida(), 11);//softmax
       
       //treinando e avaliando os resultados
-      rede.treinar(treinoEntrada, treinoSaida, 4_000);
+      rede.treinar(treinoEntrada, treinoSaida, 6_000);
       System.out.println(rede.obterInformacoes());
       double acuraria = rede.calcularAcuracia(testeEntrada, testeSaida);
       double custo = rede.entropiaCruzada(testeEntrada, testeSaida);
