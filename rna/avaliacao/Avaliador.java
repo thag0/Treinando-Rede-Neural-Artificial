@@ -99,4 +99,29 @@ public class Avaliador{
    public double entropiaCruzada(RedeNeural rede, double[][] entrada, double[][] saida){  
       return entropiaCruzada.calcular(rede, entrada, saida);
    }
+
+
+   public int[][] matrizConfusao(RedeNeural rede, double[][] entradas, double[][] saidas){
+      int nClasses = saidas[0].length;
+      int[][] matriz = new int[nClasses][nClasses];
+
+      double[] entrada = new double[entradas[0].length];
+      double[] saida = new double[saidas[0].length];
+      double[] saidaRede = new double[rede.obterCamadaSaida().obterQuantidadeNeuronios()];
+
+      for(int i = 0; i < entradas.length; i++){
+         System.arraycopy(entradas[i], 0, entrada, 0, entradas[i].length);
+         System.arraycopy(saidas[i], 0, saida, 0, saidas[i].length);
+
+         rede.calcularSaida(entrada);
+         saidaRede = rede.obterSaidas();
+
+         int real = aux.indiceMaiorValor(saida);
+         int previsto = aux.indiceMaiorValor(saidaRede);
+
+         matriz[real][previsto]++;
+      }
+
+      return matriz;
+   } 
 }

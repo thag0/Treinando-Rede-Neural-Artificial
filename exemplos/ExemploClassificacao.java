@@ -23,6 +23,7 @@ public class ExemploClassificacao{
 
       //separando dados de treino e teste
       double[][] dados = ged.listaParaDadosDouble(dataset);
+      ged.embaralharDados(dados);
       double[][][] treinoTeste = ged.separarTreinoTeste(dados, 0.25f);
       double[][] treino = treinoTeste[0];
       double[][] teste = treinoTeste[1];
@@ -38,22 +39,30 @@ public class ExemploClassificacao{
       double[][] testeSaida = ged.separarDadosSaida(teste, qSaidas);
 
       //criando e configurando a rede neural
-      int[] arq = {qEntradas, 6, 6, qSaidas};
+      int[] arq = {qEntradas, 4, qSaidas};
       RedeNeural rede = new RedeNeural(arq);
       rede.configurarMomentum(0.99);
-      rede.configurarTaxaAprendizagem(0.0001);
+      rede.configurarTaxaAprendizagem(0.001);
       rede.configurarOtimizador(2, true);
       rede.compilar();
       rede.configurarFuncaoAtivacao(4);
       rede.configurarFuncaoAtivacao(rede.obterCamadaSaida(), 11);//softmax
       
       //treinando e avaliando os resultados
-      rede.treinar(treinoEntrada, treinoSaida, 6_000);
+      rede.treinar(treinoEntrada, treinoSaida, 1_000);
       System.out.println(rede.obterInformacoes());
       double acuraria = rede.calcularAcuracia(testeEntrada, testeSaida);
       double custo = rede.entropiaCruzada(testeEntrada, testeSaida);
       System.out.println("Acurácia = " + (acuraria * 100) + "%");
       System.out.println("Custo = " + custo);
+
+      int[][] matriz = rede.obterMatrizConfusao(testeEntrada, testeSaida);
+      for(int i = 0; i < matriz.length; i++){
+         for(int j = 0; j < matriz[i].length; j++){
+            System.out.print("[" + matriz[i][j] + "]");
+         }
+         System.out.println();
+      }
    }
 
 

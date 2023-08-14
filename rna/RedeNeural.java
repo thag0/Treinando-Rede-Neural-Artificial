@@ -876,6 +876,18 @@ public class RedeNeural implements Cloneable, Serializable{
 
 
    /**
+    * 
+    * @param entradas
+    * @param saidas
+    * @return
+    */
+   public int[][] obterMatrizConfusao(double[][] entradas, double[][] saidas){
+      modeloCompilado();
+      return this.avaliador.matrizConfusao(this, entradas, saidas);
+   }
+
+
+   /**
     * Exibe as informações importantes da rede neural como:
     * <ul>
     *    <li>Otimizador atual.</li>
