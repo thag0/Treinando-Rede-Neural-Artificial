@@ -51,13 +51,13 @@ public class ExemploClassificacao{
       //treinando e avaliando os resultados
       rede.treinar(treinoEntrada, treinoSaida, 1_000);
       System.out.println(rede.obterInformacoes());
-      double acuraria = rede.calcularAcuracia(testeEntrada, testeSaida);
-      double custo = rede.entropiaCruzada(testeEntrada, testeSaida);
+      double acuraria = rede.avaliador.acuracia(testeEntrada, testeSaida);
+      double custo = rede.avaliador.entropiaCruzada(testeEntrada, testeSaida);
       System.out.println("Acurácia = " + (acuraria * 100) + "%");
       System.out.println("Custo = " + custo);
 
       System.out.println("Matriz de confusão");
-      int[][] matriz = rede.obterMatrizConfusao(testeEntrada, testeSaida);
+      int[][] matriz = rede.avaliador.matrizConfusao(testeEntrada, testeSaida);
       for(int i = 0; i < matriz.length; i++){
          for(int j = 0; j < matriz[i].length; j++){
             System.out.print("[" + matriz[i][j] + "]");

@@ -36,7 +36,7 @@ public class ExemploImagem{
       rede.treinar(dadosEntrada, dadosSaida, 5_000);
 
       //avaliando resultados
-      double precisao = rede.calcularPrecisao(dadosEntrada, dadosSaida);
+      double precisao = rede.avaliador.erroMedioAbsoluto(dadosEntrada, dadosSaida);
       System.out.println(rede.obterInformacoes());
       System.out.println("Precisão = " + (precisao * 100));
    }

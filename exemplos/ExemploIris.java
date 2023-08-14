@@ -26,6 +26,7 @@ public class ExemploIris{
       // treino da rede neural.
       // separar em treino e teste para evitar overfitting
       double[][] dados = ged.listaParaDadosDouble(iris);
+      ged.embaralharDados(dados);
       double[][][] treinoTeste = ged.separarTreinoTeste(dados, 0.2f);
       double[][] treino = treinoTeste[0];
       double[][] teste = treinoTeste[1];
@@ -56,8 +57,8 @@ public class ExemploIris{
 
 
       // avaliando os resultados da rede neural
-      double precisao = rede.calcularPrecisao(testeX, testeY);
-      double custo = rede.erroMedioQuadrado(testeX, testeY);
+      double precisao = rede.avaliador.erroMedioAbsoluto(testeX, testeY);
+      double custo = rede.avaliador.erroMedioQuadrado(testeX, testeY);
       System.out.println(rede.obterInformacoes());
       System.out.println("Custo: " + custo);
       System.out.println("Precisão: " + (precisao * 100) + "%");
