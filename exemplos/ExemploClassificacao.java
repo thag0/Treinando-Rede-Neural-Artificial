@@ -56,6 +56,7 @@ public class ExemploClassificacao{
       System.out.println("Acurácia = " + (acuraria * 100) + "%");
       System.out.println("Custo = " + custo);
 
+      System.out.println("Matriz de confusão");
       int[][] matriz = rede.obterMatrizConfusao(testeEntrada, testeSaida);
       for(int i = 0; i < matriz.length; i++){
          for(int j = 0; j < matriz[i].length; j++){

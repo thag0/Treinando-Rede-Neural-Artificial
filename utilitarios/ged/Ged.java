@@ -37,13 +37,17 @@ public class Ged{
     */
    public void imprimirCsv(ArrayList<String[]> lista){
       String separador = ",";
+      String espacamemto = "   ";
+
+      System.out.println("Csv = [");
       for(String linha[] : lista){
          for(int i = 0; i < linha.length; i++){
-            if(i == 0) System.out.print(linha[i]);
+            if(i == 0) System.out.print(espacamemto + linha[i]);
             else System.out.print(separador + " " + linha[i]);
          }
          System.out.println();
       }
+      System.out.println("]\n");
    }
 
 

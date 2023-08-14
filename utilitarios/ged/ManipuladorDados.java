@@ -17,21 +17,20 @@ class ManipuladorDados{
 
    }
  
-   public void adicionarColuna(ArrayList<String[]> lista){
+   public void adicionarColuna(ArrayList<String[]> lista) {
       int nColunas = lista.get(0).length;
-
-      for(int i = 0; i < lista.size(); i++){
-         String[] novaLinha = new String[nColunas + 1];
-
-         for(int j = 0; j < lista.get(i).length; j++){
-            novaLinha[j] = lista.get(i)[j];
-         }
-
-         novaLinha[nColunas] = "";
-
-         lista.set(i, novaLinha);
+  
+      for (int i = 0; i < lista.size(); i++) {
+          String[] linhaAtual = lista.get(i);
+          String[] novaLinha = new String[nColunas + 1];
+  
+          System.arraycopy(linhaAtual, 0, novaLinha, 0, nColunas);
+  
+          novaLinha[nColunas] = "";
+  
+          lista.set(i, novaLinha);
       }
-   }
+  }  
 
 
    public void adicionarColuna(ArrayList<String[]> lista, int indice){
@@ -47,15 +46,12 @@ class ManipuladorDados{
    
          //copiando valores antigos e deslocando a partir
          //do novo indice
-         for(int j = 0; j < indice; j++){
-            novaLinha[j] = linhaAtual[j];
-         }
+         System.arraycopy(linhaAtual, 0, novaLinha, 0, indice);
    
          novaLinha[indice] = "";
    
-         for(int j = indice + 1; j < novaLinha.length; j++){
-            novaLinha[j] = linhaAtual[j - 1];
-         }
+         //copiando valores restantes
+         System.arraycopy(linhaAtual, indice, novaLinha, indice + 1, nColunas - indice);
    
          lista.set(i, novaLinha);
       }
@@ -246,9 +242,7 @@ class ManipuladorDados{
       double[][] subMatriz = new double[linhas][colunas];
 
       for(int i = 0; i < linhas; i++){
-         for(int j = 0; j < colunas; j++){
-            subMatriz[i][j] = dados[inicio + i][j];
-         }
+         System.arraycopy(dados[inicio + i], 0, subMatriz[i], 0, colunas);
       }
 
       return subMatriz;

@@ -876,10 +876,14 @@ public class RedeNeural implements Cloneable, Serializable{
 
 
    /**
-    * 
-    * @param entradas
-    * @param saidas
-    * @return
+    * Calcula a matriz de confusão para avaliar o desempenho da rede em classificação.
+    *
+    * A matriz de confusão mostra a contagem de amostras que foram classificadas de forma correta ou não em cada classe.
+    * As linhas representam as classes reais e as colunas as classes previstas pela rede.
+    * @param entradas matriz com os dados de entrada 
+    * @param saidas matriz com os dados de saída
+    * @return matriz de confusão para avaliar o desempenho do modelo.
+    * @throws IllegalArgumentException se o modelo não foi compilado previamente.
     */
    public int[][] obterMatrizConfusao(double[][] entradas, double[][] saidas){
       modeloCompilado();
