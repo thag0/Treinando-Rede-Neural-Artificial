@@ -21,6 +21,7 @@ public class Ged{
    ConversorDados cd;//conversor de dados
    ManipuladorDados md;
    TreinoTeste gtt;//gerenciador de treino e teste da rede
+   ImpressaoMatriz im;//exibição
    
 
    public Ged(){
@@ -28,6 +29,7 @@ public class Ged{
       cd = new ConversorDados();
       md = new ManipuladorDados();
       gtt = new TreinoTeste();
+      im = new ImpressaoMatriz();
    }
 
 
@@ -48,6 +50,33 @@ public class Ged{
          System.out.println();
       }
       System.out.println("]\n");
+   }
+
+
+   /**
+    * Exibe as informações contidas na matriz fornecida.
+    * @param matriz matriz com os dados
+    */
+   public void imprimirMatriz(int[][] matriz){
+      im.imprimirMatriz(matriz);
+   }
+
+
+   /**
+    * Exibe as informações contidas na matriz fornecida.
+    * @param matriz matriz com os dados
+    */
+   public void imprimirMatriz(float[][] matriz){
+      im.imprimirMatriz(matriz);
+   }
+
+
+   /**
+    * Exibe as informações contidas na matriz fornecida.
+    * @param matriz matriz com os dados
+    */
+   public void imprimirMatriz(double[][] matriz){
+      im.imprimirMatriz(matriz);
    }
 
 

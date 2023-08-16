@@ -70,7 +70,9 @@ class Main{
 
       //avaliar resultados
       double precisao = rede.avaliador.erroMedioAbsoluto(dadosEntrada, dadosSaida);
-      System.out.println("Custo = " + rede.avaliador.erroMedioQuadrado(dadosEntrada, dadosSaida));
+      double custo = rede.avaliador.erroMedioQuadrado(dadosEntrada, dadosSaida);
+
+      System.out.println("Custo = " + custo);
       System.out.println("Precisão = " + (formatarFloat(precisao*100)) + "%");
       System.out.println("Tempo de treinamento: " + horas + "h " + minutos + "m " + segundos + "s");
 

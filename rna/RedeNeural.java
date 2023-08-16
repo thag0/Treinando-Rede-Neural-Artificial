@@ -531,7 +531,47 @@ public class RedeNeural implements Cloneable, Serializable{
       //ativar neurônios da saída
       this.saida.ativarNeuronios(this.ocultas[this.ocultas.length-1]);
    }
-  
+
+
+   /**
+    * <p>
+    *    Propaga os dados de entrada pela rede neural pelo método de feedforward através do conjunto 
+    *    de dados fornecido.
+    * </p>
+    * Os dados são alimentados para as entradas dos neurônios e é calculado o produto junto com os pesos.
+    * No final é aplicado a função de ativação da camada no neurônio e o resultado fica armazenado na saída dele.
+    * @param entradas dados usados para alimentar a camada de entrada.
+    * @throws IllegalArgumentException se o modelo não foi compilado previamente.
+    * @throws IllegalArgumentException se o tamanho dos dados de entrada for diferente do tamanho dos neurônios de entrada, excluindo o bias.
+    * @return
+    */
+   public double[][] calcularSaida(double[][] entradas){
+      modeloCompilado();
+
+      if(entradas[0].length != (this.entrada.neuronios.length-BIAS)){
+         throw new IllegalArgumentException("As dimensões dos dados de entrada com os neurônios de entrada da rede não são iguais.");
+      }
+
+      //dimensões dos dados
+      int nAmostras = entradas.length;
+      int nSaidas = this.saida.obterQuantidadeNeuronios();
+
+      double[][] resultados = new double[nAmostras][nSaidas];
+      double[] entradaRede = new double[entradas[0].length];
+      double[] saidaRede = new double[nSaidas];
+
+      for(int i = 0; i < nAmostras; i++){//iterar pelos dados de entrada
+         System.arraycopy(entradas[i], 0, entradaRede, 0, entradas[i].length);
+         
+         this.calcularSaida(entradaRede);
+         saidaRede = this.obterSaidas();
+
+         System.arraycopy(saidaRede, 0, resultados[i], 0, saidaRede.length);
+      }
+
+      return resultados;
+   }
+
 
    /**
     * <p>
