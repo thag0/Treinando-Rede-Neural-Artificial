@@ -205,8 +205,16 @@ public class PainelTreino extends JPanel{
 
       g2.drawImage(imagem, 0, 0, null);
 
+      g2.setFont(getFont().deriveFont(13f));
+      
+      //efeito de sombra
       g2.setColor(Color.BLACK);
       g2.drawString(("Época: " + epocaAtual), 6, 16);
+      g2.drawString(("Época: " + epocaAtual), 4, 16);
+
+      g2.drawString(("Época: " + epocaAtual), 6, 14);
+      g2.drawString(("Época: " + epocaAtual), 4, 14);
+
       g2.setColor(Color.WHITE);
       g2.drawString(("Época: " + epocaAtual), 5, 15);
 

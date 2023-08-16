@@ -20,10 +20,11 @@ class TreinoTeste{
       Random random = new Random();
       int linhas = dados.length;
 
+      double[] temp;
       for(int i = linhas - 1; i > 0; i--){
          int j = random.nextInt(i + 1);
 
-         double[] temp = dados[i];
+         temp = dados[i];
          dados[i] = dados[j];
          dados[j] = temp;
       }
@@ -40,10 +41,9 @@ class TreinoTeste{
 
       double[][] dadosEntrada = new double[dados.length][colunas];
       for(int i = 0; i < dadosEntrada.length; i++){
-         for(int j = 0; j < colunas; j++){
-            dadosEntrada[i][j] = dados[i][j];
-         }
+         System.arraycopy(dados[i], 0, dadosEntrada[i], 0, colunas);
       }
+      
       return dadosEntrada;
    }
 
@@ -59,16 +59,8 @@ class TreinoTeste{
       double[][] dadosSaida = new double[dados.length][colunas];
       int indiceInicial = dados[0].length - colunas;
 
-      for (int i = 0; i < dados.length; i++) { // percorrer linhas dos dados
-         int contador1 = indiceInicial; // contador coluna dados
-         int contador2 = 0; // contador coluna saída
-
-         // copiando os valores 
-         while (contador2 < colunas) {
-            dadosSaida[i][contador2] = dados[i][contador1];
-            contador1++;
-            contador2++;
-         }
+      for(int i = 0; i < dados.length; i++){
+         System.arraycopy(dados[i], indiceInicial, dadosSaida[i], 0, colunas);
       }
 
       return dadosSaida;

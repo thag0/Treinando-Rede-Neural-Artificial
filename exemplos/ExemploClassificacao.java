@@ -39,10 +39,10 @@ public class ExemploClassificacao{
       double[][] testeSaida = ged.separarDadosSaida(teste, qSaidas);
 
       //criando e configurando a rede neural
-      int[] arq = {qEntradas, 4, qSaidas};
+      int[] arq = {qEntradas, 4, 4, qSaidas};
       RedeNeural rede = new RedeNeural(arq);
       rede.configurarMomentum(0.99);
-      rede.configurarTaxaAprendizagem(0.001);
+      rede.configurarTaxaAprendizagem(0.0001);
       rede.configurarOtimizador(2, true);
       rede.compilar();
       rede.configurarFuncaoAtivacao(4);
@@ -57,13 +57,8 @@ public class ExemploClassificacao{
       System.out.println("Custo = " + custo);
 
       System.out.println("Matriz de confusão");
-      int[][] matriz = rede.avaliador.matrizConfusao(testeEntrada, testeSaida);
-      for(int i = 0; i < matriz.length; i++){
-         for(int j = 0; j < matriz[i].length; j++){
-            System.out.print("[" + matriz[i][j] + "]");
-         }
-         System.out.println();
-      }
+      int[][] matrizConfusao = rede.avaliador.matrizConfusao(testeEntrada, testeSaida);
+      ged.imprimirMatriz(matrizConfusao);
    }
 
 
