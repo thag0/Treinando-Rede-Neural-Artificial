@@ -29,7 +29,7 @@ class AuxiliaresTreino{
    public void calcularErroSaida(ArrayList<Camada> redec, double[] saidas){
       Camada saida = redec.get(redec.size()-1);
       
-      if(saida.argmax){//classificação
+      if(saida.temArgmax()){//classificação
          int indiceMaior = indiceMaiorValor(saidas);
          for(int i = 0; i < saida.obterQuantidadeNeuronios(); i++){
             Neuronio neuronio = saida.neuronios[i];
@@ -37,7 +37,7 @@ class AuxiliaresTreino{
             else neuronio.erro = 0 - neuronio.saida;
          }
 
-      }else if(saida.softmax){//classificação
+      }else if(saida.temSoftmax()){//classificação
          for(int i = 0; i < saida.neuronios.length; i++){
             Neuronio neuronio = saida.neuronios[i];
             neuronio.erro = (saidas[i] - neuronio.saida);

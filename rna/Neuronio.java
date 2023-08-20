@@ -66,6 +66,18 @@ public class Neuronio implements Serializable{
 
 
    /**
+    * Calcula o resultado do somatório da multiplicação entre cada entrada 
+    * e seu peso respectivo.
+    */
+   public void calcularSomatorio(){
+      this.somatorio = 0;
+      for(int i = 0; i < this.entradas.length; i++){
+         this.somatorio += (this.entradas[i] * this.pesos[i]);
+      }
+   }
+
+
+   /**
     * Boa no geral
     * @param alcancePeso
     */

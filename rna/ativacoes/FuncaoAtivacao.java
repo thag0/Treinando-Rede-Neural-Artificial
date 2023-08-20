@@ -22,12 +22,12 @@ public abstract class FuncaoAtivacao{
 
 
    /**
-    * Calcula o resultado da ativação de acordo com a função configurada
+    * Calcula o resultado da derivada da função de ativação de acordo com a função configurada
     *
     * @param x O valor de entrada.
-    * @return O resultado da ativação.
+    * @return O resultado da derivada.
     */
    public double derivada(double x){
-      throw new java.lang.UnsupportedOperationException("Método de atualização da função de ativação não foi implementado.");
+      throw new java.lang.UnsupportedOperationException("Método de atualização da derivada da função de ativação não foi implementado.");
    }
 }

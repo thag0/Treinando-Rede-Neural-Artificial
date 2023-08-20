@@ -10,6 +10,7 @@ import rna.ativacoes.Linear;
 import rna.ativacoes.ReLU;
 import rna.ativacoes.Seno;
 import rna.ativacoes.Sigmoid;
+import rna.ativacoes.SoftPlus;
 import rna.ativacoes.Swish;
 import rna.ativacoes.TanH;
 
@@ -22,8 +23,8 @@ public class Camada implements Serializable{
    public Neuronio[] neuronios;
    public boolean temBias = true;
    private int b = 1;
-   public boolean argmax = false;
-   public boolean softmax = false;
+   private boolean argmax = false;
+   private boolean softmax = false;
 
    public FuncaoAtivacao ativacao = new ReLU();//ativação padrão
 
@@ -36,9 +37,7 @@ public class Camada implements Serializable{
     */
    public Camada(boolean temBias){
       this.temBias = temBias;
-
-      if(temBias) b = 1;
-      else b = 0;
+      b = (temBias) ? 1 : 0;
    }
 
 
@@ -66,25 +65,23 @@ public class Camada implements Serializable{
    public void ativarNeuronios(Camada camadaAnterior){
 
       //preencher entradas dos neuronios
+      Neuronio neuronio;
       for(int i = 0; i < (this.neuronios.length-b); i++){
          
-         Neuronio neuronio = this.neuronios[i];
-         for(int j = 0; j < this.neuronios[i].entradas.length; j++){
+         neuronio = this.neuronios[i];
+         for(int j = 0; j < neuronio.entradas.length; j++){
             neuronio.entradas[j] = camadaAnterior.neuronios[j].saida;
          }
       }
 
       //calculando o somatorio das entradas com os pesos
       for(int i = 0; i < (this.neuronios.length-b); i++){
-
-         Neuronio neuronio = this.neuronios[i];
-         neuronio.somatorio = 0.0;
-         for(int j = 0; j < this.neuronios[i].entradas.length; j++){
-            neuronio.somatorio += (neuronio.entradas[j] * neuronio.pesos[j]);
-         }
+         neuronio = this.neuronios[i];
+         neuronio.calcularSomatorio();
          neuronio.saida = funcaoAtivacao(neuronio.somatorio);
       }
 
+      //sobrescreve a saída
       if(argmax) argmax();
       else if(softmax) softmax();
    }
@@ -108,6 +105,7 @@ public class Camada implements Serializable{
          case 9 -> this.ativacao = new Seno();
          case 10 -> argmax = true;
          case 11 -> softmax = true;
+         case 12 -> this.ativacao = new SoftPlus();
          default -> throw new IllegalArgumentException("Valor fornecido para a função de ativação está fora de alcance.");
       }
    }
@@ -148,6 +146,22 @@ public class Camada implements Serializable{
     */
    public int obterQuantidadeNeuronios(){
       return this.neuronios.length;
+   }
+
+
+   /**
+    * @return caso a camada possua a função de ativação argmax configurada.
+    */
+   public boolean temArgmax(){
+      return this.argmax;
+   }
+
+
+   /**
+    * @return caso a camada possua a função de ativação softmax configurada.
+    */
+   public boolean temSoftmax(){
+      return this.softmax;
    }
 
 

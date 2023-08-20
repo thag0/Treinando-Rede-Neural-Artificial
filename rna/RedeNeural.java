@@ -7,24 +7,26 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
 import java.util.ArrayList;
-import java.util.Random;
+
+import rna.treinamento.Treino;
 
 import rna.avaliacao.Avaliador;
+
 import rna.otimizadores.AdaGrad;
 import rna.otimizadores.Adam;
 import rna.otimizadores.GradientDescent;
 import rna.otimizadores.Otimizador;
 import rna.otimizadores.RMSProp;
 import rna.otimizadores.SGD;
-import rna.treinamento.Treino;
 
 //TODO
-//Implementar formas melhores de treinar com uma grande quantidade de dados.
-//Formas mais elaboradas de otmizadores.
-//Suporte ao treino da rede usando argmax ou softmax na saída
+//Implementar formas melhores de treinar com uma grande quantidade de dados;
+//Formas mais elaboradas de otmizadores;
+//Mais opções de métricas e funções de perda;
+//Poder configurar funções de ativação antes de compilar o modelo;
 
 /**
- * Modelo de Rede Neural Multilayer Perceptron baseado em feedforward criado do zero. Possui um conjunto de camadas 
+ * Modelo de Rede Neural Multilayer Perceptron criado do zero. Possui um conjunto de camadas 
  * e cada camada possui um conjunto de neurônios artificiais.
  * <p>
  *    O modelo pode ser usado para problemas de regressão e classificação, contando com algoritmos de treino 
@@ -69,8 +71,6 @@ public class RedeNeural implements Cloneable, Serializable{
     */
    public Avaliador avaliador = new Avaliador(this);
 
-   Random random = new Random();//treino embaralhado
-
 
    /**
     * <p>
@@ -106,6 +106,7 @@ public class RedeNeural implements Cloneable, Serializable{
 
       int quantidadeOcultas = arquitetura.length-2;//evitar problemas
       this.arquitetura = new int[1 + quantidadeOcultas + 1];
+
       this.arquitetura[0] = arquitetura[0];
       for(int i = 0; i < quantidadeOcultas; i++) this.arquitetura[i+1] = arquitetura[i+1];
       this.arquitetura[this.arquitetura.length-1] = arquitetura[arquitetura.length-1];
@@ -288,6 +289,7 @@ public class RedeNeural implements Cloneable, Serializable{
     *    <li>9 - Seno.</li>
     *    <li>10 - Argmax.</li>
     *    <li>11 - Softmax.</li>
+    *    <li>12 - Softplus.</li>
     * </ul>
     * @param camada camada que será configurada.
     * @param ativacao valor relativo a lista de ativações disponíveis.
@@ -321,6 +323,7 @@ public class RedeNeural implements Cloneable, Serializable{
     *    <li>9 - Seno.</li>
     *    <li>10 - Argmax.</li>
     *    <li>11 - Softmax.</li>
+    *    <li>12 - Softplus.</li>
     * </ul>
     * @param ativacao valor relativo a lista de ativações disponíveis.
     * @throws IllegalArgumentException se o modelo não foi compilado previamente.
@@ -872,7 +875,7 @@ public class RedeNeural implements Cloneable, Serializable{
 
 
    /**
-    * Exibe as informações importantes da rede neural como:
+    * Exibe algumas informações importantes sobre a Rede Neural, como:
     * <ul>
     *    <li>Otimizador atual.</li>
     *    <li>Valor da taxa de aprendizagem.</li>
