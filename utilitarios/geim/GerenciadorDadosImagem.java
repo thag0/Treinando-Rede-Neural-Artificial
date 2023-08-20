@@ -62,7 +62,6 @@ class GerenciadorDadosImagem{
          throw new IllegalArgumentException("O valor y de fornecido está fora de alcance.");
       }
 
-
       estruturaImagem[y][x].setR(r);
       estruturaImagem[y][x].setG(g);
       estruturaImagem[y][x].setB(b);

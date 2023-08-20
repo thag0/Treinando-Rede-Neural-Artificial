@@ -20,15 +20,15 @@ class ManipuladorDados{
    public void adicionarColuna(ArrayList<String[]> lista) {
       int nColunas = lista.get(0).length;
   
-      for (int i = 0; i < lista.size(); i++) {
-          String[] linhaAtual = lista.get(i);
-          String[] novaLinha = new String[nColunas + 1];
-  
-          System.arraycopy(linhaAtual, 0, novaLinha, 0, nColunas);
-  
-          novaLinha[nColunas] = "";
-  
-          lista.set(i, novaLinha);
+      for(int i = 0; i < lista.size(); i++){
+         String[] linhaAtual = lista.get(i);
+         String[] novaLinha = new String[nColunas + 1];
+
+         System.arraycopy(linhaAtual, 0, novaLinha, 0, nColunas);
+
+         novaLinha[nColunas] = "";
+
+         lista.set(i, novaLinha);
       }
   }  
 

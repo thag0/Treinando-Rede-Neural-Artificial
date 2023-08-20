@@ -16,14 +16,12 @@ public class ELU extends FuncaoAtivacao{
    
    @Override
    public double ativar(double x){
-      if(x > 0) return x;
-      else return (alfa * (Math.exp(x)-1));
+      return (x > 0) ? x : (alfa * (Math.exp(x) - 1));
    }
 
 
    @Override
    public double derivada(double x){
-      if(x > 0) return 1;
-      else return (alfa * Math.exp(x));
+      return (x > 0) ? 1 : (alfa * Math.exp(x));
    }  
 }

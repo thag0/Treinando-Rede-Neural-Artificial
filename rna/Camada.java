@@ -25,7 +25,7 @@ public class Camada implements Serializable{
    public boolean argmax = false;
    public boolean softmax = false;
 
-   public FuncaoAtivacao ativacao = new ReLU();
+   public FuncaoAtivacao ativacao = new ReLU();//ativação padrão
 
    /**
     * Inicializa uma instância de camada de RedeNeural.
@@ -43,8 +43,24 @@ public class Camada implements Serializable{
 
 
    /**
-    * Calcula a soma dos valores de saída multiplicado pelo peso correspondente ao neurônio da próxima anterior
-    * e aplica a função de ativação.
+    * Instancia os neurônios da camada correspondente.
+    * @param qNeuronios quantidade de neurônios que a camada deve possuir, incluindo bias.
+    * @param qLigacoes quantidade de pesos de cada neurônio, deve corresponder a quantidade de neurônios da camada anterior.
+    * @param alcancePeso valor de alcance da aleatorização dos pesos.
+    * @param inicializador inicializador customizado para os pesos iniciais da rede.
+    */
+   public void inicializarNeuronios(int qNeuronios, int qLigacoes, double alcancePeso, int inicializador){
+      this.neuronios = new Neuronio[qNeuronios];
+      
+      for(int i = 0; i < this.neuronios.length; i++){
+         this.neuronios[i] = new Neuronio(qLigacoes, alcancePeso, inicializador);
+      }
+   }
+
+
+   /**
+    * Calcula a soma dos valores de saída multiplicado pelo peso correspondente ao neurônio da próxima 
+    * anterior e aplica a função de ativação.
     * @param camadaAnterior camada anterior que contém os valores de saída dos neurônios
     */
    public void ativarNeuronios(Camada camadaAnterior){
@@ -53,12 +69,12 @@ public class Camada implements Serializable{
       for(int i = 0; i < (this.neuronios.length-b); i++){
          
          Neuronio neuronio = this.neuronios[i];
-         for(int j = 0; j < neuronio.entradas.length; j++){
+         for(int j = 0; j < this.neuronios[i].entradas.length; j++){
             neuronio.entradas[j] = camadaAnterior.neuronios[j].saida;
          }
       }
 
-      //calculando o somatorio com os pesos
+      //calculando o somatorio das entradas com os pesos
       for(int i = 0; i < (this.neuronios.length-b); i++){
 
          Neuronio neuronio = this.neuronios[i];
@@ -66,7 +82,6 @@ public class Camada implements Serializable{
          for(int j = 0; j < this.neuronios[i].entradas.length; j++){
             neuronio.somatorio += (neuronio.entradas[j] * neuronio.pesos[j]);
          }
-         neuronio.somatorio = neuronio.somatorio;
          neuronio.saida = funcaoAtivacao(neuronio.somatorio);
       }
 
@@ -76,24 +91,24 @@ public class Camada implements Serializable{
 
 
    /**
-    * Configura a função de ativação da camada
+    * Configura a função de ativação da camada.
     * @param ativacao valor da nova função de ativação.
     * @throws IllegalArgumentException se o valor fornecido não corresponder a nenhuma função de ativação suportada.
     */
    public void configurarAtivacao(int ativacao){
       switch(ativacao){
-         case 1: this.ativacao = new ReLU(); break;
-         case 2: this.ativacao = new Sigmoid(); break;
-         case 3: this.ativacao = new TanH(); break;
-         case 4: this.ativacao = new LeakyReLU(); break;
-         case 5: this.ativacao = new ELU(); break;
-         case 6: this.ativacao = new Swish(); break;
-         case 7: this.ativacao = new GELU(); break;
-         case 8: this.ativacao = new Linear(); break;
-         case 9: this.ativacao = new Seno(); break;
-         case 10: argmax = true; break;
-         case 11: softmax = true; break;
-         default: throw new IllegalArgumentException("Valor fornecido para a função de ativação está fora de alcance.");
+         case 1 -> this.ativacao = new ReLU();
+         case 2 -> this.ativacao = new Sigmoid();
+         case 3 -> this.ativacao = new TanH();
+         case 4 -> this.ativacao = new LeakyReLU();
+         case 5 -> this.ativacao = new ELU();
+         case 6 -> this.ativacao = new Swish();
+         case 7 -> this.ativacao = new GELU();
+         case 8 -> this.ativacao = new Linear();
+         case 9 -> this.ativacao = new Seno();
+         case 10 -> argmax = true;
+         case 11 -> softmax = true;
+         default -> throw new IllegalArgumentException("Valor fornecido para a função de ativação está fora de alcance.");
       }
    }
 
@@ -114,7 +129,6 @@ public class Camada implements Serializable{
     * @return valor resultante do cálculo da função de ativação derivada.
     */
    public double funcaoAtivacaoDx(double valor){
-      if(softmax) return 1;//anular derivada no backpropagation
       return ativacao.derivada(valor);
    }
 
@@ -130,7 +144,7 @@ public class Camada implements Serializable{
 
 
    /**
-    * @return quantidade de neurônios presente na camada, incluindo bias.
+    * @return quantidade de neurônios totais presente na camada, incluindo bias.
     */
    public int obterQuantidadeNeuronios(){
       return this.neuronios.length;
@@ -142,20 +156,20 @@ public class Camada implements Serializable{
     * Ela define a saída do neurônio de maior valor como 1 e dos demais como 0.
     */
    private void argmax(){
-      int indiceMaximo = 0;
+      int indiceMaior = 0;
       double maiorValor = this.neuronios[0].saida;
 
       //buscar indice com maior valor
       for(int i = 1; i < this.neuronios.length; i++){
          if(this.neuronios[i].saida > maiorValor){
             maiorValor = this.neuronios[i].saida;
-            indiceMaximo = i;
+            indiceMaior = i;
          }
       }
 
       //aplicar argmax
       for(int i = 0; i < this.neuronios.length; i++){
-         this.neuronios[i].saida = (i == indiceMaximo) ? 1.0 : 0.0;
+         this.neuronios[i].saida = (i == indiceMaior) ? 1.0 : 0.0;
       }
    }
 

@@ -20,13 +20,14 @@ class TreinoTeste{
       Random random = new Random();
       int linhas = dados.length;
 
-      double[] temp;
+      double[] temp = new double[dados[0].length];
+      int j;
       for(int i = linhas - 1; i > 0; i--){
-         int j = random.nextInt(i + 1);
+         j = random.nextInt(i + 1);
 
-         temp = dados[i];
-         dados[i] = dados[j];
-         dados[j] = temp;
+         System.arraycopy(dados[i], 0, temp, 0, temp.length);
+         System.arraycopy(dados[j], 0, dados[i], 0, dados[i].length);
+         System.arraycopy(temp, 0, dados[j], 0, dados[j].length);
       }
    }
 

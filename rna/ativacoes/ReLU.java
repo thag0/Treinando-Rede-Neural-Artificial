@@ -4,14 +4,12 @@ public class ReLU extends FuncaoAtivacao{
    
    @Override
    public double ativar(double x){
-      if(x > 0) return x;
-      return 0;
+      return (x > 0) ? x : 0;
    }
 
 
    @Override
    public double derivada(double x){
-      if(x > 0) return 1;
-      return 0;
+      return (x > 0) ? 1 : 0;
    }
 }

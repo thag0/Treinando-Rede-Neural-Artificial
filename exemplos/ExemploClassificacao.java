@@ -39,7 +39,7 @@ public class ExemploClassificacao{
       double[][] testeSaida = ged.separarDadosSaida(teste, qSaidas);
 
       //criando e configurando a rede neural
-      int[] arq = {qEntradas, 4, 4, qSaidas};
+      int[] arq = {qEntradas, 4, 3, qSaidas};
       RedeNeural rede = new RedeNeural(arq);
       rede.configurarMomentum(0.99);
       rede.configurarTaxaAprendizagem(0.0001);

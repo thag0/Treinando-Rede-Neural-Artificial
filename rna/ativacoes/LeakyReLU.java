@@ -16,14 +16,12 @@ public class LeakyReLU extends FuncaoAtivacao{
 
    @Override
    public double ativar(double x){
-      if(x > 0) return x;
-      else return ((alfa) * x);
+      return (x > 0) ? x : (alfa * x);
    }
 
 
    @Override
    public double derivada(double x){
-      if(x > 0) return 1;
-      else return alfa;
+      return (x > 0) ? 1 : (alfa);
    }   
 }

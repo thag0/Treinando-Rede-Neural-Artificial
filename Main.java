@@ -20,10 +20,10 @@ class Main{
    static Geim geim = new Geim();
    
    // static final String caminhoArquivo = "/dados/32x32/circulos.png";
-   static final String caminhoArquivo = "/dados/32x32/bloco.png";
-   // static final String caminhoArquivo = "/dados/mnist/8.png";
+   // static final String caminhoArquivo = "/dados/32x32/bloco.png";
+   static final String caminhoArquivo = "/dados/mnist/8.png";
    static final String caminhoImagemExportada = "./resultados/imagem-ampliada";
-   static final int epocas = 100*1000;
+   static final int epocas = 10*1000;
    static final float escalaRender = 7;
    static final float escalaImagemExportada = 20f;
 
@@ -38,7 +38,7 @@ class Main{
 
       //lendo os dados de entrada
       int qEntradas = 2;//quantidade de dados de entrada / entrada da rede
-      int qSaidas = 3;//quantidade de dados de saída / saída da rede
+      int qSaidas = 1;//quantidade de dados de saída / saída da rede
       BufferedImage imagem = geim.lerImagem(caminhoArquivo);
       double[][] dados;
 
@@ -85,15 +85,15 @@ class Main{
 
 
    public static RedeNeural criarRede(int qEntradas, int qSaidas){
-      int[] arquitetura = {qEntradas, 32, 32, 32, qSaidas};//32x32
-      // int[] arquitetura = {qEntradas, 12, 12, qSaidas};//28x28
+      // int[] arquitetura = {qEntradas, 32, 32, 32, qSaidas};//32x32
+      int[] arquitetura = {qEntradas, 12, 12, qSaidas};//28x28
       RedeNeural rede = new RedeNeural(arquitetura);
 
       rede.configurarAlcancePesos(1);
-      rede.configurarTaxaAprendizagem(0.002);
+      rede.configurarTaxaAprendizagem(0.001);
       rede.configurarMomentum(0.99);
       rede.configurarOtimizador(2);
-      rede.configurarInicializacaoPesos(2);
+      rede.configurarInicializacaoPesos(1);
       rede.compilar();
       rede.configurarFuncaoAtivacao(2);
       return rede;
