@@ -111,9 +111,9 @@ public class TreinoLote{
          nNeuronios -= (camadaAtual.temBias) ? 1 : 0;
          for(int j = 0; j < nNeuronios; j++){//percorrer neurônios da camada atual
             
-            Neuronio neuronio = camadaAtual.neuronios[j];
+            Neuronio neuronio = camadaAtual.neuronio(j);
             for(int k = 0; k < neuronio.pesos.length; k++){//percorrer pesos do neurônio atual
-               neuronio.gradienteAcumulado[k] += taxaAprendizagem * neuronio.erro * camadaAnterior.neuronios[k].saida;
+               neuronio.gradienteAcumulado[k] += taxaAprendizagem * neuronio.erro * camadaAnterior.neuronio(k).saida;
             }
          }
       }
@@ -133,7 +133,7 @@ public class TreinoLote{
          nNeuronios -= (camadaAtual.temBias) ? 1 : 0;
          for(int j = 0; j < nNeuronios; j++){//percorrer neurônios da camada atual
             
-            Neuronio neuronio = camadaAtual.neuronios[j];
+            Neuronio neuronio = camadaAtual.neuronio(j);
             for(int k = 0; k < neuronio.pesos.length; k++){//percorrer pesos do neurônio atual
                neuronio.gradiente[k] = (neuronio.gradienteAcumulado[k] / tamanhoLote);
             }

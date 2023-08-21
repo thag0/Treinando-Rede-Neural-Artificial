@@ -81,6 +81,36 @@ public class Ged{
 
 
    /**
+    * Exibe as informações contidas na matriz fornecida.
+    * @param matriz matriz com os dados
+    * @param nome nome personalizado da matriz para a impressão
+    */
+   public void imprimirMatriz(int[][] matriz, String nome){
+      im.imprimirMatriz(matriz, nome);
+   }
+
+
+   /**
+    * Exibe as informações contidas na matriz fornecida.
+    * @param matriz matriz com os dados
+    * @param nome nome personalizado da matriz para a impressão
+    */
+   public void imprimirMatriz(float[][] matriz, String nome){
+      im.imprimirMatriz(matriz, nome);
+   }
+
+
+   /**
+    * Exibe as informações contidas na matriz fornecida.
+    * @param matriz matriz com os dados
+    * @param nome nome personalizado da matriz para a impressão
+    */
+   public void imprimirMatriz(double[][] matriz, String nome){
+      im.imprimirMatriz(matriz, nome);
+   }
+
+
+   /**
     * Verifica se os a quantidade de dados na lista é simetrico. A simetria leva em conta 
     * se todas as colunas contém o mesmo tamanho.
     * <p>

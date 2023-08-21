@@ -85,10 +85,10 @@ public class RedeNeural implements Cloneable, Serializable{
     *   Os valores de todos os parâmetros pedidos <strong>NÃO devem</strong> ser menores que 1.
     * </p>
     * <p>
-    *    Após instanciar o modelo, é necessário compilar por meio da função <pre>compilar()</pre>
+    *    Após instanciar o modelo, é necessário compilar por meio da função {@code compilar()};
     * </p>
     * <p>
-    *    Certifique-se de configurar as propriedades da rede por meio das funções de configuração fornecidas
+    *    Certifique-se de configurar as propriedades da rede por meio das funções de configuração fornecidas 
     *    como, alcance dos pesos iniciais, taxa de aprendizagem e uso de bias. Caso não seja usada nenhuma 
     *    das funções de configuração, a rede será compilada com os valores padrão.
     * </p>
@@ -122,7 +122,7 @@ public class RedeNeural implements Cloneable, Serializable{
     *   Os valores de todos os parâmetros pedidos <strong>NÃO devem</strong> ser menores que 1.
     * </p>
     * <p>
-    *    Após instanciar o modelo, é necessário compilar por meio da função <pre>compilar()</pre>
+    *    Após instanciar o modelo, é necessário compilar por meio da função {@code compilar()}
     * </p>
     * <p>
     *    Certifique-se de configurar as propriedades da rede por meio das funções de configuração fornecidas

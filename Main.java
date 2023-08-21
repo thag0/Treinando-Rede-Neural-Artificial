@@ -23,8 +23,8 @@ class Main{
    // static final String caminhoArquivo = "/dados/32x32/bloco.png";
    static final String caminhoArquivo = "/dados/mnist/8.png";
    static final String caminhoImagemExportada = "./resultados/imagem-ampliada";
-   static final int epocas = 100*1000;
-   static final float escalaRender = 7;
+   static final int epocas = 10*1000;
+   static final float escalaRender = 7f;
    static final float escalaImagemExportada = 20f;
 
    // Sempre lembrar de quando mudar o dataset, também mudar a quantidade de dados de entrada e saída.
@@ -85,13 +85,13 @@ class Main{
 
 
    public static RedeNeural criarRede(int qEntradas, int qSaidas){
-      // int[] arquitetura = {qEntradas, 32, 32, 32, qSaidas};//32x32
+      // int[] arquitetura = {qEntradas, 34, 34, 34, qSaidas};//32x32
       int[] arquitetura = {qEntradas, 12, 12, qSaidas};//28x28
       RedeNeural rede = new RedeNeural(arquitetura);
 
       rede.configurarAlcancePesos(1);
-      rede.configurarTaxaAprendizagem(0.001);
-      rede.configurarMomentum(0.99);
+      rede.configurarTaxaAprendizagem(0.0001);
+      rede.configurarMomentum(0.999);
       rede.configurarOtimizador(2);
       rede.configurarInicializacaoPesos(1);
       rede.compilar();
@@ -102,6 +102,7 @@ class Main{
 
    public static void treinoEmPainel(RedeNeural rede, BufferedImage imagem, double[][] dadosEntrada, double[][] dadosSaida){
       final int fps = 60;
+      int epocasPorFrame = 10;
 
       //acelerar o processo de desenho
       //bom em situações de janelas muito grandes
@@ -116,7 +117,6 @@ class Main{
       double tempoRestante;
       
       int i = 0;
-      int epocasPorFrame = 10;
       while(i < epocas && jt.isVisible()){
          rede.treinar(dadosEntrada, dadosSaida, epocasPorFrame);
          jt.desenharTreino(rede, i, numThreads);
@@ -186,7 +186,7 @@ class Main{
             janela.desenhar(rede);
 
             for(int i = 0; i < rede.obterCamadaSaida().obterQuantidadeNeuronios(); i++){
-               System.out.print("[" + rede.obterCamadaSaida().neuronios[i].saida + "]");
+               System.out.print("[" + rede.obterCamadaSaida().neuronio(i).saida + "]");
             } 
             System.out.println();
          

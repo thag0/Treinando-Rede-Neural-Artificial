@@ -71,11 +71,11 @@ class GerenciadorArquivos{
    public void exportarImagemEscalaCinza(GerenciadorDadosImagem gdi, BufferedImage imagem, RedeNeural rede, float escala, String caminho){
       if(imagem == null) throw new IllegalArgumentException("A imagem fornecida é nula.");
       if(escala <= 0) throw new IllegalArgumentException("O valor de escala não pode ser menor que 1.");
-      if(rede.obterCamadaSaida().neuronios.length != 1){
+      if(rede.obterCamadaSaida().obterQuantidadeNeuronios() != 1){
          throw new IllegalArgumentException("A rede deve trabalhar apenas com um neurônio na camada de saída para a escala de cinza.");
       }
 
-      int nEntrada = rede.obterCamadaEntrada().neuronios.length;
+      int nEntrada = rede.obterCamadaEntrada().obterQuantidadeNeuronios();
       nEntrada -= (rede.obterCamadaEntrada().temBias) ? 1 : 0;
 
       double[] entradaRede = new double[nEntrada];
@@ -96,7 +96,7 @@ class GerenciadorArquivos{
 
             rede.calcularSaida(entradaRede);
 
-            saidaRede[0] = rede.obterCamadaSaida().neuronios[0].saida * 255;
+            saidaRede[0] = rede.obterCamadaSaida().neuronio(0).saida * 255;
            gdi.configurarCor(imagemAmpliada, x, y, (int)saidaRede[0], (int)saidaRede[0], (int)saidaRede[0]);
          }
       }
@@ -108,16 +108,16 @@ class GerenciadorArquivos{
    public void exportarImagemRGB(GerenciadorDadosImagem gdi, BufferedImage imagem, RedeNeural rede, float escala, String caminho){
       if(imagem == null) throw new IllegalArgumentException("A imagem fornecida é nula.");
       if(escala <= 0) throw new IllegalArgumentException("O valor de escala não pode ser menor que 1.");
-      if(rede.obterCamadaSaida().neuronios.length != 3){
+      if(rede.obterCamadaSaida().obterQuantidadeNeuronios() != 3){
          throw new IllegalArgumentException("A rede deve trabalhar apenas com três neurônios na saída para RGB.");
       }
 
       //quantidade de neuronios de entrada
-      int nEntrada = rede.obterCamadaEntrada().neuronios.length;
+      int nEntrada = rede.obterCamadaEntrada().obterQuantidadeNeuronios();
       nEntrada -= (rede.obterCamadaEntrada().temBias) ? 1 : 0;
 
       double[] entradaRede = new double[nEntrada];
-      double[] saidaRede = new double[rede.obterCamadaSaida().neuronios.length];
+      double[] saidaRede = new double[rede.obterCamadaSaida().obterQuantidadeNeuronios()];
 
       //estrutura de dados da imagem
       int larguraFinal = (int)(imagem.getWidth() * escala);
@@ -138,9 +138,9 @@ class GerenciadorArquivos{
             rede.calcularSaida(entradaRede);
 
             //cor do pixel em rgb
-            saidaRede[0] = rede.obterCamadaSaida().neuronios[0].saida * 255;
-            saidaRede[1] = rede.obterCamadaSaida().neuronios[1].saida * 255;
-            saidaRede[2] = rede.obterCamadaSaida().neuronios[2].saida * 255;
+            saidaRede[0] = rede.obterCamadaSaida().neuronio(0).saida * 255;
+            saidaRede[1] = rede.obterCamadaSaida().neuronio(1).saida * 255;
+            saidaRede[2] = rede.obterCamadaSaida().neuronio(2).saida * 255;
             gdi.configurarCor(imagemAmpliada, x, y, (int)saidaRede[0], (int)saidaRede[1], (int)saidaRede[2]);
          }
       }

@@ -32,20 +32,20 @@ class AuxiliaresTreino{
       if(saida.temArgmax()){//classificação
          int indiceMaior = indiceMaiorValor(saidas);
          for(int i = 0; i < saida.obterQuantidadeNeuronios(); i++){
-            Neuronio neuronio = saida.neuronios[i];
+            Neuronio neuronio = saida.neuronio(i);
             if(i == indiceMaior) neuronio.erro = 1 - neuronio.saida;
             else neuronio.erro = 0 - neuronio.saida;
          }
 
       }else if(saida.temSoftmax()){//classificação
-         for(int i = 0; i < saida.neuronios.length; i++){
-            Neuronio neuronio = saida.neuronios[i];
+         for(int i = 0; i < saida.obterQuantidadeNeuronios(); i++){
+            Neuronio neuronio = saida.neuronio(i);
             neuronio.erro = (saidas[i] - neuronio.saida);
          }
       
       }else{//regressão
-         for(int i = 0; i < saida.neuronios.length; i++){
-            Neuronio neuronio = saida.neuronios[i];
+         for(int i = 0; i < saida.obterQuantidadeNeuronios(); i++){
+            Neuronio neuronio = saida.neuronio(i);
             neuronio.erro = ((saidas[i] - neuronio.saida) * saida.funcaoAtivacaoDx(neuronio.somatorio));
          }
       }
@@ -66,9 +66,9 @@ class AuxiliaresTreino{
          if(camadaAtual.temBias) qNeuronioAtual -= 1;
          for (int j = 0; j < qNeuronioAtual; j++){//percorrer neurônios da camada atual
          
-            Neuronio neuronio = camadaAtual.neuronios[j];
+            Neuronio neuronio = camadaAtual.neuronio(j);
             double somaErros = 0.0;
-            for(Neuronio neuronioProximo : redec.get(i+1).neuronios){//percorrer neurônios da camada seguinte
+            for(Neuronio neuronioProximo : redec.get(i+1).neuronios()){//percorrer neurônios da camada seguinte
                somaErros += neuronioProximo.pesos[j] * neuronioProximo.erro;
             }
             neuronio.erro = somaErros * camadaAtual.funcaoAtivacaoDx(neuronio.somatorio);
@@ -84,24 +84,29 @@ class AuxiliaresTreino{
     */
    public void embaralharDados(double[][] entradas, double[][] saidas){
       int linhas = entradas.length;
+      int colEntrada = entradas[0].length;
+      int colSaida = saidas[0].length;
   
       //evitar muitas inicializações
-      double tempDados[];
-      double tempSaidas[];
-      int i, indiceAleatorio;
+      double tempEntradas[] = new double[colEntrada];
+      double tempSaidas[] = new double[colSaida];
+      int i, idAleatorio;
 
       for(i = linhas - 1; i > 0; i--){
-         indiceAleatorio = random.nextInt(i + 1);
-  
-         tempDados = entradas[i];
-         entradas[i] = entradas[indiceAleatorio];
-         entradas[indiceAleatorio] = tempDados;
+         idAleatorio = random.nextInt(i + 1);
 
-         tempSaidas = saidas[i];
-         saidas[i] = saidas[indiceAleatorio];
-         saidas[indiceAleatorio] = tempSaidas;
+         //trocar entradas
+         System.arraycopy(entradas[i], 0, tempEntradas, 0, colEntrada);
+         System.arraycopy(entradas[idAleatorio], 0, entradas[i], 0, colEntrada);
+         System.arraycopy(tempEntradas, 0, entradas[idAleatorio], 0, colEntrada);
+
+         //trocar saídas
+         System.arraycopy(saidas[i], 0, tempSaidas, 0, colSaida);
+         System.arraycopy(saidas[idAleatorio], 0, saidas[i], 0, colSaida);
+         System.arraycopy(tempSaidas, 0, saidas[idAleatorio], 0, colSaida); 
       }
    }
+
 
    /**
     * Dedicado para treino em lote e multithread em implementações futuras.
@@ -137,7 +142,7 @@ class AuxiliaresTreino{
       double maiorValor = dados[0];
   
       for(int i = 1; i < dados.length; i++){
-         if (dados[i] > maiorValor) {
+         if(dados[i] > maiorValor){
             maiorValor = dados[i];
             indiceMaiorValor = i;
          }
@@ -152,18 +157,18 @@ class AuxiliaresTreino{
     * @param redec
     */
    public void zerarGradientesAcumulados(ArrayList<Camada> redec){
-         for(int i = 1; i < redec.size(); i++){ 
+      for(int i = 1; i < redec.size(); i++){ 
+         
+         Camada camadaAtual = redec.get(i);
+         int nNeuronios = camadaAtual.obterQuantidadeNeuronios();
+         nNeuronios -= (camadaAtual.temBias) ? 1 : 0;
+         for(int j = 0; j < nNeuronios; j++){//percorrer neurônios da camada atual
             
-            Camada camadaAtual = redec.get(i);
-            int nNeuronios = camadaAtual.obterQuantidadeNeuronios();
-            nNeuronios -= (camadaAtual.temBias) ? 1 : 0;
-            for(int j = 0; j < nNeuronios; j++){//percorrer neurônios da camada atual
-               
-               Neuronio neuronio = camadaAtual.neuronios[j];
-               for(int k = 0; k < neuronio.pesos.length; k++){//percorrer pesos do neurônio atual
-                  neuronio.gradienteAcumulado[k] = 0;
-               }
+            Neuronio neuronio = camadaAtual.neuronio(j);
+            for(int k = 0; k < neuronio.pesos.length; k++){//percorrer pesos do neurônio atual
+               neuronio.gradienteAcumulado[k] = 0;
             }
          }
+      }
    }
 }

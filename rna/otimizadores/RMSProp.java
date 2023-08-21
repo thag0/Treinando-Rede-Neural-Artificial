@@ -26,7 +26,7 @@ public class RMSProp extends Otimizador{
          nNeuronios -= (camadaAtual.temBias) ? 1 : 0;
          for(int j = 0; j < nNeuronios; j++){//percorrer neurônios da camada atual
 
-            Neuronio neuronio = camadaAtual.neuronios[j];
+            Neuronio neuronio = camadaAtual.neuronio(j);
             for(int k = 0; k < neuronio.pesos.length; k++){//percorrer pesos do neurônio atual
                neuronio.acumuladorGradiente[k] = (taxaDecaimento * neuronio.acumuladorGradiente[k]) + ((1 - taxaDecaimento) * neuronio.gradiente[k] * neuronio.gradiente[k]);
                neuronio.pesos[k] += (taxaAprendizagem / Math.sqrt(neuronio.acumuladorGradiente[k] + epsilon)) * neuronio.gradiente[k];

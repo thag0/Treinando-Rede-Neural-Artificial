@@ -29,6 +29,7 @@ public class Neuronio implements Serializable{
     *    A quantidade de entradas dos neurônios corresponde as saídas dos neurônios da camada anterior
     *    respectivamente.
     * </p>
+    * <p>
     *    É necessário configurar o otimizador previamente, opções atualmente disponíveis:
     * </p>
     * <ul>

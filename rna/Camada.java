@@ -20,7 +20,7 @@ import rna.ativacoes.TanH;
  * Cada camada possui um conjunto de neurônios e uma função de ativação que pode ser configurada.
  */
 public class Camada implements Serializable{
-   public Neuronio[] neuronios;
+   Neuronio[] neuronios;
    public boolean temBias = true;
    private int b = 1;
    private boolean argmax = false;
@@ -138,6 +138,29 @@ public class Camada implements Serializable{
       if(argmax) return "Argmax";
       else if(softmax) return "Softmax";
       return this.ativacao.getClass().getSimpleName();
+   }
+
+
+   /**
+    * Devolve o neurônio correspondente dentro da camada.
+    * @param id índice do neurônio.
+    * @return neurõnio da camada indicado pelo índice.
+    * @throws IllegalArgumentException se o índice for inválido.
+    */
+   public Neuronio neuronio(int id){
+      if(id < 0 || id >= this.neuronios.length){
+         throw new IllegalArgumentException("Índice fornecido para busca do neurônio é inválido");
+      }
+      return this.neuronios[id];
+   }
+
+
+   /**
+    * Devolve o conjunto de neurônios da camada.
+    * @return todos os neurônios presentes na camada, incluindo bias.
+    */
+   public Neuronio[] neuronios(){
+      return this.neuronios;
    }
 
 

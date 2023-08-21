@@ -16,19 +16,20 @@ public class ExemploVariosPredicts{
       double[][] entrada = ged.separarDadosEntrada(xor, nEntrada);
       double[][] saida = ged.separarDadosSaida(xor, nSaida);
 
-      int[] arq = {nEntrada, 4, nSaida};
+      int[] arq = {nEntrada, 5, nSaida};
       RedeNeural rede = new RedeNeural(arq);
       rede.configurarTaxaAprendizagem(0.2);
-      rede.configurarMomentum(0.99);
+      rede.configurarMomentum(0.999);
       rede.configurarOtimizador(1);
+      rede.configurarInicializacaoPesos(2);
       rede.compilar();
       rede.configurarFuncaoAtivacao(2);
 
       rede.treinar(entrada, saida, 5000);
       double[][] previsoes = rede.calcularSaida(entrada);
 
-      ged.imprimirMatriz(entrada);
-      ged.imprimirMatriz(previsoes);
+      ged.imprimirMatriz(saida, "Saídas esperadas");
+      ged.imprimirMatriz(previsoes, "Saídas previstas");
 
       System.out.println("Custo = " + rede.avaliador.erroMedioQuadrado(entrada, saida));
    }
