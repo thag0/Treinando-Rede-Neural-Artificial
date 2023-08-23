@@ -20,13 +20,35 @@ import rna.ativacoes.TanH;
  * Cada camada possui um conjunto de neurônios e uma função de ativação que pode ser configurada.
  */
 public class Camada implements Serializable{
+
+   /**
+    * Conjunto de neurônios da camada. Região crítica.
+    */
    Neuronio[] neuronios;
-   public boolean temBias = true;
+
+   /**
+    * Auxiliar na contagem do neurônio adicional como bias
+    * para verificação da quantidade de neurônios reais.
+    */
    private int b = 1;
+
+   /**
+    * Auxiliar na verficação se a camada está com a função de ativação
+    * Argmax configuarda.
+    */
    private boolean argmax = false;
+
+   /**
+    * Auxiliar na verficação se a camada está com a função de ativação
+    * Softmax configuarda.
+    */ 
    private boolean softmax = false;
 
-   public FuncaoAtivacao ativacao = new ReLU();//ativação padrão
+   /**
+    * Função de ativação padrão da camada (ReLU)
+    */
+   public FuncaoAtivacao ativacao = new ReLU();
+
 
    /**
     * Inicializa uma instância de camada de RedeNeural.
@@ -36,7 +58,6 @@ public class Camada implements Serializable{
     * que a saída é sempre 1.
     */
    public Camada(boolean temBias){
-      this.temBias = temBias;
       b = (temBias) ? 1 : 0;
    }
 
@@ -63,7 +84,6 @@ public class Camada implements Serializable{
     * @param camadaAnterior camada anterior que contém os valores de saída dos neurônios
     */
    public void ativarNeuronios(Camada camadaAnterior){
-
       //preencher entradas dos neuronios
       Neuronio neuronio;
       for(int i = 0; i < (this.neuronios.length-b); i++){
@@ -169,6 +189,15 @@ public class Camada implements Serializable{
     */
    public int obterQuantidadeNeuronios(){
       return this.neuronios.length;
+   }
+
+
+   /**
+    * Checa se a camada atual possui bias configurado como neurônio adicional.
+    * @return true caso possua um neurônio adicional como bias, false caso contrário.
+    */
+   public boolean temBias(){
+      return (b == 1) ? true : false;
    }
 
 

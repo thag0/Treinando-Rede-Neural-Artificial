@@ -19,13 +19,12 @@ class Main{
    static Ged ged = new Ged();
    static Geim geim = new Geim();
    
-   // static final String caminhoArquivo = "/dados/32x32/circulos.png";
    // static final String caminhoArquivo = "/dados/32x32/bloco.png";
    static final String caminhoArquivo = "/dados/mnist/8.png";
    static final String caminhoImagemExportada = "./resultados/imagem-ampliada";
-   static final int epocas = 10*1000;
-   static final float escalaRender = 7f;
-   static final float escalaImagemExportada = 20f;
+   static final int epocas = 100*1000;
+   static final float escalaRender = 9f;
+   static final float escalaImagemExportada = 40f;
 
    // Sempre lembrar de quando mudar o dataset, também mudar a quantidade de dados de entrada e saída.
 
@@ -85,15 +84,15 @@ class Main{
 
 
    public static RedeNeural criarRede(int qEntradas, int qSaidas){
-      // int[] arquitetura = {qEntradas, 34, 34, 34, qSaidas};//32x32
+      // int[] arquitetura = {qEntradas, 36, 36, 36, qSaidas};//32x32
       int[] arquitetura = {qEntradas, 12, 12, qSaidas};//28x28
       RedeNeural rede = new RedeNeural(arquitetura);
 
       rede.configurarAlcancePesos(1);
-      rede.configurarTaxaAprendizagem(0.0001);
-      rede.configurarMomentum(0.999);
+      rede.configurarTaxaAprendizagem(0.001);
+      rede.configurarMomentum(0.99);
       rede.configurarOtimizador(2);
-      rede.configurarInicializacaoPesos(1);
+      rede.configurarInicializacaoPesos(2);
       rede.compilar();
       rede.configurarFuncaoAtivacao(2);
       return rede;
@@ -201,7 +200,7 @@ class Main{
 
    public static void compararSaidaRede(RedeNeural rede, double[][] dadosEntrada, double[][] dadosSaida, String texto){
       int nEntrada = rede.obterCamadaEntrada().obterQuantidadeNeuronios();
-      nEntrada -= (rede.obterCamadaEntrada().temBias) ? 1 : 0;
+      nEntrada -= (rede.obterCamadaEntrada().temBias()) ? 1 : 0;
 
       int nSaida = rede.obterCamadaSaida().obterQuantidadeNeuronios();
 

@@ -22,6 +22,7 @@ public class Ged{
    ManipuladorDados md;
    TreinoTeste gtt;//gerenciador de treino e teste da rede
    ImpressaoMatriz im;//exibição
+   OperadorMatriz om;
    
 
    public Ged(){
@@ -30,6 +31,7 @@ public class Ged{
       md = new ManipuladorDados();
       gtt = new TreinoTeste();
       im = new ImpressaoMatriz();
+      om = new OperadorMatriz();
    }
 
 
@@ -440,5 +442,88 @@ public class Ged{
     */
    public double[][] listaParaDadosDouble(ArrayList<String[]> lista){
       return cd.listaParaDadosDouble(lista);
+   }
+
+
+   //OPERADOR MATRIZ --------------
+
+   /**
+    * Preenche o conteúdo da matriz de acordo com o valor fornecido.
+    * @param matriz matriz com os dados.
+    * @param valor valor de preenchimento.
+    */
+   public void preencherMatriz(int[][] matriz, int valor){
+      om.preencherMatriz(matriz, valor);
+   }
+
+
+   /**
+    * Preenche o conteúdo da matriz de acordo com o valor fornecido.
+    * @param matriz matriz com os dados.
+    * @param valor valor de preenchimento.
+    */
+   public void preencherMatriz(float[][] matriz, float valor){
+      om.preencherMatriz(matriz, valor);
+   }
+
+
+   /**
+    * Preenche o conteúdo da matriz de acordo com o valor fornecido.
+    * @param matriz matriz com os dados.
+    * @param valor valor de preenchimento.
+    */
+   public void preencherMatriz(double[][] matriz, double valor){
+      om.preencherMatriz(matriz, valor);
+   }
+
+
+   /**
+    * Preenche o conteúdo da matriz para que fique no formato identidade, onde
+    * apenas os elementos da diagonal esquerda para direita tem valores iguais a 1.
+    * <p>Exemplo:<pre>
+    * m = [
+    *  1, 0, 0
+    *  0, 1, 0
+    *  0, 0, 1
+    * ]
+    * </pre></p>
+    * @param matriz
+    */
+   public void matrizIdentidade(int[][] matriz){
+      om.matrizIdentidade(matriz);
+   }
+
+
+   /**
+    * Preenche o conteúdo da matriz para que fique no formato identidade, onde
+    * apenas os elementos da diagonal esquerda para direita tem valores iguais a 1.
+    * <p>Exemplo:<pre>
+    * m = [
+    *  1, 0, 0
+    *  0, 1, 0
+    *  0, 0, 1
+    * ]
+    * </pre></p>
+    * @param matriz
+    */
+   public void matrizIdentidade(float[][] matriz){
+      om.matrizIdentidade(matriz);
+   }
+
+
+   /**
+    * Preenche o conteúdo da matriz para que fique no formato identidade, onde
+    * apenas os elementos da diagonal esquerda para direita tem valores iguais a 1.
+    * <p>Exemplo:<pre>
+    * m = [
+    *  1, 0, 0
+    *  0, 1, 0
+    *  0, 0, 1
+    * ]
+    * </pre></p>
+    * @param matriz
+    */
+   public void matrizIdentidade(double[][] matriz){
+      om.matrizIdentidade(matriz);
    }
 }

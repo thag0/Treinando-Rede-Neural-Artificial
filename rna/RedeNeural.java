@@ -504,7 +504,7 @@ public class RedeNeural implements Cloneable, Serializable{
     */
    private void consistenciaDados(double[][] dadosEntrada, double[][] dadosSaida){
       int nEntrada = this.obterCamadaEntrada().obterQuantidadeNeuronios();
-      nEntrada -= (this.obterCamadaEntrada().temBias) ? 1 : 0;
+      nEntrada -= (this.obterCamadaEntrada().temBias()) ? 1 : 0;
       int nSaida = this.obterCamadaSaida().obterQuantidadeNeuronios();
 
       if(dadosEntrada.length != dadosSaida.length){
@@ -968,10 +968,9 @@ public class RedeNeural implements Cloneable, Serializable{
     * @return clone da camada fornecida.
     */
    private Camada cloneCamada(Camada camada){
-      Camada clone = new Camada(camada.temBias);
+      Camada clone = new Camada(camada.temBias());
       clone.neuronios = new Neuronio[camada.neuronios.length];
       clone.ativacao = camada.ativacao;
-      clone.temBias = camada.temBias;
 
       for (int i = 0; i < camada.neuronios.length; i++) {
          clone.neuronios[i] = cloneNeuronio(camada.neuronios[i]);

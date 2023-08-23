@@ -63,7 +63,7 @@ class AuxiliaresTreino{
          
          Camada camadaAtual = redec.get(i);
          int qNeuronioAtual = camadaAtual.obterQuantidadeNeuronios();
-         if(camadaAtual.temBias) qNeuronioAtual -= 1;
+         if(camadaAtual.temBias()) qNeuronioAtual -= 1;
          for (int j = 0; j < qNeuronioAtual; j++){//percorrer neurônios da camada atual
          
             Neuronio neuronio = camadaAtual.neuronio(j);
@@ -161,7 +161,7 @@ class AuxiliaresTreino{
          
          Camada camadaAtual = redec.get(i);
          int nNeuronios = camadaAtual.obterQuantidadeNeuronios();
-         nNeuronios -= (camadaAtual.temBias) ? 1 : 0;
+         nNeuronios -= (camadaAtual.temBias()) ? 1 : 0;
          for(int j = 0; j < nNeuronios; j++){//percorrer neurônios da camada atual
             
             Neuronio neuronio = camadaAtual.neuronio(j);

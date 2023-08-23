@@ -76,7 +76,7 @@ class GerenciadorArquivos{
       }
 
       int nEntrada = rede.obterCamadaEntrada().obterQuantidadeNeuronios();
-      nEntrada -= (rede.obterCamadaEntrada().temBias) ? 1 : 0;
+      nEntrada -= (rede.obterCamadaEntrada().temBias()) ? 1 : 0;
 
       double[] entradaRede = new double[nEntrada];
       double[] saidaRede = new double[rede.obterCamadaSaida().obterQuantidadeNeuronios()];
@@ -114,7 +114,7 @@ class GerenciadorArquivos{
 
       //quantidade de neuronios de entrada
       int nEntrada = rede.obterCamadaEntrada().obterQuantidadeNeuronios();
-      nEntrada -= (rede.obterCamadaEntrada().temBias) ? 1 : 0;
+      nEntrada -= (rede.obterCamadaEntrada().temBias()) ? 1 : 0;
 
       double[] entradaRede = new double[nEntrada];
       double[] saidaRede = new double[rede.obterCamadaSaida().obterQuantidadeNeuronios()];

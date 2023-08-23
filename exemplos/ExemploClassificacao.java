@@ -84,7 +84,7 @@ public class ExemploClassificacao{
 
    public static void compararSaidaRede(RedeNeural rede, double[][] dadosEntrada, double[][] dadosSaida, String texto){
       int nEntrada = rede.obterCamadaEntrada().obterQuantidadeNeuronios();
-      nEntrada -= (rede.obterCamadaEntrada().temBias) ? 1 : 0;
+      nEntrada -= (rede.obterCamadaEntrada().temBias()) ? 1 : 0;
 
       int nSaida = rede.obterCamadaSaida().obterQuantidadeNeuronios();
 

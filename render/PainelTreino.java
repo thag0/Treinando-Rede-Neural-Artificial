@@ -46,7 +46,7 @@ public class PainelTreino extends JPanel{
       this.rede = rede;
       
       int nEntrada = rede.obterCamadaEntrada().obterQuantidadeNeuronios();
-      nEntrada -= rede.obterCamadaEntrada().temBias ? 1 : 0;
+      nEntrada -= rede.obterCamadaEntrada().temBias() ? 1 : 0;
       entradaRede = new double[nEntrada];
 
       int nSaida = rede.obterCamadaSaida().obterQuantidadeNeuronios();
@@ -91,7 +91,7 @@ public class PainelTreino extends JPanel{
       this.rede = rede;
       
       int nEntrada = rede.obterCamadaEntrada().obterQuantidadeNeuronios();
-      nEntrada -= rede.obterCamadaEntrada().temBias ? 1 : 0;
+      nEntrada -= rede.obterCamadaEntrada().temBias() ? 1 : 0;
       entradaRede = new double[nEntrada];
 
       int nSaida = rede.obterCamadaSaida().obterQuantidadeNeuronios();
@@ -155,7 +155,7 @@ public class PainelTreino extends JPanel{
 
    private void calcularParteImagemEscalaCinza(RedeNeural rede, int startY, int endY){
       int nEntrada = rede.obterCamadaEntrada().obterQuantidadeNeuronios();
-      nEntrada -= rede.obterCamadaEntrada().temBias ? 1 : 0;
+      nEntrada -= rede.obterCamadaEntrada().temBias() ? 1 : 0;
       double[] entradaRede = new double[nEntrada];
       int cinza;
 
@@ -179,7 +179,7 @@ public class PainelTreino extends JPanel{
 
    private void calcularParteImagemRGB(RedeNeural rede, int startY, int endY){
       int nEntrada = rede.obterCamadaEntrada().obterQuantidadeNeuronios();
-      nEntrada -= rede.obterCamadaEntrada().temBias ? 1 : 0;
+      nEntrada -= rede.obterCamadaEntrada().temBias() ? 1 : 0;
       double[] entradaRede = new double[nEntrada];
       int r, g, b, rgb;
 
