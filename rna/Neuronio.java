@@ -9,25 +9,75 @@ import java.util.Random;
  * além de valores de entrada, saída e alguns parâmetros adicionais para facilitar o uso dos otimizadores.
  */
 public class Neuronio implements Serializable{
-   public double[] entradas;//saídas da camada anterior
-   public double[] pesos;
-   public double[] momentum;//ajudar na convergência
-   public double[] acumuladorGradiente;//adagrad
-   public double[] acumuladorSegundaOrdem;//adam / rmsprop
-   public double somatorio;//entradas * pesos
-   public double saida;//resultado da ativação
-   public double erro;//backpropagation
-   public double[] gradiente;//backpropagation
-   public double[] gradienteAcumulado;//treino lote
 
+   /**
+    * Saídas dos neurônios camada anterior.
+    */
+   public double[] entradas;
+
+   /**
+    * <p>
+    *    Região crítica.
+    * </p>
+    * Parte mais importante da Rede Neural, onde é calculada a saída de cada neurônio
+    * e a informação é propagada
+    */
+   public double[] pesos;
+
+   /**
+    * Aplica "inércia" nos pesos e ajuda na convergência do aprendizado.
+    */
+   public double[] momentum;
+
+   /**
+    * Auxiliar no treino usando otimizador AdaGrad.
+    */
+   public double[] acumuladorGradiente;
+
+   /**
+    * Auxiliar no treino da Rede Neural usando otimizadores RMSprop e Adam.
+    */
+   public double[] acumuladorSegundaOrdem;
+
+   /**
+    * Resultado do somatório das entradas multiplicadas pelos pesos do neurônio.
+    */
+   public double somatorio;
+
+   /**
+    * Resultado da função de ativação aplicada ao somatório do neurônio.
+    */
+   public double saida;
+
+   /**
+    * Auxiliar utilizado durante o cálculo dos erros dos neurônios
+    * na etapa do Backpropagation.
+    */
+   public double erro;
+
+   /**
+    * Auxiliar usado pelos otimizadores para o ajuste dos pesos da
+    * Rede Neural durante o treinamento.
+    */
+   public double[] gradiente;
+
+   /**
+    * Auxiliar usado durante o treinamento em lotes. Soma
+    * os gradientes acumulados.
+    */
+   public double[] gradienteAcumulado;
+
+   /**
+    * Auxiliar no uso da aleatorização dos pesos iniciais.
+    */
    private Random random = new Random();
 
 
    /**
     * Instancia um neurônio individual da rede, com pesos aleatórios para cada ligação.
     * <p>
-    *    A quantidade de entradas dos neurônios corresponde as saídas dos neurônios da camada anterior
-    *    respectivamente.
+    *    A quantidade de entradas dos neurônios corresponde as saídas dos neurônios da 
+    *    camada anterior respectivamente.
     * </p>
     * <p>
     *    É necessário configurar o otimizador previamente, opções atualmente disponíveis:
@@ -60,6 +110,17 @@ public class Neuronio implements Serializable{
          case 2 -> inicializacaoLeCun(ligacoes);
          default -> throw new IllegalArgumentException("Otimizador fornecido para otimização dos pesos é inválido.");
       }
+
+
+      //só por segurança
+      for(int i = 0; i < this.pesos.length; i++){
+         this.entradas[i] = 0;
+         this.momentum[i] = 0;
+         this.acumuladorGradiente[i] = 0;
+         this.acumuladorSegundaOrdem[i] = 0;
+         this.gradiente[i] = 0;
+         this.gradienteAcumulado[i] = 0;
+      }
    
       this.saida = 1; //considerar que pode ter bias aplicado ao modelo
       this.erro = 0;
@@ -79,8 +140,8 @@ public class Neuronio implements Serializable{
 
 
    /**
-    * Boa no geral
-    * @param alcancePeso
+    * Boa no geral.
+    * @param alcancePeso valor máximo e mínimo na hora de aleatorizar os pesos.
     */
    private void inicializacaoAleatoria(double alcancePeso){
       for(int i = 0; i < pesos.length; i++){
@@ -91,7 +152,7 @@ public class Neuronio implements Serializable{
 
    /**
     * Boa com a relu.
-    * @param alcancePeso
+    * @param entradas quantidade de entrada de cada neurônio da camada.
     */
    private void inicializacaoHe(int entradas){
       double desvioPadrao = Math.sqrt(2.0 / entradas);
@@ -103,7 +164,7 @@ public class Neuronio implements Serializable{
 
    /**
     * Boa com leakyRelu
-    * @param entradas
+    * @param entradas quantidade de entrada de cada neurônio da camada.
     */
    private void inicializacaoLeCun(int entradas){
       double desvioPadrao = Math.sqrt(1.0 / entradas);

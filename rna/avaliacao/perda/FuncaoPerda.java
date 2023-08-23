@@ -9,7 +9,7 @@ import rna.RedeNeural;
  *    Novas funções de perda devem implementar o método {@code calcular()}.
  * </p>
  */
-abstract class FuncaoPerda{
+public abstract class FuncaoPerda{
 
    /**
     * Calcula a função de perda configurada.

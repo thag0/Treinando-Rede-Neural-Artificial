@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import rna.treinamento.Treino;
 
 import rna.avaliacao.Avaliador;
-
 import rna.otimizadores.AdaGrad;
 import rna.otimizadores.Adam;
 import rna.otimizadores.GradientDescent;
@@ -41,24 +40,88 @@ import rna.otimizadores.SGD;
  * @author Thiago Barroso, acadêmico de Engenharia da Computação pela Universidade Federal do Pará, Campus Tucuruí. Ano de 2023.
  */
 public class RedeNeural implements Cloneable, Serializable{
-   //estrutura 
+   //estrutura
+
+   /**
+    * Camada de entrada da Rede Neural.
+    */
    private Camada entrada;
+
+   /**
+    * Array contendo as camadas ocultas da Rede Neural.
+    */
    private Camada[] ocultas;
+
+   /**
+    * Camada de saída da Rede Neural.
+    */
    private Camada saida;
+
+   /**
+    * Array contendo a arquitetura de cada camada dentro da Rede Neural.
+    */
    private int[] arquitetura;
    
    //parâmertos importantes
+
+   /**
+    * Valor de taxa de aprendizagem da Rede Neural. Define o 
+    * quanto a "rede absorve do erro" durante o processo de treino.
+    */
    private double TAXA_APRENDIZAGEM = 0.01;
+
+   /**
+    * Auxiliar na aceleração do processo de aprendizagem, cria uma "inércia" que 
+    * ajuda a rede a acelerar o aprendizado e evita ela de ficar presa em mínimos locais.
+    */
    private double TAXA_MOMENTUM = 0;
+
+   /**
+    * Constante auxiliar que ajuda no controle do bias atuando como neurônio 
+    * adicional para cálculos.
+    */
    private int BIAS = 1;
+
+   /**
+    * Valor máximo e mínimo na hora de aleatorizar os pesos da rede neural.
+    */
    private double alcancePeso = 1.0;
-   private int inicializadorPeso = 0;//aleatorio
+
+   /**
+    * Otimizador usado para a inicialização dos primeiros pesos dos neurônios 
+    * da Rede Neural.
+    */
+   private int inicializadorPeso = 0;
+
+   /**
+    * Auxiliar no controle da compilação da Rede Neural, ajuda a evitar uso 
+    * indevido caso a rede não tenha suas variáveis inicializadas previamente.
+    */
    private boolean modeloCompilado = false;
+
+   /**
+    * Otimizador que será utilizado durante o processo de aprendizagem da
+    * da Rede Neural.
+    */
    private Otimizador otimizadorAtual = new SGD();//otimizador padrão
+
+   /**
+    * <p>
+    *    Experimental.
+    * </p>
+    * Auxiliar na aceleração do processo de aprendizagem da Rede Neural usando momentum.
+    */
    private boolean nesterov = false;// acelerador de nesterov
 
+   /**
+    * Nome específico da instância da Rede Neural.
+    */
    private String nome = getClass().getSimpleName();
-   
+
+   /**
+    * Gerenciador de treino da Rede Neural. contém implementações dos 
+    * algoritmos de treino.
+    */
    private Treino treino = new Treino();
 
    /**
@@ -400,6 +463,17 @@ public class RedeNeural implements Cloneable, Serializable{
 
 
    /**
+    * 
+    * @param perda
+    */
+   public void configurarFuncaoPerda(int perda){
+      switch(perda){
+
+      }
+   }
+
+
+   /**
     * Define se durante o processor de treinamento, a rede vai salvar dados relacionados a 
     * função de custo de cada época.
     * <p>
@@ -409,7 +483,7 @@ public class RedeNeural implements Cloneable, Serializable{
     * <p>
     *    O valor padrão é false.
     * </p>
-    * @param historicoCusto se verdadeiro, a rede armazenara o histórico de custo de cada época.
+    * @param historicoCusto se verdadeiro, a rede armazenará o histórico de custo de cada época.
     */
    public void configurarHistoricoCusto(boolean historicoCusto){
       this.treino.configurarHistoricoCusto(historicoCusto);
@@ -780,6 +854,7 @@ public class RedeNeural implements Cloneable, Serializable{
 
 
    /**
+    * Informa a quantidade de camadas ocultas presentes na Rede Neural.
     * @return quantiade de camadas ocultas da rede.
     * @throws IllegalArgumentException se o modelo não foi compilado previamente.
     */
@@ -853,6 +928,7 @@ public class RedeNeural implements Cloneable, Serializable{
 
 
    /**
+    * Informa o nome configurado da Rede Neural.
     * @return retorna o nome específico da rede.
     */
    public String obterNome(){

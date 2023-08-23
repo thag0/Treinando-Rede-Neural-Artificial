@@ -152,6 +152,7 @@ public class Camada implements Serializable{
 
 
    /**
+    * Retrona o nome da função de ativação configurada para a camada.
     * @return nome da função de ativação configurada para a camada.
     */
    public String obterAtivacao(){
@@ -185,7 +186,8 @@ public class Camada implements Serializable{
 
 
    /**
-    * @return quantidade de neurônios totais presente na camada, incluindo bias.
+    * Retorna o valor da quantidade de neurônios da camada, incluindo bias.
+    * @return quantidade de neurônios totais presente na camada.
     */
    public int obterQuantidadeNeuronios(){
       return this.neuronios.length;
@@ -202,6 +204,7 @@ public class Camada implements Serializable{
 
 
    /**
+    * Auxiliar na verificação da função de ativação argmax para a camada.
     * @return caso a camada possua a função de ativação argmax configurada.
     */
    public boolean temArgmax(){
@@ -210,6 +213,7 @@ public class Camada implements Serializable{
 
 
    /**
+    * Auxiliar na verificação da função de ativação softmax para a camada.
     * @return caso a camada possua a função de ativação softmax configurada.
     */
    public boolean temSoftmax(){
