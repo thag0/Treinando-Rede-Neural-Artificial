@@ -221,43 +221,43 @@ class OperadorMatriz{
 
    public int[][] subtrairMatrizes(int[][] a, int[][] b){
       dimensoesIguais(a, b);
-      int[][] soma = new int[a.length][a[0].length];
+      int[][] sub = new int[a.length][a[0].length];
 
-      for(int i = 0; i < soma.length; i++){
-         for(int j = 0; j < soma[i].length; j++){
-            soma[i][j] = a[i][j] - b[i][j];
+      for(int i = 0; i < sub.length; i++){
+         for(int j = 0; j < sub[i].length; j++){
+            sub[i][j] = a[i][j] - b[i][j];
          }
       }
 
-      return soma;
+      return sub;
    }
 
 
    public float[][] subtrairMatrizes(float[][] a, float[][] b){
       dimensoesIguais(a, b);
-      float[][] soma = new float[a.length][a[0].length];
+      float[][] sub = new float[a.length][a[0].length];
 
-      for(int i = 0; i < soma.length; i++){
-         for(int j = 0; j < soma[i].length; j++){
-            soma[i][j] = a[i][j] - b[i][j];
+      for(int i = 0; i < sub.length; i++){
+         for(int j = 0; j < sub[i].length; j++){
+            sub[i][j] = a[i][j] - b[i][j];
          }
       }
 
-      return soma;
+      return sub;
    }
 
 
    public double[][] subtrairMatrizes(double[][] a, double[][] b){
       dimensoesIguais(a, b);
-      double[][] soma = new double[a.length][a[0].length];
+      double[][] sub = new double[a.length][a[0].length];
 
-      for(int i = 0; i < soma.length; i++){
-         for(int j = 0; j < soma[i].length; j++){
-            soma[i][j] = a[i][j] - b[i][j];
+      for(int i = 0; i < sub.length; i++){
+         for(int j = 0; j < sub[i].length; j++){
+            sub[i][j] = a[i][j] - b[i][j];
          }
       }
 
-      return soma;
+      return sub;
    }
 
 
