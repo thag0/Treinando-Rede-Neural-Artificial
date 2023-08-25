@@ -7,6 +7,7 @@ import rna.RedeNeural;
 import utilitarios.ged.Ged;
 
 public class ExemploClassificacao{
+   
    public static void main(String[] args){
       limparConsole();
       Ged ged = new Ged();
@@ -59,8 +60,6 @@ public class ExemploClassificacao{
 
       int[][] matrizConfusao = rede.avaliador.matrizConfusao(testeEntrada, testeSaida);
       ged.imprimirMatriz(matrizConfusao, "Matriz de confusão");
-
-      System.out.println(rede);
    }
 
 

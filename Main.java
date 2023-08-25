@@ -20,11 +20,11 @@ class Main{
    static Geim geim = new Geim();
    
    // static final String caminhoArquivo = "/dados/32x32/bloco.png";
-   static final String caminhoArquivo = "/dados/mnist/8.png";
+   static final String caminhoArquivo = "/dados/mnist/3.png";
    static final String caminhoImagemExportada = "./resultados/imagem-ampliada";
    static final int epocas = 100*1000;
-   static final float escalaRender = 9f;
-   static final float escalaImagemExportada = 40f;
+   static final float escalaRender = 10f;
+   static final float escalaImagemExportada = 20f;
 
    // Sempre lembrar de quando mudar o dataset, também mudar a quantidade de dados de entrada e saída.
 
@@ -85,12 +85,12 @@ class Main{
 
    public static RedeNeural criarRede(int qEntradas, int qSaidas){
       // int[] arquitetura = {qEntradas, 36, 36, 36, qSaidas};//32x32
-      int[] arquitetura = {qEntradas, 12, 12, qSaidas};//28x28
+      int[] arquitetura = {qEntradas, 13, 13, qSaidas};//28x28
       RedeNeural rede = new RedeNeural(arquitetura);
 
       rede.configurarAlcancePesos(1);
-      rede.configurarTaxaAprendizagem(0.001);
-      rede.configurarMomentum(0.99);
+      rede.configurarTaxaAprendizagem(0.0001);
+      rede.configurarMomentum(0.999);
       rede.configurarOtimizador(2);
       rede.configurarInicializacaoPesos(2);
       rede.compilar();
