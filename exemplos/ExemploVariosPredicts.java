@@ -1,14 +1,13 @@
 package exemplos;
 
-import java.util.ArrayList;
-
 import rna.RedeNeural;
 import utilitarios.ged.Ged;
+import utilitarios.ged.Dados;
 
 public class ExemploVariosPredicts{
    public static void main(String[] args){
       Ged ged = new Ged();
-      ArrayList<String[]> dados = ged.lerCsv("./dados/portas-logicas/xorCascata.csv");
+      Dados dados = ged.lerCsv("./dados/portas-logicas/xorCascata.csv");
       double[][] xor = ged.listaParaDadosDouble(dados);
 
       int nEntrada = 3;

@@ -1,9 +1,9 @@
 package exemplos;
 
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 
 import rna.RedeNeural;
+import utilitarios.ged.Dados;
 import utilitarios.ged.Ged;
 
 public class ExemploClassificacao{
@@ -15,15 +15,15 @@ public class ExemploClassificacao{
       //carregando dados e tratando
       //removendo linha com nomes das categorias
       //tranformando a ultima coluna em categorização binária
-      ArrayList<String[]> dataset = ged.lerCsv("./dados/datasets-maiores/iris.csv");
-      ged.removerLinha(dataset, 0);
-      int ultimoIndice = dataset.get(0).length-1;
-      ged.categorizar(dataset, ultimoIndice);
-      int[] shape = ged.obterShapeLista(dataset);
+      Dados iris = ged.lerCsv("./dados/datasets-maiores/iris.csv");
+      ged.removerLinha(iris, 0);
+      int[] shape = ged.obterShapeDados(iris);
+      int ultimoIndice = shape[1]-1;
+      ged.categorizar(iris, ultimoIndice);
       System.out.println("Shape dados = [" + shape[0] + ", " + shape[1] + "]");
 
       //separando dados de treino e teste
-      double[][] dados = ged.listaParaDadosDouble(dataset);
+      double[][] dados = ged.listaParaDadosDouble(iris);
       ged.embaralharDados(dados);
       double[][][] treinoTeste = ged.separarTreinoTeste(dados, 0.25f);
       double[][] treino = treinoTeste[0];

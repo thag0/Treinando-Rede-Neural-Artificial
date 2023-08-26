@@ -21,8 +21,8 @@ class GerenciadorArquivos{
    }
 
 
-   public ArrayList<String[]> lerCsv(String caminho){
-      ArrayList<String[]> dados = new ArrayList<>();
+   public Dados lerCsv(String caminho){
+      ArrayList<String[]> linhas = new ArrayList<>();
       String separador = ",";
       String linha = "";
 
@@ -45,20 +45,24 @@ class GerenciadorArquivos{
                linhaDados[i] = linhaDados[i].replaceAll(" ", "");
             }
             
-            dados.add(linhaDados);
+            linhas.add(linhaDados);
          }
          br.close();
 
       }catch(Exception e){
          e.printStackTrace();
       }
-      
+
+      Dados dados = new Dados();
+      dados.atribuir(linhas);
       return dados;
    }
 
 
-   public void exportarCsv(ArrayList<String[]> lista, String caminho){
+   public void exportarCsv(Dados dados, String caminho){
       String separador = ",";
+
+      ArrayList<String[]> lista = dados.conteudo();
 
       try{
          BufferedWriter bw = new BufferedWriter(new FileWriter(caminho + ".csv"));
@@ -83,7 +87,7 @@ class GerenciadorArquivos{
    }
 
 
-   public void exportarCsv(double[][] dados, String caminho) {
+   public void exportarCsv(double[][] dados, String caminho){
       String separador = ",";
   
       try{

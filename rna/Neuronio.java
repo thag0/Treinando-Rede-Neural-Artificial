@@ -172,5 +172,26 @@ public class Neuronio implements Serializable{
          this.pesos[i] = random.nextGaussian() * desvioPadrao;
       }
    }
+
+
+   /**
+    * Retorna informações dos pesos do neurônio.
+    * @return buffer formatado contendo as informações.
+    */
+   public String obterInformacoes(){
+      String buffer = "";
+      String espacamento = "    ";
+
+      buffer += "Informações " + this.getClass().getSimpleName() + " = [\n";
+
+      buffer += espacamento + "Quantidade de pesos: " + this.pesos.length + "\n\n";
+      for(int i = 0; i < this.pesos.length; i++){
+         buffer += espacamento + "p" + i + ": " + this.pesos[i] + "\n";
+      }
+
+      buffer += "]\n";
+
+      return buffer;
+   }
   
 }

@@ -527,9 +527,13 @@ public class RedeNeural implements Cloneable, Serializable{
 
       //passar as informações do bias paras as camadas
       boolean temBias = (this.BIAS == 1) ? true : false;
+
+      int idCamada = 0;
       
       //inicializar camada de entrada
       this.entrada = new Camada(temBias);
+      this.entrada.configurarId(idCamada);
+      idCamada++;
       this.entrada.inicializarNeuronios(arquitetura[0], 1, alcancePeso, inicializadorPeso);
 
       //inicializar camadas ocultas
@@ -542,10 +546,13 @@ public class RedeNeural implements Cloneable, Serializable{
          else novaOculta.inicializarNeuronios(arquitetura[i+1], arquitetura[i], alcancePeso, inicializadorPeso);
 
          this.ocultas[i] = novaOculta;
+         this.ocultas[i].configurarId(idCamada);
+         idCamada++;
       }
 
       //inicializar camada de saída
       this.saida = new Camada(false);
+      this.saida.configurarId(idCamada);
       this.saida.inicializarNeuronios(arquitetura[arquitetura.length-1], arquitetura[arquitetura.length-2], alcancePeso, inicializadorPeso);
 
       modeloCompilado = true;//modelo pode ser usado
@@ -985,9 +992,9 @@ public class RedeNeural implements Cloneable, Serializable{
       else buffer += espacamento + "Bias: " + "false\n\n";
 
       for(int i = 0; i < this.ocultas.length; i++){
-         buffer += espacamento + "Ativação oculta " + i + " = " + this.ocultas[i].obterAtivacao() + "\n";
+         buffer += espacamento + "Ativação oculta " + i + " : " + this.ocultas[i].obterAtivacao() + "\n";
       }
-      buffer += espacamento + "Ativação saída = " + this.saida.obterAtivacao() + "\n";
+      buffer += espacamento + "Ativação saída : " + this.saida.obterAtivacao() + "\n";
 
       //arquitetura
       buffer += "\n" + espacamento + "arquitetura = {" + this.arquitetura[0];

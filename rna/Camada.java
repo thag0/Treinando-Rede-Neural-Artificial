@@ -33,6 +33,11 @@ public class Camada implements Serializable{
    private int b = 1;
 
    /**
+    * Identificador da camada dentro da Rede Neural.
+    */
+   private int id;
+
+   /**
     * Auxiliar na verficação se a camada está com a função de ativação
     * Argmax configuarda.
     */
@@ -59,6 +64,11 @@ public class Camada implements Serializable{
     */
    public Camada(boolean temBias){
       b = (temBias) ? 1 : 0;
+   }
+
+
+   public void configurarId(int id){
+      this.id = id;
    }
 
 
@@ -259,5 +269,30 @@ public class Camada implements Serializable{
          neuronio.saida = Math.exp(neuronio.somatorio) / somaExp;
       }
    }
+
    
+   /**
+    * Indica algumas informações sobre a camada, como:
+    * <ul>
+    *    <li>Id da camada dentro da Rede Neural em que foi criada.</li>
+    *    <li>Função de ativação.</li>
+    *    <li>Quantidade de neurônios.</li>
+    *    <li>Bias como neurônio adicional.</li>
+    * </ul>
+    * @return buffer formatado contendo as informações da camada.
+    */
+   public String obterInformacoes(){
+      String buffer = "";
+      String espacamento = "    ";
+      
+      buffer += "Informações " + this.getClass().getSimpleName() + " " + id + " = [\n";
+
+      buffer += espacamento + "Ativação: " + this.obterAtivacao() + "\n";
+      buffer += espacamento + "Quantidade neurônios: " + this.neuronios.length + "\n";
+      buffer += espacamento + "Bias: " + ((b == 1) ? "true" : "false") + "\n"; 
+
+      buffer += "]\n";
+
+      return buffer;
+   }
 }

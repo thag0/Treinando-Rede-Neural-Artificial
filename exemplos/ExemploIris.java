@@ -1,8 +1,8 @@
 package exemplos;
-import java.util.ArrayList;
 
 import render.JanelaRede;
 import rna.RedeNeural;
+import utilitarios.ged.Dados;
 import utilitarios.ged.Ged;
 
 public class ExemploIris{
@@ -14,9 +14,11 @@ public class ExemploIris{
       // manusear dados
       // tratamento específico para os dados do iris com adaptação
       // para usar a tangente hiperbolica como função de ativação
-      ArrayList<String[]> iris = ged.lerCsv("./dados/datasets-maiores/iris.csv");
+      Dados iris = ged.lerCsv("./dados/datasets-maiores/iris.csv");
       ged.removerLinha(iris, 0);
-      int ultimoIndice = (iris.get(0).length-1);
+      int[] shape = ged.obterShapeDados(iris);
+      int ultimoIndice = shape[1]-1;
+
       ged.editarValor(iris, ultimoIndice, "Iris-setosa", "-1");
       ged.editarValor(iris, ultimoIndice, "Iris-versicolor", "0");
       ged.editarValor(iris, ultimoIndice, "Iris-virginica", "1");

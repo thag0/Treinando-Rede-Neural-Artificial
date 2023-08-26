@@ -1,7 +1,5 @@
 package utilitarios.ged;
 
-import java.util.ArrayList;
-
 
 /**
  * Conversor de dados para o Ged
@@ -9,65 +7,68 @@ import java.util.ArrayList;
 class ConversorDados{
    
    /**
-    * Objeto responsável por interpretar arquivos csv já lidos no formato 
-    * {@code ArrayList<String[]>} e convertê-los em dados numéricos.
+    * Objeto responsável converter o conteúdo dos dados em
+    * arrays do tipo int, float e double.
     */
    public ConversorDados(){
 
    }
 
 
-   public int[][] listaParaDadosInt(ArrayList<String[]> lista){
-      int[][] dados = new int[lista.size()][lista.get(0).length];
-      String buffer = "";
+   public int[][] listaParaDadosInt(Dados dados){
+      int[] shape = dados.shape();
 
-      for(int i = 0; i < lista.size(); i++){
-         for(int j = 0; j < lista.get(i).length; j++){
+      int[][] dadosConvertidos = new int[shape[0]][shape[1]];
+
+      for(int i = 0; i < dadosConvertidos.length; i++){
+         for(int j = 0; j < dadosConvertidos[0].length; j++){
             try{
-               //cuidado na hora de converter
-               buffer = lista.get(i)[j].replaceAll(" ", "");
-               dados[i][j] = Integer.parseInt(buffer);
+               dadosConvertidos[i][j] = Integer.parseInt(dados.obterItem(i, j));
             }catch(Exception e){
                e.printStackTrace();
             }
          }
       }
    
-      return dados;
+      return dadosConvertidos;
    }
 
    
-   public float[][] listaParaDadosFloat(ArrayList<String[]> lista){
-      float[][] dados = new float[lista.size()][lista.get(0).length];
+   public float[][] listaParaDadosFloat(Dados dados){
+      int[] shape = dados.shape();
 
-      for(int i = 0; i < lista.size(); i++){
-         for(int j = 0; j < lista.get(i).length; j++){
+      float[][] dadosConvertidos = new float[shape[0]][shape[1]];
+
+      for(int i = 0; i < dadosConvertidos.length; i++){
+         for(int j = 0; j < dadosConvertidos[0].length; j++){
             try{
-               dados[i][j] = Float.parseFloat(lista.get(i)[j]);
+               dadosConvertidos[i][j] = Float.parseFloat(dados.obterItem(i, j));
             }catch(Exception e){
                e.printStackTrace();
             }
          }
       }
    
-      return dados;
+      return dadosConvertidos;
    }
 
    
-   public double[][] listaParaDadosDouble(ArrayList<String[]> lista){
-      double[][] dados = new double[lista.size()][lista.get(0).length];
+   public double[][] listaParaDadosDouble(Dados dados){
+      int[] shape = dados.shape();
 
-      for(int i = 0; i < lista.size(); i++){
-         for(int j = 0; j < lista.get(i).length; j++){
+      double[][] dadosConvertidos = new double[shape[0]][shape[1]];
+
+      for(int i = 0; i < dadosConvertidos.length; i++){
+         for(int j = 0; j < dadosConvertidos[0].length; j++){
             try{
-               dados[i][j] = Double.parseDouble(lista.get(i)[j]);
+               dadosConvertidos[i][j] = Double.parseDouble(dados.obterItem(i, j));
             }catch(Exception e){
                e.printStackTrace();
             }
          }
       }
    
-      return dados;
+      return dadosConvertidos;
    }
 
 }

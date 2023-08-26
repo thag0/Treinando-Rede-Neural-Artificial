@@ -3,6 +3,9 @@ package utilitarios.ged;
 class ImpressaoMatriz{
    
 
+   /**
+    * Implementações das impressões de matrizes.
+    */
    public ImpressaoMatriz(){
 
    }

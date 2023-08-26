@@ -12,27 +12,25 @@ import java.util.ArrayList;
  *    <li>Funções de leitura de arquivos.</li>
  *    <li>Funções de conversão de dados.</li>
  *    <li>Funções de manipulação de dados.</li>
- *    <li>Funções de gerenciamento de treino e teste para rede neural..</li>
+ *    <li>Funções de gerenciamento de treino e teste para rede neural.</li>
+ *    <li>Operações matriciais.</li>
  * </ul>
 */
 public class Ged{
 
-   GerenciadorArquivos ga;//leitor de arquivos
-   ConversorDados cd;//conversor de dados
-   ManipuladorDados md;
-   TreinoTeste gtt;//gerenciador de treino e teste da rede
    ImpressaoMatriz im;//exibição
-
-   OperadorMatriz om;
-   
+   ManipuladorDados md;//manipulador de dados
+   GerenciadorArquivos ga;//leitor de arquivos
+   ConversorDados cd;//conversor de dados 
+   TreinoTeste gtt;//gerenciador de treino e teste da rede
+   OperadorMatriz om;//operador de matrizes
 
    public Ged(){
-      ga = new GerenciadorArquivos();
-      cd = new ConversorDados();
-      md = new ManipuladorDados();
-      gtt = new TreinoTeste();
       im = new ImpressaoMatriz();
-
+      md = new ManipuladorDados();
+      ga = new GerenciadorArquivos();
+      gtt = new TreinoTeste();
+      cd = new ConversorDados();
       om = new OperadorMatriz();
    }
 
@@ -113,119 +111,119 @@ public class Ged{
       im.imprimirMatriz(matriz, nome);
    }
 
+   
+   //MANIPULADOR DE DADOS ---------------------
+
 
    /**
-    * Verifica se os a quantidade de dados na lista é simetrico. A simetria leva em conta 
+    * Verifica se o conteúdo dos dados é simetrico. A simetria leva em conta 
     * se todas as colunas contém o mesmo tamanho.
     * <p>
     *    A simetria leva em conta se a lista possui elementos, caso o tamanho seja zero será
     *    considerada como não simétrica.
     * <p>
-    * @param lista lista com os dados.
+    * @param dados conjunto de dados.
     * @return true caso os dados sejam simétricos, false caso contrário.
-    * @throws IllegalArgumentException se a lista for nula.
+    * @throws IllegalArgumentException se o conteúdo dos dados for nulo.
     */
-   public boolean dadosSimetricos(ArrayList<String[]> lista){
-      return md.dadosSimetricos(lista);
+   public boolean dadosSimetricos(Dados dados){
+      return md.dadosSimetricos(dados);
    }
 
 
    /**
-    * Adiciona uma coluna ao final de todas as linhas da lista, 
-    * a nova coluna estará em branco.
-    * @param lista lista de dados.
+    * Adiciona uma coluna ao final de todas as linhas do conteúdo dos dados.
+    * @param dados conjunto de dados.
     */
-   public void adicionarColuna(ArrayList<String[]> lista){
-      md.adicionarColuna(lista);
+   public void adicionarColuna(Dados dados){
+      md.adicionarColuna(dados);
    }
 
 
    /**
-    * Adiciona uma coluna no índice fornecido, a nova coluna estará em branco. Todos
-    * os itens depois do índice serão deslocados para a direita.
-    * @param lista lista de dados.
+    * Adiciona uma coluna no índice fornecido. Todos os itens 
+    * depois do índice serão deslocados para a direita.
+    * @param dados conjunto de dados.
     * @param indice índice onde a nova coluna será adicionada.
     * @throws IllegalArgumentException se o índice fornecido for inválido.
     */
-   public void adicionarColuna(ArrayList<String[]> lista, int indice){
-      md.adicionarColuna(lista, indice);
+   public void adicionarColuna(Dados dados, int indice){
+      md.adicionarColuna(dados, indice);
    }
 
 
    /**
     * Remove uma linha inteira do conjunto de dados
-    * @param lista lista com os dados.
-    * @param indice índice da coluna que será removida.
-    * @throws IllegalArgumentException se o indice lista for nula.
+    * @param dados conjunto de dados.
+    * @param indice índice da linha que será removida.
+    * @throws IllegalArgumentException o conteúdo dos dados for nulo.
     * @throws IllegalArgumentException se o indice estiver fora de alcance da lista.
     */
-   public void removerLinha(ArrayList<String[]> lista, int indice){
-      md.removerLinha(lista, indice);
+   public void removerLinha(Dados dados, int indice){
+      md.removerLinha(dados, indice);
    }
 
 
    /**
     * Remove todas as colunas dos dados de acordo com o índice fornecido.
-    * @param lista lista com os dados.
+    * @param dados conjunto de dados.
     * @param indice índice da coluna que será removida.
-    * @return nova lista com a coluna removida.
-    * @throws IllegalArgumentException se a lista for nula.
+    * @throws IllegalArgumentException o conteúdo dos dados for nulo.
     * @throws IllegalArgumentException se o indice estiver fora de alcance da lista.
     */
-   public void removerColuna(ArrayList<String[]> lista, int indice){
-      md.removerColuna(lista, indice);
+   public void removerColuna(Dados dados, int indice){
+      md.removerColuna(dados, indice);
    }
 
 
    /**
     * Substitui o valor de busca pelo novo valor fornecido, de acordo com a linha e coluna especificadas.
-    * @param lista lista com os dados lidos.
+    * @param dados conjunto de dados.
     * @param idLinha índice da linha alvo para a alteração dos dados.
     * @param idColuna índice da coluna alvo para a alteração dos dados.
-    * @param busca valor que será procurado para ser substituído.
-    * @param novoValor novo valor que será colocado.
-    * @throws IllegalArgumentException se a lista estiver nula.
-    * @throws IllegalArgumentException se a lista não for simétrica.
+    * @param valor novo valor que será colocado.
+    * @throws IllegalArgumentException se o conteúdo dos dados for nulo.
+    * @throws IllegalArgumentException se o conteúdo dos dados não for simétrica.
     * @throws IllegalArgumentException se o valor do índice da linha fornecido estiver fora de alcance.
     * @throws IllegalArgumentException se o valor do índice da coluna fornecido estiver fora de alcance.
     * @throws IllegalArgumentException se o valor de busca for nulo.
     * @throws IllegalArgumentException se o novo valor de substituição for nulo;
     */
-   public void editarValor(ArrayList<String[]> lista, int idLinha, int idColuna, String busca, String novoValor){
-      md.editarValor(lista, idLinha, idColuna, busca, novoValor);
+   public void editarValor(Dados dados, int idLinha, int idColuna, String valor){
+      md.editarValor(dados, idLinha, idColuna, valor);
    }
 
 
    /**
     * Substitui todas as linhas dos dados pelo valor fornecido, caso na coluna fornecida tenha o valor buscado.
-    * @param lista lista com os dados lidos.
+    * @param dados conjunto de dados.
     * @param idColuna índice da coluna alvo para a alteração dos dados.
     * @param busca valor que será procurado para ser substituído.
-    * @param novoValor novo valor que será colocado.
-    * @throws IllegalArgumentException se a lista estiver nula.
-    * @throws IllegalArgumentException se a lista não for simétrica.
+    * @param valor novo valor que será colocado.
+    * @throws IllegalArgumentException se o conteúdo dos dados estiver nulo.
+    * @throws IllegalArgumentException se o conteúdo dos dados não for simétrico.
     * @throws IllegalArgumentException se o valor do índice fornecido estiver fora de alcance.
     * @throws IllegalArgumentException se o valor de busca for nulo.
     * @throws IllegalArgumentException se o novo valor de substituição for nulo;
     */
-   public void editarValor(ArrayList<String[]> lista, int idColuna, String busca, String novoValor){
-      md.editarValor(lista, idColuna, busca, novoValor);
+   public void editarValor(Dados dados, int idColuna, String busca, String valor){
+      md.editarValor(dados, idColuna, busca, valor);
    }
 
 
    /**
-    * Troca os valores das colunas na lista de dados de acordo os com índicer fornecidos.
-    * @param lista A lista de dados.
+    * Troca os valores das colunas no conteúdo dos dados de acordo com os índices fornecidos.
+    * @param dados conjunto de dados.
     * @param idColuna1 índice da primeira coluna que será trocada.
     * @param idColuna2 índice da segunda coluna que será trocada.
-    * @throws IllegalArgumentException se a lista estiver nula.
-    * @throws IllegalArgumentException se a lista não for simétrica.
+    * @throws IllegalArgumentException se o conteúdo dos dados estiver nulo.
+    * @throws IllegalArgumentException se o conteúdo dos dados não for simétrico.
     * @throws IllegalArgumentException se a lista não tiver pelo menos duas colunas.
     * @throws IllegalArgumentException se os índices fornecidos estiverem fora de alcance do tamanho das colunas.
     * @throws IllegalArgumentException se as colunas fornecidas forem iguais.
     */
-   public void trocarColunas(ArrayList<String[]> lista, int idColuna1, int idColuna2){
-      md.trocarColunas(lista, idColuna1, idColuna2);
+   public void trocarColunas(Dados dados, int idColuna1, int idColuna2){
+      md.trocarColunas(dados, idColuna1, idColuna2);
    }
 
 
@@ -236,10 +234,10 @@ public class Ged{
     *    É importante verificar e ter certeza se os dados não possuem nenhuma coluna com caracteres, caso isso seja verdade
     *    o método irá remover todas as colunas como consequência e a lista ficará vazia.
     * </p>
-    * @param lista lista com os dados;
+    * @param dados conjunto de dados.
     */
-   public void removerNaoNumericos(ArrayList<String[]> lista){
-      md.removerNaoNumericos(lista);
+   public void removerNaoNumericos(Dados dados){
+      md.removerNaoNumericos(dados);
    }
 
 
@@ -250,13 +248,13 @@ public class Ged{
     * os valores das novas colunas serão definidos como "1" quando a categoria
     * correspondente estiver presente na linha e "0" caso contrário.
     *
-    * @param lista lista contendo os dados
+    * @param dados conjunto de dados.
     * @param indice O índice da coluna na qual a categorização será aplicada.
-    * @throws IllegalArgumentException se a lista não for simétrica.
+    * @throws IllegalArgumentException se o conteúdo dos dados não for simétrico.
     * @throws IllegalArgumentException se o índice fornecido for inválido.
     */
-   public void categorizar(ArrayList<String[]> lista, int indice){
-      md.categorizar(lista, indice);
+   public void categorizar(Dados dados, int indice){
+      md.categorizar(dados, indice);
    }
 
 
@@ -277,22 +275,15 @@ public class Ged{
 
    /**
     * Descreve as dimensões da lista, tanto em questão de quantidade de linhas qunanto quantidade de colunas.
-    * @param lista lista com os dados.
+    * @param dados conjunto de dados.
     * @return array contendo as informações das dimensões da lista, o primeiro elemento corresponde a quantidade de 
     * linhas e o segundo elemento corresponde a quantidade de colunas.
-    * @throws IllegalArgumentException se a lista estiver nula.
+    * @throws IllegalArgumentException se o conteúdo dos dados estiver nulo.
     * @throws IllegalArgumentException se a lista estiver vazia.
     * @throws IllegalArgumentException se os dados não forem simétricos, tendo colunas com tamanhos diferentes.
     */
-   public int[] obterShapeLista(ArrayList<String[]> lista){
-      if(lista == null) throw new IllegalArgumentException("A lista fornecida é nula.");
-      if(lista.size() == 0) throw new IllegalArgumentException("A lista fornecida está vazia.");
-      if(!dadosSimetricos(lista)) throw new IllegalArgumentException("As dimensões dos dados não são simétricas.");
-
-      int[] shape = new int[2];
-      shape[0] = lista.size();
-      shape[1] = lista.get(0).length;
-      return shape;
+   public int[] obterShapeDados(Dados dados){
+      return dados.shape();
    }
 
 
@@ -304,29 +295,29 @@ public class Ged{
     *
     * <p>
     *    O formato da estrutura de dados será um objeto do tipo 
-    *    {@code ArrayList<String[]>}, contendo as linhas e colunas das informações lidas.
+    *    {@code Dados}, contendo as linhas e colunas das informações lidas.
     * </p>
-    * @param caminho caminho relativo do arquivo.
+    * @param caminho caminho do arquivo.
     * @return objeto contendo as informações do arquivo lido.
     * @throws IllegalArgumentException caso não encontre o diretório fornecido.
     */
-   public ArrayList<String[]> lerCsv(String caminho){
+   public Dados lerCsv(String caminho){
       return ga.lerCsv(caminho);
    }
 
 
    /**
-    * Grava os dados no formato {@code ArrayList<String[]>} em um arquivo CSV.
-    * @param lista lista de arrays contendo os dados.
+    * Grava o conteúdo do conjunto de dados em um arquivo .csv.
+    * @param dados conjunto de dados.
     * @param filePath caminho do arquivo onde os dados serão gravados, excluindo a extensão .csv.
     */
-   public void exportarCsv(ArrayList<String[]> lista, String caminho){
-      ga.exportarCsv(lista, caminho);;
+   public void exportarCsv(Dados dados, String caminho){
+      ga.exportarCsv(dados, caminho);;
    }
 
 
    /**
-    * Grava os dados no formato {@code double[][]} em um arquivo CSV.
+    * Grava os dados no formato {@code double[][]} em um arquivo.csv.
     * @param lista lista de arrays contendo os dados.
     * @param filePath caminho do arquivo onde os dados serão gravados, excluindo a extensão .csv.
     */
@@ -415,35 +406,35 @@ public class Ged{
    //CONVERSOR DE DADOS ----------------------
 
    /**
-    * Converte a lista no formato {@code ArrayList<String[]>} para uma matriz bidimensional 
+    * Converte o conteúdo do conjunto de dados para uma matriz bidimensional 
     * com os valores numéricos.
-    * @param lista lista com os dados.
-    * @return matriz convertida para valores tipo int.
+    * @param dados conjunto de dados.
+    * @return matriz convertida para valores tipo {@code int}.
     */
-   public int[][] listaParaDadosInt(ArrayList<String[]> lista){
-      return cd.listaParaDadosInt(lista);
+   public int[][] listaParaDadosInt(Dados dados){
+      return cd.listaParaDadosInt(dados);
    }
 
 
    /**
-    * Converte a lista no formato {@code ArrayList<String[]>} para uma matriz bidimensional 
+    * Converte o conteúdo do conjunto de dados para uma matriz bidimensional 
     * com os valores numéricos.
-    * @param lista lista com os dados 
-    * @return matriz convertida para valores tipo float.
+    * @param dados conjunto de dados.
+    * @return matriz convertida para valores tipo {@code float}.
     */
-   public float[][] listaParaDadosFloat(ArrayList<String[]> lista){
-      return cd.listaParaDadosFloat(lista);
+   public float[][] listaParaDadosFloat(Dados dados){
+      return cd.listaParaDadosFloat(dados);
    }
 
 
    /**
-    * Converte a lista no formato {@code ArrayList<String[]>} para uma matriz bidimensional 
+    * Converte o conteúdo do conjunto de dados para uma matriz bidimensional 
     * com os valores numéricos.
-    * @param lista lista com os dados 
-    * @return matriz convertida para valores tipo double.
+    * @param dados conjunto de dados.
+    * @return matriz convertida para valores tipo {@code double}.
     */
-   public double[][] listaParaDadosDouble(ArrayList<String[]> lista){
-      return cd.listaParaDadosDouble(lista);
+   public double[][] listaParaDadosDouble(Dados dados){
+      return cd.listaParaDadosDouble(dados);
    }
 
 

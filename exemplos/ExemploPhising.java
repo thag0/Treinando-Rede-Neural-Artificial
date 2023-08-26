@@ -1,8 +1,8 @@
 package exemplos;
-import java.util.ArrayList;
 
 import render.JanelaRede;
 import rna.RedeNeural;
+import utilitarios.ged.Dados;
 import utilitarios.ged.Ged;
 
 public class ExemploPhising{
@@ -14,7 +14,7 @@ public class ExemploPhising{
       //manusear dados
       //tratamento específico para os dados de phishing
       //removendo coluna de id e nomes das classes
-      ArrayList<String[]> phishing = ged.lerCsv("./dados/datasets-maiores/PhishingData.csv");
+      Dados phishing = ged.lerCsv("./dados/datasets-maiores/PhishingData.csv");
       ged.removerLinha(phishing, 0);
       ged.removerColuna(phishing, 0);
       ged.removerNaoNumericos(phishing);
