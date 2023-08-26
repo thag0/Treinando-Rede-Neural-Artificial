@@ -1,7 +1,5 @@
 package utilitarios.ged;
 
-import java.util.ArrayList;
-
 /**
  * <p>
  *    Gerenciador de Dados.
@@ -36,18 +34,37 @@ public class Ged{
 
 
    /**
-    * Exibe pelo console as informações contidas na lista em formato csv.
+    * Exibe pelo console as informações contidas no conteúdo dos dados.
     * @param lista lista com os dados.
     */
-   public void imprimirCsv(ArrayList<String[]> lista){
-      String separador = ",";
-      String espacamemto = "   ";
+   public void imprimirDados(Dados dados){
+      String espacamemto = "  ";
 
-      System.out.println("Csv = [");
-      for(String linha[] : lista){
+      System.out.println("Dados = [");
+      for(String linha[] : dados.conteudo()){
          for(int i = 0; i < linha.length; i++){
             if(i == 0) System.out.print(espacamemto + linha[i]);
-            else System.out.print(separador + " " + linha[i]);
+            else System.out.print("\t " + linha[i]);
+         }
+         System.out.println();
+      }
+      System.out.println("]\n");
+   }
+
+
+   /**
+    * Exibe pelo console as informações contidas no conteúdo dos dados.
+    * @param lista lista com os dados.
+    * @param nome nome personalizado para os dados impressos.
+    */
+   public void imprimirDados(Dados dados, String nome){
+      String espacamemto = "  ";
+
+      System.out.println(nome + " = [");
+      for(String linha[] : dados.conteudo()){
+         for(int i = 0; i < linha.length; i++){
+            if(i == 0) System.out.print(espacamemto + linha[i]);
+            else System.out.print("\t " + linha[i]);
          }
          System.out.println();
       }

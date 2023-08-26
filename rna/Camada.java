@@ -16,7 +16,7 @@ import rna.ativacoes.TanH;
 
 
 /**
- * Representa uma camada de neurônios em uma rede neural.
+ * Representa uma camada de neurônios individual dentro de uma Rede Neural.
  * Cada camada possui um conjunto de neurônios e uma função de ativação que pode ser configurada.
  */
 public class Camada implements Serializable{
@@ -38,6 +38,11 @@ public class Camada implements Serializable{
    private int id;
 
    /**
+    * Função de ativação da camada.
+    */
+   public FuncaoAtivacao ativacao = new ReLU();
+
+   /**
     * Auxiliar na verficação se a camada está com a função de ativação
     * Argmax configuarda.
     */
@@ -49,11 +54,6 @@ public class Camada implements Serializable{
     */ 
    private boolean softmax = false;
 
-   /**
-    * Função de ativação padrão da camada (ReLU)
-    */
-   public FuncaoAtivacao ativacao = new ReLU();
-
 
    /**
     * Inicializa uma instância de camada de RedeNeural.
@@ -63,10 +63,15 @@ public class Camada implements Serializable{
     * que a saída é sempre 1.
     */
    public Camada(boolean temBias){
-      b = (temBias) ? 1 : 0;
+      this.b = (temBias) ? 1 : 0;
    }
 
 
+   /**
+    * Configura o id da camada. O id deve indicar dentro da rede neural, em qual posição
+    * a camada está localizada.
+    * @param id id da camada.
+    */
    public void configurarId(int id){
       this.id = id;
    }
@@ -108,12 +113,12 @@ public class Camada implements Serializable{
       for(int i = 0; i < (this.neuronios.length-b); i++){
          neuronio = this.neuronios[i];
          neuronio.calcularSomatorio();
-         neuronio.saida = funcaoAtivacao(neuronio.somatorio);
+         neuronio.saida = this.ativacao.ativar(neuronio.somatorio);
       }
 
       //sobrescreve a saída
-      if(argmax) argmax();
-      else if(softmax) softmax();
+      if(this.argmax) argmax();
+      else if(this.softmax) softmax();
    }
 
 
@@ -142,16 +147,6 @@ public class Camada implements Serializable{
 
 
    /**
-    * Executa a função de ativação específica da camada.
-    * @param valor valor de entrada do neurônio que será ativado.
-    * @return valor resultante do cálculo da função de ativação.
-    */
-   public double funcaoAtivacao(double valor){
-      return ativacao.ativar(valor);
-   }
-
-
-   /**
     * Executa a função de ativação derivada específica da camada.
     * @param valor valor anterior do cálculo da função de ativação
     * @return valor resultante do cálculo da função de ativação derivada.
@@ -173,7 +168,8 @@ public class Camada implements Serializable{
 
 
    /**
-    * Devolve o neurônio correspondente dentro da camada.
+    * Devolve o neurônio correspondente dentro da camada baseado 
+    * no identificador fornecido.
     * @param id índice do neurônio.
     * @return neurõnio da camada indicado pelo índice.
     * @throws IllegalArgumentException se o índice for inválido.
@@ -187,7 +183,7 @@ public class Camada implements Serializable{
 
 
    /**
-    * Devolve o conjunto de neurônios da camada.
+    * Devolve todo o conjunto de neurônios da camada.
     * @return todos os neurônios presentes na camada, incluindo bias.
     */
    public Neuronio[] neuronios(){

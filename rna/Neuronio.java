@@ -16,16 +16,22 @@ public class Neuronio implements Serializable{
    public double[] entradas;
 
    /**
-    * <p>
-    *    Região crítica.
-    * </p>
-    * Parte mais importante da Rede Neural, onde é calculada a saída de cada neurônio
-    * e a informação é propagada
+    * <p>Região crítica</p>
+    * Representa os pesos responsáveis por associar a conexão recebida com a 
+    * intensidade que ela deve receber.
+    * Essa região é fundamental para o cálculo da saída de cada neurônio e
+    * para a propagação da informação através da Rede Neural.
     */
    public double[] pesos;
 
    /**
-    * Aplica "inércia" nos pesos e ajuda na convergência do aprendizado.
+    * Coeficientes de momentum para cada peso do neurônio.
+    * <p>
+    * Os coeficientes de momentum são usados nos algoritmos de otimização
+    * para controlar a influência das atualizações anteriores de peso nas
+    * atualizações atuais. Eles ajudam a evitar oscilações excessivas durante
+    * o treinamento da Rede Neural e podem ajudar ela a escapar de mínimos locais.
+    * </p>
     */
    public double[] momentum;
 
@@ -87,13 +93,13 @@ public class Neuronio implements Serializable{
     *    <li>2 - He.</li>
     *    <li>3 - LeCun.</li>
     * </ul>
-    * @param ligacoes quantidade de ligações, deve estar relacionada com a quatidade de neurônios da camada anterior.
+    * @param ligacoes quantidade de ligações, deve estar relacionada com a quatidade de neurônios da camada anterior (incluindo bias, caso tenha).
     * @param alcancePeso valor de alcance em que o peso aleatório será gerado, deve ser um valor positivo e diferente de zero.
-    * @param otimizador otimizador configurado.
+    * @param inicializador algoritmo inicializador dos pesos.
     * @throws IllegalArgumentException se o valor de alcance dos pesos for menor ou igual a zero.
     * @throws IllegalArgumentException se o otimizador fornecido for inválido.
     */
-   public Neuronio(int ligacoes, double alcancePeso, int otimizador){
+   public Neuronio(int ligacoes, double alcancePeso, int inicializador){
       if (alcancePeso <= 0) throw new IllegalArgumentException("O valor de alcance do peso deve ser positivo e diferente de zero.");
    
       this.entradas = new double[ligacoes];
@@ -104,13 +110,12 @@ public class Neuronio implements Serializable{
       this.gradienteAcumulado = new double[ligacoes];
 
       this.pesos = new double[ligacoes];
-      switch(otimizador){
+      switch(inicializador){
          case 0 -> inicializacaoAleatoria(alcancePeso);
          case 1 -> inicializacaoHe(ligacoes);
          case 2 -> inicializacaoLeCun(ligacoes);
          default -> throw new IllegalArgumentException("Otimizador fornecido para otimização dos pesos é inválido.");
       }
-
 
       //só por segurança
       for(int i = 0; i < this.pesos.length; i++){
@@ -129,7 +134,8 @@ public class Neuronio implements Serializable{
 
    /**
     * Calcula o resultado do somatório da multiplicação entre cada entrada 
-    * e seu peso respectivo.
+    * e seu peso respectivo. O resultado será usado como entrada para a função
+    * de ativação.
     */
    public void calcularSomatorio(){
       this.somatorio = 0;

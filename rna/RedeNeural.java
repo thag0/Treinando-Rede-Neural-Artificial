@@ -37,7 +37,7 @@ import rna.otimizadores.SGD;
  * <p>
  *    Após configurar as propriedades da rede, o modelo precisará ser compilado para efetivamente poder ser utilizado.
  * </p>
- * @author Thiago Barroso, acadêmico de Engenharia da Computação pela Universidade Federal do Pará, Campus Tucuruí. Ano de 2023.
+ * @author Thiago Barroso, acadêmico de Engenharia da Computação pela Universidade Federal do Pará, Campus Tucuruí. Maio/2023.
  */
 public class RedeNeural implements Cloneable, Serializable{
    //estrutura
@@ -59,6 +59,8 @@ public class RedeNeural implements Cloneable, Serializable{
 
    /**
     * Array contendo a arquitetura de cada camada dentro da Rede Neural.
+    * Cada elemento da arquitetura representa a quantidade de neurônios 
+    * presente na camada correspondente.
     */
    private int[] arquitetura;
    
@@ -91,7 +93,7 @@ public class RedeNeural implements Cloneable, Serializable{
     * Otimizador usado para a inicialização dos primeiros pesos dos neurônios 
     * da Rede Neural.
     */
-   private int inicializadorPeso = 0;
+   private int inicializadorPeso = 1;
 
    /**
     * Auxiliar no controle da compilação da Rede Neural, ajuda a evitar uso 
@@ -155,7 +157,7 @@ public class RedeNeural implements Cloneable, Serializable{
     *    como, alcance dos pesos iniciais, taxa de aprendizagem e uso de bias. Caso não seja usada nenhuma 
     *    das funções de configuração, a rede será compilada com os valores padrão.
     * </p>
-    * @author Thiago Barroso, acadêmico de Engenharia da Computação pela Universidade Federal do Pará, Campus Tucuruí. Ano de 2023.
+    * @author Thiago Barroso, acadêmico de Engenharia da Computação pela Universidade Federal do Pará, Campus Tucuruí. Maio/2023.
     * @param arquitetura modelo de arquitetura específico da rede.
     * @throws IllegalArgumentException se o array de arquitetura não possuir, pelo menos, três elementos.
     * @throws IllegalArgumentException se os valores fornecidos forem menores que um.
@@ -196,7 +198,7 @@ public class RedeNeural implements Cloneable, Serializable{
     * @param nOcultas número de neurônios das camadas ocultas.
     * @param nSaida número de neurônios da camada de saída.
     * @param qOcultas quantidade de camadas ocultas.
-    * @author Thiago Barroso, acadêmico de Engenharia da Computação pela Universidade Federal do Pará, Campus Tucuruí. Ano de 2023.
+    * @author Thiago Barroso, acadêmico de Engenharia da Computação pela Universidade Federal do Pará, Campus Tucuruí. Maio/2023.
     * @throws IllegalArgumentException se algum dos valores fornecidos for menor que 1.
     */
    public RedeNeural(int nEntrada, int nOcultas, int nSaida, int qOcultas){
@@ -240,7 +242,7 @@ public class RedeNeural implements Cloneable, Serializable{
     * Define o valor máximo e mínimo na hora de aleatorizar os pesos da rede 
     * para a compilação, os novos valores não podem ser menores ou iguais a zero.
     * <p>
-    *    O valor padrão de alcance é 1.
+    *    {@code O valor padrão de alcance é 1}
     * </p>
     * @param alcancePesos novo valor máximo e mínimo.
     * @throws IllegalArgumentException se o novo valor for menor ou igual a zero.
@@ -265,7 +267,7 @@ public class RedeNeural implements Cloneable, Serializable{
     *    <li>3 - LeCun.</li>
     * </ul>
     * <p>
-    *    O valor padrão de inicializador é 0.
+    *    {@code O valor padrão de inicializador é 1}
     * </p>
     * @param inicializador novo valor de inicializador de pesos da rede.
     * @throws IllegalArgumentException se o novo valor de otimizador for menor que um.
@@ -282,7 +284,7 @@ public class RedeNeural implements Cloneable, Serializable{
     * Define se a rede neural usará um neurônio adicional como bias nas camadas da rede.
     * O bias não é adicionado na camada de saída.
     * <p>
-    *    O valor padrão para uso do bias é true.
+    *    {@code O valor padrão para uso do bias é true}
     * </p>
     * @param usarBias novo valor para o uso do bias.
     */
@@ -297,10 +299,10 @@ public class RedeNeural implements Cloneable, Serializable{
     * Certifique-se de não usar valores muito altos ou muito baixos para não gerar resultados inesperados 
     * durante o treino.
     * <p>
-    *    O valor padrão é 0.1.
+    *    {@code O valor padrão da taxa de aprendizagem é 0.1}
     * </p>
     * @param taxaAprendizagem novo valor de taxa de aprendizagem.
-    * @throws IllegalArgumentException caso o novo valor de taxa de aprendizagem seja igual a zero.
+    * @throws IllegalArgumentException caso o novo valor de taxa de aprendizagem seja menor ou igual a zero.
     */
    public void configurarTaxaAprendizagem(double taxaAprendizagem){
       if(taxaAprendizagem <= 0){
@@ -321,7 +323,7 @@ public class RedeNeural implements Cloneable, Serializable{
     * Normalmente esse valor fica entre 0 e 1, onde 0 significa que o momentum não terá efeito  e 1 
     * significa que o momentum terá o máximo de inércia, acumulando totalmente os gradientes anteriores. 
     * <p>
-    *    O valor padrão é 0, onde o momentum não é aplicado no treino.
+    *    {@code O valor padrão do momentum é 0}
     * </p>
     * @param momentum novo valor de momentum.
     * @throws IllegalArgumentException se o valor de momentum for menor que zero.
@@ -335,7 +337,7 @@ public class RedeNeural implements Cloneable, Serializable{
 
 
    /**
-    * Configura a função de ativação da camada correspondente, a função de ativação padrão é a ReLU. É preciso
+    * Configura a função de ativação da camada correspondente. É preciso
     * compilar o modelo previamente para poder configurar suas funções de ativação.
     * <p>
     *    segue a lista das funções disponíveis:
@@ -354,6 +356,9 @@ public class RedeNeural implements Cloneable, Serializable{
     *    <li>11 - Softmax.</li>
     *    <li>12 - Softplus.</li>
     * </ul>
+    * <p>
+    *    {@code A função de ativação padrão é a ReLU para todas as camadas}
+    * </p>
     * @param camada camada que será configurada.
     * @param ativacao valor relativo a lista de ativações disponíveis.
     * @throws IllegalArgumentException se o modelo não foi compilado previamente.
@@ -369,7 +374,7 @@ public class RedeNeural implements Cloneable, Serializable{
 
 
    /**
-    * Configura a função de ativação de todas as camadas da rede, a função de ativação padrão é a ReLU. É preciso
+    * Configura a função de ativação de todas as camadas da rede. É preciso
     * compilar o modelo previamente para poder configurar suas funções de ativação
     * <p>
     *    segue a lista das funções disponíveis:
@@ -388,6 +393,9 @@ public class RedeNeural implements Cloneable, Serializable{
     *    <li>11 - Softmax.</li>
     *    <li>12 - Softplus.</li>
     * </ul>
+    * <p>
+    *    {@code A função de ativação padrão é a ReLU para todas as camadas}
+    * </p>
     * @param ativacao valor relativo a lista de ativações disponíveis.
     * @throws IllegalArgumentException se o modelo não foi compilado previamente.
     */
@@ -400,10 +408,9 @@ public class RedeNeural implements Cloneable, Serializable{
 
 
    /**
-    * Configura o otimizador usado durante o treino da rede neural.
-    * <p>
-    *    O otimizador padrão é o SGD (Gradiente Descendente Estocástico).
-    * </p>
+    * Configura o otimizador usado durante o treino da rede neural. Cada otimizador possui sua 
+    * própia maneira de atualizar os pesos da rede e cada um deles pode ser apropriado em uma 
+    * determinada tarefa.
     * <p>
     *    Os otimizadores disponíveis são:
     * </p>
@@ -414,6 +421,9 @@ public class RedeNeural implements Cloneable, Serializable{
     *    <li>4 - RMSProp: Um otimizador que utiliza a média móvel dos quadrados dos gradientes acumulados para ajustar a taxa de aprendizado.</li>
     *    <li>5 - Adam: Um otimizador que combina o AdaGrad e o Momentum para convergência rápida e estável.</li>
     * </ul>
+    * <p>
+    *    {@code O otimizador padrão é o SGD}
+    * </p>
     * @param otimizador valor do novo otimizador.
     * @throws IllegalArgumentException se o valor fornecido do otimizador estiver fora da lista dos disponíveis.
     */
@@ -430,10 +440,9 @@ public class RedeNeural implements Cloneable, Serializable{
 
 
    /**
-    * Configura o otimizador usado durante o treino da rede neural.
-    * <p>
-    *    O otimizador padrão é o SGD (Gradiente Descendente Estocástico).
-    * </p>
+    * Configura o otimizador usado durante o treino da rede neural. Cada otimizador possui sua 
+    * própia maneira de atualizar os pesos da rede e cada um deles pode ser apropriado em uma 
+    * determinada tarefa.
     * <p>
     *    Os otimizadores disponíveis são:
     * </p>
@@ -444,6 +453,9 @@ public class RedeNeural implements Cloneable, Serializable{
     *    <li>4 - RMSProp: Um otimizador que utiliza a média móvel dos quadrados dos gradientes acumulados para ajustar a taxa de aprendizado.</li>
     *    <li>5 - Adam: Um otimizador que combina o AdaGrad e o Momentum para convergência rápida e estável.</li>
     * </ul>
+    * <p>
+    *    {@code O otimizador padrão é o SGD}
+    * </p>
     * @param otimizador valor do novo otimizador.
     * @param nesterov configura se o otimizador vai usar o acelerador de Nesterov (Por enquanto só pro SGD)
     * @throws IllegalArgumentException se o valor fornecido do otimizador estiver fora da lista dos disponíveis.
@@ -463,25 +475,14 @@ public class RedeNeural implements Cloneable, Serializable{
 
 
    /**
-    * 
-    * @param perda
-    */
-   public void configurarFuncaoPerda(int perda){
-      switch(perda){
-
-      }
-   }
-
-
-   /**
-    * Define se durante o processor de treinamento, a rede vai salvar dados relacionados a 
+    * Define se durante o processo de treinamento, a rede vai salvar dados relacionados a 
     * função de custo de cada época.
     * <p>
     *    Calcular o custo é uma operação que pode ser computacionalmente cara, então deve ser
     *    bem avaliado querer ativar ou não esse recurso.
     * </p>
     * <p>
-    *    O valor padrão é false.
+    *    {@code O valor padrão é false}
     * </p>
     * @param historicoCusto se verdadeiro, a rede armazenará o histórico de custo de cada época.
     */
@@ -501,7 +502,8 @@ public class RedeNeural implements Cloneable, Serializable{
     *    <li>Taxa de aprendizagem.</li>
     *    <li>Taxa de momentum.</li>
     *    <li>Otimizador.</li>
-    *    <li>Habilitar histórico de erros e custos durante o treino.</li>
+    *    <li>Habilitar histórico de custos durante o treino.</li>
+    *    <li>Inicializador de pesos.</li>
     * </ul>
     * <p>
     *    Caso nenhuma configuração seja feita, a rede será inicializada com os valores padrão. 

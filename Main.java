@@ -89,8 +89,8 @@ class Main{
       RedeNeural rede = new RedeNeural(arquitetura);
 
       rede.configurarAlcancePesos(1);
-      rede.configurarTaxaAprendizagem(0.0001);
-      rede.configurarMomentum(0.999);
+      rede.configurarTaxaAprendizagem(0.001);
+      rede.configurarMomentum(0.99);
       rede.configurarOtimizador(2);
       rede.configurarInicializacaoPesos(2);
       rede.compilar();
