@@ -80,12 +80,14 @@ class Main{
       if(qSaidas == 1)geim.exportarImagemEscalaCinza(imagem, rede, escalaImagemExportada, caminhoImagemExportada);
       else if(qSaidas == 3) geim.exportarImagemRGB(imagem, rede, escalaImagemExportada, caminhoImagemExportada);
       else System.out.println("Não é possível exportar a imagem");
+
+      System.out.println(rede);
    }
 
 
    public static RedeNeural criarRede(int qEntradas, int qSaidas){
       // int[] arquitetura = {qEntradas, 36, 36, 36, qSaidas};//32x32
-      int[] arquitetura = {qEntradas, 13, 13, qSaidas};//28x28
+      int[] arquitetura = {qEntradas, 12, 12, qSaidas};//28x28
       RedeNeural rede = new RedeNeural(arquitetura);
 
       rede.configurarAlcancePesos(1);
@@ -105,7 +107,7 @@ class Main{
 
       //acelerar o processo de desenho
       //bom em situações de janelas muito grandes
-      int numThreads = (int)(Runtime.getRuntime().availableProcessors() * 0.75);
+      int numThreads = (int)(Runtime.getRuntime().availableProcessors() * 0.5);
 
       JanelaTreino jt = new JanelaTreino(imagem.getWidth(), imagem.getHeight(), escalaRender);
       jt.desenharTreino(rede, 0, numThreads);

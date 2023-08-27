@@ -23,12 +23,12 @@ public class Adam extends Otimizador{
       double momentumCorrigido, segundaOrdemCorrigida;
       for(int i = 1; i < redec.size(); i++){//percorrer rede
 
-         Camada camadaAtual = redec.get(i);
-         int nNeuronios = camadaAtual.obterQuantidadeNeuronios();
-         nNeuronios -= (camadaAtual.temBias()) ? 1 : 0;
+         Camada camada = redec.get(i);
+         int nNeuronios = camada.obterQuantidadeNeuronios();
+         nNeuronios -= (camada.temBias()) ? 1 : 0;
          for(int j = 0; j < nNeuronios; j++){//percorrer neurônios da camada atual
 
-            Neuronio neuronio = camadaAtual.neuronio(j);
+            Neuronio neuronio = camada.neuronio(j);
             for(int k = 0; k < neuronio.pesos.length; k++){//percorrer pesos do neurônio atual
                //atualização do momentum
                neuronio.momentum[k] = (beta1 * neuronio.momentum[k]) + ((1 - beta1) * neuronio.gradiente[k]);

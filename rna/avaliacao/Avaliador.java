@@ -36,7 +36,7 @@ public class Avaliador{
 
    /**
     * Calcula o erro médio quadrado da rede neural em relação aos dados de entrada e saída fornecidos.
-    * @param dados dados de entrada.
+    * @param entrada dados de entrada.
     * @param saida dados de saída contendo os resultados respectivos para as entradas.
     * @return erro médio quadrado da rede em relação ao dados fornecidos (custo/perda).
     */
@@ -70,7 +70,7 @@ public class Avaliador{
    /**
     * Calcula a entropia cruzada entre as saídas previstas pela rede neural
     * e as saídas reais fornecidas.
-    * @param dados dados de entrada.
+    * @param entrada dados de entrada.
     * @param saida dados de saída contendo os resultados respectivos para as entradas.
     * @return entropia cruzada da rede em relação ao dados fornecidos (custo/perda).
     */
