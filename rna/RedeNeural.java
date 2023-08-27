@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import rna.treinamento.Treino;
 
 import rna.avaliacao.Avaliador;
+
 import rna.otimizadores.AdaGrad;
 import rna.otimizadores.Adam;
 import rna.otimizadores.GradientDescent;

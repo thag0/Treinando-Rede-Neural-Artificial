@@ -3,12 +3,12 @@ package rna.avaliacao;
 import rna.RedeNeural;
 
 import rna.avaliacao.metrica.Acuracia;
-import rna.avaliacao.metrica.ErroMedioAbsoluto;
 import rna.avaliacao.metrica.F1Score;
 import rna.avaliacao.metrica.MatrizConfusao;
 
 import rna.avaliacao.perda.EntropiaCruzada;
 import rna.avaliacao.perda.EntropiaCruzadaBinaria;
+import rna.avaliacao.perda.ErroMedioAbsoluto;
 import rna.avaliacao.perda.ErroMedioQuadrado;
 
 

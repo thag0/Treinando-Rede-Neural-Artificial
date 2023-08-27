@@ -4,15 +4,21 @@ package utilitarios.ged;
  * <p>
  *    Gerenciador de Dados.
  * </p>
- * Responsável pelo manuseio do conjunto de dados, 
+ * Responsável pelo manuseio de conjunto de dados, 
  * funcionalidades disponíveis:
  * <ul>
- *    <li>Funções de leitura de arquivos.</li>
- *    <li>Funções de conversão de dados.</li>
- *    <li>Funções de manipulação de dados.</li>
- *    <li>Funções de gerenciamento de treino e teste para rede neural.</li>
- *    <li>Operações matriciais.</li>
+ *    <li>Leitura de arquivos;</li>
+ *    <li>Conversão de dados;</li>
+ *    <li>Manipulação de estrutura de dados;</li>
+ *    <li>Gerenciamento de treino e teste para rede neural;</li>
+ *    <li>Operações matriciais;</li>
  * </ul>
+ * Algumas operação necessitam de um objeto do tipo {@code Dados} para serem realizadas.
+ * <p>
+ *    A classe Ged é apeans uma casca/embrulho (ou wrapper) que contém as funções que são expostas 
+ *    publicamente para quem quiser utilizá-las, o conteúdo com implementações está divididos de acordo 
+ *    com suas especialidades.
+ * </p>
 */
 public class Ged{
 
@@ -23,6 +29,14 @@ public class Ged{
    TreinoTeste gtt;//gerenciador de treino e teste da rede
    OperadorMatriz om;//operador de matrizes
 
+
+   /**
+    * Objeto responsável pelo manuseio de um conjunto de dados contendo 
+    * diversas implementações de métodos para gerenciamento e manipulação.
+    * <p>
+    *    Algumas operação necessitam de um objeto do tipo {@code Dados} para serem realizadas.
+    * </p>
+    */
    public Ged(){
       im = new ImpressaoMatriz();
       md = new ManipuladorDados();
@@ -38,17 +52,7 @@ public class Ged{
     * @param lista lista com os dados.
     */
    public void imprimirDados(Dados dados){
-      String espacamemto = "  ";
-
-      System.out.println("Dados = [");
-      for(String linha[] : dados.conteudo()){
-         for(int i = 0; i < linha.length; i++){
-            if(i == 0) System.out.print(espacamemto + linha[i]);
-            else System.out.print("\t " + linha[i]);
-         }
-         System.out.println();
-      }
-      System.out.println("]\n");
+      dados.imprimir();
    }
 
 
@@ -58,16 +62,22 @@ public class Ged{
     * @param nome nome personalizado para os dados impressos.
     */
    public void imprimirDados(Dados dados, String nome){
-      String espacamemto = "  ";
+      String espacamento = "   ";
 
       System.out.println(nome + " = [");
-      for(String linha[] : dados.conteudo()){
-         for(int i = 0; i < linha.length; i++){
-            if(i == 0) System.out.print(espacamemto + linha[i]);
-            else System.out.print("\t " + linha[i]);
+
+      if(dados.estaVazio()){
+         System.out.println(espacamento + "(Vazio)");
+
+      }else{
+         for(String linha[] : dados.conteudo()){
+            for(int i = 0; i < linha.length; i++){
+               System.out.print(espacamento + linha[i] + "\t");
+            }
+            System.out.println();
          }
-         System.out.println();
       }
+      
       System.out.println("]\n");
    }
 
@@ -286,6 +296,58 @@ public class Ged{
     */
    public double[][] obterSubMatriz(double[][] dados, int inicio, int fim){
       return md.obterSubMatriz(dados, inicio, fim);
+   }
+
+
+   /**
+    * Filtra o conteúdo contido nos dados fornecidos de 
+    * acordo com o valor de busca.
+    * @param dados conjunto de dados.
+    * @param idCol índice da coluna para busca.
+    * @param busca valor de busca desejado.
+    * @return novo conjunto de dados contendo apenas as informações filtradas, caso 
+    *    não seja encontrado nenhum valor desejado, o conteúdo dos novos dados
+    *    estará {@code vazio}.
+    */
+   public Dados filtrar(Dados dados, int idCol, String busca){
+      return md.filtrar(dados, idCol, busca);
+   }
+
+
+   /**
+    * <p>
+    *    Filtra o conteúdo numérico contido nos dados fornecidos de 
+    *    acordo com o operador fornecido.
+    * </p>
+    * A ordem da filtragem segue o seguinte critério:
+    * <p>
+    *    {@code valorContidoNosDados (operador) valorDesejado}
+    * </p>
+    * Dados que não possam ser convertidos serão desconsiderados e consequentemente 
+    * não incluídos no resultado filtrado.
+    * <p>
+    * Operadores suportados:
+    * </p>
+    * <ul>
+    *    <li> {@code >} </li>
+    *    <li> {@code >=} </li>
+    *    <li> {@code <} </li>
+    *    <li> {@code <=} </li>
+    *    <li> {@code ==} </li>
+    * </ul>
+    * @param dados conjunto de dados.
+    * @param idCol índice da coluna para busca.
+    * @param operador operador desejado.
+    * @param valor valor de busca desejado.
+    * @return novo conjunto de dados contendo apenas as informações filtradas, caso 
+    *    não seja encontrado nenhum valor desejado, o conteúdo dos novos dados
+    *    estará {@code vazio}.
+    * @throws IllegalArgumentException se o conteúdo dos dados estiver vazio.
+    * @throws IllegalArgumentException se o índice da coluna for inválido.
+    * @throws IllegalArgumentException se o operador fornecido não for suportado.
+    */
+   public Dados filtrar(Dados dados, int idCol, String operador, String valor){
+      return md.filtrar(dados, idCol, operador, valor);
    }
 
 

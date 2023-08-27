@@ -270,6 +270,58 @@ class ManipuladorDados{
    }
 
 
+   public Dados filtrar(Dados dados, int idCol, String busca){
+      dadosSimetricos(dados);
+      if(dados.estaVazio()){
+         throw new IllegalArgumentException("O conteúdo dos dados está vazio.");
+      }
+
+      ArrayList<String[]> conteudo = dados.conteudo();
+      if(idCol < 0 || idCol > conteudo.get(0).length){
+         throw new IllegalArgumentException("Índice da coluna fornecido é invalido.");
+      }
+
+      ArrayList<String[]> conteudoFiltrado = new ArrayList<>();
+      //percorre a lista e procura o valor desejado
+      for(String[] linha : conteudo){
+         if(linha[idCol].equals(busca)){
+            conteudoFiltrado.add(linha);
+         }
+      }
+
+      //salvar numa estrutura separada
+      Dados dadosFiltados = new Dados();
+      dadosFiltados.atribuir(conteudoFiltrado);
+
+      return dadosFiltados;
+   }
+
+
+   public Dados filtrar(Dados dados, int idCol, String operador, String valor){
+      dadosSimetricos(dados);
+      if(dados.estaVazio()){
+         throw new IllegalArgumentException("O conteúdo dos dados está vazio.");
+      }
+
+      ArrayList<String[]> conteudo = dados.conteudo();
+      if(idCol < 0 || idCol > conteudo.get(0).length){
+         throw new IllegalArgumentException("Índice da coluna fornecido é invalido.");
+      }
+
+      ArrayList<String[]> conteudoFiltrado = new ArrayList<>();
+      for(String[] linha : conteudo){
+         if(compararValores(linha[idCol], operador, valor)){
+            conteudoFiltrado.add(linha);
+         }
+      }
+
+      Dados dadosFiltados = new Dados();
+      dadosFiltados.atribuir(conteudoFiltrado);
+
+      return dadosFiltados;
+   }
+
+
    /**
     * Tenta converter o valor para um numérico do tipo int
     * @param valor valor que será testado.
@@ -315,6 +367,38 @@ class ManipuladorDados{
       }catch(Exception e){
          return false;
       }
+   }
+
+
+   /**
+    * Verifica se a operação entre os dois valores é válida de acordo com a expressão.
+    * v1 (operador) v2.
+    * @param v1 primeiro valor.
+    * @param operador operador esperado.
+    * @param v2 segundo valor.
+    * @return resultado da operação, valores que não possam ser convertidos serão desconsiderados.
+    */
+   private boolean compararValores(String v1, String operador, String v2){
+      double valor1;
+      double valor2;
+
+      try{
+         valor1 = Double.parseDouble(v1);
+         valor2 = Double.parseDouble(v2);
+
+      }catch(Exception e){
+         return false;
+      }
+
+      switch(operador){
+         case ">": return (valor1 > valor2);
+         case ">=": return (valor1 >= valor2);
+         case "<": return (valor1 < valor2);
+         case "<=": return (valor1 <= valor2);
+         case "==": return (valor1 == valor2);
+         default: throw new IllegalArgumentException("Operador não suportado.");
+      }
+
    }
 
 
