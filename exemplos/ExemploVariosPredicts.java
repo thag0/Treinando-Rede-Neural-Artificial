@@ -8,7 +8,7 @@ public class ExemploVariosPredicts{
    public static void main(String[] args){
       Ged ged = new Ged();
       Dados dados = ged.lerCsv("./dados/portas-logicas/xorCascata.csv");
-      double[][] xor = ged.listaParaDadosDouble(dados);
+      double[][] xor = ged.dadosParaDouble(dados);
 
       int nEntrada = 3;
       int nSaida = 2;

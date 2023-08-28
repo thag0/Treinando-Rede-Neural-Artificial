@@ -49,7 +49,7 @@ public class Ged{
 
    /**
     * Exibe pelo console as informações contidas no conteúdo dos dados.
-    * @param lista lista com os dados.
+    * @param dados conjunto de dados.
     */
    public void imprimirDados(Dados dados){
       dados.imprimir();
@@ -58,7 +58,7 @@ public class Ged{
 
    /**
     * Exibe pelo console as informações contidas no conteúdo dos dados.
-    * @param lista lista com os dados.
+    * @param dados conjunto de dados.
     * @param nome nome personalizado para os dados impressos.
     */
    public void imprimirDados(Dados dados, String nome){
@@ -334,6 +334,7 @@ public class Ged{
     *    <li> {@code <} </li>
     *    <li> {@code <=} </li>
     *    <li> {@code ==} </li>
+    *    <li> {@code !=} </li>
     * </ul>
     * @param dados conjunto de dados.
     * @param idCol índice da coluna para busca.
@@ -350,6 +351,39 @@ public class Ged{
       return md.filtrar(dados, idCol, operador, valor);
    }
 
+
+   /**
+    * Substitui todos os valores ausentes no conteúdos dos dados fornecidos.
+    * <p>
+    *    São considerados dados ausentes quaisquer valores {@code vazio},
+    *    {@code em branco} e {@code com "?"}
+    * </p>
+    * Valores de preenchimento como {@code média}, {@code mediana} entre outros, podem 
+    * ser obtidos diretamente pelo objeto {@code Dados}.
+    * @param dados conjunto de dados.
+    * @param valor valor de preenchimento em elementos ausentes.
+    */
+   public void preencherAusentes(Dados dados, double valor){
+      md.preencherAusentes(dados, valor);
+   }
+
+
+   /**
+    * Substitui todos os valores ausentes no conteúdos dos dados fornecidos de 
+    * acordo com a coluna informada.
+    * <p>
+    *    São considerados dados ausentes quaisquer valores {@code vazio},
+    *    {@code em branco} e {@code com "?"}
+    * </p>
+    * Valores de preenchimento como {@code média}, {@code mediana} entre outros, podem 
+    * ser obtidos diretamente pelo objeto {@code Dados}.
+    * @param dados conjunto de dados.
+    * @param idCol índice da coluna desejada.
+    * @param valor valor de preenchimento em elementos ausentes.
+    */
+   public void preencherAusentes(Dados dados, int idCol, double valor){
+      md.preencherAusentes(dados, idCol, valor);
+   }
 
 
    /**
@@ -490,8 +524,8 @@ public class Ged{
     * @param dados conjunto de dados.
     * @return matriz convertida para valores tipo {@code int}.
     */
-   public int[][] listaParaDadosInt(Dados dados){
-      return cd.listaParaDadosInt(dados);
+   public int[][] dadosParaInt(Dados dados){
+      return cd.dadosParaInt(dados);
    }
 
 
@@ -501,8 +535,8 @@ public class Ged{
     * @param dados conjunto de dados.
     * @return matriz convertida para valores tipo {@code float}.
     */
-   public float[][] listaParaDadosFloat(Dados dados){
-      return cd.listaParaDadosFloat(dados);
+   public float[][] dadosParaFloat(Dados dados){
+      return cd.dadosParaFloat(dados);
    }
 
 
@@ -512,8 +546,8 @@ public class Ged{
     * @param dados conjunto de dados.
     * @return matriz convertida para valores tipo {@code double}.
     */
-   public double[][] listaParaDadosDouble(Dados dados){
-      return cd.listaParaDadosDouble(dados);
+   public double[][] dadosParaDouble(Dados dados){
+      return cd.dadosParaDouble(dados);
    }
 
 

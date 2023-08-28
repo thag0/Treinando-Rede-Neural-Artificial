@@ -15,7 +15,7 @@ class ConversorDados{
    }
 
 
-   public int[][] listaParaDadosInt(Dados dados){
+   public int[][] dadosParaInt(Dados dados){
       int[] shape = dados.shape();
 
       int[][] dadosConvertidos = new int[shape[0]][shape[1]];
@@ -34,7 +34,7 @@ class ConversorDados{
    }
 
    
-   public float[][] listaParaDadosFloat(Dados dados){
+   public float[][] dadosParaFloat(Dados dados){
       int[] shape = dados.shape();
 
       float[][] dadosConvertidos = new float[shape[0]][shape[1]];
@@ -53,7 +53,7 @@ class ConversorDados{
    }
 
    
-   public double[][] listaParaDadosDouble(Dados dados){
+   public double[][] dadosParaDouble(Dados dados){
       int[] shape = dados.shape();
 
       double[][] dadosConvertidos = new double[shape[0]][shape[1]];

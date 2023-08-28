@@ -22,7 +22,7 @@ public class ExemploPhising{
       //converter os dados da estrutura de texto em valores 
       //numéricos para o treino da rede neural.
       //separar em treino e teste para evitar overfitting
-      double[][] dados = ged.listaParaDadosDouble(phishing);
+      double[][] dados = ged.dadosParaDouble(phishing);
       ged.embaralharDados(dados);
       double[][][] treinoTeste = ged.separarTreinoTeste(dados, 0.3f);
       double[][] treino = treinoTeste[0];

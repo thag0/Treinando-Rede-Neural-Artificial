@@ -23,7 +23,7 @@ public class ExemploClassificacao{
       System.out.println("Shape dados = [" + shape[0] + ", " + shape[1] + "]");
 
       //separando dados de treino e teste
-      double[][] dados = ged.listaParaDadosDouble(iris);
+      double[][] dados = ged.dadosParaDouble(iris);
       ged.embaralharDados(dados);
       double[][][] treinoTeste = ged.separarTreinoTeste(dados, 0.25f);
       double[][] treino = treinoTeste[0];

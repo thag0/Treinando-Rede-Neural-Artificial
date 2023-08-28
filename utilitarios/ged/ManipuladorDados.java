@@ -322,6 +322,34 @@ class ManipuladorDados{
    }
 
 
+   public void preencherAusentes(Dados dados, double valor){
+      ArrayList<String[]> conteudo = dados.conteudo();
+
+      for(String[] linha : conteudo){
+         for(int j = 0; j < linha.length; j++){
+            if(linha[j].equals("?") || linha[j].isBlank() || linha[j].isEmpty()){
+               linha[j] = Double.toString(valor);
+            }
+         }
+      }
+
+      dados.atribuir(conteudo);
+   }
+
+
+   public void preencherAusentes(Dados dados, int idCol, double valor){
+      ArrayList<String[]> conteudo = dados.conteudo();
+
+      for(String[] linha : conteudo){
+         if(linha[idCol].equals("?") || linha[idCol].isBlank() || linha[idCol].isEmpty()){
+            linha[idCol] = Double.toString(valor);
+         }
+      }
+
+      dados.atribuir(conteudo);
+   }
+
+
    /**
     * Tenta converter o valor para um numérico do tipo int
     * @param valor valor que será testado.
@@ -396,6 +424,7 @@ class ManipuladorDados{
          case "<": return (valor1 < valor2);
          case "<=": return (valor1 <= valor2);
          case "==": return (valor1 == valor2);
+         case "!=": return (valor1 != valor2);
          default: throw new IllegalArgumentException("Operador não suportado.");
       }
 
@@ -403,18 +432,6 @@ class ManipuladorDados{
 
 
    public boolean dadosSimetricos(Dados dados){
-      ArrayList<String[]> lista = dados.conteudo();
-
-      if(lista == null) throw new IllegalArgumentException("O conteúdo dos dados é nulo.");
-      
-      //lista sem dados é considerada como não simétrica
-      if(lista.size() == 0) return false;
-
-      int colunas = lista.get(0).length;// tamanho base
-      for(int i = 0; i < lista.size(); i++){
-         if(lista.get(i).length != colunas) return false;
-      }
-
-      return true;
+      return dados.dadosSimetricos();
    }
 }
