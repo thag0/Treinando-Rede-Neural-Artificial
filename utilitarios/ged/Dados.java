@@ -432,7 +432,7 @@ public class Dados{
          throw new IllegalArgumentException("O conteúdo dos dados está vazio.");
       }
 
-      if(!this.dadosSimetricos()){
+      if(!this.simetrico()){
          throw new IllegalArgumentException("O conteúdo dos dados não é.");
       }
 
@@ -449,7 +449,7 @@ public class Dados{
     * <p>
     *    {@code shape = [linhas, colunas]}
     * </p>
-    * @return estrutura contendo o formato da lista, considerando que ela é simétrica.
+    * @return buffer contendo o formato da lista, considerando que ela é simétrica.
     */
    public String shapeInfo(){
       if(this.estaVazio()){
@@ -480,7 +480,7 @@ public class Dados{
          System.out.println(espacamento + "(Vazio)");
          
       }else{
-         if(this.dadosSimetricos()){
+         if(this.simetrico()){
             int[] shape = this.shape();
             System.out.println("Dados (" + shape[0] + ", " + shape[1] + ") = [");
 
@@ -559,7 +559,7 @@ public class Dados{
          buffer += espacamento + "Conteúdo vazio.\n"; 
       
       }else{
-         if(dadosSimetricos()){
+         if(this.simetrico()){
             int[] shape = this.shape();
             buffer += espacamento + "Linhas: " + formatacao + shape[0] + "\n";
             buffer += espacamento + "Colunas: " + formatacao + shape[1] + "\n";
@@ -661,7 +661,7 @@ public class Dados{
     * @return true caso os dados sejam simétricos, false caso contrário.
     * @throws IllegalArgumentException se o conteúdo dos dados for nulo.
     */
-   public boolean dadosSimetricos(){
+   public boolean simetrico(){
       ArrayList<String[]> lista = this.conteudo();
 
       if(lista == null) throw new IllegalArgumentException("O conteúdo dos dados é nulo.");

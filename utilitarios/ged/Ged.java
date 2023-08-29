@@ -70,7 +70,7 @@ public class Ged{
          System.out.println(espacamento + "(Vazio)");
 
       }else{
-         if(dados.dadosSimetricos()){//conteúdo
+         if(dados.simetrico()){//conteúdo
             int[] shape = dados.shape();
             System.out.println(nome.trim() + " (" + shape[0] + ", " + shape[1] + ") = [");
 
@@ -152,6 +152,16 @@ public class Ged{
     * @param nome nome personalizado da matriz para a impressão
     */
    public void imprimirMatriz(double[][] matriz, String nome){
+      im.imprimirMatriz(matriz, nome);
+   }
+
+
+   /**
+    * Exibe as informações contidas na matriz fornecida.
+    * @param matriz matriz com os dados
+    * @param nome nome personalizado da matriz para a impressão
+    */
+   public void imprimirMatriz(String[][] matriz, String nome){
       im.imprimirMatriz(matriz, nome);
    }
 
@@ -393,11 +403,12 @@ public class Ged{
 
    /**
     * Categoriza o conteúdo de dados na coluna relativa ao índice fornecido,
-    * usando a técnica de One-Hot Encoding. As novas colunas adicionadas
-    * representarão as categorias únicas encontradas na coluna especificada, e
-    * os valores das novas colunas serão definidos como "1" quando a categoria
-    * correspondente estiver presente na linha e "0" caso contrário.
-    *
+    * usando a técnica de One-Hot Encoding. 
+    * <p>
+    *    As novas colunas adicionadas representarão as categorias únicas encontradas 
+    *    na coluna especificada, e os valores das novas colunas serão definidos como "1" 
+    *    quando a categoria correspondente estiver presente na linha e "0" caso contrário.
+    * <p>
     * @param dados conjunto de dados.
     * @param indice O índice da coluna na qual a categorização será aplicada.
     * @throws IllegalArgumentException se o conteúdo dos dados não for simétrico.
@@ -405,6 +416,108 @@ public class Ged{
     */
    public void categorizar(Dados dados, int indice){
       md.categorizar(dados, indice);
+   }
+
+
+   /**
+    * Une os dois conjuntos de dados fornecidos
+    * <p>
+    *    A união adiciona as linhas do conteúdo de B ao final das linhas
+    *    do conteúdo de A. 
+    * </p>
+    * Exemplo:
+    * <pre>
+    * a = [
+    *    "a", "b", "c" 
+    *    "d", "e", "f" 
+    *    "g", "h", "i" 
+    * ]
+    *
+    * b = [
+    *    "j", "k", "l" 
+    *    "m", "n", "o" 
+    *    "p", "q", "r" 
+    * ]
+    *
+    * união = [
+    *    "a", "b", "c" 
+    *    "d", "e", "f" 
+    *    "g", "h", "i" 
+    *    "j", "k", "l" 
+    *    "m", "n", "o" 
+    *    "p", "q", "r" 
+    * ]
+    * </pre>
+    * @param a primeiro conjunto de dados.
+    * @param b segnudo conjunto de dados.
+    * @return novo conjunto de dados contendo a união entre A e B.
+    * @throws IllegalArgumentException se o conteúdo de A não for simétrico.
+    * @throws IllegalArgumentException se o conteúdo de B não for simétrico.
+    * @throws IllegalArgumentException se a quantidade de colunas de A e B forem diferentes.
+    */
+   public Dados unir(Dados a, Dados b){
+      return md.unir(a, b);
+   }
+
+
+   /**
+    * Une o conteúdo de cada coluna dentro de A e B num
+    * novo conjunto de dados.
+    * <p>
+    *    A lógica envolve primeiro adicionar o conteúdo da linha de A e
+    *    depois adicionar o conteúdo da linha de B.
+    * </p>
+    *    Exemplo:
+    * <pre>
+    * a = [
+    *    1, 2
+    *    4, 5
+    * ]
+    *
+    * b = [
+    *    3
+    *    6
+    * ]
+    *
+    * união = [
+    *    1, 2, 3
+    *    4, 5, 6
+    *    7, 8, 9
+    * ]
+    * </pre>
+    * @param a primeiro conjunto de dados.
+    * @param b segundo conjunto de dados.
+    * @return novo objeto do tipo {@code Dados} conténdo a união por colunas de A com B.
+    * @throws IllegalArgumentException caso a quantiade de linhas de A e B sejam diferentes.
+    */
+   public Dados unirColunas(Dados a, Dados b){
+      return md.unirColuna(a, b);
+   }
+
+
+   /**
+    * Remove linhas repetidas dentro do conjunto de dados.
+    * <p>
+    *    Exemplo:
+    * </p>
+    * <pre>
+    * a = [
+    *    1, 2, 3
+    *    4, 5, 6
+    *    4, 5, 6
+    *    7, 8, 9
+    * ]
+    *
+    * sem duplicadas = [
+    *    1, 2, 3
+    *    4, 5, 6
+    *    7, 8, 9
+    * ]
+    * </pre>
+    * @param dados conjunto de dados.
+    */
+   public void removerDuplicadas(Dados dados){
+      md.removerDuplicadas(dados);
    }
 
 
@@ -554,6 +667,7 @@ public class Ged{
 
 
    //GERENCIADOR DE ARQUIVOS ---------------------
+
 
    /**
     * Lê o arquivo .csv de acordo com o caminho especificado.
@@ -737,6 +851,17 @@ public class Ged{
     */
    public double[][] dadosParaDouble(Dados dados){
       return cd.dadosParaDouble(dados);
+   }
+
+
+   /**
+    * Converte o conjunto de dados para uma matriz bidimensional 
+    * com os conteúdo contido nos dados.
+    * @param dados conjunto de dados.
+    * @return matriz convertida para valores tipo {@code String}.
+    */
+   public String[][] dadosParaString(Dados dados){
+      return cd.dadosParaString(dados);
    }
 
 

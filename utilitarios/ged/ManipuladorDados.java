@@ -2,6 +2,7 @@ package utilitarios.ged;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Set;
 
 
 /**
@@ -37,7 +38,7 @@ class ManipuladorDados{
 
 
    public void adicionarColuna(Dados dados, int indice){
-      if(!dados.dadosSimetricos()){
+      if(!dados.simetrico()){
          throw new IllegalArgumentException("O conteúdo dos dados deve ser simético.");
       }
 
@@ -69,7 +70,7 @@ class ManipuladorDados{
 
 
    public void adicionarLinha(Dados dados){
-      if(!dados.dadosSimetricos()){
+      if(!dados.simetrico()){
          throw new IllegalArgumentException("O conteúdo dos dados deve ser simético.");
       }
 
@@ -87,7 +88,7 @@ class ManipuladorDados{
 
 
    public void adicionarLinha(Dados dados, int indice){
-      if(!dados.dadosSimetricos()){
+      if(!dados.simetrico()){
          throw new IllegalArgumentException("O conteúdo dos dados deve ser simético.");
       }
       
@@ -296,6 +297,91 @@ class ManipuladorDados{
    }
 
 
+   public Dados unir(Dados a, Dados b){
+      //simetria
+      if(!a.simetrico()){
+         throw new IllegalArgumentException("O conteúdo de A deve ser simétrico.");
+      }
+      if(!b.simetrico()){
+         throw new IllegalArgumentException("O conteúdo de B deve ser simétrico.");
+      }
+
+      //dimensionalidade
+      int[] shapeA = a.shape();
+      int[] shapeB = b.shape();
+      if(shapeA[1] != shapeB[1]){
+         throw new IllegalArgumentException("O contéudo de A e B deve conter a mesma quantidade de colunas.");
+      }
+
+      //é seguro trabalhar com os dados agora
+      ArrayList<String[]> conteudoA = a.conteudo();
+      ArrayList<String[]> conteudoB = b.conteudo();
+
+      ArrayList<String[]> conteudoNovo = new ArrayList<>();
+      conteudoNovo.addAll(conteudoA);
+      conteudoNovo.addAll(conteudoB);
+
+      Dados dados = new Dados();
+      dados.atribuir(conteudoNovo);
+
+      return dados;
+   }
+
+
+   public Dados unirColuna(Dados a, Dados b){
+      int[] shapeA = a.shape();
+      int[] shapeB = b.shape();
+
+      if(shapeA[0] != shapeB[0]){
+         throw new IllegalArgumentException("A quantidade de linhas de A deve ser igual a quantidade de linhas de B");
+      }
+
+      int qLinhas = shapeA[0];
+
+      ArrayList<String[]> conteudoA = a.conteudo();
+      ArrayList<String[]> conteudoB = b.conteudo();
+      
+      ArrayList<String[]> conteudoNovo = new ArrayList<>();
+      for(int i = 0; i < qLinhas; i++){
+         String[] linhaA = conteudoA.get(i);
+         String[] linhaB = conteudoB.get(i);
+         String[] novaLinha = new String[linhaA.length + linhaB.length];
+
+         System.arraycopy(linhaA, 0, novaLinha, 0, linhaA.length);
+         System.arraycopy(linhaB, 0, novaLinha, linhaA.length, linhaB.length);
+
+         conteudoNovo.add(novaLinha);
+      }
+      
+      Dados dados = new Dados();
+      dados.atribuir(conteudoNovo);
+      
+      return dados;
+   }
+
+
+   public void removerDuplicadas(Dados dados){
+      if(!dados.simetrico()){
+         throw new IllegalArgumentException("O conjunto de dados deve ser simétrico.");
+      }
+
+      ArrayList<String[]> conteudo = dados.conteudo();
+      Set<String> linhasVistas = new HashSet<>();
+      ArrayList<String[]> novoConteudo = new ArrayList<>();
+
+      for(String[] linha : conteudo){
+         
+         String linhaComoString = String.join(",", linha);//transforma a linha em uma única string
+         if(!linhasVistas.contains(linhaComoString)){
+            novoConteudo.add(linha);
+            linhasVistas.add(linhaComoString);
+         }
+      }
+
+      dados.atribuir(novoConteudo);
+   }
+
+
    public double[][] obterSubMatriz(double[][] dados, int inicio, int fim){
       if(inicio < 0 || fim > dados.length || inicio >= fim){
          throw new IllegalArgumentException("Índices de início ou fim inválidos.");
@@ -480,6 +566,6 @@ class ManipuladorDados{
 
 
    public boolean dadosSimetricos(Dados dados){
-      return dados.dadosSimetricos();
+      return dados.simetrico();
    }
 }
