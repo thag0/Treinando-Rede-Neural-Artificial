@@ -39,7 +39,8 @@ class GerenciadorArquivos{
       try{
          BufferedReader br = new BufferedReader(new FileReader(caminho));
          while((linha = br.readLine()) != null){
-            String linhaDados[] = linha.split(separador);
+            linha = linha.trim();//remover espaços vazios
+            String linhaDados[] = linha.split(separador);//separar pelas vírgulas
 
             for(int i = 0; i < linhaDados.length; i++){
                linhaDados[i] = linhaDados[i].replaceAll(" ", "");

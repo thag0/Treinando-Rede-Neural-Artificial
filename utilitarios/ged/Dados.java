@@ -12,6 +12,9 @@ import java.util.HashMap;
 public class Dados{
 
    /**
+    * <p>
+    *    Região crítica.
+    * </p>
     * Estrutura que armazena o conteúdo de dados lidos
     */
    private ArrayList<String[]> conteudo;
@@ -42,8 +45,16 @@ public class Dados{
     * @param lin linha para edição.
     * @param col coluna para edição.
     * @param valor novo valor.
+    * @throws IllegalArgumentException se os índices fornecidos forem inválidos.
     */
    public void editarItem(int lin, int col, String valor){
+      if(lin < 0 || lin >= this.conteudo.size()){
+         throw new IllegalArgumentException("Índice de linha fornecido é inválido.");
+      }
+      if(col < 0 || col >= this.conteudo.get(lin).length){
+         throw new IllegalArgumentException("Índice de coluna fornecido é inválido.");
+      }
+
       String[] linha = this.conteudo.get(lin);
       linha[col] = valor;
       this.conteudo.set(lin, linha);
@@ -124,28 +135,6 @@ public class Dados{
     * conteúdo de Dados.
     * @param matriz matriz com os dados.
     */
-   public void atribuir(String[][] matriz){
-      int linhas = matriz.length;
-      int colunas = matriz[0].length;
-      ArrayList<String[]> lista = new ArrayList<>();
-
-      for (int i = 0; i < linhas; i++) {
-         String[] linha = new String[colunas];
-         for (int j = 0; j < colunas; j++) {
-            linha[j] = matriz[i][j];
-         }
-         lista.add(linha);
-      }
-
-      this.conteudo = lista;
-   }
-
-
-   /**
-    * Atribui os valores contidos na matriz fonercida ao 
-    * conteúdo de Dados.
-    * @param matriz matriz com os dados.
-    */
    public void atribuir(double[][] matriz){
       int linhas = matriz.length;
       int colunas = matriz[0].length;
@@ -164,6 +153,28 @@ public class Dados{
 
 
    /**
+    * Atribui os valores contidos na matriz fonercida ao 
+    * conteúdo de Dados.
+    * @param matriz matriz com os dados.
+    */
+   public void atribuir(String[][] matriz){
+      int linhas = matriz.length;
+      int colunas = matriz[0].length;
+      ArrayList<String[]> lista = new ArrayList<>();
+
+      for (int i = 0; i < linhas; i++) {
+         String[] linha = new String[colunas];
+         for (int j = 0; j < colunas; j++) {
+            linha[j] = matriz[i][j];
+         }
+         lista.add(linha);
+      }
+
+      this.conteudo = lista;
+   }
+
+
+   /**
     * Retorna todo o conteúdo presente nos dados.
     * @return estrutura {@code ArrayList<String[]>} que armazena o conteúdo dos dados.
     */
@@ -172,6 +183,14 @@ public class Dados{
    }
 
 
+   /**
+    * Verifica se o conteúdo do conjunto de dados está vazio.
+    * <p>
+    *    Ele é considerado vazio se não conter nenhuma linha ou 
+    *    se todas as linhas estiverem vazias.
+    * </p>
+    * @return true se o conjunto de dados estiver vazio, false caso contrário.
+    */
    public boolean estaVazio(){
       if(this.conteudo.isEmpty()) return true;
       
@@ -406,10 +425,15 @@ public class Dados{
     * </p>
     * @return estrutura contendo o formato da lista, considerando que ela é simétrica.
     * @throws IllegalArgumentException se o conteúdo estiver vazio.
+    * @throws IllegalArgumentException se o conteúdo não for simétrico.
     */
    public int[] shape(){
       if(this.estaVazio()){
          throw new IllegalArgumentException("O conteúdo dos dados está vazio.");
+      }
+
+      if(!this.dadosSimetricos()){
+         throw new IllegalArgumentException("O conteúdo dos dados não é.");
       }
 
       int[] shape = {
@@ -442,17 +466,28 @@ public class Dados{
 
 
    /**
-    * Método de impressão básico, via console, do conteúdo 
+    * Método de impressão básico, via console, do conteúdo
     * contido em formato de tabela.
+    * <p>
+    *    Caso os dados sejam simétricos, também é exibido o formato do conteúdo.
+    * </p>
     */
    public void imprimir(){
       String espacamento = "   ";
-      System.out.println("Dados = [");
 
       if(this.estaVazio()){
+         System.out.println("Dados = [");
          System.out.println(espacamento + "(Vazio)");
          
       }else{
+         if(this.dadosSimetricos()){
+            int[] shape = this.shape();
+            System.out.println("Dados (" + shape[0] + ", " + shape[1] + ") = [");
+
+         }else{
+            System.out.println("Dados = [");
+         }
+
          for(String linha[] : this.conteudo){
             for(int i = 0; i < linha.length; i++){
                System.out.print(espacamento + linha[i] + "\t");
@@ -615,6 +650,17 @@ public class Dados{
   }
  
 
+   /**
+    * Verifica se o conteúdo dos dados é simetrico. A simetria leva em conta 
+    * se todas as colunas têm o mesmo tamanho.
+    * <p>
+    *    A simetria também leva em conta se o conteúdo dos dados possui elementos, 
+    *    caso o tamanho seja zero será considerada como não simétrica.
+    * <p>
+    * @param dados conjunto de dados.
+    * @return true caso os dados sejam simétricos, false caso contrário.
+    * @throws IllegalArgumentException se o conteúdo dos dados for nulo.
+    */
    public boolean dadosSimetricos(){
       ArrayList<String[]> lista = this.conteudo();
 
@@ -629,5 +675,23 @@ public class Dados{
       }
 
       return true;
+   }
+
+
+   /**
+    * Clona o conteúdo em uma nova estrutura, devolvendo um novo objeto
+    * de {@code Dados} com o mesmo conteúdo.
+    * @return novo objeto do tipo {@code Dados} com a cópia do conteúdo.
+    */
+   public Dados clonar(){
+      Dados cloneDados = new Dados();
+      ArrayList<String[]> cloneConteudo = new ArrayList<>();
+
+      for(String[] linha : this.conteudo){
+         cloneConteudo.add(linha);
+      }
+      cloneDados.atribuir(cloneConteudo);
+
+      return cloneDados;
    }
 }

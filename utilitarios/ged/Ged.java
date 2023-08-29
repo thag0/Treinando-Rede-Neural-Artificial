@@ -4,8 +4,8 @@ package utilitarios.ged;
  * <p>
  *    Gerenciador de Dados.
  * </p>
- * Responsável pelo manuseio de conjunto de dados, 
- * funcionalidades disponíveis:
+ * Conjunto de ferramentas criadas para lidar com dados. As funcionalidades
+ * incluem:
  * <ul>
  *    <li>Leitura de arquivos;</li>
  *    <li>Conversão de dados;</li>
@@ -19,6 +19,7 @@ package utilitarios.ged;
  *    publicamente para quem quiser utilizá-las, o conteúdo com implementações está divididos de acordo 
  *    com suas especialidades.
  * </p>
+ * @see https://github.com/thag0/Treinando-Rede-Neural-Artificial/tree/main/utilitarios/ged
 */
 public class Ged{
 
@@ -64,12 +65,19 @@ public class Ged{
    public void imprimirDados(Dados dados, String nome){
       String espacamento = "   ";
 
-      System.out.println(nome + " = [");
-
-      if(dados.estaVazio()){
+      if(dados.estaVazio()){//conteúdo vazio
+         System.out.println(nome + " = [");
          System.out.println(espacamento + "(Vazio)");
 
       }else{
+         if(dados.dadosSimetricos()){//conteúdo
+            int[] shape = dados.shape();
+            System.out.println(nome.trim() + " (" + shape[0] + ", " + shape[1] + ") = [");
+
+         }else{
+            System.out.println(nome + " = [");
+         }
+
          for(String linha[] : dados.conteudo()){
             for(int i = 0; i < linha.length; i++){
                System.out.print(espacamento + linha[i] + "\t");
@@ -112,6 +120,15 @@ public class Ged{
    /**
     * Exibe as informações contidas na matriz fornecida.
     * @param matriz matriz com os dados
+    */
+   public void imprimirMatriz(String[][] matriz){
+      im.imprimirMatriz(matriz);
+   }
+
+
+   /**
+    * Exibe as informações contidas na matriz fornecida.
+    * @param matriz matriz com os dados
     * @param nome nome personalizado da matriz para a impressão
     */
    public void imprimirMatriz(int[][] matriz, String nome){
@@ -144,10 +161,10 @@ public class Ged{
 
    /**
     * Verifica se o conteúdo dos dados é simetrico. A simetria leva em conta 
-    * se todas as colunas contém o mesmo tamanho.
+    * se todas as colunas têm o mesmo tamanho.
     * <p>
-    *    A simetria leva em conta se a lista possui elementos, caso o tamanho seja zero será
-    *    considerada como não simétrica.
+    *    A simetria também leva em conta se o conteúdo dos dados possui elementos, 
+    *    caso o tamanho seja zero será considerada como não simétrica.
     * <p>
     * @param dados conjunto de dados.
     * @return true caso os dados sejam simétricos, false caso contrário.
@@ -159,7 +176,24 @@ public class Ged{
 
 
    /**
-    * Adiciona uma coluna ao final de todas as linhas do conteúdo dos dados.
+    * Adiciona uma coluna com conteúdo {@code vazio} ao final de todas as 
+    * linhas do conteúdo dos dados.
+    * <p>
+    *    Exemplo:
+    * </p>
+    * <pre>
+    * dados = [
+    *    1, 2, 3 
+    *    4, 5, 6 
+    *    7, 8, 9 
+    * ]
+    *
+    * novaColuna = [
+    *    1, 2, 3, 
+    *    4, 5, 6,  
+    *    7, 8, 9, 
+    * ]
+    * </pre>
     * @param dados conjunto de dados.
     */
    public void adicionarColuna(Dados dados){
@@ -168,10 +202,29 @@ public class Ged{
 
 
    /**
-    * Adiciona uma coluna no índice fornecido. Todos os itens 
-    * depois do índice serão deslocados para a direita.
+    * Adiciona uma coluna com conteúdo {@code vazio} no índice fornecido. 
+    * Todos os itens depois do índice serão deslocados para a direita.
+    * <p>
+    *    Exemplo:
+    * </p>
+    * <pre>
+    * dados = [
+    *    1, 2, 3 
+    *    4, 5, 6 
+    *    7, 8, 9 
+    * ]
+    *
+    * int indice = 1;
+    *
+    * novaColuna = [
+    *    1,  , 2, 3
+    *    4,  , 5, 6 
+    *    7,  , 8, 9
+    * ]
+    * </pre>
     * @param dados conjunto de dados.
     * @param indice índice onde a nova coluna será adicionada.
+    * @throws IllegalArgumentException se o conteúdo dos dados não for simétrico.
     * @throws IllegalArgumentException se o índice fornecido for inválido.
     */
    public void adicionarColuna(Dados dados, int indice){
@@ -180,11 +233,70 @@ public class Ged{
 
 
    /**
+    * Adiciona uma linha com conteúdo vazio ao final do conteúdo dos dados.
+    * <p>
+    *    Exemplo:
+    * </p>
+    * <pre>
+    * dados = [
+    *    1, 2, 3 
+    *    4, 5, 6 
+    *    7, 8, 9 
+    * ]
+    *
+    * novaLinha = [
+    *    1, 2, 3
+    *    4, 5, 6 
+    *    7, 8, 9 
+    *     ,  , 
+    * ]
+    * </pre>
+    * @param dados conjunto de dados.
+    * @throws IllegalArgumentException se o conteúdo dos dados não for simétrico.
+    */
+   public void adicionarLinha(Dados dados){
+      md.adicionarLinha(dados);
+   }
+
+
+   /**
+    * Adiciona uma linha com conteúdo vazio de acordo com o índice especificado. Todos 
+    * os elementos depois da linha fornecida serão deslocados para baixo.
+    * <p>
+    *    Exemplo:
+    * </p>
+    * <pre>
+    * dados = [
+    *    1, 2, 3 
+    *    4, 5, 6 
+    *    7, 8, 9 
+    * ]
+    *
+    * int indice = 1;
+    *
+    * novaLinha = [
+    *    1, 2, 3
+    *     ,  , 
+    *    4, 5, 6 
+    *    7, 8, 9 
+    * ]
+    * </pre>
+    * @param dados conjunto de dados.
+    * @param indice índice onde a nova linha será adicionada.
+    * @throws IllegalArgumentException se o conteúdo dos dados não for simétrico.
+    * @throws IllegalArgumentException se o índice fornecido for inválido.
+    */
+   public void adicionarLinha(Dados dados, int indice){
+      md.adicionarLinha(dados, indice);
+   }
+
+
+   /**
     * Remove uma linha inteira do conjunto de dados
     * @param dados conjunto de dados.
     * @param indice índice da linha que será removida.
     * @throws IllegalArgumentException o conteúdo dos dados for nulo.
-    * @throws IllegalArgumentException se o indice estiver fora de alcance da lista.
+    * @throws IllegalArgumentException se o indice for inválido.
     */
    public void removerLinha(Dados dados, int indice){
       md.removerLinha(dados, indice);
@@ -196,7 +308,7 @@ public class Ged{
     * @param dados conjunto de dados.
     * @param indice índice da coluna que será removida.
     * @throws IllegalArgumentException o conteúdo dos dados for nulo.
-    * @throws IllegalArgumentException se o indice estiver fora de alcance da lista.
+    * @throws IllegalArgumentException se o indice for inválido.
     */
    public void removerColuna(Dados dados, int indice){
       md.removerColuna(dados, indice);
@@ -245,7 +357,7 @@ public class Ged{
     * @param idColuna2 índice da segunda coluna que será trocada.
     * @throws IllegalArgumentException se o conteúdo dos dados estiver nulo.
     * @throws IllegalArgumentException se o conteúdo dos dados não for simétrico.
-    * @throws IllegalArgumentException se a lista não tiver pelo menos duas colunas.
+    * @throws IllegalArgumentException se a o conteúdo dos dados não tiver pelo menos duas colunas.
     * @throws IllegalArgumentException se os índices fornecidos estiverem fora de alcance do tamanho das colunas.
     * @throws IllegalArgumentException se as colunas fornecidas forem iguais.
     */
@@ -259,8 +371,19 @@ public class Ged{
     * um valor numérico.
     * <p>
     *    É importante verificar e ter certeza se os dados não possuem nenhuma coluna com caracteres, caso isso seja verdade
-    *    o método irá remover todas as colunas como consequência e a lista ficará vazia.
+    *    o método irá remover todas as colunas como consequência e o conteúdo dos dados estará vazio.
     * </p>
+    * Exemplo:
+    * <pre>
+    * dados = [
+    *    1, "a", 3
+    *    4,  5 , 6
+    *    7,    , 9    
+    * ]
+    * resultado = [
+    *    4, 5, 6
+    * ]
+    * </pre>
     * @param dados conjunto de dados.
     */
    public void removerNaoNumericos(Dados dados){
@@ -269,7 +392,7 @@ public class Ged{
 
 
    /**
-    * Categoriza a lista de dados na coluna relativa ao índice fornecido,
+    * Categoriza o conteúdo de dados na coluna relativa ao índice fornecido,
     * usando a técnica de One-Hot Encoding. As novas colunas adicionadas
     * representarão as categorias únicas encontradas na coluna especificada, e
     * os valores das novas colunas serão definidos como "1" quando a categoria
@@ -288,6 +411,24 @@ public class Ged{
    /**
     * Retorna uma matriz menor contendo as mesmas informações da matriz original, apenas
     * com os dados do ponto de inínio e fim.
+    * <p>
+    *    Exemplo:
+    * </p>
+    * <pre>
+    * dados = [
+    *    1, 2, 3
+    *    4, 5, 6
+    *    7, 8, 9
+    * ]
+    *
+    * int inicio = 0;
+    * int fim = 2;
+    *
+    * subDados = [
+    *    1, 2, 3
+    *    4, 5, 6
+    * ]
+    * </pre>
     * @param dados matriz contendo os dados completos.
     * @param inicio índice inicial do corte (inclusivo).
     * @param fim índice final do corte (exclusivo).
@@ -326,7 +467,7 @@ public class Ged{
     * Dados que não possam ser convertidos serão desconsiderados e consequentemente 
     * não incluídos no resultado filtrado.
     * <p>
-    * Operadores suportados:
+    *    Operadores suportados:
     * </p>
     * <ul>
     *    <li> {@code >} </li>
@@ -369,6 +510,17 @@ public class Ged{
 
 
    /**
+    * Clona o conteúdo dos dados fornecidos em uma nova estrutura e devolve um novo objeto
+    * de dados conteúdo o mesmo conteúdo do original.
+    * @param dados conjunto de dados originais.
+    * @return novo objeto do tipo {@code Dados} com o mesmo conteúdo do original.
+    */
+   public Dados clonarDados(Dados dados){
+      return md.clonarDados(dados);
+   }
+
+
+   /**
     * Substitui todos os valores ausentes no conteúdos dos dados fornecidos de 
     * acordo com a coluna informada.
     * <p>
@@ -387,12 +539,13 @@ public class Ged{
 
 
    /**
-    * Descreve as dimensões da lista, tanto em questão de quantidade de linhas qunanto quantidade de colunas.
+    * Descreve as dimensões do conteúdo dos dados, tanto em questão de quantidade de linhas 
+    * quanto quantidade de colunas.
     * @param dados conjunto de dados.
-    * @return array contendo as informações das dimensões da lista, o primeiro elemento corresponde a quantidade de 
-    * linhas e o segundo elemento corresponde a quantidade de colunas.
-    * @throws IllegalArgumentException se o conteúdo dos dados estiver nulo.
-    * @throws IllegalArgumentException se a lista estiver vazia.
+    * @return array contendo as informações das dimensões do conteúdo do conjunto de dados, o primeiro elemento 
+    * corresponde a quantidade de linhas e o segundo elemento corresponde a quantidade de colunas seguindo o 
+    * formato {@code [linhas, colunas]}.
+    * @throws IllegalArgumentException se o conteúdo estiver vazio.
     * @throws IllegalArgumentException se os dados não forem simétricos, tendo colunas com tamanhos diferentes.
     */
    public int[] obterShapeDados(Dados dados){
@@ -431,8 +584,8 @@ public class Ged{
 
    /**
     * Grava os dados no formato {@code double[][]} em um arquivo.csv.
-    * @param lista lista de arrays contendo os dados.
-    * @param filePath caminho do arquivo onde os dados serão gravados, excluindo a extensão .csv.
+    * @param dados array com o conjunto de dados.
+    * @param caminho caminho do arquivo onde os dados serão gravados, excluindo a extensão .csv.
     */
    public void exportarCsv(double[][] dados, String caminho){
       ga.exportarCsv(dados, caminho);
@@ -458,8 +611,26 @@ public class Ged{
     * <p>
     *    Método para treino da rede neural.
     * </p>
-    *
     * Separa os dados que serão usados como entrada de acordo com os valores fornecidos.
+    * <p>
+    *    A lógica de separação dos dados de entrada envolve iniciar a coleta das colunas em ordem crescente,
+    *    exemplo: 
+    * </p>
+    * <pre>
+    * dados = [
+    *    1, 2, 3
+    *    4, 5, 6
+    *    7, 8, 9    
+    * ]
+    *
+    * int colunas = 2;
+    *
+    * entrada = [
+    *    1, 2
+    *    4, 5
+    *    7, 8 
+    * ]
+    * </pre>
     * @param dados conjunto de dados completo.
     * @param colunas quantidade de colunas que serão preservadas, começando pela primeira até o valor fornecido.
     * @return nova matriz de dados apenas com as colunas desejadas.
@@ -475,9 +646,27 @@ public class Ged{
     * <p>
     *    Método para treino da rede neural.
     * </p>
-    *
     * Extrai os dados de saída do conjunto de dados e devolve um novo conjunto de dados contendo apenas as 
     * colunas de dados de saída especificadas.
+    * <p>
+    *    A lógica de separação dos dados de saída envolve iniciar a coleta das colunas em ordem decrescente,
+    *    exemplo: 
+    * </p>
+    * <pre>
+    * dados = [
+    *    1, 2, 3
+    *    4, 5, 6
+    *    7, 8, 9
+    * ]
+    *
+    * int colunas = 2;
+    *
+    * saida = [
+    *    2, 3
+    *    5, 6
+    *    8, 9
+    * ]
+    * </pre>
     * @param dados O conjunto de dados com as informações completas.
     * @param colunas O número de colunas de dados de saída que serão extraídas.
     * @return novo conjunto de dados com apenas as colunas de dados de saída.

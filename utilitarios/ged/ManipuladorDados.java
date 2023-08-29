@@ -17,77 +17,120 @@ class ManipuladorDados{
    }
  
    public void adicionarColuna(Dados dados){
-      ArrayList<String[]> lista = dados.conteudo();
+      ArrayList<String[]> conteudo = dados.conteudo();
 
-      int nColunas = lista.get(0).length;
+      int nColunas = conteudo.get(0).length;
   
-      for(int i = 0; i < lista.size(); i++){
-         String[] linhaAtual = lista.get(i);
+      for(int i = 0; i < conteudo.size(); i++){
+         String[] linhaAtual = conteudo.get(i);
          String[] novaLinha = new String[nColunas + 1];
 
          System.arraycopy(linhaAtual, 0, novaLinha, 0, nColunas);
 
-         novaLinha[nColunas] = "0";
+         novaLinha[nColunas] = "";
 
-         lista.set(i, novaLinha);
+         conteudo.set(i, novaLinha);
       }
 
-      dados.atribuir(lista);
+      dados.atribuir(conteudo);
   }  
 
 
    public void adicionarColuna(Dados dados, int indice){
-      ArrayList<String[]> lista = dados.conteudo();
+      if(!dados.dadosSimetricos()){
+         throw new IllegalArgumentException("O conteúdo dos dados deve ser simético.");
+      }
 
-      if((indice < 0) || (indice > lista.get(0).length - 1)){
+      ArrayList<String[]> conteudo = dados.conteudo();
+      if((indice < 0) || (indice >= conteudo.get(0).length)){
          throw new IllegalArgumentException("O índice fornecido é inválido.");
       }
    
-      int nColunas = lista.get(0).length;
+      int nColunas = conteudo.get(0).length;
    
-      for(int i = 0; i < lista.size(); i++){
-         String[] linhaAtual = lista.get(i);
+      for(int i = 0; i < conteudo.size(); i++){
+         String[] linhaAtual = conteudo.get(i);
          String[] novaLinha = new String[nColunas + 1];
    
          //copiando valores antigos e deslocando a partir
          //do novo indice
          System.arraycopy(linhaAtual, 0, novaLinha, 0, indice);
    
-         novaLinha[indice] = "0";
+         novaLinha[indice] = "";
    
          //copiando valores restantes
          System.arraycopy(linhaAtual, indice, novaLinha, indice + 1, nColunas - indice);
    
-         lista.set(i, novaLinha);
+         conteudo.set(i, novaLinha);
       }
 
-      dados.atribuir(lista);
+      dados.atribuir(conteudo);
+   }
+
+
+   public void adicionarLinha(Dados dados){
+      if(!dados.dadosSimetricos()){
+         throw new IllegalArgumentException("O conteúdo dos dados deve ser simético.");
+      }
+
+      ArrayList<String[]> conteudo = dados.conteudo();
+      int colunas = conteudo.get(0).length;
+
+      String[] novaLinha = new String[colunas];
+      for(int i = 0; i < novaLinha.length; i++){
+         novaLinha[i] = "";
+      }
+      conteudo.add(novaLinha);
+
+      dados.atribuir(conteudo);
+   }
+
+
+   public void adicionarLinha(Dados dados, int indice){
+      if(!dados.dadosSimetricos()){
+         throw new IllegalArgumentException("O conteúdo dos dados deve ser simético.");
+      }
+      
+      ArrayList<String[]> conteudo = dados.conteudo();
+      if(indice < 0 || indice >= conteudo.size()){
+         throw new IllegalArgumentException("O índice fornecido é inválido.");
+      }
+
+      int colunas = conteudo.get(0).length;
+
+      String[] novaLinha = new String[colunas];
+      for(int i = 0; i < novaLinha.length; i++){
+         novaLinha[i] = "";
+      }
+      conteudo.add(indice, novaLinha);
+
+      dados.atribuir(conteudo);
    }
 
 
    public void removerLinha(Dados dados, int indice){
-      ArrayList<String[]> lista = dados.conteudo();
+      ArrayList<String[]> conteudo = dados.conteudo();
 
-      if(lista == null) throw new IllegalArgumentException("A lista de dados é nula.");
-      if((indice < 0) || (indice > lista.get(0).length-1)){
+      if(conteudo == null) throw new IllegalArgumentException("O conteúdo dos dados é nulo.");
+      if((indice < 0) || (indice > conteudo.get(0).length-1)){
          throw new IllegalArgumentException("Índice fornecido para remoção é inválido");
       }
 
-      lista.remove(indice);
-      dados.atribuir(lista);
+      conteudo.remove(indice);
+      dados.atribuir(conteudo);
    }
 
 
    public void removerColuna(Dados dados, int indice){
-      ArrayList<String[]> lista = dados.conteudo();
+      ArrayList<String[]> conteudo = dados.conteudo();
 
-      if(lista == null) throw new IllegalArgumentException("A lista de dados é nula.");
-      if((indice < 0) || (indice > lista.get(0).length-1)){
+      if(conteudo == null) throw new IllegalArgumentException("O conteúdo dos dados é nulo.");
+      if((indice < 0) || (indice > conteudo.get(0).length-1)){
          throw new IllegalArgumentException("Índice fornecido para remoção é inválido");
       }
 
-      for(int i = 0; i < lista.size(); i++){
-         String[] linha = lista.get(i);
+      for(int i = 0; i < conteudo.size(); i++){
+         String[] linha = conteudo.get(i);
          //remover coluna original e substituir pelas novas categorias
          String[] novaLinha = new String[linha.length - 1];
 
@@ -104,24 +147,24 @@ class ManipuladorDados{
             }
          }
 
-         lista.set(i, novaLinha);
+         conteudo.set(i, novaLinha);
       }
 
-      dados.atribuir(lista);
+      dados.atribuir(conteudo);
    }
 
 
    public void editarValor(Dados dados, int idLinha, int idColuna, String novoValor){
-      ArrayList<String[]> lista = dados.conteudo();
+      ArrayList<String[]> conteudo = dados.conteudo();
 
-      if(lista == null) throw new IllegalArgumentException("O conteúdo dos dados é nulo.");
+      if(conteudo == null) throw new IllegalArgumentException("O conteúdo dos dados é nulo.");
       if(!dadosSimetricos(dados)) throw new IllegalArgumentException("O conteúdo dos dados deve ser simétrico para a operação.");
 
-      if(idLinha < 0 || (idLinha >= lista.size())){
-         throw new IllegalArgumentException("Valor do índice de linha está fora de alcance dos índices da lista.");
+      if(idLinha < 0 || (idLinha >= conteudo.size())){
+         throw new IllegalArgumentException("Valor do índice de linha é inválido");
       }
-      if(idColuna < 0 || (idColuna >= lista.get(0).length)){
-         throw new IllegalArgumentException("Valor do índice de coluna está fora de alcance dos índices da lista.");
+      if(idColuna < 0 || (idColuna >= conteudo.get(0).length)){
+         throw new IllegalArgumentException("Valor do índice de coluna é inválido.");
       }
 
       if(novoValor == null) throw new IllegalArgumentException("O novo valor para substituição é nulo");
@@ -131,13 +174,13 @@ class ManipuladorDados{
 
 
    public void editarValor(Dados dados, int idColuna, String busca, String novoValor){
-      ArrayList<String[]> lista = dados.conteudo();
+      ArrayList<String[]> conteudo = dados.conteudo();
 
-      if(lista == null) throw new IllegalArgumentException("O conteúdo dos dados é nulo.");
+      if(conteudo == null) throw new IllegalArgumentException("O conteúdo dos dados é nulo.");
       if(!dadosSimetricos(dados)) throw new IllegalArgumentException("O conteúdo dos dados deve ser simétrico para a operação.");
 
-      if(idColuna < 0 || (idColuna >= lista.get(0).length)){
-         throw new IllegalArgumentException("Valor do índice de coluna está fora de alcance dos índices da lista.");
+      if(idColuna < 0 || (idColuna >= conteudo.get(0).length)){
+         throw new IllegalArgumentException("Valor do índice de coluna é inválido.");
       }
       if(busca == null) throw new IllegalArgumentException("O valor de busca é nulo");
       if(novoValor == null) throw new IllegalArgumentException("O novo valor para substituição é nulo");
@@ -147,67 +190,67 @@ class ManipuladorDados{
 
 
    public void trocarColunas(Dados dados, int idColuna1, int idColuna2){
-      ArrayList<String[]> lista = dados.conteudo();
+      ArrayList<String[]> conteudo = dados.conteudo();
 
-      if(lista == null) throw new IllegalArgumentException("O conteúdo dos dados fornicido está nulo.");
-      if(lista.size() < 2) throw new IllegalArgumentException("É necessário que o conteúdo dos dados tenha pelo menos duas colunas.");
+      if(conteudo == null) throw new IllegalArgumentException("O conteúdo dos dados fornicido está nulo.");
+      if(conteudo.size() < 2) throw new IllegalArgumentException("É necessário que o conteúdo dos dados tenha pelo menos duas colunas.");
       if(!(dadosSimetricos(dados))) throw new IllegalArgumentException("O conteúdo dos dados deve ser simétrica.");
 
-      if(idColuna1 < 0 || idColuna1 >= lista.get(0).length) throw new IllegalArgumentException("O índice fornecido da coluna 1 é inválido.");
-      if(idColuna2 < 0 || idColuna2 >= lista.get(0).length) throw new IllegalArgumentException("O índice fornecido da coluna 2 é inválido.");
+      if(idColuna1 < 0 || idColuna1 >= conteudo.get(0).length) throw new IllegalArgumentException("O índice fornecido da coluna 1 é inválido.");
+      if(idColuna2 < 0 || idColuna2 >= conteudo.get(0).length) throw new IllegalArgumentException("O índice fornecido da coluna 2 é inválido.");
       if(idColuna1 == idColuna2) throw new IllegalArgumentException("Os índices fornecidos devem ser diferentes.");
 
-      for(String[] linha : lista){
+      for(String[] linha : conteudo){
          String intermediario = linha[idColuna1];
          linha[idColuna1] = linha[idColuna2];
          linha[idColuna2] = intermediario;
       }
 
-      dados.atribuir(lista);
+      dados.atribuir(conteudo);
    }
 
 
    public void removerNaoNumericos(Dados dados){
-      ArrayList<String[]> lista = dados.conteudo();
+      ArrayList<String[]> conteudo = dados.conteudo();
 
       int indiceInicial = 0;
       boolean removerLinha = false;
    
-      while(indiceInicial < lista.size()){
+      while(indiceInicial < conteudo.size()){
          removerLinha = false;
 
-         for(int j = 0; j < lista.get(indiceInicial).length; j++){
+         for(int j = 0; j < conteudo.get(indiceInicial).length; j++){
             //verificar se existe algum valor que não possa ser convertido para número.
-            if((valorInt(lista.get(indiceInicial)[j]) == false) || 
-               (valorFloat(lista.get(indiceInicial)[j]) == false) || 
-               (valorDouble(lista.get(indiceInicial)[j]) == false)
+            if((valorInt(conteudo.get(indiceInicial)[j]) == false) || 
+               (valorFloat(conteudo.get(indiceInicial)[j]) == false) || 
+               (valorDouble(conteudo.get(indiceInicial)[j]) == false)
             ){
                removerLinha = true;
                break;
             }
          }
 
-         if(removerLinha) lista.remove(indiceInicial);
+         if(removerLinha) conteudo.remove(indiceInicial);
          else indiceInicial++; 
       }
 
-      dados.atribuir(lista);
+      dados.atribuir(conteudo);
    }
 
 
    public void categorizar(Dados dados, int indice){
-      ArrayList<String[]> lista = dados.conteudo();
+      ArrayList<String[]> conteudo = dados.conteudo();
 
       if(!dadosSimetricos(dados)){
          throw new IllegalArgumentException("O conteúdo dos dados deve ser simétrico para categorizar.");
       }
-      if((indice < 0) || (indice >= lista.get(0).length)){
+      if((indice < 0) || (indice >= conteudo.get(0).length)){
          throw new IllegalArgumentException("O índice fornecido é inválido.");
       }
 
       //objeto que recebe apenas valores únicos
       HashSet<String> categoriasUnicas = new HashSet<>();
-      for(String[] linha : lista){
+      for(String[] linha : conteudo){
          categoriasUnicas.add(linha[indice]);
       }
 
@@ -223,7 +266,7 @@ class ManipuladorDados{
       ArrayList<String[]> novaLista = new ArrayList<>();
 
       //reestruturando a lista com as novas categorias
-      for(String[] linha : lista){
+      for(String[] linha : conteudo){
          //remover coluna original e substituir pelas novas categorias
          String[] novaLinha = new String[(linha.length - 1) + nCategorias];
 
@@ -247,8 +290,8 @@ class ManipuladorDados{
       }
 
       //substituindo a lista original pela nova lista modificada
-      lista.clear();
-      lista.addAll(novaLista);
+      conteudo.clear();
+      conteudo.addAll(novaLista);
       dados.atribuir(novaLista);
    }
 
@@ -347,6 +390,11 @@ class ManipuladorDados{
       }
 
       dados.atribuir(conteudo);
+   }
+
+
+   public Dados clonarDados(Dados dados){
+      return dados.clonar();
    }
 
 
