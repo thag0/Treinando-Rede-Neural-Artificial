@@ -68,7 +68,7 @@ class Main{
       segundos = segundosTotais % 60;
 
       //avaliar resultados
-      double precisao = rede.avaliador.erroMedioAbsoluto(dadosEntrada, dadosSaida);
+      double precisao = 1 - rede.avaliador.erroMedioAbsoluto(dadosEntrada, dadosSaida);
       double custo = rede.avaliador.erroMedioQuadrado(dadosEntrada, dadosSaida);
 
       System.out.println("Custo = " + custo);

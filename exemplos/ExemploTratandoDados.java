@@ -23,7 +23,7 @@ public class ExemploTratandoDados{
       //trocando valores 4 para 1
       ged.editarValor(breastCancer, 9, "4", "1");
 
-      System.out.println(breastCancer.informacoes());
+      System.out.println(breastCancer.info());
 
       //convertendo conjunto de dados para valores numéricos
       double[][] dados = ged.dadosParaDouble(breastCancer);

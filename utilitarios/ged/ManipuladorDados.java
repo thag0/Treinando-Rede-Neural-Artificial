@@ -381,6 +381,11 @@ class ManipuladorDados{
       dados.atribuir(novoConteudo);
    }
 
+   
+   public void normalizar(Dados dados){
+      dados.normalizar();
+   }
+
 
    public double[][] obterSubMatriz(double[][] dados, int inicio, int fim){
       if(inicio < 0 || fim > dados.length || inicio >= fim){
@@ -401,7 +406,7 @@ class ManipuladorDados{
 
    public Dados filtrar(Dados dados, int idCol, String busca){
       dadosSimetricos(dados);
-      if(dados.estaVazio()){
+      if(dados.vazio()){
          throw new IllegalArgumentException("O conteúdo dos dados está vazio.");
       }
 
@@ -428,7 +433,7 @@ class ManipuladorDados{
 
    public Dados filtrar(Dados dados, int idCol, String operador, String valor){
       dadosSimetricos(dados);
-      if(dados.estaVazio()){
+      if(dados.vazio()){
          throw new IllegalArgumentException("O conteúdo dos dados está vazio.");
       }
 

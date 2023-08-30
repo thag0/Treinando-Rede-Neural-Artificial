@@ -65,7 +65,7 @@ public class Ged{
    public void imprimirDados(Dados dados, String nome){
       String espacamento = "   ";
 
-      if(dados.estaVazio()){//conteúdo vazio
+      if(dados.vazio()){//conteúdo vazio
          System.out.println(nome + " = [");
          System.out.println(espacamento + "(Vazio)");
 
@@ -518,6 +518,36 @@ public class Ged{
     */
    public void removerDuplicadas(Dados dados){
       md.removerDuplicadas(dados);
+   }
+
+
+   /**
+    * Normaliza as colunas numéricas do conjunto de dados para o intervalo entre 0 e 1.
+    * <p>
+    *    As colunas que não puderem ser <strong>completamente</strong> convertidas serão desconsideradas.
+    * </p>
+    * Exemplo:
+    * <pre>
+    * a = [
+    *    1, 5 
+    *    2, a
+    *    3, 7
+    *    4, 8
+    *    5, 9
+    * ]
+    *
+    * normalizado = [
+    *    0.00, 5 
+    *    0.25, a
+    *    0.50, 7
+    *    0.75, 8
+    *    1.00, 9
+    * ]
+    * </pre>
+    * @throws IllegalArgumentException se o conteúdo não for simétrico.
+    */
+   public void normalizar(Dados dados){
+      md.normalizar(dados);
    }
 
 

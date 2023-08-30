@@ -89,11 +89,28 @@ public class Dados{
    /**
     * Atribui os valores contidos na matriz fonercida ao 
     * conteúdo de Dados.
+    * <p>
+    *    Os dados contidos na matriz devem ser simétricos, o que quer dizer 
+    *    que eles devem possuir a mesma quantidade de colunas para todas as 
+    *    linhas presentes.
+    * </p>
     * @param matriz matriz com os dados.
+    * @throws IllegalArgumentException se a matriz for vazia.
+    * @throws IllegalArgumentException se a matriz não for simétrica.
     */
    public void atribuir(int[][] matriz){
       int linhas = matriz.length;
+      if(linhas == 0){
+         throw new IllegalArgumentException("A matriz fornecida está vazia.");
+      }
+
       int colunas = matriz[0].length;
+      for(int i = 1; i < linhas; i++){
+         if(matriz[i].length != colunas){
+            throw new IllegalArgumentException("A matriz deve conter o mesmo número de colunas para todas as linhas.");
+         }
+      }
+
       ArrayList<String[]> lista = new ArrayList<>();
 
       for (int i = 0; i < linhas; i++) {
@@ -111,11 +128,28 @@ public class Dados{
    /**
     * Atribui os valores contidos na matriz fonercida ao 
     * conteúdo de Dados.
+    * <p>
+    *    Os dados contidos na matriz devem ser simétricos, o que quer dizer 
+    *    que eles devem possuir a mesma quantidade de colunas para todas as 
+    *    linhas presentes.
+    * </p>
     * @param matriz matriz com os dados.
+    * @throws IllegalArgumentException se a matriz for vazia.
+    * @throws IllegalArgumentException se a matriz não for simétrica.
     */
    public void atribuir(float[][] matriz){
       int linhas = matriz.length;
+      if(linhas == 0){
+         throw new IllegalArgumentException("A matriz fornecida está vazia.");
+      }
+
       int colunas = matriz[0].length;
+      for(int i = 1; i < linhas; i++){
+         if(matriz[i].length != colunas){
+            throw new IllegalArgumentException("A matriz deve conter o mesmo número de colunas para todas as linhas.");
+         }
+      }
+
       ArrayList<String[]> lista = new ArrayList<>();
 
       for (int i = 0; i < linhas; i++) {
@@ -133,11 +167,28 @@ public class Dados{
    /**
     * Atribui os valores contidos na matriz fonercida ao 
     * conteúdo de Dados.
+    * <p>
+    *    Os dados contidos na matriz devem ser simétricos, o que quer dizer 
+    *    que eles devem possuir a mesma quantidade de colunas para todas as 
+    *    linhas presentes.
+    * </p>
     * @param matriz matriz com os dados.
+    * @throws IllegalArgumentException se a matriz for vazia.
+    * @throws IllegalArgumentException se a matriz não for simétrica.
     */
    public void atribuir(double[][] matriz){
       int linhas = matriz.length;
+      if(linhas == 0){
+         throw new IllegalArgumentException("A matriz fornecida está vazia.");
+      }
+
       int colunas = matriz[0].length;
+      for(int i = 1; i < linhas; i++){
+         if(matriz[i].length != colunas){
+            throw new IllegalArgumentException("A matriz deve conter o mesmo número de colunas para todas as linhas.");
+         }
+      }
+
       ArrayList<String[]> lista = new ArrayList<>();
 
       for (int i = 0; i < linhas; i++) {
@@ -155,11 +206,28 @@ public class Dados{
    /**
     * Atribui os valores contidos na matriz fonercida ao 
     * conteúdo de Dados.
+    * <p>
+    *    Os dados contidos na matriz devem ser simétricos, o que quer dizer 
+    *    que eles devem possuir a mesma quantidade de colunas para todas as 
+    *    linhas presentes.
+    * </p>
     * @param matriz matriz com os dados.
+    * @throws IllegalArgumentException se a matriz for vazia.
+    * @throws IllegalArgumentException se a matriz não for simétrica.
     */
    public void atribuir(String[][] matriz){
       int linhas = matriz.length;
+      if(linhas == 0){
+         throw new IllegalArgumentException("A matriz fornecida está vazia.");
+      }
+
       int colunas = matriz[0].length;
+      for(int i = 1; i < linhas; i++){
+         if(matriz[i].length != colunas){
+            throw new IllegalArgumentException("A matriz deve conter o mesmo número de colunas para todas as linhas.");
+         }
+      }
+
       ArrayList<String[]> lista = new ArrayList<>();
 
       for (int i = 0; i < linhas; i++) {
@@ -191,7 +259,7 @@ public class Dados{
     * </p>
     * @return true se o conjunto de dados estiver vazio, false caso contrário.
     */
-   public boolean estaVazio(){
+   public boolean vazio(){
       if(this.conteudo.isEmpty()) return true;
       
       for(int i = 0; i < this.conteudo.size(); i++){
@@ -416,6 +484,35 @@ public class Dados{
 
 
    /**
+    * Normaliza as colunas numéricas do conjunto de dados para o intervalo entre 0 e 1.
+    * <p>
+    *    As colunas que não conseguirem serem convertidas serão desconsideradas.
+    * </p>
+    * @throws IllegalArgumentException se o conteúdo não for simétrico.
+    */
+   public void normalizar(){
+      if(!this.simetrico()){
+         throw new IllegalArgumentException("Os dados devem ser simétricos para normalização.");
+      }
+
+      for(int col = 0; col < this.conteudo.get(0).length; col++){
+         if(contemNaoNumericos(col)){
+            continue;
+         }
+          
+         double min = minimo(col);
+         double max = maximo(col);
+
+         for(String[] linha : this.conteudo){
+            double valor = Double.parseDouble(linha[col]);
+            double valorNormalizado = (valor - min) / (max - min);
+            linha[col] = Double.toString(valorNormalizado);
+         }
+      }
+   }
+
+
+   /**
     * Retorna um array contendo as linhas e colunas do conteúdo dos dados.
     * <p>
     *    {@code shape[0] = linhas}
@@ -428,7 +525,7 @@ public class Dados{
     * @throws IllegalArgumentException se o conteúdo não for simétrico.
     */
    public int[] shape(){
-      if(this.estaVazio()){
+      if(this.vazio()){
          throw new IllegalArgumentException("O conteúdo dos dados está vazio.");
       }
 
@@ -452,7 +549,7 @@ public class Dados{
     * @return buffer contendo o formato da lista, considerando que ela é simétrica.
     */
    public String shapeInfo(){
-      if(this.estaVazio()){
+      if(this.vazio()){
          return "Shape = [ (Vazio) ]";
       }
 
@@ -475,7 +572,7 @@ public class Dados{
    public void imprimir(){
       String espacamento = "   ";
 
-      if(this.estaVazio()){
+      if(this.vazio()){
          System.out.println("Dados = [");
          System.out.println(espacamento + "(Vazio)");
          
@@ -501,43 +598,6 @@ public class Dados{
 
 
    /**
-    * Exibe uma visão geral das informações da coluna especificada.
-    * <p>
-    *    As informações incluem:
-    * </p>
-    * <ul>
-    *    <li>Média;</li>
-    *    <li>Mediana;</li>
-    *    <li>Valor máximo;</li>
-    *    <li>Valor mínimo;</li>
-    *    <li>Moda;</li>
-    * </ul>
-    * @param idCol índice da coluna desejada.
-    * @return buffer formatado contendo informações da coluna.
-    * @throws IllegalArgumentException se o índice fornecido for inválido.
-    */
-   public String informacoesColuna(int idCol){
-      if(idCol < 0 || idCol > this.conteudo.get(0).length){
-         throw new IllegalArgumentException("Índice fornecido inválido.");
-      }
-
-      String espacamento = "   ";
-
-      String buffer = "Coluna " + idCol + ": [\n";
-      buffer += espacamento + "Média: \t" + media(idCol) + "\n";
-      buffer += espacamento + "Mediana: \t" + mediana(idCol) + "\n";
-      buffer += espacamento + "Máximo: \t" + maximo(idCol) + "\n";
-      buffer += espacamento + "Mínimo: \t" + minimo(idCol) + "\n";
-      buffer += espacamento + "Moda: \t" + moda(idCol) + "\n";
-      buffer += espacamento + "Numéricos: \t" + (!contemNaoNumericos(idCol) ? "sim" : "não") + "\n";
-      buffer += espacamento + "Ausentes: \t" + valoresAusentes(idCol) + "\n";
-      buffer += "]\n";
-
-      return buffer;
-   }
-
-
-   /**
     * Exibe algumas informações sobre o conjunto de dados no geral.
     * <p>
     *    As informações incluem:
@@ -549,13 +609,13 @@ public class Dados{
     * </ul>
     * @return buffer formatado contendo as informações.
     */
-   public String informacoes(){
+   public String info(){
       String espacamento = "    ";
       String formatacao = "\t\t";
 
       String buffer = "Informações dos Dados = [\n";
 
-      if(this.estaVazio()){
+      if(this.vazio()){
          buffer += espacamento + "Conteúdo vazio.\n"; 
       
       }else{
@@ -582,7 +642,7 @@ public class Dados{
 
       boolean temValoresAusentes = false;
       for(int i = 0; i < this.conteudo.get(0).length; i++){
-         int valoresAusentes = valoresAusentes(i);
+         int valoresAusentes = ausentes(i);
          if (valoresAusentes > 0) {
             buffer += espacamento + "Ausentes coluna " + i + ": \t" + valoresAusentes + "\n";
             temValoresAusentes = true;
@@ -600,12 +660,49 @@ public class Dados{
 
 
    /**
+    * Exibe uma visão geral das informações da coluna especificada.
+    * <p>
+    *    As informações incluem:
+    * </p>
+    * <ul>
+    *    <li>Média;</li>
+    *    <li>Mediana;</li>
+    *    <li>Valor máximo;</li>
+    *    <li>Valor mínimo;</li>
+    *    <li>Moda;</li>
+    * </ul>
+    * @param idCol índice da coluna desejada.
+    * @return buffer formatado contendo informações da coluna.
+    * @throws IllegalArgumentException se o índice fornecido for inválido.
+    */
+   public String infoColuna(int idCol){
+      if(idCol < 0 || idCol > this.conteudo.get(0).length){
+         throw new IllegalArgumentException("Índice fornecido inválido.");
+      }
+
+      String espacamento = "   ";
+
+      String buffer = "Coluna " + idCol + ": [\n";
+      buffer += espacamento + "Média: \t" + media(idCol) + "\n";
+      buffer += espacamento + "Mediana: \t" + mediana(idCol) + "\n";
+      buffer += espacamento + "Máximo: \t" + maximo(idCol) + "\n";
+      buffer += espacamento + "Mínimo: \t" + minimo(idCol) + "\n";
+      buffer += espacamento + "Moda: \t" + moda(idCol) + "\n";
+      buffer += espacamento + "Numéricos: \t" + (!contemNaoNumericos(idCol) ? "sim" : "não") + "\n";
+      buffer += espacamento + "Ausentes: \t" + ausentes(idCol) + "\n";
+      buffer += "]\n";
+
+      return buffer;
+   }
+
+
+   /**
     * Verifica se a coluna indicada possui algum valor que não possa
     * ser convertido para um valor numérico.
     * @param idCol índice da coluna desejada.
     * @return verdadeiro caso a coluna possua valores que não possam ser convertidos, falso caso contrário.
     */
-   private boolean contemNaoNumericos(int idCol){
+   public boolean contemNaoNumericos(int idCol){
       if (idCol < 0 || idCol >= this.conteudo.get(0).length) {
           throw new IllegalArgumentException("Índice fornecido inválido.");
       }
@@ -633,7 +730,7 @@ public class Dados{
     * @param idCol índice da coluna desejada.
     * @return quantidade de valores considerados ausentes.
     */
-   public int valoresAusentes(int idCol){
+   public int ausentes(int idCol){
       if(idCol < 0 || idCol >= this.conteudo.get(0).length){
          throw new IllegalArgumentException("Índice fornecido inválido.");
       }
