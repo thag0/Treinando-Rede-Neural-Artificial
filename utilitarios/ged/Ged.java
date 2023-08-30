@@ -30,12 +30,12 @@ public class Ged{
    TreinoTeste gtt;//gerenciador de treino e teste da rede
    OperadorMatriz om;//operador de matrizes
 
-
    /**
     * Objeto responsável pelo manuseio de um conjunto de dados contendo 
     * diversas implementações de métodos para gerenciamento e manipulação.
     * <p>
-    *    Algumas operação necessitam de um objeto do tipo {@code Dados} para serem realizadas.
+    *    Algumas operação necessitam de um objeto do tipo {@code Dados} para serem realizadas que 
+    *    deve ser importado através de <pre>import ged.Dados;</pre>
     * </p>
     */
    public Ged(){
@@ -176,6 +176,16 @@ public class Ged{
     *    A simetria também leva em conta se o conteúdo dos dados possui elementos, 
     *    caso o tamanho seja zero será considerada como não simétrica.
     * <p>
+    * Exemplo:
+    * <pre>
+    * dados =  [
+    *    1, 2, 3
+    *    4, 5, 6, 7
+    *    8, 9, 
+    * ]
+    * 
+    * dadosSimetricos(dados) == false
+    * </pre>
     * @param dados conjunto de dados.
     * @return true caso os dados sejam simétricos, false caso contrário.
     * @throws IllegalArgumentException se o conteúdo dos dados for nulo.
@@ -544,6 +554,7 @@ public class Ged{
     *    1.00, 9
     * ]
     * </pre>
+    * @param dados conjunto de dados.
     * @throws IllegalArgumentException se o conteúdo não for simétrico.
     */
    public void normalizar(Dados dados){

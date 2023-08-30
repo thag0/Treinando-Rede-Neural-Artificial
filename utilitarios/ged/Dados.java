@@ -22,10 +22,86 @@ public class Dados{
 
    /**
     * Inicializa um objeto do tipo Dados com seu conteúdo vazio.
+    * <p>
+    *    {@code Dados} é um objeto criado para armazenar informações de conjuntos de 
+    *    dados, possui algumas funcionalidades mais básicas e é uma dependência para 
+    *    algumas funcionalidades presentes dentro do {@code Ged}.
+    * </p>
+    * @see https://github.com/thag0/Treinando-Rede-Neural-Artificial/tree/main/utilitarios/ged
     */
    public Dados(){
       this.conteudo = new ArrayList<>();
       this.conteudo.add(new String[0]);
+   }
+
+
+   /**
+    * Inicializa um objeto do tipo Dados de acordo com o conteúdo especificado.
+    * <p>
+    *    {@code Dados} é um objeto criado para armazenar informações de conjuntos de 
+    *    dados, possui algumas funcionalidades mais básicas e é uma dependência para 
+    *    algumas funcionalidades presentes dentro do {@code Ged}.
+    * </p>
+    * @see https://github.com/thag0/Treinando-Rede-Neural-Artificial/tree/main/utilitarios/ged
+    */
+   public Dados(int[][] conteudo){
+      this.atribuir(conteudo);
+   }
+
+
+   /**
+    * Inicializa um objeto do tipo Dados de acordo com o conteúdo especificado.
+    * <p>
+    *    {@code Dados} é um objeto criado para armazenar informações de conjuntos de 
+    *    dados, possui algumas funcionalidades mais básicas e é uma dependência para 
+    *    algumas funcionalidades presentes dentro do {@code Ged}.
+    * </p>
+    * @see https://github.com/thag0/Treinando-Rede-Neural-Artificial/tree/main/utilitarios/ged
+    */
+   public Dados(float[][] conteudo){
+      this.atribuir(conteudo);
+   }
+
+
+   /**
+    * Inicializa um objeto do tipo Dados de acordo com o conteúdo especificado.
+    * <p>
+    *    {@code Dados} é um objeto criado para armazenar informações de conjuntos de 
+    *    dados, possui algumas funcionalidades mais básicas e é uma dependência para 
+    *    algumas funcionalidades presentes dentro do {@code Ged}.
+    * </p>
+    * @see https://github.com/thag0/Treinando-Rede-Neural-Artificial/tree/main/utilitarios/ged
+    */
+   public Dados(double[][] conteudo){
+      this.atribuir(conteudo);
+   }
+
+
+   /**
+    * Inicializa um objeto do tipo Dados de acordo com o conteúdo especificado.
+    * <p>
+    *    {@code Dados} é um objeto criado para armazenar informações de conjuntos de 
+    *    dados, possui algumas funcionalidades mais básicas e é uma dependência para 
+    *    algumas funcionalidades presentes dentro do {@code Ged}.
+    * </p>
+    * @see https://github.com/thag0/Treinando-Rede-Neural-Artificial/tree/main/utilitarios/ged
+    */
+   public Dados(String[][] conteudo){
+      this.atribuir(conteudo);
+   }
+
+
+   /**
+    * Inicializa um objeto do tipo Dados de acordo com o conteúdo especificado.
+    * <p>
+    *    {@code Dados} é um objeto criado para armazenar informações de conjuntos de 
+    *    dados, possui algumas funcionalidades mais básicas e é uma dependência para 
+    *    algumas funcionalidades presentes dentro do {@code Ged}.
+    * </p>
+    * @see https://github.com/thag0/Treinando-Rede-Neural-Artificial/tree/main/utilitarios/ged
+    */
+   public Dados(ArrayList<String[]> conteudo){
+      this.atribuir(conteudo);
    }
 
 
@@ -703,11 +779,11 @@ public class Dados{
     * @return verdadeiro caso a coluna possua valores que não possam ser convertidos, falso caso contrário.
     */
    public boolean contemNaoNumericos(int idCol){
-      if (idCol < 0 || idCol >= this.conteudo.get(0).length) {
-          throw new IllegalArgumentException("Índice fornecido inválido.");
+      if(idCol < 0 || idCol >= this.conteudo.get(0).length){
+         throw new IllegalArgumentException("Índice fornecido inválido.");
       }
   
-      for (String[] linha : this.conteudo) {
+      for(String[] linha : this.conteudo){
          String valor = linha[idCol];
          try{
             Double.parseDouble(valor);
@@ -754,21 +830,37 @@ public class Dados{
     *    A simetria também leva em conta se o conteúdo dos dados possui elementos, 
     *    caso o tamanho seja zero será considerada como não simétrica.
     * <p>
+    * Exemplo:
+    * <pre>
+    * a =  [
+    *    1, 2, 3
+    *    4, 5, 6, 7
+    *    8, 9
+    * ]
+    * 
+    * a.simetrico() == false
+    *
+    * b =  [
+    *    1, 2, 3
+    *    4, 5, 6
+    *    7, 8, 9
+    * ]
+    * 
+    * b.simetrico() == true
+    * </pre>
     * @param dados conjunto de dados.
     * @return true caso os dados sejam simétricos, false caso contrário.
     * @throws IllegalArgumentException se o conteúdo dos dados for nulo.
     */
    public boolean simetrico(){
-      ArrayList<String[]> lista = this.conteudo();
-
-      if(lista == null) throw new IllegalArgumentException("O conteúdo dos dados é nulo.");
+      if(this.conteudo == null) throw new IllegalArgumentException("O conteúdo dos dados é nulo.");
       
       //lista sem dados é considerada como não simétrica
-      if(lista.size() == 0) return false;
+      if(this.conteudo.size() == 0) return false;
 
-      int colunas = lista.get(0).length;// tamanho base
-      for(int i = 0; i < lista.size(); i++){
-         if(lista.get(i).length != colunas) return false;
+      int colunas = this.conteudo.get(0).length;// tamanho base
+      for(String[] linha : this.conteudo){
+         if(linha.length != colunas) return false;
       }
 
       return true;
