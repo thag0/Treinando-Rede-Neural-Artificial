@@ -563,34 +563,56 @@ public class Ged{
 
 
    /**
-    * Retorna uma matriz menor contendo as mesmas informações da matriz original, apenas
-    * com os dados do ponto de inínio e fim.
+    * Captaliza todo valor alfabético contido no conteúdo dos dados.
     * <p>
-    *    Exemplo:
+    *    Exemplo
     * </p>
     * <pre>
-    * dados = [
-    *    1, 2, 3
-    *    4, 5, 6
-    *    7, 8, 9
+    * a = [
+    *    UM, doIS
+    *    trÊs, QuAtRo 
     * ]
     *
-    * int inicio = 0;
-    * int fim = 2;
-    *
-    * subDados = [
-    *    1, 2, 3
-    *    4, 5, 6
+    * capitalizado = [
+    *    Um, Dois
+    *    Três, Quatro 
     * ]
     * </pre>
-    * @param dados matriz contendo os dados completos.
-    * @param inicio índice inicial do corte (inclusivo).
-    * @param fim índice final do corte (exclusivo).
-    * @return submatriz contendo o conteúdo da matriz original, com os dados selecionados.
-    * @throws IllegalArgumentException se os índices fornecidos forem inválidos.
+    * @param dados conjunto de dados.
+    * @throws IllegalArgumentException se o conteúdo dos dados for vazio.
+    * @throws IllegalArgumentException se o conteúdo dos dados não for simétrico.
     */
-   public double[][] obterSubMatriz(double[][] dados, int inicio, int fim){
-      return md.obterSubMatriz(dados, inicio, fim);
+   public void capitalizar(Dados dados){
+      md.capitalizar(dados);
+   }
+
+
+   /**
+    * Captaliza todo valor alfabético contido no conteúdo dos dados.
+    * <p>
+    *    Exemplo
+    * </p>
+    * <pre>
+    * a = [
+    *    UM, doIS
+    *    trÊs, QuAtRo 
+    * ]
+    *
+    * int indice = 0;
+    *
+    * capitalizado = [
+    *    Um, doIS
+    *    Três, QuAtRo 
+    * ]
+    * </pre>
+    * @param dados conjunto de dados.
+    * @param idCol índice da coluna desejada.
+    * @throws IllegalArgumentException se o conteúdo dos dados for vazio.
+    * @throws IllegalArgumentException se o conteúdo dos dados não for simétrico.
+    * @throws IllegalArgumentException se o índice da coluna fornecida for inválido.
+    */
+   public void capitalizar(Dados dados, int idCol){
+      dados.capitalizar(idCol);
    }
 
 
@@ -1130,6 +1152,103 @@ public class Ged{
 
 
    //OPERADOR MATRIZ --------------
+
+
+   /**
+    * Retorna uma matriz menor contendo as mesmas informações da matriz original, apenas
+    * com os dados do ponto de início e fim.
+    * <p>
+    *    Exemplo:
+    * </p>
+    * <pre>
+    * dados = [
+    *    1, 2, 3
+    *    4, 5, 6
+    *    7, 8, 9
+    * ]
+    *
+    * int inicio = 0;
+    * int fim = 2;
+    *
+    * subDados = [
+    *    1, 2, 3
+    *    4, 5, 6
+    * ]
+    * </pre>
+    * @param dados matriz contendo os dados completos.
+    * @param inicio índice inicial do corte (inclusivo).
+    * @param fim índice final do corte (exclusivo).
+    * @return submatriz contendo o conteúdo da matriz original, com os dados selecionados.
+    * @throws IllegalArgumentException se os índices fornecidos forem inválidos.
+    */
+   public int[][] obterSubMatriz(int[][] dados, int inicio, int fim){
+      return om.obterSubMatriz(dados, inicio, fim);
+   }
+
+
+   /**
+    * Retorna uma matriz menor contendo as mesmas informações da matriz original, apenas
+    * com os dados do ponto de início e fim.
+    * <p>
+    *    Exemplo:
+    * </p>
+    * <pre>
+    * dados = [
+    *    1, 2, 3
+    *    4, 5, 6
+    *    7, 8, 9
+    * ]
+    *
+    * int inicio = 0;
+    * int fim = 2;
+    *
+    * subDados = [
+    *    1, 2, 3
+    *    4, 5, 6
+    * ]
+    * </pre>
+    * @param dados matriz contendo os dados completos.
+    * @param inicio índice inicial do corte (inclusivo).
+    * @param fim índice final do corte (exclusivo).
+    * @return submatriz contendo o conteúdo da matriz original, com os dados selecionados.
+    * @throws IllegalArgumentException se os índices fornecidos forem inválidos.
+    */
+   public float[][] obterSubMatriz(float[][] dados, int inicio, int fim){
+      return om.obterSubMatriz(dados, inicio, fim);
+   }
+
+
+   /**
+    * Retorna uma matriz menor contendo as mesmas informações da matriz original, apenas
+    * com os dados do ponto de início e fim.
+    * <p>
+    *    Exemplo:
+    * </p>
+    * <pre>
+    * dados = [
+    *    1, 2, 3
+    *    4, 5, 6
+    *    7, 8, 9
+    * ]
+    *
+    * int inicio = 0;
+    * int fim = 2;
+    *
+    * subDados = [
+    *    1, 2, 3
+    *    4, 5, 6
+    * ]
+    * </pre>
+    * @param dados matriz contendo os dados completos.
+    * @param inicio índice inicial do corte (inclusivo).
+    * @param fim índice final do corte (exclusivo).
+    * @return submatriz contendo o conteúdo da matriz original, com os dados selecionados.
+    * @throws IllegalArgumentException se os índices fornecidos forem inválidos.
+    */
+   public double[][] obterSubMatriz(double[][] dados, int inicio, int fim){
+      return om.obterSubMatriz(dados, inicio, fim);
+   }
+
 
    /**
     * Preenche o conteúdo da matriz de acordo com o valor fornecido.

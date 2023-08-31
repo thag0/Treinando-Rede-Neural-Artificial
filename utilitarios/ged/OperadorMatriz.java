@@ -15,6 +15,58 @@ class OperadorMatriz{
 
    }
 
+   
+   public int[][] obterSubMatriz(int[][] dados, int inicio, int fim){
+      if(inicio < 0 || fim > dados.length || inicio >= fim){
+         throw new IllegalArgumentException("Índices de início ou fim inválidos.");
+      }
+
+      int linhas = fim - inicio;
+      int colunas = dados[0].length;
+      int[][] subMatriz = new int[linhas][colunas];
+
+      for(int i = 0; i < linhas; i++){
+         System.arraycopy(dados[inicio + i], 0, subMatriz[i], 0, colunas);
+      }
+
+      return subMatriz;
+   }
+
+
+   public float[][] obterSubMatriz(float[][] dados, int inicio, int fim){
+      if(inicio < 0 || fim > dados.length || inicio >= fim){
+         throw new IllegalArgumentException("Índices de início ou fim inválidos.");
+      }
+
+      int linhas = fim - inicio;
+      int colunas = dados[0].length;
+      float[][] subMatriz = new float[linhas][colunas];
+
+      for(int i = 0; i < linhas; i++){
+         System.arraycopy(dados[inicio + i], 0, subMatriz[i], 0, colunas);
+      }
+
+      return subMatriz;
+   }
+
+
+   public double[][] obterSubMatriz(double[][] dados, int inicio, int fim){
+      if(inicio < 0 || fim > dados.length || inicio >= fim){
+         throw new IllegalArgumentException("Índices de início ou fim inválidos.");
+      }
+
+      int linhas = fim - inicio;
+      int colunas = dados[0].length;
+      double[][] subMatriz = new double[linhas][colunas];
+
+      for(int i = 0; i < linhas; i++){
+         System.arraycopy(dados[inicio + i], 0, subMatriz[i], 0, colunas);
+      }
+
+      return subMatriz;
+   }
+
+
    //preencher
    
    public void preencherMatriz(int[][] matriz, int valor){

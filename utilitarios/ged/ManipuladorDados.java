@@ -381,26 +381,24 @@ class ManipuladorDados{
       dados.atribuir(novoConteudo);
    }
 
+
+   public void capitalizar(Dados dados){
+      if(dados.vazio()){
+         throw new IllegalArgumentException("O conteúdo dos dados está vazio.");
+      }
+      if(!dados.simetrico()){
+         throw new IllegalArgumentException("O conteúdo dos dados deve ser simétrico.");
+      }
+
+      int nColunas = dados.conteudo().get(0).length;
+      for(int i = 0; i < nColunas; i++){
+         dados.capitalizar(i);
+      }
+   }
+
    
    public void normalizar(Dados dados){
       dados.normalizar();
-   }
-
-
-   public double[][] obterSubMatriz(double[][] dados, int inicio, int fim){
-      if(inicio < 0 || fim > dados.length || inicio >= fim){
-         throw new IllegalArgumentException("Índices de início ou fim inválidos.");
-      }
-
-      int linhas = fim - inicio;
-      int colunas = dados[0].length;
-      double[][] subMatriz = new double[linhas][colunas];
-
-      for(int i = 0; i < linhas; i++){
-         System.arraycopy(dados[inicio + i], 0, subMatriz[i], 0, colunas);
-      }
-
-      return subMatriz;
    }
 
 

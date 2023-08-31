@@ -31,7 +31,6 @@ public class Dados{
     */
    public Dados(){
       this.conteudo = new ArrayList<>();
-      this.conteudo.add(new String[0]);
    }
 
 
@@ -110,8 +109,20 @@ public class Dados{
     * @param lin linha para busca.
     * @param col coluna para busca.
     * @return valor contido com base na linha e coluna.
+    * @throws IllegalArgumentException se o conteúdo estiver vazio.
+    * @throws IllegalArgumentException se os índices fornecidos estiverem fora de alcance.
     */
    public String obterItem(int lin, int col){
+      if(this.conteudo.isEmpty()){
+         throw new IllegalArgumentException("O conteúdo está vazio.");
+      }
+      if(lin < 0 || lin >= this.conteudo.size()){
+         throw new IllegalArgumentException("Índice de busca de linha inválido");
+      }
+      if(col < 0 || col >= this.conteudo.get(lin).length){
+         throw new IllegalArgumentException("Índice de busca de coluna inválido");
+      }
+
       return this.conteudo.get(lin)[col];
    }
 
@@ -139,12 +150,20 @@ public class Dados{
 
    /**
     * Edita o valor em todas as linhas de acordo com a coluna especificada.
-    * @param lin linha para edição.
     * @param col coluna para edição.
     * @param busca valor alvo.
     * @param valor novo valor.
+    * @throws IllegalArgumentException se o conteúdo dos dados não for simétrico.
+    * @throws IllegalArgumentException se o índice de coluna for inválido.
     */
    public void editarItem(int col, String busca, String valor){
+      if(!this.simetrico()){
+         throw new IllegalArgumentException("O conteúdo dos dados deve ser simétrico.");
+      }
+      if(col < 0 || col >= this.conteudo.get(0).length){
+         throw new IllegalArgumentException("O índice de coluna fornecido é inválido.");
+      }
+
       for(String[] linha : this.conteudo){
          if(linha[col].contains(busca)){
             linha[col] = valor;
@@ -589,6 +608,50 @@ public class Dados{
 
 
    /**
+    * Capitaliza todo o conteúdo alfabético contido na coluna fornecida.
+    * @param idCol índice da coluna desejada.
+    * @throws IllegalArgumentException se o conteúdo dos dados estiver vazio.
+    * @throws IllegalArgumentException se os dados não forem simétricos.
+    * @throws IllegalArgumentException e o índice da coluna for inválido.
+    */
+   public void capitalizar(int idCol){
+      if(this.vazio()){
+         throw new IllegalArgumentException("O conteúdo dos dados está vazio.");
+      }
+      if(!this.simetrico()){
+         throw new IllegalArgumentException("Os dados devem ser simétricos para normalização.");
+      }
+      if(idCol < 0 || idCol >= this.conteudo.get(0).length){
+         throw new IllegalArgumentException("Índice fornecido da coluna é inválido.");
+      }
+
+      for(String[] linha : this.conteudo){
+         linha[idCol] = cap(linha[idCol]);
+      }
+   }
+
+
+   /**
+    * Captaliza a palavra.
+    * @param palavra palavra desejada.
+    * @return nova palavra captalizada com base na forncedida.
+    */
+   private String cap(String palavra){
+      if(palavra == null || palavra.isEmpty()) return palavra;
+
+      char[] caracteres = palavra.toCharArray();
+
+      //primeiro caractere é maiúsculo e os demais são minúsculos.
+      caracteres[0] = Character.toUpperCase(caracteres[0]);
+      for(int i = 1; i < caracteres.length; i++){
+         caracteres[i] = Character.toLowerCase(caracteres[i]);
+      }
+
+      return new String(caracteres);
+   }
+
+
+   /**
     * Retorna um array contendo as linhas e colunas do conteúdo dos dados.
     * <p>
     *    {@code shape[0] = linhas}
@@ -606,7 +669,7 @@ public class Dados{
       }
 
       if(!this.simetrico()){
-         throw new IllegalArgumentException("O conteúdo dos dados não é.");
+         throw new IllegalArgumentException("O conteúdo dos dados não é simétrico.");
       }
 
       int[] shape = {
@@ -873,13 +936,11 @@ public class Dados{
     * @return novo objeto do tipo {@code Dados} com a cópia do conteúdo.
     */
    public Dados clonar(){
-      Dados cloneDados = new Dados();
       ArrayList<String[]> cloneConteudo = new ArrayList<>();
-
       for(String[] linha : this.conteudo){
          cloneConteudo.add(linha);
       }
-      cloneDados.atribuir(cloneConteudo);
+      Dados cloneDados = new Dados(cloneConteudo);
 
       return cloneDados;
    }
