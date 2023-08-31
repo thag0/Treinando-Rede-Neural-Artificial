@@ -5,6 +5,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 
 
@@ -56,6 +57,36 @@ class GerenciadorArquivos{
 
       Dados dados = new Dados();
       dados.atribuir(linhas);
+      return dados;
+   }
+
+
+   public Dados lerTxt(String caminho){
+      if(!(new File(caminho).exists())){
+         throw new IllegalArgumentException("O caminho especificado não existe ou não foi encontrado.");
+      }
+
+      //extensão não é .txt
+      if(new File(caminho).getClass().getName().toLowerCase().endsWith(".txt")){
+         throw new IllegalArgumentException("O arquivo especificado não contém as extensão .txt");
+      }
+
+      ArrayList<String[]> linhas = new ArrayList<>();
+      String linha = "";
+
+      try{
+         BufferedReader br = new BufferedReader(new FileReader(caminho));
+         while ((linha = br.readLine()) != null) {
+            String linhaDados[] = linha.trim().split("\\s+");//dividir por espaços em branco
+            linhas.add(linhaDados);
+         }
+         br.close();
+
+      }catch(IOException e){
+         e.printStackTrace();
+      }
+
+      Dados dados = new Dados(linhas);
       return dados;
    }
 

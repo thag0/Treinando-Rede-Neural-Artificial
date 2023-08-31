@@ -617,8 +617,71 @@ public class Ged{
 
 
    /**
+    * Substitui pelo novo valor todo o conteúdo encontrado na coluna de acordo com a busca.
+    * <p>
+    *    Exemplo:
+    * </p>
+    * <pre>
+    * d = [
+    *    a.b, c.d
+    *    e.f, g.h  
+    * ]
+    * 
+    * substituir(dados, 0, ".", "");
+    * 
+    * d = [
+    *    ab, c.d
+    *    ef, g.h  
+    * ]
+    * </pre>
+    * @param idCol índice da coluna desejada.
+    * @param busca valor que será substituído.
+    * @param valor novo valor que será colocado no lugar.
+    * @throws IllegalArgumentException se o conteúdo dos dados estiver vazio.
+    * @throws IllegalArgumentException se os dados não forem simétricos.
+    * @throws IllegalArgumentException e o índice da coluna for inválido.
+    */
+   public void substituir(Dados dados, int idCol, String busca, String valor){
+      dados.substituir(idCol, null, null);
+   }
+
+
+   /**
+    * Substitui pelo novo valor todo o conteúdo encontrado dentro do conteúdo dos dados.
+    * <p>
+    *    Exemplo:
+    * </p>
+    * <pre>
+    * d = [
+    *    a.b, c.d
+    *    e.f, g.h  
+    * ]
+    * 
+    * substituir(dados, ".", "");
+    * 
+    * d = [
+    *    ab, cd
+    *    ef, gh  
+    * ]
+    * </pre>
+    * @param idCol índice da coluna desejada.
+    * @param busca valor que será substituído.
+    * @param valor novo valor que será colocado no lugar.
+    * @throws IllegalArgumentException se o conteúdo dos dados estiver vazio.
+    * @throws IllegalArgumentException se os dados não forem simétricos.
+    */
+   public void substituir(Dados dados, String busca, String valor){
+      md.substituir(dados, busca, valor);
+   }
+
+
+   /**
     * Filtra o conteúdo contido nos dados fornecidos de 
     * acordo com o valor de busca.
+    * <p>
+    *    A busca retorna toda a linha caso o valor desejado seja encontrado. É importante 
+    *    que o valor seja exatamente igual ao que está no conteúdo dos dados.
+    * </p>
     * @param dados conjunto de dados.
     * @param idCol índice da coluna para busca.
     * @param busca valor de busca desejado.
@@ -735,17 +798,37 @@ public class Ged{
    /**
     * Lê o arquivo .csv de acordo com o caminho especificado.
     * Espaços contidos serão removidos.
-    *
     * <p>
     *    O formato da estrutura de dados será um objeto do tipo 
     *    {@code Dados}, contendo as linhas e colunas das informações lidas.
     * </p>
-    * @param caminho caminho do arquivo.
-    * @return objeto contendo as informações do arquivo lido.
+    * @param caminho caminho do arquivo, com extensão.
+    * @return objeto do tipo {@code Dados} contendo as informações do arquivo lido.
     * @throws IllegalArgumentException caso não encontre o diretório fornecido.
+    * @throws IllegalArgumentException caso arquivo não possua a extensão .csv.
     */
    public Dados lerCsv(String caminho){
       return ga.lerCsv(caminho);
+   }
+
+
+   /**
+    * Lê o arquivo .txt de acordo com o caminho especificado.
+    * Espaços contidos serão removidos.
+    * <p>
+    *    A separação do arquivo txt é considerada usando espaços
+    * </p>
+    * <p>
+    *    O formato da estrutura de dados será um objeto do tipo 
+    *    {@code Dados}, contendo as linhas e colunas das informações lidas.
+    * </p>
+    * @param caminho caminho do arquivo, com extensão.
+    * @return objeto do tipo {@code Dados} contendo as informações do arquivo lido.
+    * @throws IllegalArgumentException caso não encontre o diretório fornecido.
+    * @throws IllegalArgumentException caso arquivo não possua a extensão .txt.
+    */
+   public Dados lerTxt(String caminho){
+      return ga.lerTxt(caminho);
    }
 
 

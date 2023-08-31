@@ -396,6 +396,21 @@ class ManipuladorDados{
       }
    }
 
+
+   public void substituir(Dados dados, String busca, String valor){
+      if(dados.vazio()){
+         throw new IllegalArgumentException("O conteúdo dos dados está vazio.");
+      }
+      if(!dados.simetrico()){
+         throw new IllegalArgumentException("O conteúdo dos dados deve ser simétrico.");
+      }
+
+      int[] shape = dados.shape();
+      for(int i = 0; i < shape[1]; i++){
+         dados.substituir(i, busca, valor);
+      }
+   }
+
    
    public void normalizar(Dados dados){
       dados.normalizar();

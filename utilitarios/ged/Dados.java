@@ -347,6 +347,25 @@ public class Dados{
 
 
    /**
+    * Retorna todo o conteúdo da coluna de acordo com o índice fornecido.
+    * @param idCol índice da coluna desejada.
+    * @return coluna completa.
+    * @throws IllegalArgumentException se o conteúdo dos dados não for simétrico. 
+    * @throws IllegalArgumentException se o índice fornecido for inválido.
+    */
+   public String[] coluna(int idCol){
+      if(!this.simetrico()){
+         throw new IllegalArgumentException("O conteúdo dos dados deve ser simétrico.");
+      }
+      if(idCol < 0 || idCol >= this.conteudo.get(0).length){
+         throw new IllegalArgumentException("Índice da coluna fornecido é inválido.");
+      }
+
+      return this.conteudo.get(idCol);
+   }
+
+
+   /**
     * Verifica se o conteúdo do conjunto de dados está vazio.
     * <p>
     *    Ele é considerado vazio se não conter nenhuma linha ou 
@@ -608,6 +627,53 @@ public class Dados{
 
 
    /**
+    * Calcula o desvio padrão dos valores numéricos presentes na coluna especificada.
+    * @param idCol índice da coluna desejada.
+    * @return desvio padrão dos valores numéricos na coluna.
+    * @throws IllegalArgumentException Se o índice fornecido for inválido.
+    */
+   public double desvioPadrao(int idCol) {
+      if (idCol < 0 || idCol >= this.conteudo.get(0).length) {
+         throw new IllegalArgumentException("Índice fornecido inválido.");
+      }
+
+      ArrayList<Double> valoresNumericos = new ArrayList<>();
+
+      //valores numéricos da coluna
+      for(String[] linha : this.conteudo){
+         String valor = linha[idCol];
+         try{
+            double valorTransformado = Double.parseDouble(valor);
+            valoresNumericos.add(valorTransformado);
+         }catch(NumberFormatException e){
+            //ignorar
+         }
+      }
+
+      //média dos valores
+      double media = 0;
+      int contador = 0;
+      for(double valor : valoresNumericos){
+         media += valor;
+         contador++;
+      }
+      if(contador > 0) media /= contador;
+      else return 0;//não houver valores numéricos.
+
+      //somatório dos quadrados das diferenças entre os valores e a média.
+      double somaDiferencasQuadrado = 0;
+      for(double valor : valoresNumericos){
+         double diferenca = valor - media;
+         somaDiferencasQuadrado += diferenca * diferenca;
+      }
+
+      //desvio padrão.
+      double desvioPadrao = Math.sqrt(somaDiferencasQuadrado / contador);
+      return desvioPadrao;
+   }
+
+
+   /**
     * Capitaliza todo o conteúdo alfabético contido na coluna fornecida.
     * @param idCol índice da coluna desejada.
     * @throws IllegalArgumentException se o conteúdo dos dados estiver vazio.
@@ -648,6 +714,50 @@ public class Dados{
       }
 
       return new String(caracteres);
+   }
+
+
+   /**
+    * Substitui pelo novo valor todo o conteúdo encontrado na linha de acordo com a busca.
+    * <p>
+    *    Exemplo:
+    * </p>
+    * <pre>
+    * d = [
+    *    a.b, c.d
+    *    e.f, g.h  
+    * ]
+    * 
+    * substituir(0, ".", "");
+    * 
+    * d = [
+    *    ab, c.d
+    *    ef, g.h  
+    * ]
+    * </pre>
+    * @param idCol
+    * @param busca
+    * @param valor
+    * @throws IllegalArgumentException se o conteúdo dos dados estiver vazio.
+    * @throws IllegalArgumentException se os dados não forem simétricos.
+    * @throws IllegalArgumentException e o índice da coluna for inválido.
+    */
+   public void substituir(int idCol, String busca, String valor){
+      if(this.vazio()){
+         throw new IllegalArgumentException("O conteúdo dos dados está vazio.");
+      }
+      if(!this.simetrico()){
+         throw new IllegalArgumentException("O conteúdo dos dados deve ser simétrico.");
+      }
+      if(idCol < 0 || idCol >= this.conteudo.get(0).length){
+         throw new IllegalArgumentException("O índice fornecido é inválido.");
+      }
+
+      for(String[] linha : this.conteudo){
+         if(linha[idCol].contains(busca)){
+            linha[idCol] = linha[idCol].replace(busca, valor);
+         }
+      }
    }
 
 
@@ -814,7 +924,7 @@ public class Dados{
     * @return buffer formatado contendo informações da coluna.
     * @throws IllegalArgumentException se o índice fornecido for inválido.
     */
-   public String infoColuna(int idCol){
+   public String info(int idCol){
       if(idCol < 0 || idCol > this.conteudo.get(0).length){
          throw new IllegalArgumentException("Índice fornecido inválido.");
       }
