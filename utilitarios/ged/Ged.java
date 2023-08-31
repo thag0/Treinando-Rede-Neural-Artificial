@@ -749,6 +749,33 @@ public class Ged{
 
    // GERENCIADOR TREINO TESTE ---------------------
 
+   
+   /**
+    * Embaralha o conjunto de dados aleatoriamente.
+    * <p>
+    *    A alteração irá afetar o conteúdo dos dados recebidos.
+    *    Caso queira manter os dados originais, é recomendado fazer uma cópia previamente.
+    * </p>
+    * @param dados conjunto de dados completo.
+    */
+   public void embaralharDados(int[][] dados){
+      gtt.embaralharDados(dados);
+   }
+
+
+   /**
+    * Embaralha o conjunto de dados aleatoriamente.
+    * <p>
+    *    A alteração irá afetar o conteúdo dos dados recebidos.
+    *    Caso queira manter os dados originais, é recomendado fazer uma cópia previamente.
+    * </p>
+    * @param dados conjunto de dados completo.
+    */
+   public void embaralharDados(float[][] dados){
+      gtt.embaralharDados(dados);
+   }
+
+
    /**
     * Embaralha o conjunto de dados aleatoriamente.
     * <p>
@@ -759,6 +786,76 @@ public class Ged{
     */
    public void embaralharDados(double[][] dados){
       gtt.embaralharDados(dados);
+   }
+
+
+   /**
+    * <p>
+    *    Método para treino da rede neural.
+    * </p>
+    * Separa os dados que serão usados como entrada de acordo com os valores fornecidos.
+    * <p>
+    *    A lógica de separação dos dados de entrada envolve iniciar a coleta das colunas em ordem crescente,
+    *    exemplo: 
+    * </p>
+    * <pre>
+    * dados = [
+    *    1, 2, 3
+    *    4, 5, 6
+    *    7, 8, 9    
+    * ]
+    *
+    * int colunas = 2;
+    *
+    * entrada = [
+    *    1, 2
+    *    4, 5
+    *    7, 8 
+    * ]
+    * </pre>
+    * @param dados conjunto de dados completo.
+    * @param colunas quantidade de colunas que serão preservadas, começando pela primeira até o valor fornecido.
+    * @return nova matriz de dados apenas com as colunas desejadas.
+    * @throws IllegalArgumentException Se o número de colunas for maior que o número de colunas disponíveis nos dados.
+    * @throws IllegalArgumentException Se o número de colunas for menor que um.
+    */
+   public int[][] separarDadosEntrada(int[][] dados, int colunas){
+      return gtt.separarDadosEntrada(dados, colunas);
+   }
+
+
+   /**
+    * <p>
+    *    Método para treino da rede neural.
+    * </p>
+    * Separa os dados que serão usados como entrada de acordo com os valores fornecidos.
+    * <p>
+    *    A lógica de separação dos dados de entrada envolve iniciar a coleta das colunas em ordem crescente,
+    *    exemplo: 
+    * </p>
+    * <pre>
+    * dados = [
+    *    1, 2, 3
+    *    4, 5, 6
+    *    7, 8, 9    
+    * ]
+    *
+    * int colunas = 2;
+    *
+    * entrada = [
+    *    1, 2
+    *    4, 5
+    *    7, 8 
+    * ]
+    * </pre>
+    * @param dados conjunto de dados completo.
+    * @param colunas quantidade de colunas que serão preservadas, começando pela primeira até o valor fornecido.
+    * @return nova matriz de dados apenas com as colunas desejadas.
+    * @throws IllegalArgumentException Se o número de colunas for maior que o número de colunas disponíveis nos dados.
+    * @throws IllegalArgumentException Se o número de colunas for menor que um.
+    */
+   public float[][] separarDadosEntrada(float[][] dados, int colunas){
+      return gtt.separarDadosEntrada(dados, colunas);
    }
 
 
@@ -828,8 +925,134 @@ public class Ged{
     * @throws IllegalArgumentException Se o número de colunas for maior que o número de colunas disponíveis nos dados.
     * @throws IllegalArgumentException Se o número de colunas for menor que um.
     */
+   public int[][] separarDadosSaida(int[][] dados, int colunas){
+      return gtt.separarDadosSaida(dados, colunas);
+   }
+
+
+   /**
+    * <p>
+    *    Método para treino da rede neural.
+    * </p>
+    * Extrai os dados de saída do conjunto de dados e devolve um novo conjunto de dados contendo apenas as 
+    * colunas de dados de saída especificadas.
+    * <p>
+    *    A lógica de separação dos dados de saída envolve iniciar a coleta das colunas em ordem decrescente,
+    *    exemplo: 
+    * </p>
+    * <pre>
+    * dados = [
+    *    1, 2, 3
+    *    4, 5, 6
+    *    7, 8, 9
+    * ]
+    *
+    * int colunas = 2;
+    *
+    * saida = [
+    *    2, 3
+    *    5, 6
+    *    8, 9
+    * ]
+    * </pre>
+    * @param dados O conjunto de dados com as informações completas.
+    * @param colunas O número de colunas de dados de saída que serão extraídas.
+    * @return novo conjunto de dados com apenas as colunas de dados de saída.
+    * @throws IllegalArgumentException Se o número de colunas for maior que o número de colunas disponíveis nos dados.
+    * @throws IllegalArgumentException Se o número de colunas for menor que um.
+    */
+   public float[][] separarDadosSaida(float[][] dados, int colunas){
+      return gtt.separarDadosSaida(dados, colunas);
+   }
+
+
+   /**
+    * <p>
+    *    Método para treino da rede neural.
+    * </p>
+    * Extrai os dados de saída do conjunto de dados e devolve um novo conjunto de dados contendo apenas as 
+    * colunas de dados de saída especificadas.
+    * <p>
+    *    A lógica de separação dos dados de saída envolve iniciar a coleta das colunas em ordem decrescente,
+    *    exemplo: 
+    * </p>
+    * <pre>
+    * dados = [
+    *    1, 2, 3
+    *    4, 5, 6
+    *    7, 8, 9
+    * ]
+    *
+    * int colunas = 2;
+    *
+    * saida = [
+    *    2, 3
+    *    5, 6
+    *    8, 9
+    * ]
+    * </pre>
+    * @param dados O conjunto de dados com as informações completas.
+    * @param colunas O número de colunas de dados de saída que serão extraídas.
+    * @return novo conjunto de dados com apenas as colunas de dados de saída.
+    * @throws IllegalArgumentException Se o número de colunas for maior que o número de colunas disponíveis nos dados.
+    * @throws IllegalArgumentException Se o número de colunas for menor que um.
+    */
    public double[][] separarDadosSaida(double[][] dados, int colunas){
       return gtt.separarDadosSaida(dados, colunas);
+   }
+
+
+   /**
+    * Separa o conjunto de dados em dados de treino e dados de teste, de acordo com o tamanho do teste fornecido.
+    * 
+    * <p>
+    *    A função recebe um conjunto de dados completo e separa ele em duas matrizes, uma para treino e outra para teste.
+    *    A quantidade de dados para o conjunto de teste é determinada pelo parâmetro tamanhoTeste.
+    * </p>
+    * 
+    * <p>
+    *    Exemplo de uso:
+    * </p>
+    * <pre>{@code 
+    * int[][][] treinoTeste = separarTreinoTeste(dados, 0.25f);
+    * int[][] treino = treinoTeste[0];
+    * int[][] teste = treinoTeste[1];}
+    * </pre>
+    * @param dados O conjunto de dados completo.
+    * @param tamanhoTeste O tamanho relativo do conjunto de teste (entre 0 e 1).
+    * @return Um array de duas matrizes contendo os dados de treino e teste, respectivamente.
+    * @throws IllegalArgumentException caso o conjunto de dados for nulo.
+    * @throws IllegalArgumentException caso o tamanho de teste estiver fora do intervalo (0, 1).
+    */
+   public int[][][] separarTreinoTeste(int[][] dados, float tamanhoTeste){
+      return gtt.separarTreinoTeste(dados, tamanhoTeste);
+   }
+
+
+   /**
+    * Separa o conjunto de dados em dados de treino e dados de teste, de acordo com o tamanho do teste fornecido.
+    * 
+    * <p>
+    *    A função recebe um conjunto de dados completo e separa ele em duas matrizes, uma para treino e outra para teste.
+    *    A quantidade de dados para o conjunto de teste é determinada pelo parâmetro tamanhoTeste.
+    * </p>
+    * 
+    * <p>
+    *    Exemplo de uso:
+    * </p>
+    * <pre>{@code 
+    * float[][][] treinoTeste = separarTreinoTeste(dados, 0.25f);
+    * float[][] treino = treinoTeste[0];
+    * float[][] teste = treinoTeste[1];}
+    * </pre>
+    * @param dados O conjunto de dados completo.
+    * @param tamanhoTeste O tamanho relativo do conjunto de teste (entre 0 e 1).
+    * @return Um array de duas matrizes contendo os dados de treino e teste, respectivamente.
+    * @throws IllegalArgumentException caso o conjunto de dados for nulo.
+    * @throws IllegalArgumentException caso o tamanho de teste estiver fora do intervalo (0, 1).
+    */
+   public float[][][] separarTreinoTeste(float[][] dados, float tamanhoTeste){
+      return gtt.separarTreinoTeste(dados, tamanhoTeste);
    }
 
 
