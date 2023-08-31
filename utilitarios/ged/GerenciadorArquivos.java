@@ -15,7 +15,7 @@ import java.util.ArrayList;
 class GerenciadorArquivos{
    
    /**
-    * Responsável por manuseio de arquivos externos, por enquanto só csv
+    * Responsável por manuseio de arquivos externos
     */
    public GerenciadorArquivos(){
 
