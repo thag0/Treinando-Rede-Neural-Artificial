@@ -28,15 +28,16 @@ public class ExemploImagem{
       //nesse exemplo queremos que ela tenha overfitting
       int[] arq = {nEntrada, 11, 11, nSaida};
       RedeNeural rede = new RedeNeural(arq);
-      rede.configurarTaxaAprendizagem(0.01);
-      rede.configurarMomentum(0.9);
-      rede.configurarOtimizador(5);
+      rede.configurarTaxaAprendizagem(0.001);
+      rede.configurarMomentum(0.99);
+      rede.configurarOtimizador(2, true);
+      rede.configurarInicializacaoPesos(2);
       rede.compilar();
       rede.configurarFuncaoAtivacao(2);
-      rede.treinar(dadosEntrada, dadosSaida, 5_000);
+      rede.treinar(dadosEntrada, dadosSaida, 6_000);
 
       //avaliando resultados
-      double precisao = rede.avaliador.erroMedioAbsoluto(dadosEntrada, dadosSaida);
+      double precisao = 1 - rede.avaliador.erroMedioAbsoluto(dadosEntrada, dadosSaida);
       System.out.println(rede.obterInformacoes());
       System.out.println("Precisão = " + (precisao * 100));
    }

@@ -1,8 +1,11 @@
 package utilitarios.ged;
 
+import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Locale;
 
 
 /**
@@ -27,9 +30,14 @@ public class Dados{
    private ArrayList<String[]> conteudo;
 
    /**
+    * Quantidade de alterações feitas no conjunto de dados.
+    */
+   private int qAlteracoes = 0;
+
+   /**
     * Nome personalizável.
     */
-   private String nome = "Dados";
+   private String nome = this.getClass().getSimpleName();
 
 
    /**
@@ -55,6 +63,7 @@ public class Dados{
     */
    public Dados(int[][] conteudo){
       this.atribuir(conteudo);
+      this.qAlteracoes++;
    }
 
 
@@ -68,6 +77,7 @@ public class Dados{
     */
    public Dados(float[][] conteudo){
       this.atribuir(conteudo);
+      this.qAlteracoes++;
    }
 
 
@@ -81,6 +91,7 @@ public class Dados{
     */
    public Dados(double[][] conteudo){
       this.atribuir(conteudo);
+      this.qAlteracoes++;
    }
 
 
@@ -94,6 +105,7 @@ public class Dados{
     */
    public Dados(String[][] conteudo){
       this.atribuir(conteudo);
+      this.qAlteracoes++;
    }
 
 
@@ -107,6 +119,7 @@ public class Dados{
     */
    public Dados(ArrayList<String[]> conteudo){
       this.atribuir(conteudo);
+      this.qAlteracoes++;
    }
 
 
@@ -124,6 +137,7 @@ public class Dados{
          throw new IllegalArgumentException("O novo nome não pode estar vazio ou em branco.");
       }
       this.nome = nome;
+      this.qAlteracoes++;
    }
 
 
@@ -168,6 +182,7 @@ public class Dados{
       String[] linha = this.conteudo.get(lin);
       linha[col] = valor;
       this.conteudo.set(lin, linha);
+      this.qAlteracoes++;
    }
 
 
@@ -192,6 +207,8 @@ public class Dados{
             linha[col] = valor;
          }
       }
+
+      this.qAlteracoes++;
    }
 
 
@@ -200,7 +217,10 @@ public class Dados{
     * @param lista lista com os novos dados.
     */
    public void atribuir(ArrayList<String[]> lista){
-      if(lista != null) this.conteudo = lista;
+      if(lista != null){
+         this.conteudo = lista;
+         this.qAlteracoes++;
+      }
    }
 
 
@@ -240,6 +260,7 @@ public class Dados{
       }
 
       this.conteudo = lista;
+      this.qAlteracoes++;
    }
 
 
@@ -279,6 +300,7 @@ public class Dados{
       }
 
       this.conteudo = lista;
+      this.qAlteracoes++;
    }
 
 
@@ -318,6 +340,7 @@ public class Dados{
       }
 
       this.conteudo = lista;
+      this.qAlteracoes++;
    }
 
 
@@ -357,6 +380,7 @@ public class Dados{
       }
 
       this.conteudo = lista;
+      this.qAlteracoes++;
    }
 
 
@@ -385,6 +409,15 @@ public class Dados{
       }
 
       return this.conteudo.get(idCol);
+   }
+
+
+   /**
+    * Aumenta em uma unidade a quantidade de alterações
+    * feitas dentro do conjunto de dados.
+    */
+   public void incrementarAlteracao(){
+      this.qAlteracoes++;
    }
 
 
@@ -541,6 +574,56 @@ public class Dados{
 
 
    /**
+    * Calcula o desvio padrão dos valores numéricos presentes na coluna especificada.
+    * @param idCol índice da coluna desejada.
+    * @return desvio padrão dos valores numéricos na coluna.
+    * @throws IllegalArgumentException Se o índice fornecido for inválido.
+    */
+   public double desvioPadrao(int idCol){
+      if(!this.simetrico()){
+         throw new IllegalArgumentException("O conteúdo dos dados deve ser simétrico.");
+      }
+      if(idCol < 0 || idCol >= this.conteudo.get(0).length){
+         throw new IllegalArgumentException("Índice fornecido inválido.");
+      }
+
+      ArrayList<Double> valoresNumericos = new ArrayList<>();
+
+      //valores numéricos da coluna
+      for(String[] linha : this.conteudo){
+         String valor = linha[idCol];
+         try{
+            double valorTransformado = Double.parseDouble(valor);
+            valoresNumericos.add(valorTransformado);
+         }catch(NumberFormatException e){
+            //ignorar
+         }
+      }
+
+      //média dos valores
+      double media = 0;
+      int contador = 0;
+      for(double valor : valoresNumericos){
+         media += valor;
+         contador++;
+      }
+      if(contador > 0) media /= contador;
+      else return 0;//não houver valores numéricos.
+
+      //somatório dos quadrados das diferenças entre os valores e a média.
+      double somaDiferencasQuadrado = 0;
+      for(double valor : valoresNumericos){
+         double diferenca = valor - media;
+         somaDiferencasQuadrado += diferenca * diferenca;
+      }
+
+      //desvio padrão.
+      double desvioPadrao = Math.sqrt(somaDiferencasQuadrado / contador);
+      return desvioPadrao;
+   }
+
+
+   /**
     * Calcula o maior valor do conteúdo que pode ser transformado para valor numérico
     * presente na coluna especificada.
     * @param idCol índice da coluna desejada.
@@ -668,53 +751,7 @@ public class Dados{
          double valorNormalizado = (valor - min) / (max - min);
          linha[idCol] = Double.toString(valorNormalizado);
       }
-   }
-
-
-   /**
-    * Calcula o desvio padrão dos valores numéricos presentes na coluna especificada.
-    * @param idCol índice da coluna desejada.
-    * @return desvio padrão dos valores numéricos na coluna.
-    * @throws IllegalArgumentException Se o índice fornecido for inválido.
-    */
-   public double desvioPadrao(int idCol){
-      if(idCol < 0 || idCol >= this.conteudo.get(0).length){
-         throw new IllegalArgumentException("Índice fornecido inválido.");
-      }
-
-      ArrayList<Double> valoresNumericos = new ArrayList<>();
-
-      //valores numéricos da coluna
-      for(String[] linha : this.conteudo){
-         String valor = linha[idCol];
-         try{
-            double valorTransformado = Double.parseDouble(valor);
-            valoresNumericos.add(valorTransformado);
-         }catch(NumberFormatException e){
-            //ignorar
-         }
-      }
-
-      //média dos valores
-      double media = 0;
-      int contador = 0;
-      for(double valor : valoresNumericos){
-         media += valor;
-         contador++;
-      }
-      if(contador > 0) media /= contador;
-      else return 0;//não houver valores numéricos.
-
-      //somatório dos quadrados das diferenças entre os valores e a média.
-      double somaDiferencasQuadrado = 0;
-      for(double valor : valoresNumericos){
-         double diferenca = valor - media;
-         somaDiferencasQuadrado += diferenca * diferenca;
-      }
-
-      //desvio padrão.
-      double desvioPadrao = Math.sqrt(somaDiferencasQuadrado / contador);
-      return desvioPadrao;
+      this.qAlteracoes++;
    }
 
 
@@ -739,6 +776,7 @@ public class Dados{
       for(String[] linha : this.conteudo){
          linha[idCol] = cap(linha[idCol]);
       }
+      this.qAlteracoes++;
    }
 
 
@@ -803,6 +841,7 @@ public class Dados{
             linha[idCol] = linha[idCol].replace(busca, valor);
          }
       }
+      this.qAlteracoes++;
    }
 
 
@@ -859,6 +898,67 @@ public class Dados{
          String valor2 = linha2[idCol];
          return crescente ? valor1.compareTo(valor2) : valor2.compareTo(valor1);
       });
+
+      this.qAlteracoes++;
+   }
+
+
+   /**
+    * Ordena o conteúdo contido nos dados de acordo com a coluna desejada.
+    * <p>
+    *    A ordenação consequentemente irá mudar a ordem de organização
+    *    dos outros elementos.
+    * </p>
+    * Exemplo:
+    * <pre>
+    * d = [
+    *    d
+    *    b
+    *    a
+    *    e
+    *    c
+    * ]
+    * 
+    * d.ordenarAlfabetico(0, true).
+    * 
+    * d = [
+    *    a
+    *    b
+    *    c
+    *    d
+    *    e
+    * ]
+    * </pre>
+    * @param idCol índice da coluna desejada.
+    * @param crescente true caso a ordenação deva ser crescente, false caso contrário.
+    * @throws IllegalArgumentException se o conteúdo dos dados estiver vazio.
+    * @throws IllegalArgumentException se o conteúdo dos dados não forem simétricos.
+    * @throws IllegalArgumentException se o índice da coluna for inválido.
+    */
+   public void ordenarAlfabetico(int idCol, boolean crescente){
+      if(this.vazio()){
+         throw new IllegalArgumentException("O conteúdo dos dados está vazio.");
+      }
+      if(!this.simetrico()){
+         throw new IllegalArgumentException("O conteúdo dos dados deve ser simétrico.");
+      }
+      if(idCol < 0 || idCol >= this.conteudo.get(0).length){
+         throw new IllegalArgumentException("O índice da coluna fornecido é inválido.");
+      }
+
+      Comparator<String[]> comp = (linha1, linha2) -> {
+         String valor1 = linha1[idCol];
+         String valor2 = linha2[idCol];
+
+         Locale regiao = new Locale("pt", "BR");//configurando língua e região
+         Collator collator = Collator.getInstance(regiao);
+         collator.setStrength(Collator.TERTIARY);
+
+         return crescente ? collator.compare(valor1, valor2) : collator.compare(valor2, valor1);
+      };
+
+      Collections.sort(this.conteudo, comp);
+      this.qAlteracoes++;
    }
 
 
@@ -963,10 +1063,16 @@ public class Dados{
       String espacamento = "    ";
       String formatacao = "\t\t";
 
-      String buffer = "Informações dos Dados = [\n";
+      String buffer = "Informações do conjunto de dados = [\n";
+
+      if(this.nome == this.getClass().getSimpleName()){
+         buffer += espacamento + "Nome padrão\n";
+      
+      }else buffer += espacamento + "Nome:" + formatacao + "\"" +this.nome + "\"\n";
 
       if(this.vazio()){
-         buffer += espacamento + "Conteúdo vazio.\n"; 
+         buffer += espacamento + "Conteúdo vazio.\n]"; 
+         return buffer;
       
       }else{
          if(this.simetrico()){
@@ -978,6 +1084,7 @@ public class Dados{
             buffer += espacamento + "Tamanho inconsistente \n";
          }
       }
+      buffer += espacamento + "Alterações:" + formatacao + this.qAlteracoes + "\n";
       buffer += "\n";
 
 
@@ -1020,6 +1127,9 @@ public class Dados{
     *    <li>Valor máximo;</li>
     *    <li>Valor mínimo;</li>
     *    <li>Moda;</li>
+    *    <li>Desvio Padrão;</li>
+    *    <li>Coluna composta apenas por valores numéricos;</li>
+    *    <li>Coluna contém valores ausentes ou em branco;</li>
     * </ul>
     * @param idCol índice da coluna desejada.
     * @return buffer formatado contendo informações da coluna.
@@ -1033,13 +1143,14 @@ public class Dados{
       String espacamento = "   ";
 
       String buffer = "Coluna " + idCol + ": [\n";
-      buffer += espacamento + "Média: \t" + media(idCol) + "\n";
-      buffer += espacamento + "Mediana: \t" + mediana(idCol) + "\n";
-      buffer += espacamento + "Máximo: \t" + maximo(idCol) + "\n";
-      buffer += espacamento + "Mínimo: \t" + minimo(idCol) + "\n";
-      buffer += espacamento + "Moda: \t" + moda(idCol) + "\n";
-      buffer += espacamento + "Numéricos: \t" + (!contemNaoNumericos(idCol) ? "sim" : "não") + "\n";
-      buffer += espacamento + "Ausentes: \t" + ausentes(idCol) + "\n";
+      buffer += espacamento + "Média: \t\t" + media(idCol) + "\n";
+      buffer += espacamento + "Mediana: \t\t" + mediana(idCol) + "\n";
+      buffer += espacamento + "Máximo: \t\t" + maximo(idCol) + "\n";
+      buffer += espacamento + "Mínimo: \t\t" + minimo(idCol) + "\n";
+      buffer += espacamento + "Moda: \t\t" + moda(idCol) + "\n";
+      buffer += espacamento + "Desv Padrão: \t" + desvioPadrao(idCol) + "\n";
+      buffer += espacamento + "Numéricos: \t\t" + (!contemNaoNumericos(idCol) ? "sim" : "não") + "\n";
+      buffer += espacamento + "Ausentes: \t\t" + ausentes(idCol) + "\n";
       buffer += "]\n";
 
       return buffer;

@@ -26,13 +26,11 @@ public class Teste{
       limparConsole();
       Ged ged = new Ged();
       
-      double[][] a = {
-         {1, 2, 3},
-         {4, 5, 6},
-         {7, 8, 9}
-      };
+      // Dados dados = ged.lerCsv("./dados/portas-logicas/xor-cascata.csv");
+      Dados dados = ged.lerCsv("./teste.csv");
+      dados.editarNome("Teste");
 
-      double[][] b = ged.obterSubLinhas(a, 0, 2);
-      ged.imprimirMatriz(b);
+      dados.imprimir();
+      System.out.println(dados.info());
    }
 }
