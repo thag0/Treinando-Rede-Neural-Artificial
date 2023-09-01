@@ -30,6 +30,7 @@ package utilitarios.ged;
 public class Ged{
 
    ImpressaoMatriz im;//exibição
+   ImpressaoDados id;//exibição
    ManipuladorDados md;//manipulador de dados
    GerenciadorArquivos ga;//leitor de arquivos
    ConversorDados cd;//conversor de dados 
@@ -46,6 +47,7 @@ public class Ged{
     */
    public Ged(){
       im = new ImpressaoMatriz();
+      id = new ImpressaoDados();
       md = new ManipuladorDados();
       ga = new GerenciadorArquivos();
       gtt = new TreinoTeste();
@@ -64,35 +66,11 @@ public class Ged{
 
 
    /**
-    * Exibe pelo console as informações contidas no conteúdo dos dados.
+    * Imprime o início do conteúdo do conjunto de dados.
     * @param dados conjunto de dados.
-    * @param nome nome personalizado para os dados impressos.
     */
-   public void imprimirDados(Dados dados, String nome){
-      String espacamento = "   ";
-
-      if(dados.vazio()){//conteúdo vazio
-         System.out.println(nome + " = [");
-         System.out.println(espacamento + "(Vazio)");
-
-      }else{
-         if(dados.simetrico()){//conteúdo
-            int[] shape = dados.shape();
-            System.out.println(nome.trim() + " (" + shape[0] + ", " + shape[1] + ") = [");
-
-         }else{
-            System.out.println(nome + " = [");
-         }
-
-         for(String linha[] : dados.conteudo()){
-            for(int i = 0; i < linha.length; i++){
-               System.out.print(espacamento + linha[i] + "\t");
-            }
-            System.out.println();
-         }
-      }
-      
-      System.out.println("]\n");
+   public void imprimirInicio(Dados dados){
+      id.imprimirInicio(dados);
    }
 
 

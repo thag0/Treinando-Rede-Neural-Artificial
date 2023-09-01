@@ -26,6 +26,11 @@ public class Dados{
     */
    private ArrayList<String[]> conteudo;
 
+   /**
+    * Nome personalizável.
+    */
+   private String nome = "Dados";
+
 
    /**
     * Inicializa um objeto do tipo Dados com seu conteúdo vazio.
@@ -102,6 +107,23 @@ public class Dados{
     */
    public Dados(ArrayList<String[]> conteudo){
       this.atribuir(conteudo);
+   }
+
+
+   /**
+    * Configura um novo nome personalizado para o conjunto de dados.
+    * @param nome novo nome do conjunto de dados.
+    * @throws IllegalArgumentException se novo nome for nulo.
+    * @throws IllegalArgumentException se novo estiver vazio ou em branco.
+    */
+   public void editarNome(String nome){
+      if(nome == null){
+         throw new IllegalArgumentException("O novo nome não pode ser nulo.");
+      }
+      if(nome.isBlank() || nome.isEmpty()){
+         throw new IllegalArgumentException("O novo nome não pode estar vazio ou em branco.");
+      }
+      this.nome = nome;
    }
 
 
@@ -901,16 +923,16 @@ public class Dados{
       String espacamento = "   ";
 
       if(this.vazio()){
-         System.out.println("Dados = [");
+         System.out.println(this.nome + " = [");
          System.out.println(espacamento + "(Vazio)");
          
       }else{
          if(this.simetrico()){
             int[] shape = this.shape();
-            System.out.println("Dados (" + shape[0] + ", " + shape[1] + ") = [");
+            System.out.println(this.nome + " (" + shape[0] + ", " + shape[1] + ") = [");
 
          }else{
-            System.out.println("Dados = [");
+            System.out.println(this.nome + " = [");
          }
 
          for(String linha[] : this.conteudo){
@@ -1021,6 +1043,15 @@ public class Dados{
       buffer += "]\n";
 
       return buffer;
+   }
+
+
+   /**
+    * Retorna o nome personalizado do conjunto de dados.
+    * @return nome personalizado do conjunto de dados.
+    */
+   public String nome(){
+      return this.nome;
    }
 
 
