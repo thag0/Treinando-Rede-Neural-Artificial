@@ -1,5 +1,6 @@
 package rna.ativacoes;
 
+import java.io.Serializable;
 
 /**
  * Classe genérica para a implementação das funções de ativação.
@@ -7,7 +8,7 @@ package rna.ativacoes;
  *    Novas funções de ativações devem sobrescrever os métodos existentes {@code ativar()} e {@code derivada()}.
  * </p>
  */
-public abstract class FuncaoAtivacao{
+public abstract class FuncaoAtivacao implements Serializable{
    
 
    /**

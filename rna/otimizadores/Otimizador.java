@@ -1,5 +1,6 @@
 package rna.otimizadores;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import rna.Camada;
@@ -15,7 +16,7 @@ import rna.Camada;
  *      da rede neural de acordo com seu próprio algoritmo.
  * </p>
  */
-public abstract class Otimizador{
+public abstract class Otimizador implements Serializable{
 
    /**
     * Treina a rede neural de acordo com o otimizador configurado.

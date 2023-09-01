@@ -1,5 +1,6 @@
 package rna.treinamento;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -9,7 +10,7 @@ import rna.Neuronio;
 /**
  * Operadores auxiliares para o treino da rede neural;
  */
-class AuxiliaresTreino{
+class AuxiliaresTreino implements Serializable{
    Random random = new Random();
 
    

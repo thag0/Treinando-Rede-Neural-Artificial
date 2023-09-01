@@ -1,5 +1,7 @@
 package rna.avaliacao;
 
+import java.io.Serializable;
+
 import rna.RedeNeural;
 
 import rna.avaliacao.metrica.Acuracia;
@@ -15,7 +17,7 @@ import rna.avaliacao.perda.ErroMedioQuadrado;
 /**
  * Interface para os métodos de avaliação e desempenho da rede neural.
  */
-public class Avaliador{
+public class Avaliador implements Serializable{
    RedeNeural rede;
 
    //perda

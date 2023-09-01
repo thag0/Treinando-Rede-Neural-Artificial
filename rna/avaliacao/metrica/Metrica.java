@@ -1,5 +1,7 @@
 package rna.avaliacao.metrica;
 
+import java.io.Serializable;
+
 import rna.RedeNeural;
 
 
@@ -9,7 +11,7 @@ import rna.RedeNeural;
  *    Novas métricas devem implementar o método {@code calcular()}.
  * </p>
  */
-abstract class Metrica{
+abstract class Metrica implements Serializable{
 
    /**
     * Calcula a métrica de avaliação configurada.

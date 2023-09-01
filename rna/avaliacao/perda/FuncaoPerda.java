@@ -1,5 +1,7 @@
 package rna.avaliacao.perda;
 
+import java.io.Serializable;
+
 import rna.RedeNeural;
 
 
@@ -9,7 +11,7 @@ import rna.RedeNeural;
  *    Novas funções de perda devem implementar o método {@code calcular()}.
  * </p>
  */
-public abstract class FuncaoPerda{
+public abstract class FuncaoPerda implements Serializable{
 
    /**
     * Calcula a função de perda configurada.

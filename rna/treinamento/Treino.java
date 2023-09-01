@@ -1,5 +1,6 @@
 package rna.treinamento;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import rna.Camada;
@@ -17,7 +18,7 @@ import rna.otimizadores.Otimizador;
  * To tentando separar bem e deixar o mais abstrato possível pra 
  * facilitar novas implementações e reaproveitar código.
  */
-public class Treino{
+public class Treino implements Serializable{
    
    //Dados de custo da rede durante o treinamento.
    ArrayList<Double> historicoCusto = new ArrayList<>();

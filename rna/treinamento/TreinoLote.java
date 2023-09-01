@@ -1,5 +1,6 @@
 package rna.treinamento;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import rna.Camada;
@@ -11,7 +12,7 @@ import rna.otimizadores.Otimizador;
 /**
  * Classe dedicada para lidar com o treinamento em lotes da rede neural.
  */
-public class TreinoLote{
+public class TreinoLote implements Serializable{
    AuxiliaresTreino auxiliarTreino = new AuxiliaresTreino();
 
    public boolean calcularHistoricoCusto = false;
