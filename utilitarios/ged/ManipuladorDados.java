@@ -413,7 +413,18 @@ class ManipuladorDados{
 
    
    public void normalizar(Dados dados){
-      dados.normalizar();
+      if(dados.vazio()){
+         throw new IllegalArgumentException("O conteúdo dos dados está vazio.");
+      }
+      if(!dados.simetrico()){
+         throw new IllegalArgumentException("O conteúdo dos dados deve ser simétrico.");
+      }
+
+      int nColunas = dados.shape()[1];
+
+      for(int i = 0; i < nColunas; i++){
+         dados.normalizar(nColunas);
+      }
    }
 
 

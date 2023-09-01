@@ -17,7 +17,7 @@ public class ExemploClassificacao{
       //tranformando a ultima coluna em categorização binária
       Dados iris = ged.lerCsv("./dados/datasets-maiores/iris.csv");
       ged.removerLinha(iris, 0);
-      int[] shape = ged.obterShapeDados(iris);
+      int[] shape = ged.shapeDados(iris);
       int ultimoIndice = shape[1]-1;
       ged.categorizar(iris, ultimoIndice);
       System.out.println("Shape dados = [" + shape[0] + ", " + shape[1] + "]");

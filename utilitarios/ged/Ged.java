@@ -13,13 +13,19 @@ package utilitarios.ged;
  *    <li>Gerenciamento de treino e teste para rede neural;</li>
  *    <li>Operações matriciais;</li>
  * </ul>
- * Algumas operação necessitam de um objeto do tipo {@code Dados} para serem realizadas.
+ *    Algumas operação necessitam de um objeto do tipo {@code Dados} para serem realizadas que 
+ *    deve ser importado através de <pre>import ged.Dados;</pre>
  * <p>
  *    A classe Ged é apeans uma casca/embrulho (ou wrapper) que contém as funções que são expostas 
  *    publicamente para quem quiser utilizá-las, o conteúdo com implementações está divididos de acordo 
  *    com suas especialidades.
  * </p>
+ * <p>
+ *    Aos poucos são adicionadas novas funcionalidades de acordo com as necessidades que surgem então o
+ *    Ged sempre pode sofrer alterações e melhorias com o passar do tempo.
+ * </p>
  * @see https://github.com/thag0/Treinando-Rede-Neural-Artificial/tree/main/utilitarios/ged
+ * @author Thiago Barroso, acadêmico de Engenharia da Computação pela Universidade Federal do Pará, Campus Tucuruí. Maio/2023.
 */
 public class Ged{
 
@@ -176,6 +182,9 @@ public class Ged{
     *    A simetria também leva em conta se o conteúdo dos dados possui elementos, 
     *    caso o tamanho seja zero será considerada como não simétrica.
     * <p>
+    * <p>
+    *    Dados nulos não classificados.
+    * <p>
     * Exemplo:
     * <pre>
     * dados =  [
@@ -253,7 +262,7 @@ public class Ged{
 
 
    /**
-    * Adiciona uma linha com conteúdo vazio ao final do conteúdo dos dados.
+    * Adiciona uma linha com conteúdo {@code vazio} ao final do conteúdo dos dados.
     * <p>
     *    Exemplo:
     * </p>
@@ -280,7 +289,7 @@ public class Ged{
 
 
    /**
-    * Adiciona uma linha com conteúdo vazio de acordo com o índice especificado. Todos 
+    * Adiciona uma linha com conteúdo {@code vazio} de acordo com o índice especificado. Todos 
     * os elementos depois da linha fornecida serão deslocados para baixo.
     * <p>
     *    Exemplo:
@@ -372,6 +381,25 @@ public class Ged{
 
    /**
     * Troca os valores das colunas no conteúdo dos dados de acordo com os índices fornecidos.
+    * <p>
+    *    Exemplo:
+    * </p>
+    * <pre>
+    * dados = [
+    *    1, 2, 3
+    *    4, 5, 6
+    *    7, 8, 9    
+    * ]
+    *
+    * int idColuna1 = 0;
+    * int idColuna2 = 2;
+    *
+    * dados = [
+    *    3, 2, 1
+    *    6, 5, 2
+    *    9, 8, 3    
+    * ]
+    * </pre>
     * @param dados conjunto de dados.
     * @param idColuna1 índice da primeira coluna que será trocada.
     * @param idColuna2 índice da segunda coluna que será trocada.
@@ -419,8 +447,24 @@ public class Ged{
     *    na coluna especificada, e os valores das novas colunas serão definidos como "1" 
     *    quando a categoria correspondente estiver presente na linha e "0" caso contrário.
     * <p>
+    * Exemplo:
+    * <pre>
+    * dados = [
+    *    a, b, c
+    *    d, e, f
+    *    g, h, i
+    * ]
+    *
+    * categorizar(dados, 2);
+    *
+    * dados = [
+    *    a, b, 1, 0, 0
+    *    d, e, 0, 1, 0
+    *    g, h, 0, 0, 1
+    * ]
+    * </pre>
     * @param dados conjunto de dados.
-    * @param indice O índice da coluna na qual a categorização será aplicada.
+    * @param indice O índice da coluna desejada para categorização.
     * @throws IllegalArgumentException se o conteúdo dos dados não for simétrico.
     * @throws IllegalArgumentException se o índice fornecido for inválido.
     */
@@ -474,7 +518,7 @@ public class Ged{
     * Une o conteúdo de cada coluna dentro de A e B num
     * novo conjunto de dados.
     * <p>
-    *    A lógica envolve primeiro adicionar o conteúdo da linha de A e
+    *    A lógica de união envolve primeiro adicionar o conteúdo da linha de A e
     *    depois adicionar o conteúdo da linha de B.
     * </p>
     *    Exemplo:
@@ -532,13 +576,14 @@ public class Ged{
 
 
    /**
-    * Normaliza as colunas numéricas do conjunto de dados para o intervalo entre 0 e 1.
+    * Normaliza todos os valores numéricos contidos no conjunto de dados.
     * <p>
-    *    As colunas que não puderem ser <strong>completamente</strong> convertidas serão desconsideradas.
+    *    Caso alguma coluna possua algum valor que não possa ser convertido o 
+    *    processo é cancelado e a coluna não sofrerá alterações.
     * </p>
     * Exemplo:
     * <pre>
-    * a = [
+    * dados = [
     *    1, 5 
     *    2, a
     *    3, 7
@@ -555,10 +600,45 @@ public class Ged{
     * ]
     * </pre>
     * @param dados conjunto de dados.
-    * @throws IllegalArgumentException se o conteúdo não for simétrico.
+    * @throws IllegalArgumentException se o conteúdo dos dados estiver vazio.
+    * @throws IllegalArgumentException se o conteúdo dos dados não for simétrico.
     */
    public void normalizar(Dados dados){
       md.normalizar(dados);
+   }
+
+
+   /**
+    * Normaliza os valores numéricos contido na coluna fornecida.
+    * <p>
+    *    Caso a coluna possua algum valor que não possa ser convertido o 
+    *    processo é cancelado.
+    * </p>
+    * Exemplo:
+    * <pre>
+    * dados = [
+    *    1, 5 
+    *    2, a
+    *    3, 7
+    *    4, 8
+    *    5, 9
+    * ]
+    *
+    * normalizar(dados, 0);
+    *
+    * dados = [
+    *    0.00, 5 
+    *    0.25, a
+    *    0.50, 7
+    *    0.75, 8
+    *    1.00, 9
+    * ]
+    * </pre>
+    * @param dados conjunto de dados.
+    * @throws IllegalArgumentException se o conteúdo dos dados não for simétrico.
+    */
+   public void normalizar(Dados dados, int idCol){
+      dados.normalizar(idCol);
    }
 
 
@@ -598,7 +678,7 @@ public class Ged{
     *    trÊs, QuAtRo 
     * ]
     *
-    * int indice = 0;
+    * capitalizar(dados, 0);
     *
     * capitalizado = [
     *    Um, doIS
@@ -676,12 +756,67 @@ public class Ged{
 
 
    /**
+    * Ordena o conteúdo contido nos dados de acordo com a coluna desejada.
+    * <p>
+    *    A ordenação consequentemente irá mudar a ordem de organização
+    *    dos outros elementos.
+    * </p>
+    * Exemplo:
+    * <pre>
+    * d = [
+    *    30
+    *    40
+    *    10
+    *    50
+    *    20
+    * ]
+    * 
+    * ordenar(d, 0, true).
+    * 
+    * d = [
+    *    10
+    *    20
+    *    30
+    *    40
+    *    50
+    * ]
+    * </pre>
+    * @param dados conjunto de dados.
+    * @param idCol índice da coluna desejada.
+    * @param crescente true caso a ordenação deva ser crescente, false caso contrário.
+    * @throws IllegalArgumentException se o conteúdo dos dados estiver vazio.
+    * @throws IllegalArgumentException se o conteúdo dos dados não forem simétricos.
+    * @throws IllegalArgumentException se o índice da coluna for inválido.
+    * @throws IllegalArgumentException se a coluna conter valores que não possam ser convertidos para números.
+    */
+   public void ordenar(Dados dados, int idCol, boolean crescente){
+      dados.ordenar(idCol, crescente);
+   }
+
+
+   /**
     * Filtra o conteúdo contido nos dados fornecidos de 
     * acordo com o valor de busca.
     * <p>
     *    A busca retorna toda a linha caso o valor desejado seja encontrado. É importante 
     *    que o valor seja exatamente igual ao que está no conteúdo dos dados.
     * </p>
+    * Exemplo:
+    * <pre>
+    * dados = [
+    *    a, 1, 2
+    *    a, 3, 4
+    *    b, 5, 6
+    *    c, 7, 8  
+    * ]
+    *
+    * Dados filtro = filtrar(dados, 0, "a");
+    *
+    * filtro = [
+    *    a, 1, 2
+    *    a, 3, 4
+    * ]
+    * </pre>
     * @param dados conjunto de dados.
     * @param idCol índice da coluna para busca.
     * @param busca valor de busca desejado.
@@ -787,7 +922,7 @@ public class Ged{
     * @throws IllegalArgumentException se o conteúdo estiver vazio.
     * @throws IllegalArgumentException se os dados não forem simétricos, tendo colunas com tamanhos diferentes.
     */
-   public int[] obterShapeDados(Dados dados){
+   public int[] shapeDados(Dados dados){
       return dados.shape();
    }
 
@@ -1238,8 +1373,8 @@ public class Ged{
 
 
    /**
-    * Retorna uma matriz menor contendo as mesmas informações da matriz original, apenas
-    * com os dados do ponto de início e fim.
+    * Retorna uma nova matriz que possui o conteúdo das linhas 
+    * de acordo com os índices fornecidos.
     * <p>
     *    Exemplo:
     * </p>
@@ -1250,10 +1385,9 @@ public class Ged{
     *    7, 8, 9
     * ]
     *
-    * int inicio = 0;
-    * int fim = 2;
+    * subLinhas = obterSubLinhas(dados, 0, 2);
     *
-    * subDados = [
+    * subLinhas = [
     *    1, 2, 3
     *    4, 5, 6
     * ]
@@ -1264,14 +1398,14 @@ public class Ged{
     * @return submatriz contendo o conteúdo da matriz original, com os dados selecionados.
     * @throws IllegalArgumentException se os índices fornecidos forem inválidos.
     */
-   public int[][] obterSubMatriz(int[][] dados, int inicio, int fim){
-      return om.obterSubMatriz(dados, inicio, fim);
+   public int[][] obterSubLinhas(int[][] dados, int inicio, int fim){
+      return om.obterSubLinhas(dados, inicio, fim);
    }
 
 
    /**
-    * Retorna uma matriz menor contendo as mesmas informações da matriz original, apenas
-    * com os dados do ponto de início e fim.
+    * Retorna uma nova matriz que possui o conteúdo das linhas 
+    * de acordo com os índices fornecidos.
     * <p>
     *    Exemplo:
     * </p>
@@ -1282,10 +1416,9 @@ public class Ged{
     *    7, 8, 9
     * ]
     *
-    * int inicio = 0;
-    * int fim = 2;
+    * subLinhas = obterSubLinhas(dados, 0, 2);
     *
-    * subDados = [
+    * subLinhas = [
     *    1, 2, 3
     *    4, 5, 6
     * ]
@@ -1296,14 +1429,14 @@ public class Ged{
     * @return submatriz contendo o conteúdo da matriz original, com os dados selecionados.
     * @throws IllegalArgumentException se os índices fornecidos forem inválidos.
     */
-   public float[][] obterSubMatriz(float[][] dados, int inicio, int fim){
-      return om.obterSubMatriz(dados, inicio, fim);
+   public float[][] obterSubLinhas(float[][] dados, int inicio, int fim){
+      return om.obterSubLinhas(dados, inicio, fim);
    }
 
 
    /**
-    * Retorna uma matriz menor contendo as mesmas informações da matriz original, apenas
-    * com os dados do ponto de início e fim.
+    * Retorna uma nova matriz que possui o conteúdo das linhas 
+    * de acordo com os índices fornecidos.
     * <p>
     *    Exemplo:
     * </p>
@@ -1314,10 +1447,9 @@ public class Ged{
     *    7, 8, 9
     * ]
     *
-    * int inicio = 0;
-    * int fim = 2;
+    * subLinhas = obterSubLinhas(dados, 0, 2);
     *
-    * subDados = [
+    * subLinhas = [
     *    1, 2, 3
     *    4, 5, 6
     * ]
@@ -1328,8 +1460,104 @@ public class Ged{
     * @return submatriz contendo o conteúdo da matriz original, com os dados selecionados.
     * @throws IllegalArgumentException se os índices fornecidos forem inválidos.
     */
-   public double[][] obterSubMatriz(double[][] dados, int inicio, int fim){
-      return om.obterSubMatriz(dados, inicio, fim);
+   public double[][] obterSubLinhas(double[][] dados, int inicio, int fim){
+      return om.obterSubLinhas(dados, inicio, fim);
+   }
+
+
+   /**
+    * Retorna uma nova matriz que possui o conteúdo das colunas 
+    * de acordo com os índices fornecidos.
+    * <p>
+    *    Exemplo:
+    * </p>
+    * <pre>
+    * dados = [
+    *    1, 2, 3
+    *    4, 5, 6
+    *    7, 8, 9
+    * ]
+    *
+    * subColunas = obterColunas(dados, 0, 2);
+    *
+    * subColunas = [
+    *    1, 2
+    *    4, 5
+    *    7, 8
+    * ]
+    * </pre>
+    * @param dados matriz contendo os dados completos.
+    * @param inicio índice inicial do corte (inclusivo).
+    * @param fim índice final do corte (exclusivo).
+    * @return submatriz contendo o conteúdo da matriz original, com os dados filtrados de acordo
+    *    com as colunas indicadas.
+    */
+   public int[][] obterSubColunas(int[][] dados, int inicio, int fim){
+      return om.obterSubColunas(dados, inicio, fim);
+   }
+
+
+   /**
+    * Retorna uma nova matriz que possui o conteúdo das colunas 
+    * de acordo com os índices fornecidos.
+    * <p>
+    *    Exemplo:
+    * </p>
+    * <pre>
+    * dados = [
+    *    1, 2, 3
+    *    4, 5, 6
+    *    7, 8, 9
+    * ]
+    *
+    * subColunas = obterColunas(dados, 0, 2);
+    *
+    * subColunas = [
+    *    1, 2
+    *    4, 5
+    *    7, 8
+    * ]
+    * </pre>
+    * @param dados matriz contendo os dados completos.
+    * @param inicio índice inicial do corte (inclusivo).
+    * @param fim índice final do corte (exclusivo).
+    * @return submatriz contendo o conteúdo da matriz original, com os dados filtrados de acordo
+    *    com as colunas indicadas.
+    */
+   public float[][] obterSubColunas(float[][] dados, int inicio, int fim){
+      return om.obterSubColunas(dados, inicio, fim);
+   }
+
+
+   /**
+    * Retorna uma nova matriz que possui o conteúdo das colunas 
+    * de acordo com os índices fornecidos.
+    * <p>
+    *    Exemplo:
+    * </p>
+    * <pre>
+    * dados = [
+    *    1, 2, 3
+    *    4, 5, 6
+    *    7, 8, 9
+    * ]
+    *
+    * subColunas = obterColunas(dados, 0, 2);
+    *
+    * subColunas = [
+    *    1, 2
+    *    4, 5
+    *    7, 8
+    * ]
+    * </pre>
+    * @param dados matriz contendo os dados completos.
+    * @param inicio índice inicial do corte (inclusivo).
+    * @param fim índice final do corte (exclusivo).
+    * @return submatriz contendo o conteúdo da matriz original, com os dados filtrados de acordo
+    *    com as colunas indicadas.
+    */
+   public double[][] obterSubColunas(double[][] dados, int inicio, int fim){
+      return om.obterSubColunas(dados, inicio, fim);
    }
 
 

@@ -8,6 +8,13 @@ import java.util.HashMap;
 /**
  * Classe criada para centralizar um tipo de dado 
  * específico para uso dentro do Ged.
+ * <p>
+ *    O objeto de dados possui um conjunto de pequenas ferramentas para manipulação 
+ *    e visualização de conteudo. Algumas operações mais elaboradas podem ser executadas
+ *    usando o Gerenciador de Dados {@code Ged}.
+ * </p>
+ * @see https://github.com/thag0/Treinando-Rede-Neural-Artificial/tree/main/utilitarios/ged
+ * @author Thiago Barroso, acadêmico de Engenharia da Computação pela Universidade Federal do Pará, Campus Tucuruí. Maio/2023.
  */
 public class Dados{
 
@@ -27,7 +34,6 @@ public class Dados{
     *    dados, possui algumas funcionalidades mais básicas e é uma dependência para 
     *    algumas funcionalidades presentes dentro do {@code Ged}.
     * </p>
-    * @see https://github.com/thag0/Treinando-Rede-Neural-Artificial/tree/main/utilitarios/ged
     */
    public Dados(){
       this.conteudo = new ArrayList<>();
@@ -41,7 +47,6 @@ public class Dados{
     *    dados, possui algumas funcionalidades mais básicas e é uma dependência para 
     *    algumas funcionalidades presentes dentro do {@code Ged}.
     * </p>
-    * @see https://github.com/thag0/Treinando-Rede-Neural-Artificial/tree/main/utilitarios/ged
     */
    public Dados(int[][] conteudo){
       this.atribuir(conteudo);
@@ -55,7 +60,6 @@ public class Dados{
     *    dados, possui algumas funcionalidades mais básicas e é uma dependência para 
     *    algumas funcionalidades presentes dentro do {@code Ged}.
     * </p>
-    * @see https://github.com/thag0/Treinando-Rede-Neural-Artificial/tree/main/utilitarios/ged
     */
    public Dados(float[][] conteudo){
       this.atribuir(conteudo);
@@ -69,7 +73,6 @@ public class Dados{
     *    dados, possui algumas funcionalidades mais básicas e é uma dependência para 
     *    algumas funcionalidades presentes dentro do {@code Ged}.
     * </p>
-    * @see https://github.com/thag0/Treinando-Rede-Neural-Artificial/tree/main/utilitarios/ged
     */
    public Dados(double[][] conteudo){
       this.atribuir(conteudo);
@@ -83,7 +86,6 @@ public class Dados{
     *    dados, possui algumas funcionalidades mais básicas e é uma dependência para 
     *    algumas funcionalidades presentes dentro do {@code Ged}.
     * </p>
-    * @see https://github.com/thag0/Treinando-Rede-Neural-Artificial/tree/main/utilitarios/ged
     */
    public Dados(String[][] conteudo){
       this.atribuir(conteudo);
@@ -97,7 +99,6 @@ public class Dados{
     *    dados, possui algumas funcionalidades mais básicas e é uma dependência para 
     *    algumas funcionalidades presentes dentro do {@code Ged}.
     * </p>
-    * @see https://github.com/thag0/Treinando-Rede-Neural-Artificial/tree/main/utilitarios/ged
     */
    public Dados(ArrayList<String[]> conteudo){
       this.atribuir(conteudo);
@@ -598,30 +599,52 @@ public class Dados{
 
 
    /**
-    * Normaliza as colunas numéricas do conjunto de dados para o intervalo entre 0 e 1.
+    * Normaliza os valores numéricos contido na coluna fornecida.
     * <p>
-    *    As colunas que não conseguirem serem convertidas serão desconsideradas.
+    *    Caso a coluna possua algum valor que não possa ser convertido o 
+    *    processo é cancelado.
     * </p>
+    * Exemplo:
+    * <pre>
+    * d = [
+    *    1, 5 
+    *    2, a
+    *    3, 7
+    *    4, 8
+    *    5, 9
+    * ]
+    *
+    * d.normalizar(0);
+    *
+    * d = [
+    *    0.00, 5 
+    *    0.25, a
+    *    0.50, 7
+    *    0.75, 8
+    *    1.00, 9
+    * ]
+    * </pre>
+    * @param idCol índice da coluna desejada.
+    * @throws IllegalArgumentException se o conteúdo dos dados estiver vazio.
     * @throws IllegalArgumentException se o conteúdo não for simétrico.
     */
-   public void normalizar(){
+   public void normalizar(int idCol){
+      if(this.vazio()){
+         throw new IllegalArgumentException("O conteúdo dos dados está vazio.");
+      }
       if(!this.simetrico()){
          throw new IllegalArgumentException("Os dados devem ser simétricos para normalização.");
       }
 
-      for(int col = 0; col < this.conteudo.get(0).length; col++){
-         if(contemNaoNumericos(col)){
-            continue;
-         }
+      if(this.contemNaoNumericos(idCol)) return;
           
-         double min = minimo(col);
-         double max = maximo(col);
+      double min = minimo(idCol);
+      double max = maximo(idCol);
 
-         for(String[] linha : this.conteudo){
-            double valor = Double.parseDouble(linha[col]);
-            double valorNormalizado = (valor - min) / (max - min);
-            linha[col] = Double.toString(valorNormalizado);
-         }
+      for(String[] linha : this.conteudo){
+         double valor = Double.parseDouble(linha[idCol]);
+         double valorNormalizado = (valor - min) / (max - min);
+         linha[idCol] = Double.toString(valorNormalizado);
       }
    }
 
@@ -632,8 +655,8 @@ public class Dados{
     * @return desvio padrão dos valores numéricos na coluna.
     * @throws IllegalArgumentException Se o índice fornecido for inválido.
     */
-   public double desvioPadrao(int idCol) {
-      if (idCol < 0 || idCol >= this.conteudo.get(0).length) {
+   public double desvioPadrao(int idCol){
+      if(idCol < 0 || idCol >= this.conteudo.get(0).length){
          throw new IllegalArgumentException("Índice fornecido inválido.");
       }
 
@@ -735,12 +758,12 @@ public class Dados{
     *    ef, g.h  
     * ]
     * </pre>
-    * @param idCol
-    * @param busca
-    * @param valor
+    * @param idCol índice da coluna desejada.
+    * @param busca valor desejado para substituição.
+    * @param valor novo valor que ficará no lugar do valor buscado.
     * @throws IllegalArgumentException se o conteúdo dos dados estiver vazio.
-    * @throws IllegalArgumentException se os dados não forem simétricos.
-    * @throws IllegalArgumentException e o índice da coluna for inválido.
+    * @throws IllegalArgumentException se o conteúdo dos dados não forem simétricos.
+    * @throws IllegalArgumentException se o índice da coluna for inválido.
     */
    public void substituir(int idCol, String busca, String valor){
       if(this.vazio()){
@@ -758,6 +781,62 @@ public class Dados{
             linha[idCol] = linha[idCol].replace(busca, valor);
          }
       }
+   }
+
+
+   /**
+    * Ordena o conteúdo contido nos dados de acordo com a coluna desejada.
+    * <p>
+    *    A ordenação consequentemente irá mudar a ordem de organização
+    *    dos outros elementos.
+    * </p>
+    * Exemplo:
+    * <pre>
+    * d = [
+    *    30
+    *    40
+    *    10
+    *    50
+    *    20
+    * ]
+    * 
+    * d.ordenar(0, true).
+    * 
+    * d = [
+    *    10
+    *    20
+    *    30
+    *    40
+    *    50
+    * ]
+    * </pre>
+    * @param idCol índice da coluna desejada.
+    * @param crescente true caso a ordenação deva ser crescente, false caso contrário.
+    * @throws IllegalArgumentException se o conteúdo dos dados estiver vazio.
+    * @throws IllegalArgumentException se o conteúdo dos dados não forem simétricos.
+    * @throws IllegalArgumentException se o índice da coluna for inválido.
+    * @throws IllegalArgumentException se a coluna conter valores que não possam ser convertidos para números.
+    */
+   public void ordenar(int idCol, boolean crescente){
+      if(this.vazio()){
+         throw new IllegalArgumentException("O conteúdo dos dados está vazio.");
+      }
+      if(!this.simetrico()){
+         throw new IllegalArgumentException("O conteúdo dos dados deve ser simétrico.");
+      }
+      if(idCol < 0 || idCol >= this.conteudo.get(0).length){
+         throw new IllegalArgumentException("O índice da coluna fornecido é inválido.");
+      }
+      if(this.contemNaoNumericos(idCol)){
+         throw new IllegalArgumentException("A coluna contém valores não numéricos.");
+      }
+
+      //isso é novo pra mim
+      Collections.sort(this.conteudo, (linha1, linha2) -> {
+         String valor1 = linha1[idCol];
+         String valor2 = linha2[idCol];
+         return crescente ? valor1.compareTo(valor2) : valor2.compareTo(valor1);
+      });
    }
 
 
@@ -799,7 +878,7 @@ public class Dados{
     */
    public String shapeInfo(){
       if(this.vazio()){
-         return "Shape = [ (Vazio) ]";
+         return "[ (Vazio) ]";
       }
 
       int[] shape = {
@@ -807,7 +886,7 @@ public class Dados{
          this.conteudo.get(0).length
       };
 
-      return "[" + Integer.toString(shape[0]) + ", " + Integer.toString(shape[1]) + "]";
+      return "[" + shape[0] + ", " + shape[1] + "]";
    }
 
 
@@ -950,6 +1029,7 @@ public class Dados{
     * ser convertido para um valor numérico.
     * @param idCol índice da coluna desejada.
     * @return verdadeiro caso a coluna possua valores que não possam ser convertidos, falso caso contrário.
+    * @throws IllegalArgumentException se o índice for inválido.
     */
    public boolean contemNaoNumericos(int idCol){
       if(idCol < 0 || idCol >= this.conteudo.get(0).length){
@@ -978,6 +1058,7 @@ public class Dados{
     * </p>
     * @param idCol índice da coluna desejada.
     * @return quantidade de valores considerados ausentes.
+    * @throws IllegalArgumentException se o índice for inválido.
     */
    public int ausentes(int idCol){
       if(idCol < 0 || idCol >= this.conteudo.get(0).length){
@@ -993,7 +1074,7 @@ public class Dados{
       }
   
       return contador;
-  }
+   }
  
 
    /**
@@ -1002,6 +1083,9 @@ public class Dados{
     * <p>
     *    A simetria também leva em conta se o conteúdo dos dados possui elementos, 
     *    caso o tamanho seja zero será considerada como não simétrica.
+    * <p>
+    * <p>
+    *    Dados nulos não classificados.
     * <p>
     * Exemplo:
     * <pre>
@@ -1026,7 +1110,9 @@ public class Dados{
     * @throws IllegalArgumentException se o conteúdo dos dados for nulo.
     */
    public boolean simetrico(){
-      if(this.conteudo == null) throw new IllegalArgumentException("O conteúdo dos dados é nulo.");
+      if(this.conteudo == null){
+        throw new IllegalArgumentException("O conteúdo dos dados é nulo."); 
+      } 
       
       //lista sem dados é considerada como não simétrica
       if(this.conteudo.size() == 0) return false;

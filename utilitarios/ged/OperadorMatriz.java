@@ -15,8 +15,11 @@ class OperadorMatriz{
 
    }
 
+
+   //sublinhas
    
-   public int[][] obterSubMatriz(int[][] dados, int inicio, int fim){
+
+   public int[][] obterSubLinhas(int[][] dados, int inicio, int fim){
       if(inicio < 0 || fim > dados.length || inicio >= fim){
          throw new IllegalArgumentException("Índices de início ou fim inválidos.");
       }
@@ -33,7 +36,7 @@ class OperadorMatriz{
    }
 
 
-   public float[][] obterSubMatriz(float[][] dados, int inicio, int fim){
+   public float[][] obterSubLinhas(float[][] dados, int inicio, int fim){
       if(inicio < 0 || fim > dados.length || inicio >= fim){
          throw new IllegalArgumentException("Índices de início ou fim inválidos.");
       }
@@ -50,7 +53,7 @@ class OperadorMatriz{
    }
 
 
-   public double[][] obterSubMatriz(double[][] dados, int inicio, int fim){
+   public double[][] obterSubLinhas(double[][] dados, int inicio, int fim){
       if(inicio < 0 || fim > dados.length || inicio >= fim){
          throw new IllegalArgumentException("Índices de início ou fim inválidos.");
       }
@@ -64,6 +67,66 @@ class OperadorMatriz{
       }
 
       return subMatriz;
+   }
+
+
+   //subcolunas
+
+
+   public int[][] obterSubColunas(int[][] matriz, int inicio, int fim){
+      if(inicio < 0 || fim > matriz[0].length || inicio >= fim){
+         throw new IllegalArgumentException("Índices de início ou fim inválidos para colunas.");
+      }
+
+      int linhas = matriz.length;
+      int colunas = fim - inicio;
+      int[][] subColunas = new int[linhas][colunas];
+
+      for(int i = 0; i < linhas; i++){
+         for(int j = 0; j < colunas; j++){
+            System.arraycopy(matriz[i], inicio, subColunas[i], 0, colunas);
+         }
+      }
+
+      return subColunas;
+   }
+
+
+   public float[][] obterSubColunas(float[][] matriz, int inicio, int fim){
+      if(inicio < 0 || fim > matriz[0].length || inicio >= fim){
+         throw new IllegalArgumentException("Índices de início ou fim inválidos para colunas.");
+      }
+
+      int linhas = matriz.length;
+      int colunas = fim - inicio;
+      float[][] subColunas = new float[linhas][colunas];
+
+      for(int i = 0; i < linhas; i++){
+         for(int j = 0; j < colunas; j++){
+            System.arraycopy(matriz[i], inicio, subColunas[i], 0, colunas);
+         }
+      }
+
+      return subColunas;
+   }
+
+
+   public double[][] obterSubColunas(double[][] matriz, int inicio, int fim){
+      if(inicio < 0 || fim > matriz[0].length || inicio >= fim){
+         throw new IllegalArgumentException("Índices de início ou fim inválidos para colunas.");
+      }
+
+      int linhas = matriz.length;
+      int colunas = fim - inicio;
+      double[][] subColunas = new double[linhas][colunas];
+
+      for(int i = 0; i < linhas; i++){
+         for(int j = 0; j < colunas; j++){
+            System.arraycopy(matriz[i], inicio, subColunas[i], 0, colunas);
+         }
+      }
+
+      return subColunas;
    }
 
 

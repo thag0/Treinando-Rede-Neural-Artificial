@@ -16,7 +16,7 @@ public class ExemploIris{
       // para usar a tangente hiperbolica como função de ativação
       Dados iris = ged.lerCsv("./dados/datasets-maiores/iris.csv");
       ged.removerLinha(iris, 0);
-      int[] shape = ged.obterShapeDados(iris);
+      int[] shape = ged.shapeDados(iris);
       int ultimoIndice = shape[1]-1;
 
       ged.editarValor(iris, ultimoIndice, "Iris-setosa", "-1");
