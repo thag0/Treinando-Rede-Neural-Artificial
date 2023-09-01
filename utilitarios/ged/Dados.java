@@ -63,7 +63,6 @@ public class Dados{
     */
    public Dados(int[][] conteudo){
       this.atribuir(conteudo);
-      this.qAlteracoes++;
    }
 
 
@@ -77,7 +76,6 @@ public class Dados{
     */
    public Dados(float[][] conteudo){
       this.atribuir(conteudo);
-      this.qAlteracoes++;
    }
 
 
@@ -91,7 +89,6 @@ public class Dados{
     */
    public Dados(double[][] conteudo){
       this.atribuir(conteudo);
-      this.qAlteracoes++;
    }
 
 
@@ -105,7 +102,6 @@ public class Dados{
     */
    public Dados(String[][] conteudo){
       this.atribuir(conteudo);
-      this.qAlteracoes++;
    }
 
 
@@ -119,7 +115,6 @@ public class Dados{
     */
    public Dados(ArrayList<String[]> conteudo){
       this.atribuir(conteudo);
-      this.qAlteracoes++;
    }
 
 
