@@ -16,6 +16,11 @@ public class ImpressaoDados {
       int[] shape = dados.shape();
       int linPadrao = (shape[0] < 5) ? shape[0] : 5;
 
+      if(shape[0] < 6){
+         dados.imprimir();
+         return;
+      }
+
       System.out.println("Início " + "\"" + dados.nome() + "\" (" + shape[0] + ", " + shape[1] + ")" +" = [");
 
       //comprimento máximo de cada coluna
