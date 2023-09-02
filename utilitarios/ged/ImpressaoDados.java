@@ -18,12 +18,40 @@ public class ImpressaoDados {
 
       System.out.println("Início " + "\"" + dados.nome() + "\" (" + shape[0] + ", " + shape[1] + ")" +" = [");
 
+      //comprimento máximo de cada coluna
+      int[] comprimentoMaximo = new int[dados.conteudo().get(0).length];
       for(int i = 0; i < linPadrao; i++){
-
          String[] linha = dados.conteudo().get(i);
+
          for(int j = 0; j < linha.length; j++){
-            System.out.print(espacamento + linha[j] + "\t");
+            int comprimento = linha[j].length();
+
+            if(comprimento > comprimentoMaximo[j]){
+               comprimentoMaximo[j] = comprimento;
+            }
          }
+      }
+
+      for(int i = 0; i < linPadrao+1; i++){
+         String[] linha = dados.conteudo().get(i);
+         
+         if(i < linPadrao){//imprimir conteúdo
+            for(int j = 0; j < linha.length; j++){
+               String valor = linha[j];
+               int distancia = comprimentoMaximo[j] - (valor.length()-1);
+               String espacos = " ".repeat(distancia);
+               System.out.print(espacamento + valor + espacos);
+            }
+
+         }else{//imprimir reticências
+            for(int j = 0; j < linha.length; j++){
+               String valor = "...";
+               int distancia = comprimentoMaximo[j] - (valor.length()-1);
+               String espacos = " ".repeat(distancia);
+               System.out.print(espacamento + valor + espacos);
+            }
+         }
+         
          System.out.println();
       }
 

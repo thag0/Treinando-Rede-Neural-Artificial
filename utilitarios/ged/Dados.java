@@ -1015,29 +1015,43 @@ public class Dados{
     * </p>
     */
    public void imprimir(){
-      String espacamento = "   ";
+      String espacamento = "    ";
 
       if(this.vazio()){
          System.out.println(this.nome + " = [");
-         System.out.println(espacamento + "(Vazio)");
-         
+         System.out.println("   (Vazio)");
+      
       }else{
          if(this.simetrico()){
             int[] shape = this.shape();
             System.out.println(this.nome + " (" + shape[0] + ", " + shape[1] + ") = [");
 
-         }else{
-            System.out.println(this.nome + " = [");
+         }else System.out.println(this.nome + " = [");
+
+         //comprimento máximo de cada coluna
+         int[] comprimentoMaximo = new int[this.conteudo.get(0).length];
+         for(String[] linha : this.conteudo){
+            for(int i = 0; i < linha.length; i++){
+               int comprimento = linha[i].length();
+
+               if(comprimento > comprimentoMaximo[i]){
+                  comprimentoMaximo[i] = comprimento;
+               }
+            }
          }
 
-         for(String linha[] : this.conteudo){
+         //colunas dinâmicas
+         for(String[] linha : this.conteudo){
             for(int i = 0; i < linha.length; i++){
-               System.out.print(espacamento + linha[i] + "\t");
+               String valor = linha[i];
+               int distancia = comprimentoMaximo[i] - valor.length() + 1;
+               String espacos = " ".repeat(distancia);
+               System.out.print(espacamento + valor + espacos);
             }
             System.out.println();
          }
       }
-      
+
       System.out.println("]\n");
    }
 
