@@ -849,64 +849,6 @@ public class Dados{
     * Exemplo:
     * <pre>
     * d = [
-    *    30
-    *    40
-    *    10
-    *    50
-    *    20
-    * ]
-    * 
-    * d.ordenar(0, true).
-    * 
-    * d = [
-    *    10
-    *    20
-    *    30
-    *    40
-    *    50
-    * ]
-    * </pre>
-    * @param idCol índice da coluna desejada.
-    * @param crescente true caso a ordenação deva ser crescente, false caso contrário.
-    * @throws IllegalArgumentException se o conteúdo dos dados estiver vazio.
-    * @throws IllegalArgumentException se o conteúdo dos dados não forem simétricos.
-    * @throws IllegalArgumentException se o índice da coluna for inválido.
-    * @throws IllegalArgumentException se a coluna conter valores que não possam ser convertidos para números.
-    */
-   public void ordenar(int idCol, boolean crescente){
-      if(this.vazio()){
-         throw new IllegalArgumentException("O conteúdo dos dados está vazio.");
-      }
-      if(!this.simetrico()){
-         throw new IllegalArgumentException("O conteúdo dos dados deve ser simétrico.");
-      }
-      if(idCol < 0 || idCol >= this.conteudo.get(0).length){
-         throw new IllegalArgumentException("O índice da coluna fornecido é inválido.");
-      }
-      if(this.contemNaoNumericos(idCol)){
-         throw new IllegalArgumentException("A coluna contém valores não numéricos.");
-      }
-
-      //isso é novo pra mim
-      Collections.sort(this.conteudo, (linha1, linha2) -> {
-         String valor1 = linha1[idCol];
-         String valor2 = linha2[idCol];
-         return crescente ? valor1.compareTo(valor2) : valor2.compareTo(valor1);
-      });
-
-      this.qAlteracoes++;
-   }
-
-
-   /**
-    * Ordena o conteúdo contido nos dados de acordo com a coluna desejada.
-    * <p>
-    *    A ordenação consequentemente irá mudar a ordem de organização
-    *    dos outros elementos.
-    * </p>
-    * Exemplo:
-    * <pre>
-    * d = [
     *    d
     *    b
     *    a
@@ -930,7 +872,7 @@ public class Dados{
     * @throws IllegalArgumentException se o conteúdo dos dados não forem simétricos.
     * @throws IllegalArgumentException se o índice da coluna for inválido.
     */
-   public void ordenarAlfabetico(int idCol, boolean crescente){
+   public void ordenar(int idCol, boolean crescente){
       if(this.vazio()){
          throw new IllegalArgumentException("O conteúdo dos dados está vazio.");
       }

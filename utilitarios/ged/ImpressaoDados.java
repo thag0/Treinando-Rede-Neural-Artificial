@@ -16,7 +16,7 @@ public class ImpressaoDados {
       int[] shape = dados.shape();
       int linPadrao = (shape[0] < 5) ? shape[0] : 5;
 
-      if(shape[0] < 6){
+      if(linPadrao < 5){
          dados.imprimir();
          return;
       }
@@ -37,24 +37,13 @@ public class ImpressaoDados {
          }
       }
 
-      for(int i = 0; i < linPadrao+1; i++){
+      for(int i = 0; i < linPadrao; i++){
          String[] linha = dados.conteudo().get(i);
-         
-         if(i < linPadrao){//imprimir conteúdo
-            for(int j = 0; j < linha.length; j++){
-               String valor = linha[j];
-               int distancia = comprimentoMaximo[j] - (valor.length()-1);
-               String espacos = " ".repeat(distancia);
-               System.out.print(espacamento + valor + espacos);
-            }
-
-         }else{//imprimir reticências
-            for(int j = 0; j < linha.length; j++){
-               String valor = "...";
-               int distancia = comprimentoMaximo[j] - (valor.length()-1);
-               String espacos = " ".repeat(distancia);
-               System.out.print(espacamento + valor + espacos);
-            }
+         for(int j = 0; j < linha.length; j++){
+            String valor = linha[j];
+            int distancia = comprimentoMaximo[j] - (valor.length()-1);
+            String espacos = " ".repeat(distancia);
+            System.out.print(espacamento + valor + espacos);
          }
          
          System.out.println();
