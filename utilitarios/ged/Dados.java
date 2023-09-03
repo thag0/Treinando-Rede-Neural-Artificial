@@ -856,7 +856,7 @@ public class Dados{
     *    c
     * ]
     * 
-    * d.ordenarAlfabetico(0, true).
+    * d.ordenar(0, true).
     * 
     * d = [
     *    a
