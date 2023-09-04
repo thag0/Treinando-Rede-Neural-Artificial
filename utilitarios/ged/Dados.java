@@ -389,13 +389,32 @@ public class Dados{
 
 
    /**
-    * Retorna todo o conteúdo da coluna de acordo com o índice fornecido.
+    * Retorna um novo conjunto de dados simples contendo apenas o conteúdo da coluna
+    * indicada.
+    * <p>
+    *    Exemplo:
+    * </p>
+    * <pre>
+    * d = [
+    *    1, 2
+    *    3, 4
+    *    5, 6 
+    * ]
+    *
+    * col = d.coluna(0)
+    *
+    * col = [
+    *    1
+    *    3
+    *    5 
+    * ]
+    * </pre>
     * @param idCol índice da coluna desejada.
-    * @return coluna completa.
+    * @return conjunto de dados contendo o conteúdo da coluna indicada.
     * @throws IllegalArgumentException se o conteúdo dos dados não for simétrico. 
     * @throws IllegalArgumentException se o índice fornecido for inválido.
     */
-   public String[] coluna(int idCol){
+   public Dados coluna(int idCol){
       if(!this.simetrico()){
          throw new IllegalArgumentException("O conteúdo dos dados deve ser simétrico.");
       }
@@ -403,7 +422,20 @@ public class Dados{
          throw new IllegalArgumentException("Índice da coluna fornecido é inválido.");
       }
 
-      return this.conteudo.get(idCol);
+      ArrayList<String[]> conteudo = new ArrayList<>();
+
+      //criando uma nova coluna com os valores
+      //da coluna desejada
+      for(String[] linha : this.conteudo){
+         String[] novaLinha = new String[1];
+         novaLinha[0] = linha[idCol];
+         conteudo.add(novaLinha);
+      }
+
+      Dados d = new Dados(conteudo);
+      d.nome = "Coluna " + idCol;
+      d.qAlteracoes = 0;
+      return d;
    }
 
 
@@ -413,25 +445,6 @@ public class Dados{
     */
    public void incrementarAlteracao(){
       this.qAlteracoes++;
-   }
-
-
-   /**
-    * Verifica se o conteúdo do conjunto de dados está vazio.
-    * <p>
-    *    Ele é considerado vazio se não conter nenhuma linha ou 
-    *    se todas as linhas estiverem vazias.
-    * </p>
-    * @return true se o conjunto de dados estiver vazio, false caso contrário.
-    */
-   public boolean vazio(){
-      if(this.conteudo.isEmpty()) return true;
-      
-      for(int i = 0; i < this.conteudo.size(); i++){
-         if(this.conteudo.get(i).length > 0) return false;
-      }
-
-      return true;
    }
 
 
@@ -736,7 +749,7 @@ public class Dados{
          throw new IllegalArgumentException("Os dados devem ser simétricos para normalização.");
       }
 
-      if(this.contemNaoNumericos(idCol)) return;
+      if(this.naoNumericos(idCol)) return;
           
       double min = minimo(idCol);
       double max = maximo(idCol);
@@ -900,6 +913,25 @@ public class Dados{
 
 
    /**
+    * Verifica se o conteúdo do conjunto de dados está vazio.
+    * <p>
+    *    Ele é considerado vazio se não conter nenhuma linha ou 
+    *    se todas as linhas estiverem vazias.
+    * </p>
+    * @return true se o conjunto de dados estiver vazio, false caso contrário.
+    */
+   public boolean vazio(){
+      if(this.conteudo.isEmpty()) return true;
+      
+      for(int i = 0; i < this.conteudo.size(); i++){
+         if(this.conteudo.get(i).length > 0) return false;
+      }
+
+      return true;
+   }
+
+
+   /**
     * Retorna um array contendo as linhas e colunas do conteúdo dos dados.
     * <p>
     *    {@code shape[0] = linhas}
@@ -1041,7 +1073,7 @@ public class Dados{
 
       boolean apenasNumericos = true;
       for(int i = 0; i < this.conteudo.get(0).length; i++){
-         if(contemNaoNumericos(i)){
+         if(naoNumericos(i)){
             apenasNumericos = false;
             break;
          }
@@ -1100,7 +1132,7 @@ public class Dados{
       buffer += espacamento + "Mínimo: \t\t" + minimo(idCol) + "\n";
       buffer += espacamento + "Moda: \t\t" + moda(idCol) + "\n";
       buffer += espacamento + "Desv Padrão: \t" + desvioPadrao(idCol) + "\n";
-      buffer += espacamento + "Numéricos: \t\t" + (!contemNaoNumericos(idCol) ? "sim" : "não") + "\n";
+      buffer += espacamento + "Numéricos: \t\t" + (!naoNumericos(idCol) ? "sim" : "não") + "\n";
       buffer += espacamento + "Ausentes: \t\t" + ausentes(idCol) + "\n";
       buffer += "]\n";
 
@@ -1124,7 +1156,7 @@ public class Dados{
     * @return verdadeiro caso a coluna possua valores que não possam ser convertidos, falso caso contrário.
     * @throws IllegalArgumentException se o índice for inválido.
     */
-   public boolean contemNaoNumericos(int idCol){
+   public boolean naoNumericos(int idCol){
       if(idCol < 0 || idCol >= this.conteudo.get(0).length){
          throw new IllegalArgumentException("Índice fornecido inválido.");
       }
@@ -1132,7 +1164,7 @@ public class Dados{
       for(String[] linha : this.conteudo){
          String valor = linha[idCol];
          try{
-            Double.parseDouble(valor);
+            Double.parseDouble(valor);//conversão "universal"
          
          }catch(NumberFormatException e){
             return true;
@@ -1232,5 +1264,11 @@ public class Dados{
       Dados cloneDados = new Dados(cloneConteudo);
 
       return cloneDados;
+   }
+
+
+   @Override
+   public String toString(){
+      return this.info();
    }
 }
