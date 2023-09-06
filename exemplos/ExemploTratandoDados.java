@@ -51,7 +51,7 @@ public class ExemploTratandoDados{
       rede.treinar(treinoEntrada, treinoSaida, 2_000);
 
       //avaliando resultados
-      System.out.println(rede.obterInformacoes());
+      System.out.println(rede.info());
       System.out.println("Perda = " + rede.avaliador.erroMedioQuadrado(testeEntrada, testeSaida));
       var precisao = 1 - rede.avaliador.erroMedioAbsoluto(testeEntrada, testeSaida);
       System.out.println("Precisão = " + (precisao * 100) + "%");

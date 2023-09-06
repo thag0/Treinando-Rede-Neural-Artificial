@@ -38,7 +38,7 @@ public class ExemploImagem{
 
       //avaliando resultados
       double precisao = 1 - rede.avaliador.erroMedioAbsoluto(dadosEntrada, dadosSaida);
-      System.out.println(rede.obterInformacoes());
+      System.out.println(rede.info());
       System.out.println("Precisão = " + (precisao * 100));
    }
 }

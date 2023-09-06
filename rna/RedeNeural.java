@@ -21,7 +21,7 @@ import rna.otimizadores.SGD;
 
 //TODO
 //Implementar formas melhores de treinar com uma grande quantidade de dados;
-//Formas mais elaboradas de otmizadores;
+//novos otimizadores;
 //Mais opções de métricas e funções de perda;
 //Poder configurar funções de ativação antes de compilar o modelo;
 
@@ -100,7 +100,7 @@ public class RedeNeural implements Cloneable, Serializable{
     * Auxiliar no controle da compilação da Rede Neural, ajuda a evitar uso 
     * indevido caso a rede não tenha suas variáveis inicializadas previamente.
     */
-   private boolean modeloCompilado = false;
+   private boolean compilado = false;
 
    /**
     * Otimizador que será utilizado durante o processo de aprendizagem da
@@ -558,7 +558,7 @@ public class RedeNeural implements Cloneable, Serializable{
       this.saida.configurarId(idCamada);
       this.saida.inicializarNeuronios(arquitetura[arquitetura.length-1], arquitetura[arquitetura.length-2], alcancePeso, inicializadorPeso);
 
-      modeloCompilado = true;//modelo pode ser usado
+      compilado = true;//modelo pode ser usado
    }
 
 
@@ -567,7 +567,7 @@ public class RedeNeural implements Cloneable, Serializable{
     * @throws IllegalArgumentException se o modelo não foi compilado.
     */
    private void modeloCompilado(){
-      if(!this.modeloCompilado){
+      if(!this.compilado){
          throw new IllegalArgumentException("O modelo ainda não foi compilado");
       }
    }
@@ -583,21 +583,21 @@ public class RedeNeural implements Cloneable, Serializable{
     *    da camada de saída da rede.</li>
     * </ul>
     * Caso os dados fornecidos atendam a essas condições, o fluxo de execução segue normalmente.
-    * @param dadosEntrada conjunto de dados de entrada.
-    * @param dadosSaida conjunto de dados de saída.
+    * @param entrada conjunto de dados de entrada.
+    * @param saida conjunto de dados de saída.
     */
-   private void consistenciaDados(double[][] dadosEntrada, double[][] dadosSaida){
+   private void consistenciaDados(double[][] entrada, double[][] saida){
       int nEntrada = this.obterCamadaEntrada().obterQuantidadeNeuronios();
       nEntrada -= (this.obterCamadaEntrada().temBias()) ? 1 : 0;
       int nSaida = this.obterCamadaSaida().obterQuantidadeNeuronios();
 
-      if(dadosEntrada.length != dadosSaida.length){
+      if(entrada.length != saida.length){
          throw new IllegalArgumentException("A quantidade de linhas de dados e saídas são diferentes.");
       }
-      if(nEntrada != dadosEntrada[0].length){
+      if(nEntrada != entrada[0].length){
          throw new IllegalArgumentException("Incompatibilidade entre os dados de entrada e os neurônios de entrada da rede.");
       }
-      if(nSaida != dadosSaida[0].length){
+      if(nSaida != saida[0].length){
          throw new IllegalArgumentException("Incompatibilidade entre os dados de saída e os neurônios de saída da rede.");
       }      
    }
@@ -695,13 +695,12 @@ public class RedeNeural implements Cloneable, Serializable{
 
       if(epochs < 1) throw new IllegalArgumentException("O valor de epochs deve ser maior que zero.");
 
-      //enviar clones pra não embaralhar os dados originais
-      if(otimizadorAtual.getClass().equals(rna.otimizadores.GradientDescent.class)){
-         treino.treino(this, this.otimizadorAtual, entradas.clone(), saidas.clone(), epochs, false);
+      boolean embaralhar;
+      if(otimizadorAtual.getClass().equals(rna.otimizadores.GradientDescent.class)) embaralhar = false;
+      else embaralhar = true;
       
-      }else{
-         treino.treino(this, this.otimizadorAtual, entradas.clone(), saidas.clone(), epochs, true);
-      }
+      //enviar clones pra não embaralhar os dados originais
+      treino.treino(this, this.otimizadorAtual, entradas.clone(), saidas.clone(), epochs, embaralhar);
    }
 
 
@@ -734,32 +733,33 @@ public class RedeNeural implements Cloneable, Serializable{
          throw new IllegalArgumentException("O valor de tamanho do lote é inválido.");
       }
 
+      boolean embaralhar;
+      if(otimizadorAtual.getClass().equals(rna.otimizadores.GradientDescent.class)) embaralhar = false;
+      else embaralhar = true;
+
       //enviar clones pra não embaralhar os dados originais
-      if(otimizadorAtual.getClass().equals(rna.otimizadores.GradientDescent.class)){
-         treino.treino(this, this.otimizadorAtual, entradas.clone(), saidas.clone(), epochs, false, tamanhoLote);
-      
-      }else{
-         treino.treino(this, this.otimizadorAtual, entradas.clone(), saidas.clone(), epochs, true, tamanhoLote);
-      }
+      treino.treino(this, this.otimizadorAtual, entradas.clone(), saidas.clone(), epochs, embaralhar, tamanhoLote);
    }
    
 
    /**
-    * Método alternativo no treino da rede neural usando diferenciação finita (finite difference), que calcula a "derivada" da função de custo levando
-    * a rede ao mínimo local dela. É importante encontrar um bom balanço entre a taxa de aprendizagem da rede e o valor de perturbação usado.
+    * Método alternativo no treino da rede neural usando diferenciação finita (finite difference), que calcula a "derivada" da 
+    * função de custo levando a rede ao mínimo local dela. É importante encontrar um bom balanço entre a taxa de aprendizagem da 
+    * rede e o valor de perturbação usado.
     * <p>
-    *    Vale ressaltar que esse método é mais lento e menos eficiente que o backpropagation, em arquiteturas de rede maiores e que tenha uma grande 
-    *    volume de dados de treino ou para problemas mais complexos ele pode demorar muito para convergir ou simplemente não funcionar como esperado.
+    *    Vale ressaltar que esse método é mais lento e menos eficiente que o backpropagation, em arquiteturas de rede maiores e 
+    *    que tenha uma grande volume de dados de treino ou para problemas mais complexos ele pode demorar muito para convergir 
+    *    ou simplemente não funcionar como esperado.
     * </p>
     * <p>
-    *    Ainda sim pode ser uma abordagem válida.
+    *    Ainda sim não deixa de ser uma abordagem válida.
     * </p>
     * @param entradas matriz com os dados de entrada 
     * @param saidas matriz com os dados de saída
     * @param eps valor de perturbação
     * @param epochs número de épocas do treinamento
-    * @param custoMinimo valor de custo desejável, o treino será finalizado caso o valor de custo mínimo seja atingido. Caso o custo mínimo seja zero, o treino
-    * irá continuar até o final das épocas fornecidas
+    * @param custoMinimo valor de custo desejável, o treino será finalizado caso o valor de custo mínimo seja atingido. Caso o custo mínimo seja 
+    * zero, o treino irá continuar até o final das épocas fornecidas
     * @throws IllegalArgumentException se o modelo não foi compilado previamente.
     * @throws IllegalArgumentException se houver alguma inconsistência dos dados de entrada e saída para a operação.
     * @throws IllegalArgumentException se o valor de perturbação for igual a zero.
@@ -780,43 +780,42 @@ public class RedeNeural implements Cloneable, Serializable{
          throw new IllegalArgumentException("O valor de custo mínimo não pode ser negativo.");
       }
 
-      RedeNeural redeG = this.clone();//copia da rede para guardar os valores de gradiente
+      RedeNeural redeG = this.clone();//copia da rede para guardar os valores de "gradiente"
       
-      ArrayList<Camada> camadasRede = new ArrayList<Camada>();//copia da rede para camadas
-      ArrayList<Camada> camadasGradiente = new ArrayList<Camada>();//copia da rede gradiente para camadas
+      ArrayList<Camada> camadasR = new ArrayList<Camada>();//copia da rede para camadas
+      ArrayList<Camada> camadasG = new ArrayList<Camada>();//copia da rede gradiente para camadas
       
       //colocando a rede de forma sequencial
-      camadasRede.add(this.entrada);
-      for(Camada camada : this.ocultas) camadasRede.add(camada);
-      camadasRede.add(this.saida);
+      camadasR.add(this.entrada);
+      for(Camada camada : this.ocultas) camadasR.add(camada);
+      camadasR.add(this.saida);
       
       //colocando a rede gradiente de forma sequencial
-      camadasGradiente.add(redeG.entrada);
-      for(Camada camada : redeG.ocultas) camadasGradiente.add(camada);
-      camadasGradiente.add(redeG.saida);
+      camadasG.add(redeG.entrada);
+      for(Camada camada : redeG.ocultas) camadasG.add(camada);
+      camadasG.add(redeG.saida);
 
       for(int epocas = 0; epocas < epochs; epocas++){
          double custo = avaliador.erroMedioQuadrado(entradas, saidas);
          if(custo < custoMinimo) break;
 
          double valorAnterior = 0;
-
-         for(int i = 0; i < camadasRede.size(); i++){//percorrer camadas da rede
-            for(int j = 0; j < camadasRede.get(i).neuronios.length; j++){//percorrer neuronios da camada
-               for(int k = 0; k < camadasRede.get(i).neuronios[j].pesos.length; k++){//percorrer pesos do neuronio
-                  valorAnterior = camadasRede.get(i).neuronios[j].pesos[k];
-                  camadasRede.get(i).neuronios[j].pesos[k] += eps;
-                  camadasGradiente.get(i).neuronios[j].pesos[k] = ((avaliador.erroMedioQuadrado(entradas, saidas) - custo)/eps);//derivada da função de custo
-                  camadasRede.get(i).neuronios[j].pesos[k] = valorAnterior;
+         for(int i = 0; i < camadasR.size(); i++){//percorrer camadas da rede
+            for(int j = 0; j < camadasR.get(i).neuronios.length; j++){//percorrer neuronios da camada
+               for(int k = 0; k < camadasR.get(i).neuronios[j].pesos.length; k++){//percorrer pesos do neuronio
+                  valorAnterior = camadasR.get(i).neuronios[j].pesos[k];
+                  camadasR.get(i).neuronios[j].pesos[k] += eps;
+                  camadasG.get(i).neuronios[j].pesos[k] = ((avaliador.erroMedioQuadrado(entradas, saidas) - custo)/eps);//"derivada" da função de custo
+                  camadasR.get(i).neuronios[j].pesos[k] = valorAnterior;
                }
             }
          }
 
          //atualizar pesos
-         for(int i = 0; i < camadasRede.size(); i++){
-            for(int j = 0; j < camadasRede.get(i).neuronios.length; j++){
-               for(int k = 0; k < camadasRede.get(i).neuronios[j].pesos.length; k++){
-                  camadasRede.get(i).neuronios[j].pesos[k] -= TAXA_APRENDIZAGEM * camadasGradiente.get(i).neuronios[j].pesos[k];
+         for(int i = 0; i < camadasR.size(); i++){
+            for(int j = 0; j < camadasR.get(i).neuronios.length; j++){
+               for(int k = 0; k < camadasR.get(i).neuronios[j].pesos.length; k++){
+                  camadasR.get(i).neuronios[j].pesos[k] -= TAXA_APRENDIZAGEM * camadasG.get(i).neuronios[j].pesos[k];
                }
             }
          }
@@ -826,7 +825,7 @@ public class RedeNeural implements Cloneable, Serializable{
 
 
    /**
-    * Informa o valor do hiperparâmetro de traxa de aprendizagem da Rede Neural.
+    * Informa o valor do hiperparâmetro de taxa de aprendizagem da Rede Neural.
     * @return valor de taxa de aprendizagem da rede.
     */
    public double obterTaxaAprendizagem(){
@@ -835,7 +834,7 @@ public class RedeNeural implements Cloneable, Serializable{
 
 
    /**
-    * Informa o valor do hiperparâmetro de traxa de momentum da Rede Neural.
+    * Informa o valor do hiperparâmetro de taxa de momentum da Rede Neural.
     * @return valor de taxa de momentum da rede.
     */
    public double obterTaxaMomentum(){
@@ -844,7 +843,7 @@ public class RedeNeural implements Cloneable, Serializable{
 
 
    /**
-    * Informa qual tipo de otmizador está sendo usado para o treio da Rede Neural.
+    * Informa qual tipo de otimizador está sendo usado para o treino da Rede Neural.
     * @return otimizador atual da rede.
     */
    public Otimizador obterOtimizador(){
@@ -903,7 +902,7 @@ public class RedeNeural implements Cloneable, Serializable{
 
 
    /**
-    * Copia os dados da saída de cada neurônio da camada de saída da rede neural para um vetor.
+    * Copia os dados da saída de cada neurônio da camada de saída da Rede Neural para um array.
     * A ordem de cópia é crescente, do primeiro neurônio da saída ao último.
     * @return vetor com os dados das saídas da rede.
     * @throws IllegalArgumentException se o modelo não foi compilado previamente.
@@ -939,7 +938,7 @@ public class RedeNeural implements Cloneable, Serializable{
 
    /**
     * Informa o nome configurado da Rede Neural.
-    * @return retorna o nome específico da rede.
+    * @return nome específico da rede.
     */
    public String obterNome(){
       return this.nome;
@@ -974,7 +973,7 @@ public class RedeNeural implements Cloneable, Serializable{
     * @return buffer formatado contendo as informações.
     * @throws IllegalArgumentException se o modelo não foi compilado previamente.
     */
-   public String obterInformacoes(){
+   public String info(){
       this.modeloCompilado();
 
       String buffer = "";
@@ -1000,9 +999,9 @@ public class RedeNeural implements Cloneable, Serializable{
       buffer += espacamento + "Ativação saída : " + this.saida.obterAtivacao() + "\n";
 
       //arquitetura
-      buffer += "\n" + espacamento + "arquitetura = {" + this.arquitetura[0];
+      buffer += "\n" + espacamento + "arquitetura = [" + this.arquitetura[0];
       for(int i = 0; i < this.ocultas.length; i++) buffer += ", " + this.arquitetura[i+1];
-      buffer += ", " + this.arquitetura[this.arquitetura.length-1] + "}";
+      buffer += ", " + this.arquitetura[this.arquitetura.length-1] + "]";
 
       buffer += "\n]\n";
 
@@ -1112,7 +1111,7 @@ public class RedeNeural implements Cloneable, Serializable{
     * Lê um arquivo de rede neural no caminho especificado, o caminho não leva em consideração
     * o formato, logo precisa ser especificado.
     * @param caminho caminho do arquivo de rede salvo
-    * @return Rede lida pelo arquivo.
+    * @return objeto do tipo {@code RedeNeural} lido pelo arquivo.
     */
    public static RedeNeural lerArquivoRede(String caminho){
       RedeNeural rede = null;

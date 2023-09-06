@@ -11,7 +11,7 @@ import java.util.Random;
 public class Neuronio implements Serializable{
 
    /**
-    * Saídas dos neurônios camada anterior.
+    * Corresponde às saídas dos neurônios da camada anterior.
     */
    public double[] entradas;
 
@@ -93,27 +93,27 @@ public class Neuronio implements Serializable{
     *    <li>2 - He.</li>
     *    <li>3 - LeCun.</li>
     * </ul>
-    * @param ligacoes quantidade de ligações, deve estar relacionada com a quatidade de neurônios da camada anterior (incluindo bias, caso tenha).
+    * @param conexoes quantidade de conexões, deve estar relacionada com a quatidade de neurônios da camada anterior (incluindo bias, caso tenha).
     * @param alcancePeso valor de alcance em que o peso aleatório será gerado, deve ser um valor positivo e diferente de zero.
     * @param inicializador algoritmo inicializador dos pesos.
     * @throws IllegalArgumentException se o valor de alcance dos pesos for menor ou igual a zero.
     * @throws IllegalArgumentException se o otimizador fornecido for inválido.
     */
-   public Neuronio(int ligacoes, double alcancePeso, int inicializador){
+   public Neuronio(int conexoes, double alcancePeso, int inicializador){
       if (alcancePeso <= 0) throw new IllegalArgumentException("O valor de alcance do peso deve ser positivo e diferente de zero.");
    
-      this.entradas = new double[ligacoes];
-      this.momentum = new double[ligacoes];
-      this.acumuladorGradiente = new double[ligacoes];
-      this.acumuladorSegundaOrdem = new double[ligacoes];
-      this.gradiente = new double[ligacoes];
-      this.gradienteAcumulado = new double[ligacoes];
+      this.entradas = new double[conexoes];
+      this.momentum = new double[conexoes];
+      this.acumuladorGradiente = new double[conexoes];
+      this.acumuladorSegundaOrdem = new double[conexoes];
+      this.gradiente = new double[conexoes];
+      this.gradienteAcumulado = new double[conexoes];
 
-      this.pesos = new double[ligacoes];
+      this.pesos = new double[conexoes];
       switch(inicializador){
          case 0 -> inicializacaoAleatoria(alcancePeso);
-         case 1 -> inicializacaoHe(ligacoes);
-         case 2 -> inicializacaoLeCun(ligacoes);
+         case 1 -> inicializacaoHe(conexoes);
+         case 2 -> inicializacaoLeCun(conexoes);
          default -> throw new IllegalArgumentException("Otimizador fornecido para otimização dos pesos é inválido.");
       }
 
@@ -137,7 +137,7 @@ public class Neuronio implements Serializable{
     * e seu peso respectivo. O resultado será usado como entrada para a função
     * de ativação.
     */
-   public void calcularSomatorio(){
+   public void somatorio(){
       this.somatorio = 0;
       for(int i = 0; i < this.entradas.length; i++){
          this.somatorio += (this.entradas[i] * this.pesos[i]);
@@ -184,7 +184,7 @@ public class Neuronio implements Serializable{
     * Retorna informações dos pesos do neurônio.
     * @return buffer formatado contendo as informações.
     */
-   public String obterInformacoes(){
+   public String info(){
       String buffer = "";
       String espacamento = "    ";
 

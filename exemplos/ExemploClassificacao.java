@@ -52,7 +52,7 @@ public class ExemploClassificacao{
       
       //treinando e avaliando os resultados
       rede.treinar(treinoEntrada, treinoSaida, 2_000);
-      System.out.println(rede.obterInformacoes());
+      System.out.println(rede.info());
       double acuraria = rede.avaliador.acuracia(testeEntrada, testeSaida);
       double custo = rede.avaliador.entropiaCruzada(testeEntrada, testeSaida);
       System.out.println("Acurácia = " + (acuraria * 100) + "%");

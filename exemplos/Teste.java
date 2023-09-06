@@ -1,9 +1,25 @@
 package exemplos;
 
 import utilitarios.ged.Dados;
-import utilitarios.ged.Ged;
 
 public class Teste{
+
+   public static void main(String[] args){
+      limparConsole();
+
+      int[][] a = {
+         {1, 2, 3},
+         {4, 5, 6},
+         {7, 8, 9}
+      };
+      
+      Dados dados = new Dados(a);
+      dados.editarNome("Teste");
+      Dados d = dados.coluna(1);
+      dados.imprimir();
+      d.imprimir();
+   }
+
 
    public static void limparConsole(){
       try{
@@ -20,17 +36,5 @@ public class Teste{
       }catch(Exception e){
          return;
       }
-   }
-
-   public static void main(String[] args){
-      limparConsole();
-      Ged ged = new Ged();
-      
-      // Dados dados = ged.lerCsv("./dados/portas-logicas/xor-cascata.csv");
-      Dados dados = ged.lerCsv("./teste.csv");
-      dados.editarNome("Teste");
-
-      dados.imprimir();
-      System.out.println(dados.info());
    }
 }

@@ -56,7 +56,7 @@ public class ExemploPhising{
       // avaliando os resultados da rede neural
       double precisao = rede.avaliador.erroMedioAbsoluto(testeX, testeY);
       double custo = rede.avaliador.erroMedioQuadrado(testeX, testeY);
-      System.out.println(rede.obterInformacoes());
+      System.out.println(rede.info());
       System.out.println("Precisão: " + (precisao * 100) + "%");
       System.out.println("Custo: " + custo);
 

@@ -52,7 +52,7 @@ class Main{
       System.out.println("Tamanho dos dados [" + dados.length + ", " + dados[0].length + "]");
 
       RedeNeural rede = criarRede(qEntradas, qSaidas);
-      System.out.println(rede.obterInformacoes());
+      System.out.println(rede.info());
 
       //treinar e marcar tempo
       t1 = System.nanoTime();

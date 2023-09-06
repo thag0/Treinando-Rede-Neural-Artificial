@@ -22,7 +22,10 @@ import rna.ativacoes.TanH;
 public class Camada implements Serializable{
 
    /**
-    * Conjunto de neurônios da camada. Região crítica.
+    * <p>
+    *    Região crítica.
+    * </p>
+    * Conjunto de neurônios da camada.
     */
    Neuronio[] neuronios;
 
@@ -68,8 +71,8 @@ public class Camada implements Serializable{
 
 
    /**
-    * Configura o id da camada. O id deve indicar dentro da rede neural, em qual posição
-    * a camada está localizada.
+    * Configura o id da camada. O id deve indicar dentro da rede neural, em 
+    * qual posição a camada está localizada.
     * @param id id da camada.
     */
    public void configurarId(int id){
@@ -114,7 +117,7 @@ public class Camada implements Serializable{
       //calculando o somatorio das entradas com os pesos
       for(int i = 0; i < qNeuronios; i++){
          neuronio = this.neuronios[i];
-         neuronio.calcularSomatorio();
+         neuronio.somatorio();
          neuronio.saida = this.ativacao.ativar(neuronio.somatorio);
       }
 
@@ -279,7 +282,7 @@ public class Camada implements Serializable{
     * </ul>
     * @return buffer formatado contendo as informações da camada.
     */
-   public String obterInformacoes(){
+   public String info(){
       String buffer = "";
       String espacamento = "    ";
       
