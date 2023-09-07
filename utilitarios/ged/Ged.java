@@ -66,7 +66,8 @@ public class Ged{
 
 
    /**
-    * Imprime o início do conteúdo do conjunto de dados.
+    * Imprime o início do conteúdo do conjunto de dados para facilitar a visualização 
+    * em dados muito grandes.
     * @param dados conjunto de dados.
     */
    public void imprimirInicio(Dados dados){
@@ -952,16 +953,6 @@ public class Ged{
     */
    public void exportarCsv(Dados dados, String caminho){
       ga.exportarCsv(dados, caminho);;
-   }
-
-
-   /**
-    * Grava os dados no formato {@code double[][]} em um arquivo.csv.
-    * @param dados array com o conjunto de dados.
-    * @param caminho caminho do arquivo onde os dados serão gravados, excluindo a extensão .csv.
-    */
-   public void exportarCsv(double[][] dados, String caminho){
-      ga.exportarCsv(dados, caminho);
    }
 
 

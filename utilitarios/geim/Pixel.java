@@ -2,32 +2,49 @@ package utilitarios.geim;
 
 
 /**
- * Classe responsável por representar o valor de cor de um pixel de acordo com o padrão
- * de cor rgb.
+ * Classe responsável por representar o valor de cor de um pixel de 
+ * acordo com o padrão de cor rgb.
  */
 public class Pixel{
+
+   /**
+    * intensidade da cor vermelha.
+    */
    private int r;
+    
+   /**
+    * intensidade da cor verde.
+    */
    private int g;
+
+   /**
+    * intensidade da cor azul.
+    */
    private int b;
 
 
    /**
     * Cria uma intância de um pixel.
-    * Os valores fornecidos serão configurados automaticamente.
-    * @param r
-    * @param g
-    * @param b
+    * <p>
+    *    Os valores de intensidade de cada cor serão inicializados de acordo
+    *    com os valores fornecidos.
+    * </p>
+    * @param r intensidade da cor vermelha.
+    * @param g intensidade da cor verde.
+    * @param b intensidade da cor azul.
     */
    public Pixel(int r, int g, int b){
-      this.r = r;
-      this.g = g;
-      this.b = b;
+      this.setR(r);
+      this.setG(g);
+      this.setB(b);
    }
 
 
    /**
     * Cria uma intância de um pixel.
-    * Os valores fornecidos serão inicializados como 0.
+    * <p>
+    *    Os valores de intensidade de cada cor serão inicializados como 0.
+    * </p>
     */
    public Pixel(){
       this.r = 0;
@@ -88,7 +105,8 @@ public class Pixel{
 
 
    /**
-    * @return valor da cor vemelha do pixel.
+    * Retorna o valor de intensidade da cor vermelha do pixel.
+    * @return valor de intensidade da cor vermelha do pixel.
     */
    public int getR(){
       return this.r;
@@ -96,7 +114,8 @@ public class Pixel{
 
 
    /**
-    * @return valor da cor verde do pixel.
+    * Retorna o valor de intensidade da cor verde do pixel.
+    * @return valor de intensidade da cor verde do pixel.
     */
    public int getG(){
       return this.g;
@@ -104,7 +123,8 @@ public class Pixel{
 
 
    /**
-    * @return valor da cor azul do pixel.
+    * Retorna o valor de intensidade da cor azul do pixel.
+    * @return valor de intensidade da cor azul do pixel.
     */
    public int getB(){
       return this.b;

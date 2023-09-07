@@ -1,23 +1,28 @@
 package exemplos;
 
 import utilitarios.ged.Dados;
+import utilitarios.ged.Ged;
 
 public class Teste{
 
    public static void main(String[] args){
       limparConsole();
+      Ged ged = new Ged();
 
-      int[][] a = {
-         {1, 2, 3},
-         {4, 5, 6},
-         {7, 8, 9}
+      // final String caminho = "./dados/datasets-maiores/breast-cancer-wisconsin.csv";
+      final String caminho = "./dados/datasets-maiores/iris.csv";
+      Dados da = ged.lerCsv(caminho);
+
+      double[][] xord = {
+         {0, 0, 0},
+         {0, 1, 1},
+         {1, 0, 1},
+         {1, 1, 0},
       };
+      Dados xor = new Dados(xord);
       
-      Dados dados = new Dados(a);
-      dados.editarNome("Teste");
-      Dados d = dados.coluna(1);
-      dados.imprimir();
-      d.imprimir();
+      ged.imprimirInicio(xor);
+      ged.imprimirInicio(da);
    }
 
 

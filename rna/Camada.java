@@ -25,7 +25,7 @@ public class Camada implements Serializable{
     * <p>
     *    Região crítica.
     * </p>
-    * Conjunto de neurônios da camada.
+    * Conjunto de neurônios artificiais da camada.
     */
    Neuronio[] neuronios;
 
@@ -83,15 +83,15 @@ public class Camada implements Serializable{
    /**
     * Instancia os neurônios da camada correspondente.
     * @param qNeuronios quantidade de neurônios que a camada deve possuir, incluindo bias.
-    * @param qLigacoes quantidade de pesos de cada neurônio, deve corresponder a quantidade de neurônios da camada anterior.
+    * @param qConexoes quantidade de pesos de cada neurônio, deve corresponder a quantidade de neurônios da camada anterior.
     * @param alcancePeso valor de alcance da aleatorização dos pesos.
     * @param inicializador inicializador customizado para os pesos iniciais da rede.
     */
-   public void inicializarNeuronios(int qNeuronios, int qLigacoes, double alcancePeso, int inicializador){
+   public void inicializarNeuronios(int qNeuronios, int qConexoes, double alcancePeso, int inicializador){
       this.neuronios = new Neuronio[qNeuronios];
       
       for(int i = 0; i < this.neuronios.length; i++){
-         this.neuronios[i] = new Neuronio(qLigacoes, alcancePeso, inicializador);
+         this.neuronios[i] = new Neuronio(qConexoes, alcancePeso, inicializador);
       }
    }
 
@@ -102,19 +102,18 @@ public class Camada implements Serializable{
     * @param camadaAnterior camada anterior que contém os valores de saída dos neurônios
     */
    public void ativarNeuronios(Camada camadaAnterior){
-      //preencher entradas dos neuronios
       Neuronio neuronio;
+
+      //preencher entradas dos neuronios
       for(int i = 0; i < (this.neuronios.length-b); i++){
-         
          neuronio = this.neuronios[i];
          for(int j = 0; j < neuronio.entradas.length; j++){
             neuronio.entradas[j] = camadaAnterior.neuronios[j].saida;
          }
       }
 
-      int qNeuronios = this.neuronios.length-b;
-
       //calculando o somatorio das entradas com os pesos
+      int qNeuronios = this.neuronios.length-b;
       for(int i = 0; i < qNeuronios; i++){
          neuronio = this.neuronios[i];
          neuronio.somatorio();

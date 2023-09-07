@@ -23,10 +23,6 @@ class GerenciadorArquivos{
 
 
    public Dados lerCsv(String caminho){
-      ArrayList<String[]> linhas = new ArrayList<>();
-      String separador = ",";
-      String linha = "";
-
       //diretório não existe
       if(!(new File(caminho).exists())){
          throw new IllegalArgumentException("O caminho especificado não existe ou não foi encontrado.");
@@ -36,6 +32,10 @@ class GerenciadorArquivos{
       if(new File(caminho).getClass().getName().toLowerCase().endsWith(".csv")){
          throw new IllegalArgumentException("O arquivo especificado não contém as extensão .csv");
       }
+
+      ArrayList<String[]> linhas = new ArrayList<>();
+      String separador = ",";
+      String linha = "";
 
       try{
          BufferedReader br = new BufferedReader(new FileReader(caminho));
@@ -55,8 +55,7 @@ class GerenciadorArquivos{
          e.printStackTrace();
       }
 
-      Dados dados = new Dados();
-      dados.atribuir(linhas);
+      Dados dados = new Dados(linhas);
       return dados;
    }
 
@@ -94,12 +93,12 @@ class GerenciadorArquivos{
    public void exportarCsv(Dados dados, String caminho){
       String separador = ",";
 
-      ArrayList<String[]> lista = dados.conteudo();
+      ArrayList<String[]> conteudo = dados.conteudo();
 
       try{
          BufferedWriter bw = new BufferedWriter(new FileWriter(caminho + ".csv"));
          
-         for(String[] linha : lista){
+         for(String[] linha : conteudo){
             for(int i = 0; i < linha.length; i++){
 
                bw.write(linha[i]);
@@ -118,28 +117,4 @@ class GerenciadorArquivos{
       }
    }
 
-
-   public void exportarCsv(double[][] dados, String caminho){
-      String separador = ",";
-  
-      try{
-         BufferedWriter bw = new BufferedWriter(new FileWriter(caminho + ".csv"));
-  
-         for (double[] linha : dados) {
-            for (int i = 0; i < linha.length; i++) {
-               bw.write(String.valueOf(linha[i])); // Convert double to string
-               if (i < linha.length - 1) {
-                  bw.write(separador);
-               }
-            }
-            bw.newLine();
-         }
-  
-         bw.close();
-  
-      }catch(Exception e){
-         System.out.println("Houve um erro ao exportar o arquivo.");
-         e.printStackTrace();
-      }
-   }
 }

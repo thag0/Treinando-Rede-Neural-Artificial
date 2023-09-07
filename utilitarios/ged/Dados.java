@@ -37,7 +37,7 @@ public class Dados{
    /**
     * Nome personalizável.
     */
-   private String nome = this.getClass().getSimpleName();
+   private String nome = this.getClass().getSimpleName();;
 
 
    /**
@@ -131,6 +131,7 @@ public class Dados{
       if(nome.isBlank() || nome.isEmpty()){
          throw new IllegalArgumentException("O novo nome não pode estar vazio ou em branco.");
       }
+
       this.nome = nome;
       this.qAlteracoes++;
    }
@@ -209,11 +210,11 @@ public class Dados{
 
    /**
     * Substitui todo o conteúdo atual de Dados pela nova lista.
-    * @param lista lista com os novos dados.
+    * @param conteudo lista com os novos dados.
     */
-   public void atribuir(ArrayList<String[]> lista){
-      if(lista != null){
-         this.conteudo = lista;
+   public void atribuir(ArrayList<String[]> conteudo){
+      if(conteudo != null){
+         this.conteudo = conteudo;
          this.qAlteracoes++;
       }
    }
@@ -244,14 +245,14 @@ public class Dados{
          }
       }
 
-      ArrayList<String[]> lista = new ArrayList<>();
+      ArrayList<String[]> lista = new ArrayList<>(linhas);
 
-      for (int i = 0; i < linhas; i++) {
+      for(int i = 0; i < linhas; i++){
          String[] linha = new String[colunas];
-         for (int j = 0; j < colunas; j++) {
+         for(int j = 0; j < colunas; j++){
             linha[j] = Integer.toString(matriz[i][j]);
          }
-         lista.add(linha);
+         lista.add(i, linha);
       }
 
       this.conteudo = lista;
@@ -284,14 +285,14 @@ public class Dados{
          }
       }
 
-      ArrayList<String[]> lista = new ArrayList<>();
+      ArrayList<String[]> lista = new ArrayList<>(linhas);
 
-      for (int i = 0; i < linhas; i++) {
+      for(int i = 0; i < linhas; i++){
          String[] linha = new String[colunas];
-         for (int j = 0; j < colunas; j++) {
+         for(int j = 0; j < colunas; j++){
             linha[j] = Float.toString(matriz[i][j]);
          }
-         lista.add(linha);
+         lista.add(i, linha);
       }
 
       this.conteudo = lista;
@@ -324,14 +325,14 @@ public class Dados{
          }
       }
 
-      ArrayList<String[]> lista = new ArrayList<>();
+      ArrayList<String[]> lista = new ArrayList<>(linhas);
 
-      for (int i = 0; i < linhas; i++) {
+      for(int i = 0; i < linhas; i++){
          String[] linha = new String[colunas];
-         for (int j = 0; j < colunas; j++) {
+         for(int j = 0; j < colunas; j++){
             linha[j] = Double.toString(matriz[i][j]);
          }
-         lista.add(linha);
+         lista.add(i, linha);
       }
 
       this.conteudo = lista;
@@ -364,14 +365,14 @@ public class Dados{
          }
       }
 
-      ArrayList<String[]> lista = new ArrayList<>();
+      ArrayList<String[]> lista = new ArrayList<>(linhas);
 
-      for (int i = 0; i < linhas; i++) {
+      for(int i = 0; i < linhas; i++){
          String[] linha = new String[colunas];
-         for (int j = 0; j < colunas; j++) {
+         for(int j = 0; j < colunas; j++){
             linha[j] = matriz[i][j];
          }
-         lista.add(linha);
+         lista.add(i, linha);
       }
 
       this.conteudo = lista;
@@ -982,8 +983,8 @@ public class Dados{
 
 
    /**
-    * Método de impressão básico, via console, do conteúdo
-    * contido em formato de tabela.
+    * Método de impressão básico, via console, de todo o 
+    * conteúdo contido em formato de tabela.
     * <p>
     *    Caso os dados sejam simétricos, também é exibido o formato do conteúdo.
     * </p>

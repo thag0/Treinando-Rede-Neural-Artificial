@@ -198,6 +198,5 @@ public class Neuronio implements Serializable{
       buffer += "]\n";
 
       return buffer;
-   }
-  
+   } 
 }

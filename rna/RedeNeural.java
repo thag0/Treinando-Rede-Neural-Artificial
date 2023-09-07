@@ -622,7 +622,7 @@ public class RedeNeural implements Cloneable, Serializable{
 
       //carregar dados na camada de entrada
       for(int i = 0; i < (this.entrada.obterQuantidadeNeuronios()-BIAS); i++){
-         this.entrada.neuronios[i].saida = entradas[i];
+         this.entrada.neuronio(i).saida = entradas[i];
       }
       
       //ativar neurônios das ocultas
@@ -651,7 +651,7 @@ public class RedeNeural implements Cloneable, Serializable{
    public double[][] calcularSaida(double[][] entradas){
       this.modeloCompilado();
 
-      if(entradas[0].length != (this.entrada.neuronios.length-BIAS)){
+      if(entradas[0].length != (this.entrada.obterQuantidadeNeuronios()-BIAS)){
          throw new IllegalArgumentException("As dimensões dos dados de entrada com os neurônios de entrada da rede não são iguais.");
       }
 
@@ -801,21 +801,21 @@ public class RedeNeural implements Cloneable, Serializable{
 
          double valorAnterior = 0;
          for(int i = 0; i < camadasR.size(); i++){//percorrer camadas da rede
-            for(int j = 0; j < camadasR.get(i).neuronios.length; j++){//percorrer neuronios da camada
-               for(int k = 0; k < camadasR.get(i).neuronios[j].pesos.length; k++){//percorrer pesos do neuronio
-                  valorAnterior = camadasR.get(i).neuronios[j].pesos[k];
-                  camadasR.get(i).neuronios[j].pesos[k] += eps;
-                  camadasG.get(i).neuronios[j].pesos[k] = ((avaliador.erroMedioQuadrado(entradas, saidas) - custo)/eps);//"derivada" da função de custo
-                  camadasR.get(i).neuronios[j].pesos[k] = valorAnterior;
+            for(int j = 0; j < camadasR.get(i).obterQuantidadeNeuronios(); j++){//percorrer neuronios da camada
+               for(int k = 0; k < camadasR.get(i).neuronio(j).pesos.length; k++){//percorrer pesos do neuronio
+                  valorAnterior = camadasR.get(i).neuronio(j).pesos[k];
+                  camadasR.get(i).neuronio(j).pesos[k] += eps;
+                  camadasG.get(i).neuronio(j).pesos[k] = ((avaliador.erroMedioQuadrado(entradas, saidas) - custo)/eps);//"derivada" da função de custo
+                  camadasR.get(i).neuronio(j).pesos[k] = valorAnterior;
                }
             }
          }
 
          //atualizar pesos
          for(int i = 0; i < camadasR.size(); i++){
-            for(int j = 0; j < camadasR.get(i).neuronios.length; j++){
-               for(int k = 0; k < camadasR.get(i).neuronios[j].pesos.length; k++){
-                  camadasR.get(i).neuronios[j].pesos[k] -= TAXA_APRENDIZAGEM * camadasG.get(i).neuronios[j].pesos[k];
+            for(int j = 0; j < camadasR.get(i).obterQuantidadeNeuronios(); j++){
+               for(int k = 0; k < camadasR.get(i).neuronio(j).pesos.length; k++){
+                  camadasR.get(i).neuronio(j).pesos[k] -= TAXA_APRENDIZAGEM * camadasG.get(i).neuronio(j).pesos[k];
                }
             }
          }
@@ -910,9 +910,9 @@ public class RedeNeural implements Cloneable, Serializable{
    public double[] obterSaidas(){
       this.modeloCompilado();
 
-      double saida[] = new double[this.saida.neuronios.length];
-      for(int i = 0; i < this.saida.neuronios.length; i++){
-         saida[i] = this.saida.neuronios[i].saida;
+      double saida[] = new double[this.saida.obterQuantidadeNeuronios()];
+      for(int i = 0; i < saida.length; i++){
+         saida[i] = this.saida.neuronio(i).saida;
       }
 
       return saida;
@@ -1054,11 +1054,11 @@ public class RedeNeural implements Cloneable, Serializable{
     */
    private Camada cloneCamada(Camada camada){
       Camada clone = new Camada(camada.temBias());
-      clone.neuronios = new Neuronio[camada.neuronios.length];
+      clone.neuronios = new Neuronio[camada.obterQuantidadeNeuronios()];
       clone.ativacao = camada.ativacao;
 
-      for (int i = 0; i < camada.neuronios.length; i++) {
-         clone.neuronios[i] = cloneNeuronio(camada.neuronios[i]);
+      for (int i = 0; i < camada.obterQuantidadeNeuronios(); i++) {
+         clone.neuronios[i] = cloneNeuronio(camada.neuronio(i));
       }
 
       return clone;
@@ -1147,15 +1147,15 @@ public class RedeNeural implements Cloneable, Serializable{
       for(int i = 0; i < this.ocultas.length; i++){
 
          buffer += espacamento + "Camada oculta " + i + " = [\n";
-         for(int j = 0; j < this.ocultas[i].neuronios.length-BIAS; j++){
+         for(int j = 0; j < this.ocultas[i].obterQuantidadeNeuronios()-BIAS; j++){
             
             buffer += espacamentoDuplo + "n" + j + " = [\n";
-            for(int k = 0; k < this.ocultas[i].neuronios[j].pesos.length; k++){
-               if(k == this.ocultas[i].neuronios[j].pesos.length-1 && (this.BIAS == 1)){
-                  buffer += espacamentoTriplo + "pb" + " = " + this.ocultas[i].neuronios[j].pesos[k] + "\n";
+            for(int k = 0; k < this.ocultas[i].neuronio(j).pesos.length; k++){
+               if(k == this.ocultas[i].neuronio(j).pesos.length-1 && (this.BIAS == 1)){
+                  buffer += espacamentoTriplo + "pb" + " = " + this.ocultas[i].neuronio(j).pesos[k] + "\n";
                
                }else{
-                  buffer += espacamentoTriplo + "p" + k + " = " + this.ocultas[i].neuronios[j].pesos[k] + "\n";
+                  buffer += espacamentoTriplo + "p" + k + " = " + this.ocultas[i].neuronio(j).pesos[k] + "\n";
                }
             }
             buffer += espacamentoDuplo + "]\n";
@@ -1167,14 +1167,14 @@ public class RedeNeural implements Cloneable, Serializable{
 
       //saida
       buffer += espacamento + "Camada saída = [\n";
-      for(int i = 0; i < this.saida.neuronios.length; i++){
+      for(int i = 0; i < this.saida.obterQuantidadeNeuronios(); i++){
 
          buffer += espacamentoDuplo + "n" + i + " = [\n";
-         for(int j = 0; j < this.saida.neuronios[i].pesos.length; j++){
-            if(j == this.saida.neuronios[i].pesos.length-1 && (this.BIAS == 1)){
-               buffer += espacamentoTriplo + "pb" + " = " + this.saida.neuronios[i].pesos[j] + "\n";
+         for(int j = 0; j < this.saida.neuronio(i).pesos.length; j++){
+            if(j == this.saida.neuronio(i).pesos.length-1 && (this.BIAS == 1)){
+               buffer += espacamentoTriplo + "pb" + " = " + this.saida.neuronio(i).pesos[j] + "\n";
             
-            }else buffer += espacamentoTriplo + "p" + j + " = " + this.saida.neuronios[i].pesos[j] + "\n";
+            }else buffer += espacamentoTriplo + "p" + j + " = " + this.saida.neuronio(i).pesos[j] + "\n";
          }
          buffer += espacamentoDuplo + "]\n";
 

@@ -10,7 +10,7 @@ import render.JanelaRede;
 import render.JanelaTreino;
 
 import rna.RedeNeural;
-
+import utilitarios.ged.Dados;
 import utilitarios.ged.Ged;
 import utilitarios.geim.Geim;
 
@@ -22,7 +22,7 @@ class Main{
    // static final String caminhoArquivo = "/dados/32x32/bloco.png";
    static final String caminhoArquivo = "/dados/mnist/3.png";
    static final String caminhoImagemExportada = "./resultados/imagem-ampliada";
-   static final int epocas = 100*1000;
+   static final int epocas = 10*1000;
    static final float escalaRender = 10f;
    static final float escalaImagemExportada = 20f;
 
@@ -85,7 +85,7 @@ class Main{
 
    public static RedeNeural criarRede(int qEntradas, int qSaidas){
       // int[] arquitetura = {qEntradas, 36, 36, 36, qSaidas};//32x32
-      int[] arquitetura = {qEntradas, 12, 12, qSaidas};//28x28
+      int[] arquitetura = {qEntradas, 14, 14, qSaidas};//28x28
       RedeNeural rede = new RedeNeural(arquitetura);
 
       rede.configurarAlcancePesos(1);
@@ -248,7 +248,8 @@ class Main{
          dadosErro[i][0] = custos.get(i);
       }
 
-      ged.exportarCsv(dadosErro, "historico-custo");
+      Dados dados = new Dados(dadosErro);
+      ged.exportarCsv(dados, "historico-custo");
    }
 
 
