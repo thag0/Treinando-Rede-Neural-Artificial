@@ -32,7 +32,7 @@ public class Adam extends Otimizador{
    /**
     * Contador de iterações.
     */
-   double interacoes = 1;
+   long interacoes = 1;
 
    /**
     * Inicializa uma nova instância de otimizador Adam usando os 
@@ -71,13 +71,10 @@ public class Adam extends Otimizador{
    public void atualizar(ArrayList<Camada> redec, double taxaAprendizagem, double momentum){
       double momentumCorrigido, segundaOrdemCorrigida;
 
-      //pre alocações
-      Camada camada;
       Neuronio neuronio;
+      //percorrer rede, com exceção da camada de entrada
+      for(Camada camada : redec.subList(1, redec.size())){
 
-      for(int i = 1; i < redec.size(); i++){//percorrer rede
-
-         camada = redec.get(i);
          int nNeuronios = camada.quantidadeNeuronios() - (camada.temBias() ? 1 : 0);
          for(int j = 0; j < nNeuronios; j++){//percorrer neurônios da camada atual
             

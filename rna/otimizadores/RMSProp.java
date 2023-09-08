@@ -55,12 +55,11 @@ public class RMSProp extends Otimizador{
 
    @Override
     public void atualizar(ArrayList<Camada> redec, double taxaAprendizagem, double momentum){
-      Camada camada;
       Neuronio neuronio;
 
-      for(int i = 1; i < redec.size(); i++){//percorrer rede
+      //percorrer rede, com exceção da camada de entrada
+      for(Camada camada : redec.subList(1, redec.size())){
 
-         camada = redec.get(i);
          int nNeuronios = camada.quantidadeNeuronios() - ((camada.temBias()) ? 1 : 0);
          for(int j = 0; j < nNeuronios; j++){//percorrer neurônios da camada atual
 

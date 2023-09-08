@@ -21,9 +21,9 @@ class Main{
    static Geim geim = new Geim();
    
    // static final String caminhoArquivo = "/dados/32x32/bloco.png";
-   static final String caminhoArquivo = "/dados/mnist/8.png";
+   static final String caminhoArquivo = "/dados/mnist/3.png";
    static final String caminhoImagemExportada = "./resultados/imagem-ampliada";
-   static final int epocas = 10*1000;
+   static final int epocas = 5*1000;
    static final float escalaRender = 10f;
    static final float escalaImagemExportada = 20f;
 
@@ -96,6 +96,7 @@ class Main{
       rede.configurarOtimizador(new Adam());
       rede.configurarInicializacaoPesos(2);
       rede.configurarFuncaoAtivacao(2);
+
       return rede;
    }
 
