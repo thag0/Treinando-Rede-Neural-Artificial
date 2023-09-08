@@ -3,6 +3,7 @@ package exemplos;
 import java.text.DecimalFormat;
 
 import rna.RedeNeural;
+import rna.otimizadores.Adam;
 import utilitarios.ged.Dados;
 import utilitarios.ged.Ged;
 
@@ -42,16 +43,16 @@ public class ExemploClassificacao{
       //criando e configurando a rede neural
       int[] arq = {qEntradas, 4, 4, qSaidas};
       RedeNeural rede = new RedeNeural(arq);
-      rede.configurarMomentum(0.999);
-      rede.configurarTaxaAprendizagem(0.0001);
-      rede.configurarOtimizador(2, true);
+      rede.configurarTaxaAprendizagem(0.001);
+      rede.configurarMomentum(0.99);
+      rede.configurarOtimizador(new Adam());
       rede.configurarInicializacaoPesos(2);
       rede.compilar();
       rede.configurarFuncaoAtivacao(2);
       rede.configurarFuncaoAtivacao(rede.obterCamadaSaida(), 11);//softmax
       
       //treinando e avaliando os resultados
-      rede.treinar(treinoEntrada, treinoSaida, 2_000);
+      rede.treinar(treinoEntrada, treinoSaida, 3_000);
       System.out.println(rede.info());
       double acuraria = rede.avaliador.acuracia(testeEntrada, testeSaida);
       double custo = rede.avaliador.entropiaCruzada(testeEntrada, testeSaida);
@@ -82,10 +83,10 @@ public class ExemploClassificacao{
 
 
    public static void compararSaidaRede(RedeNeural rede, double[][] dadosEntrada, double[][] dadosSaida, String texto){
-      int nEntrada = rede.obterCamadaEntrada().obterQuantidadeNeuronios();
+      int nEntrada = rede.obterCamadaEntrada().quantidadeNeuronios();
       nEntrada -= (rede.obterCamadaEntrada().temBias()) ? 1 : 0;
 
-      int nSaida = rede.obterCamadaSaida().obterQuantidadeNeuronios();
+      int nSaida = rede.obterCamadaSaida().quantidadeNeuronios();
 
       double[] entrada_rede = new double[nEntrada];
       double[] saida_rede = new double[nSaida];

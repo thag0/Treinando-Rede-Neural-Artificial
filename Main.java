@@ -21,7 +21,7 @@ class Main{
    static Geim geim = new Geim();
    
    // static final String caminhoArquivo = "/dados/32x32/bloco.png";
-   static final String caminhoArquivo = "/dados/mnist/3.png";
+   static final String caminhoArquivo = "/dados/mnist/8.png";
    static final String caminhoImagemExportada = "./resultados/imagem-ampliada";
    static final int epocas = 10*1000;
    static final float escalaRender = 10f;
@@ -93,10 +93,9 @@ class Main{
       rede.configurarAlcancePesos(1);
       rede.configurarTaxaAprendizagem(0.001);
       rede.configurarMomentum(0.99);
-      rede.configurarOtimizador(new SGD());
+      rede.configurarOtimizador(new Adam());
       rede.configurarInicializacaoPesos(2);
       rede.configurarFuncaoAtivacao(2);
-      
       return rede;
    }
 
@@ -186,7 +185,7 @@ class Main{
 
             janela.desenhar(rede);
 
-            for(int i = 0; i < rede.obterCamadaSaida().obterQuantidadeNeuronios(); i++){
+            for(int i = 0; i < rede.obterCamadaSaida().quantidadeNeuronios(); i++){
                System.out.print("[" + rede.obterCamadaSaida().neuronio(i).saida + "]");
             } 
             System.out.println();
@@ -201,10 +200,10 @@ class Main{
 
 
    public static void compararSaidaRede(RedeNeural rede, double[][] dadosEntrada, double[][] dadosSaida, String texto){
-      int nEntrada = rede.obterCamadaEntrada().obterQuantidadeNeuronios();
+      int nEntrada = rede.obterCamadaEntrada().quantidadeNeuronios();
       nEntrada -= (rede.obterCamadaEntrada().temBias()) ? 1 : 0;
 
-      int nSaida = rede.obterCamadaSaida().obterQuantidadeNeuronios();
+      int nSaida = rede.obterCamadaSaida().quantidadeNeuronios();
 
       double[] entrada_rede = new double[nEntrada];
       double[] saida_rede = new double[nSaida];

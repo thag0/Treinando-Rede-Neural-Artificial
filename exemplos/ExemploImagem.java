@@ -3,7 +3,7 @@ package exemplos;
 import java.awt.image.BufferedImage;
 
 import rna.RedeNeural;
-
+import rna.otimizadores.Adam;
 import utilitarios.ged.Ged;
 import utilitarios.geim.Geim;
 
@@ -30,7 +30,7 @@ public class ExemploImagem{
       RedeNeural rede = new RedeNeural(arq);
       rede.configurarTaxaAprendizagem(0.001);
       rede.configurarMomentum(0.99);
-      rede.configurarOtimizador(2, true);
+      rede.configurarOtimizador(new Adam());
       rede.configurarInicializacaoPesos(2);
       rede.compilar();
       rede.configurarFuncaoAtivacao(2);

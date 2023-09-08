@@ -20,6 +20,16 @@ public class AdaGrad extends Otimizador{
 
 
    /**
+    * Inicializa uma nova instância de otimizador AdaGrad usando os valores 
+    * de hiperparâmetros fornecidos.
+    * @param epsilon usado para evitar a divisão por zero.
+    */
+   public AdaGrad(double epsilon){
+      this.epsilon = epsilon;
+   }
+
+
+   /**
     * Inicializa uma nova instância de otimizador AdaGrad.
     * <p>
     *    Os hiperparâmetros do AdaGrad serão inicializados com os valores padrão, que são:
@@ -28,16 +38,6 @@ public class AdaGrad extends Otimizador{
     */
    public AdaGrad(){
       this(1e-7);
-   }
-
-
-   /**
-    * Inicializa uma nova instância de otimizador AdaGrad usando os valores 
-    * de hiperparâmetros fornecidos.
-    * @param epsilon usado para evitar a divisão por zero.
-    */
-   public AdaGrad(double epsilon){
-      this.epsilon = epsilon;
    }
 
    
@@ -49,7 +49,7 @@ public class AdaGrad extends Otimizador{
       for(int i = 1; i < redec.size(); i++){//percorrer rede
   
          camada = redec.get(i);
-         int nNeuronios = camada.obterQuantidadeNeuronios() - ((camada.temBias()) ? 1 : 0);
+         int nNeuronios = camada.quantidadeNeuronios() - ((camada.temBias()) ? 1 : 0);
          for(int j = 0; j < nNeuronios; j++){//percorrer neurônios da camada atual
   
             neuronio = camada.neuronio(j);

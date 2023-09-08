@@ -27,6 +27,18 @@ public class RMSProp extends Otimizador{
 
 
    /**
+    * Inicializa uma nova instância de otimizador RMSProp usando os valores 
+    * de hiperparâmetros fornecidos.
+    * @param epsilon usado para evitar a divisão por zero.
+    * @param beta fator de decaimento do RMSProp.
+    */
+   public RMSProp(double epsilon, double beta){
+      this.epsilon = epsilon;
+      this.beta = beta;
+   }
+
+
+   /**
     * Inicializa uma nova instância de otimizador RMSProp.
     * <p>
     *    Os hiperparâmetros do RMSProp serão inicializados com os valores padrão, que são:
@@ -41,18 +53,6 @@ public class RMSProp extends Otimizador{
    }
 
 
-   /**
-    * Inicializa uma nova instância de otimizador RMSProp usando os valores 
-    * de hiperparâmetros fornecidos.
-    * @param epsilon usado para evitar a divisão por zero.
-    * @param beta fator de decaimento do RMSProp.
-    */
-   public RMSProp(double epsilon, double beta){
-      this.epsilon = epsilon;
-      this.beta = beta;
-   }
-
-
    @Override
     public void atualizar(ArrayList<Camada> redec, double taxaAprendizagem, double momentum){
       Camada camada;
@@ -61,7 +61,7 @@ public class RMSProp extends Otimizador{
       for(int i = 1; i < redec.size(); i++){//percorrer rede
 
          camada = redec.get(i);
-         int nNeuronios = camada.obterQuantidadeNeuronios() - ((camada.temBias()) ? 1 : 0);
+         int nNeuronios = camada.quantidadeNeuronios() - ((camada.temBias()) ? 1 : 0);
          for(int j = 0; j < nNeuronios; j++){//percorrer neurônios da camada atual
 
             neuronio = camada.neuronio(j);

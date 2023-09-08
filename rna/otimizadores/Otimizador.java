@@ -19,7 +19,8 @@ import rna.Camada;
 public abstract class Otimizador implements Serializable{
 
    /**
-    * Treina a rede neural de acordo com o otimizador configurado.
+    * Treina a rede neural de acordo com o otimizador configurado, atualizando 
+    * seus pesos.
     * @param redec Rede Neural em formato de lista de camadas.
     * @param taxaAprendizagem valor de taxa de aprendizagem da Rede Neural.
     * @param momentum valor de taxa de momentum da Rede Neural.

@@ -119,7 +119,7 @@ public class Treino implements Serializable{
          Camada camadaAnterior = redec.get(i-1);
 
          //não precisa e nem faz diferença calcular os gradientes dos bias
-         int nNeuronios = camadaAtual.obterQuantidadeNeuronios();
+         int nNeuronios = camadaAtual.quantidadeNeuronios();
          nNeuronios -= (camadaAtual.temBias()) ? 1 : 0;
          for(int j = 0; j < nNeuronios; j++){//percorrer neurônios da camada atual
             

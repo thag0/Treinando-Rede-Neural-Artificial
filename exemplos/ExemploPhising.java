@@ -1,7 +1,7 @@
 package exemplos;
 
-import render.JanelaRede;
 import rna.RedeNeural;
+import rna.otimizadores.Adam;
 import utilitarios.ged.Dados;
 import utilitarios.ged.Ged;
 
@@ -18,13 +18,14 @@ public class ExemploPhising{
       ged.removerLinha(phishing, 0);
       ged.removerColuna(phishing, 0);
       ged.removerNaoNumericos(phishing);
+      ged.removerDuplicadas(phishing);
 
       //converter os dados da estrutura de texto em valores 
       //numéricos para o treino da rede neural.
       //separar em treino e teste para evitar overfitting
       double[][] dados = ged.dadosParaDouble(phishing);
       ged.embaralharDados(dados);
-      double[][][] treinoTeste = ged.separarTreinoTeste(dados, 0.3f);
+      double[][][] treinoTeste = ged.separarTreinoTeste(dados, 0.25f);
       double[][] treino = treinoTeste[0];
       double[][] teste = treinoTeste[1];
       ged.embaralharDados(treino);
@@ -42,15 +43,15 @@ public class ExemploPhising{
       //criando, configurando e treinando a rede neural.
       //os valores de configuração não devem ser tomados como regra e 
       //devem se adaptar ao problema e os dados apresentados.
-      int[] arq = {colunasDados, 10, 10, 10, colunasClasses};
+      int[] arq = {colunasDados, 25, 25, colunasClasses};
       RedeNeural rede = new RedeNeural(arq);
-      rede.configurarTaxaAprendizagem(0.0001);
-      rede.configurarMomentum(0.999);
-      rede.configurarOtimizador(2, true);
       rede.compilar();
+      rede.configurarTaxaAprendizagem(0.001);
+      rede.configurarMomentum(0.99);
+      rede.configurarOtimizador(new Adam());
       rede.configurarFuncaoAtivacao(2);
       rede.configurarFuncaoAtivacao(rede.obterCamadaSaida(), 3);
-      rede.treinar(treinoX, treinoY, 3_000);
+      rede.treinar(treinoX, treinoY, 5_000);
 
 
       // avaliando os resultados da rede neural
@@ -59,9 +60,6 @@ public class ExemploPhising{
       System.out.println(rede.info());
       System.out.println("Precisão: " + (precisao * 100) + "%");
       System.out.println("Custo: " + custo);
-
-      JanelaRede jr = new JanelaRede();
-      jr.desenhar(rede);
    }
 
 

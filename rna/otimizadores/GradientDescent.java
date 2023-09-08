@@ -28,7 +28,7 @@ public class GradientDescent extends Otimizador{
       for(int i = 1; i < redec.size(); i++){//percorrer rede 
          
          camada = redec.get(i);
-         int nNeuronios = camada.obterQuantidadeNeuronios() - ((camada.temBias()) ? 1 : 0);
+         int nNeuronios = camada.quantidadeNeuronios() - ((camada.temBias()) ? 1 : 0);
          for(int j = 0; j < nNeuronios; j++){//percorrer neurônios da camada atual
             
             neuronio = camada.neuronio(j);

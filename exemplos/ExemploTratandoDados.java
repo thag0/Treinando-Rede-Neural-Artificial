@@ -1,6 +1,7 @@
 package exemplos;
 
 import rna.RedeNeural;
+import rna.otimizadores.Adam;
 import utilitarios.ged.Dados;
 import utilitarios.ged.Ged;
 
@@ -46,7 +47,7 @@ public class ExemploTratandoDados{
       rede.compilar();
       rede.configurarTaxaAprendizagem(0.01);
       rede.configurarMomentum(0.99);
-      rede.configurarOtimizador(2, true);
+      rede.configurarOtimizador(new Adam());
       rede.configurarFuncaoAtivacao(2);
       rede.treinar(treinoEntrada, treinoSaida, 2_000);
 

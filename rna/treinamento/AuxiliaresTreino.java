@@ -54,20 +54,20 @@ class AuxiliaresTreino implements Serializable{
       
       if(saida.temArgmax()){//classificação
          int indiceMaior = indiceMaiorValor(saidas);
-         for(int i = 0; i < saida.obterQuantidadeNeuronios(); i++){
+         for(int i = 0; i < saida.quantidadeNeuronios(); i++){
             neuronio = saida.neuronio(i);
             if(i == indiceMaior) neuronio.erro = 1 - neuronio.saida;
             else neuronio.erro = 0 - neuronio.saida;
          }
 
       }else if(saida.temSoftmax()){//classificação
-         for(int i = 0; i < saida.obterQuantidadeNeuronios(); i++){
+         for(int i = 0; i < saida.quantidadeNeuronios(); i++){
             neuronio = saida.neuronio(i);
             neuronio.erro = (saidas[i] - neuronio.saida);
          }
       
       }else{//regressão
-         for(int i = 0; i < saida.obterQuantidadeNeuronios(); i++){
+         for(int i = 0; i < saida.quantidadeNeuronios(); i++){
             neuronio = saida.neuronio(i);
             neuronio.erro = ((saidas[i] - neuronio.saida) * saida.funcaoAtivacaoDx(neuronio.somatorio));
          }
@@ -88,7 +88,7 @@ class AuxiliaresTreino implements Serializable{
       for(int i = redec.size()-2; i >= 1; i--){// percorrer camadas ocultas de trás pra frente
          
          camadaAtual = redec.get(i);
-         int qNeuronioAtual = camadaAtual.obterQuantidadeNeuronios();
+         int qNeuronioAtual = camadaAtual.quantidadeNeuronios();
          qNeuronioAtual -= (camadaAtual.temBias()) ? 1 : 0;
          for (int j = 0; j < qNeuronioAtual; j++){//percorrer neurônios da camada atual
          
@@ -186,7 +186,7 @@ class AuxiliaresTreino implements Serializable{
       for(int i = 1; i < redec.size(); i++){ 
          
          Camada camadaAtual = redec.get(i);
-         int nNeuronios = camadaAtual.obterQuantidadeNeuronios();
+         int nNeuronios = camadaAtual.quantidadeNeuronios();
          nNeuronios -= (camadaAtual.temBias()) ? 1 : 0;
          for(int j = 0; j < nNeuronios; j++){//percorrer neurônios da camada atual
             

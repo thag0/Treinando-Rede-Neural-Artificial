@@ -199,7 +199,7 @@ public class Camada implements Serializable{
     * Retorna o valor da quantidade de neurônios da camada, incluindo bias.
     * @return quantidade de neurônios totais presente na camada.
     */
-   public int obterQuantidadeNeuronios(){
+   public int quantidadeNeuronios(){
       return this.neuronios.length;
    }
 
