@@ -8,7 +8,7 @@ import java.awt.image.BufferedImage;
 
 import javax.swing.JPanel;
 
-import rna.RedeNeural;
+import rna.estrutura.RedeNeural;
 
 public class PainelTreino extends JPanel{
    final int largura;

@@ -1,7 +1,7 @@
 package exemplos;
 
-import rna.RedeNeural;
 import utilitarios.ged.Ged;
+import rna.estrutura.RedeNeural;
 import utilitarios.ged.Dados;
 
 public class ExemploVariosPredicts{

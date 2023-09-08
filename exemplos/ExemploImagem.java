@@ -2,7 +2,7 @@ package exemplos;
 
 import java.awt.image.BufferedImage;
 
-import rna.RedeNeural;
+import rna.estrutura.RedeNeural;
 import rna.otimizadores.Adam;
 import utilitarios.ged.Ged;
 import utilitarios.geim.Geim;

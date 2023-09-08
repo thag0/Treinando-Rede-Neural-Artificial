@@ -9,8 +9,10 @@ import java.util.concurrent.TimeUnit;
 import render.JanelaRede;
 import render.JanelaTreino;
 
-import rna.RedeNeural;
+import rna.estrutura.RedeNeural;
+import rna.ativacoes.*;
 import rna.otimizadores.*;
+
 import utilitarios.ged.Dados;
 import utilitarios.ged.Ged;
 import utilitarios.geim.Geim;
@@ -93,9 +95,9 @@ class Main{
       rede.configurarAlcancePesos(1);
       rede.configurarTaxaAprendizagem(0.001);
       rede.configurarMomentum(0.99);
-      rede.configurarOtimizador(new Adam());
       rede.configurarInicializacaoPesos(2);
-      rede.configurarFuncaoAtivacao(2);
+      rede.configurarOtimizador(new Adam());
+      rede.configurarFuncaoAtivacao(new Sigmoid());
 
       return rede;
    }

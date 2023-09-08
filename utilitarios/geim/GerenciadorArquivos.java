@@ -5,7 +5,7 @@ import java.io.File;
 
 import javax.imageio.ImageIO;
 
-import rna.RedeNeural;
+import rna.estrutura.RedeNeural;
 
 /**
  * Gerenciador de arquivos do Geim

@@ -2,7 +2,7 @@ package utilitarios.geim;
 
 import java.awt.image.BufferedImage;
 
-import rna.RedeNeural;
+import rna.estrutura.RedeNeural;
 
 
 /**

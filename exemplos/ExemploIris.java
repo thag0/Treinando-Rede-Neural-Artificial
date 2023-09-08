@@ -1,7 +1,7 @@
 package exemplos;
 
 import render.JanelaRede;
-import rna.RedeNeural;
+import rna.estrutura.RedeNeural;
 import utilitarios.ged.Dados;
 import utilitarios.ged.Ged;
 

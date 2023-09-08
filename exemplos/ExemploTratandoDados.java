@@ -1,6 +1,6 @@
 package exemplos;
 
-import rna.RedeNeural;
+import rna.estrutura.RedeNeural;
 import rna.otimizadores.Adam;
 import utilitarios.ged.Dados;
 import utilitarios.ged.Ged;

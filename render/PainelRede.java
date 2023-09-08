@@ -10,8 +10,8 @@ import java.util.ArrayList;
 
 import javax.swing.JPanel;
 
-import rna.Camada;
-import rna.RedeNeural;
+import rna.estrutura.Camada;
+import rna.estrutura.RedeNeural;
 
 public class PainelRede extends JPanel{
    final int largura = 500;
