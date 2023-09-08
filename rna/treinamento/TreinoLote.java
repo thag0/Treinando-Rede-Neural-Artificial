@@ -12,7 +12,7 @@ import rna.otimizadores.Otimizador;
 /**
  * Classe dedicada para lidar com o treinamento em lotes da rede neural.
  */
-public class TreinoLote implements Serializable{
+class TreinoLote implements Serializable{
    AuxiliaresTreino auxiliarTreino = new AuxiliaresTreino();
 
    public boolean calcularHistoricoCusto = false;
@@ -29,7 +29,7 @@ public class TreinoLote implements Serializable{
 
 
    public void treino(RedeNeural rede, Otimizador otimizador, double[][] entradas, double[][] saidas, int epochs, boolean embaralhar, int tamanhoLote){
-      ArrayList<Camada> redec = redeParaCamadas(rede);
+      ArrayList<Camada> redec = auxiliarTreino.redeParaCamadas(rede);
 
       for(int i = 0; i < epochs; i++){
          if(embaralhar) auxiliarTreino.embaralharDados(entradas, saidas);
@@ -39,7 +39,8 @@ public class TreinoLote implements Serializable{
             double[][] entradaLote = auxiliarTreino.obterSubMatriz(entradas, j, fimIndice);
             double[][] saidaLote = auxiliarTreino.obterSubMatriz(saidas, j, fimIndice);
 
-            auxiliarTreino.zerarGradientesAcumulados(redec);//reiniciar gradiente do lote
+            //reiniciar gradiente do lote
+            auxiliarTreino.zerarGradientesAcumulados(redec);
             for(int k = 0; k < entradaLote.length; k++){
                double[] entrada = entradaLote[k];
                double[] saida = saidaLote[k];
@@ -47,6 +48,7 @@ public class TreinoLote implements Serializable{
                rede.calcularSaida(entrada);
                backpropagationLote(redec, rede.obterTaxaAprendizagem(), saida);
             }
+
             //normalizar gradientes para enviar pro otimizador
             calcularMediaGradientesLote(redec, entradaLote.length);
             otimizador.atualizar(redec, rede.obterTaxaAprendizagem(), rede.obterTaxaMomentum());
@@ -58,25 +60,6 @@ public class TreinoLote implements Serializable{
             else historicoCusto.add(rede.avaliador.erroMedioQuadrado(entradas, saidas));
          }
       }
-   }
-
-
-   /**
-    * Serializa a rede no formato de lista de camadas pra facilitar (a minha vida)
-    * o manuseio e generalização das operações.
-    * @param rede Rede Neural
-    * @return lista de camadas da rede neural.
-    */
-   private ArrayList<Camada> redeParaCamadas(RedeNeural rede){
-      ArrayList<Camada> redec = new ArrayList<>();
-
-      redec.add(rede.obterCamadaEntrada());
-      for(int i = 0; i < rede.obterQuantidadeOcultas(); i++){
-         redec.add(rede.obterCamadaOculta(i));
-      }
-      redec.add(rede.obterCamadaSaida());
-
-      return redec;
    }
 
 
@@ -136,7 +119,7 @@ public class TreinoLote implements Serializable{
             
             Neuronio neuronio = camadaAtual.neuronio(j);
             for(int k = 0; k < neuronio.pesos.length; k++){//percorrer pesos do neurônio atual
-               neuronio.gradiente[k] = (neuronio.gradienteAcumulado[k] / tamanhoLote);
+               neuronio.gradiente[k] = neuronio.gradienteAcumulado[k] / tamanhoLote;
             }
          }
       }

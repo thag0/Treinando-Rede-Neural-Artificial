@@ -109,14 +109,6 @@ public class RedeNeural implements Cloneable, Serializable{
    private Otimizador otimizadorAtual = new SGD();//otimizador padrão
 
    /**
-    * <p>
-    *    Experimental.
-    * </p>
-    * Auxiliar na aceleração do processo de aprendizagem da Rede Neural usando momentum.
-    */
-   private boolean nesterov = false;// acelerador de nesterov
-
-   /**
     * Nome específico da instância da Rede Neural.
     */
    private String nome = getClass().getSimpleName();
@@ -470,8 +462,23 @@ public class RedeNeural implements Cloneable, Serializable{
          case 5 -> this.otimizadorAtual = new Adam();
          default-> throw new IllegalArgumentException("Valor fornecido do otimizador é inválido.");
       }
+   }
 
-      this.nesterov = nesterov;
+
+   /**
+    * Configura o novo otimizdor da Rede Neural com base numa nova instância de otimizador.
+    * <p>
+    *    Configurando o otimizador passando diretamente uma nova instância permite configurar
+    *    os hiperparâmetros do otimizador fora dos valores padrão, o que pode ajudar a
+    *    melhorar o desempenho de aprendizado da Rede Neural em cenário específicos.
+    * </p>
+    * <p>
+    *    {@code O otimizador padrão é o SGD}
+    * </p>
+    * @param otimizador novo otimizador
+    */
+   public void configurarOtimizador(Otimizador otimizador){
+      this.otimizadorAtual = otimizador;
    }
 
 
@@ -978,20 +985,19 @@ public class RedeNeural implements Cloneable, Serializable{
 
       String buffer = "";
       String espacamento = "    ";
-      System.out.println("\nInformações " + nome + " = [");
+      System.out.println("\nInformações " + this.nome + " = [");
 
       //otimizador
-      buffer += espacamento + "Otimizador: " + this.otimizadorAtual.getClass().getSimpleName();
-      if(nesterov) buffer += " (Acelerador de Nesterov)";
-      buffer += "\n";
+      buffer += espacamento + "Otimizador: " + this.otimizadorAtual.getClass().getSimpleName() + "\n";
 
       //hiperparâmetros
-      buffer += espacamento + "Taxa de aprendizgem: " + TAXA_APRENDIZAGEM + "\n";
-      buffer += espacamento + "Taxa de momentum: " + TAXA_MOMENTUM + "\n";
+      buffer += espacamento + "Taxa de aprendizgem: " + this.TAXA_APRENDIZAGEM + "\n";
+      buffer += espacamento + "Taxa de momentum: " + this.TAXA_MOMENTUM + "\n";
 
       //bias
-      if(this.BIAS == 1) buffer += espacamento + "Bias = " + "true\n\n";
-      else buffer += espacamento + "Bias: " + "false\n\n";
+      buffer += espacamento + "Bias = ";
+      buffer += (this.BIAS == 1) ? "true" : "false";
+      buffer += "\n\n";
 
       for(int i = 0; i < this.ocultas.length; i++){
          buffer += espacamento + "Ativação oculta " + i + " : " + this.ocultas[i].obterAtivacao() + "\n";
@@ -1108,7 +1114,7 @@ public class RedeNeural implements Cloneable, Serializable{
 
 
    /**
-    * Lê um arquivo de rede neural no caminho especificado, o caminho não leva em consideração
+    * Lê um arquivo de Rede Neural no caminho especificado, o caminho não leva em consideração
     * o formato, logo precisa ser especificado.
     * @param caminho caminho do arquivo de rede salvo
     * @return objeto do tipo {@code RedeNeural} lido pelo arquivo.

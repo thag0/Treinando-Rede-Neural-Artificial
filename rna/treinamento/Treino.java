@@ -43,11 +43,11 @@ public class Treino implements Serializable{
     * @param embaralhar embaralhar dados de treino para cada época.
     */
    public void treino(RedeNeural rede, Otimizador otimizador, double[][] entradas, double[][] saidas, int epochs, boolean embaralhar){
-      double[] dadosEntrada = new double[entradas[0].length];//tamanho de colunas da entrada
-      double[] dadosSaida = new double[saidas[0].length];//tamanho de colunas da saída
+      double[] entrada = new double[entradas[0].length];//tamanho de colunas da entrada
+      double[] saida = new double[saidas[0].length];//tamanho de colunas da saída
 
       //transformar a rede numa lista de camadas pra facilitar minha vida
-      ArrayList<Camada> redec = redeParaCamadas(rede);
+      ArrayList<Camada> redec = auxiliarTreino.redeParaCamadas(rede);
 
       for(int i = 0; i < epochs; i++){//quantidade de épocas
          //aplicar gradiente estocástico
@@ -55,14 +55,14 @@ public class Treino implements Serializable{
 
          for(int j = 0; j < entradas.length; j++){//percorrer amostras
             //preencher dados de entrada e saída
-            dadosEntrada = entradas[j];
-            dadosSaida = saidas[j];
+            System.arraycopy(entradas[j], 0, entrada, 0, entrada.length);
+            System.arraycopy(saidas[j], 0, saida, 0, saida.length);
 
             //calcular desempenho da rede,
             //erros e gradientes
             //e atualizar os pesos
-            rede.calcularSaida(dadosEntrada);
-            backpropagation(redec, rede.obterTaxaAprendizagem(), dadosSaida);
+            rede.calcularSaida(entrada);
+            backpropagation(redec, rede.obterTaxaAprendizagem(), saida);
             otimizador.atualizar(redec, rede.obterTaxaAprendizagem(), rede.obterTaxaMomentum());
          }
 
@@ -88,25 +88,6 @@ public class Treino implements Serializable{
     */
    public void treino(RedeNeural rede, Otimizador otimizador, double[][] entradas, double[][] saidas, int epochs, boolean embaralhar, int tamLote){
       treinoLote.treino(rede, otimizador, entradas, saidas, epochs, embaralhar, tamLote);
-   }
-
-
-   /**
-    * Serializa a rede no formato de lista de camadas pra facilitar (a minha vida)
-    * o manuseio e generalização das operações.
-    * @param rede Rede Neural
-    * @return lista de camadas da rede neural.
-    */
-   private ArrayList<Camada> redeParaCamadas(RedeNeural rede){
-      ArrayList<Camada> redec = new ArrayList<>();
-
-      redec.add(rede.obterCamadaEntrada());
-      for(int i = 0; i < rede.obterQuantidadeOcultas(); i++){
-         redec.add(rede.obterCamadaOculta(i));
-      }
-      redec.add(rede.obterCamadaSaida());
-
-      return redec;
    }
 
 

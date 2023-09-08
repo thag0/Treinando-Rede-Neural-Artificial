@@ -9,12 +9,17 @@ import rna.Neuronio;
  * Classe que implementa o otimizador Gradiente Descentente Estocástico.
  */
 public class SGD extends Otimizador{
-   boolean nesterov = false;
+
+   /**
+    * Usar acelerador de Nesterov.
+    */
+   boolean nesterov;
 
 
    /**
-    * Otimizador usando gradiente descendente estocástico com momentum.
-    * Atualiza os pesos usando o gradiente e momentum para ajudar a otimizar o aprendizado.
+    * Inicializa uma nova instância de otimizador Stochastic Gradient Descent (SGD) 
+    * usando os valores de hiperparâmetros fornecidos.
+    * @param nesterov usar acelerador de nesterov.
     */
    public SGD(boolean nesterov){
       this.nesterov = nesterov;
@@ -22,24 +27,29 @@ public class SGD extends Otimizador{
       
       
    /**
-    * Otimizador usando gradiente descendente estocástico com momentum.
-    * Atualiza os pesos usando o gradiente e momentum para ajudar a otimizar o aprendizado.
+    * Inicializa uma nova instância de otimizador Stochastic Gradient Descent (SGD) .
+    * <p>
+    *    Os hiperparâmetros do SGD serão inicializados com os valores padrão, que são:
+    * </p>
+    * {@code nesterov = false}
     */
    public SGD(){
-
+      this(false);
    }
 
 
    @Override
    public void atualizar(ArrayList<Camada> redec, double taxaAprendizagem, double momentum){
+      Camada camada;
+      Neuronio neuronio;
+
       for(int i = 1; i < redec.size(); i++){//percorrer rede 
          
-         Camada camada = redec.get(i);
-         int nNeuronios = camada.obterQuantidadeNeuronios();
-         nNeuronios -= (camada.temBias()) ? 1 : 0;
+         camada = redec.get(i);
+         int nNeuronios = camada.obterQuantidadeNeuronios() - ((camada.temBias()) ? 1 : 0);
          for(int j = 0; j < nNeuronios; j++){//percorrer neurônios da camada atual
             
-            Neuronio neuronio = camada.neuronio(j);
+            neuronio = camada.neuronio(j);
             for(int k = 0; k < neuronio.pesos.length; k++){//percorrer pesos do neurônio atual
                if(nesterov){
                   double momentumAnterior = neuronio.momentum[k];

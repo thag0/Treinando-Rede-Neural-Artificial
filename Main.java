@@ -10,6 +10,7 @@ import render.JanelaRede;
 import render.JanelaTreino;
 
 import rna.RedeNeural;
+import rna.otimizadores.*;
 import utilitarios.ged.Dados;
 import utilitarios.ged.Ged;
 import utilitarios.geim.Geim;
@@ -69,9 +70,9 @@ class Main{
 
       //avaliar resultados
       double precisao = 1 - rede.avaliador.erroMedioAbsoluto(dadosEntrada, dadosSaida);
-      double custo = rede.avaliador.erroMedioQuadrado(dadosEntrada, dadosSaida);
+      double perda = rede.avaliador.erroMedioQuadrado(dadosEntrada, dadosSaida);
 
-      System.out.println("Custo = " + custo);
+      System.out.println("Perda = " + perda);
       System.out.println("Precisão = " + (formatarFloat(precisao*100)) + "%");
       System.out.println("Tempo de treinamento: " + horas + "h " + minutos + "m " + segundos + "s");
 
@@ -84,17 +85,18 @@ class Main{
 
 
    public static RedeNeural criarRede(int qEntradas, int qSaidas){
-      // int[] arquitetura = {qEntradas, 36, 36, 36, qSaidas};//32x32
-      int[] arquitetura = {qEntradas, 14, 14, qSaidas};//28x28
-      RedeNeural rede = new RedeNeural(arquitetura);
+      // int[] arq = {qEntradas, 36, 36, 36, qSaidas};//32x32
+      int[] arq = {qEntradas, 12, 12, qSaidas};//28x28
+      RedeNeural rede = new RedeNeural(arq);
 
+      rede.compilar();
       rede.configurarAlcancePesos(1);
       rede.configurarTaxaAprendizagem(0.001);
       rede.configurarMomentum(0.99);
-      rede.configurarOtimizador(2);
+      rede.configurarOtimizador(new SGD());
       rede.configurarInicializacaoPesos(2);
-      rede.compilar();
       rede.configurarFuncaoAtivacao(2);
+      
       return rede;
    }
 

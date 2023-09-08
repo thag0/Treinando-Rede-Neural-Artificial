@@ -6,6 +6,7 @@ import java.util.Random;
 
 import rna.Camada;
 import rna.Neuronio;
+import rna.RedeNeural;
 
 /**
  * Operadores auxiliares para o treino da rede neural;
@@ -20,6 +21,25 @@ class AuxiliaresTreino implements Serializable{
 
 
    /**
+    * Serializa a rede no formato de lista de camadas pra facilitar (a minha vida)
+    * o manuseio e generalização das operações.
+    * @param rede Rede Neural
+    * @return lista de camadas da rede neural.
+    */
+   public ArrayList<Camada> redeParaCamadas(RedeNeural rede){
+      ArrayList<Camada> redec = new ArrayList<>();
+
+      redec.add(rede.obterCamadaEntrada());
+      for(int i = 0; i < rede.obterQuantidadeOcultas(); i++){
+         redec.add(rede.obterCamadaOculta(i));
+      }
+      redec.add(rede.obterCamadaSaida());
+
+      return redec;
+   }
+
+
+   /**
     * Método exclusivo para separar a forma de calcular os erros da camada de saída.
     * Dando suporte não apenas para problemas de regressão.
     * <p>
@@ -28,26 +48,27 @@ class AuxiliaresTreino implements Serializable{
     * @param redec Rede Neural em formato de lista de camadas.
     * @param saidas array com as saídas esperadas.
     */
-   public void calcularErroSaida(ArrayList<Camada> redec, double[] saidas){
+   void calcularErroSaida(ArrayList<Camada> redec, double[] saidas){
       Camada saida = redec.get(redec.size()-1);
+      Neuronio neuronio;
       
       if(saida.temArgmax()){//classificação
          int indiceMaior = indiceMaiorValor(saidas);
          for(int i = 0; i < saida.obterQuantidadeNeuronios(); i++){
-            Neuronio neuronio = saida.neuronio(i);
+            neuronio = saida.neuronio(i);
             if(i == indiceMaior) neuronio.erro = 1 - neuronio.saida;
             else neuronio.erro = 0 - neuronio.saida;
          }
 
       }else if(saida.temSoftmax()){//classificação
          for(int i = 0; i < saida.obterQuantidadeNeuronios(); i++){
-            Neuronio neuronio = saida.neuronio(i);
+            neuronio = saida.neuronio(i);
             neuronio.erro = (saidas[i] - neuronio.saida);
          }
       
       }else{//regressão
          for(int i = 0; i < saida.obterQuantidadeNeuronios(); i++){
-            Neuronio neuronio = saida.neuronio(i);
+            neuronio = saida.neuronio(i);
             neuronio.erro = ((saidas[i] - neuronio.saida) * saida.funcaoAtivacaoDx(neuronio.somatorio));
          }
       }
@@ -59,16 +80,19 @@ class AuxiliaresTreino implements Serializable{
     * da rede neural.
     * @param redec Rede Neural em formato de lista de camadas.
     */
-   public void calcularErroOcultas(ArrayList<Camada> redec){
+   void calcularErroOcultas(ArrayList<Camada> redec){
+      Camada camadaAtual;
+      Neuronio neuronio;
+
       //começar da ultima oculta
       for(int i = redec.size()-2; i >= 1; i--){// percorrer camadas ocultas de trás pra frente
          
-         Camada camadaAtual = redec.get(i);
+         camadaAtual = redec.get(i);
          int qNeuronioAtual = camadaAtual.obterQuantidadeNeuronios();
-         if(camadaAtual.temBias()) qNeuronioAtual -= 1;
+         qNeuronioAtual -= (camadaAtual.temBias()) ? 1 : 0;
          for (int j = 0; j < qNeuronioAtual; j++){//percorrer neurônios da camada atual
          
-            Neuronio neuronio = camadaAtual.neuronio(j);
+            neuronio = camadaAtual.neuronio(j);
             double somaErros = 0.0;
             for(Neuronio neuronioProximo : redec.get(i+1).neuronios()){//percorrer neurônios da camada seguinte
                somaErros += neuronioProximo.pesos[j] * neuronioProximo.erro;
@@ -84,7 +108,7 @@ class AuxiliaresTreino implements Serializable{
     * @param entradas matriz com os dados de entrada.
     * @param saidas matriz com os dados de saída.
     */
-   public void embaralharDados(double[][] entradas, double[][] saidas){
+   void embaralharDados(double[][] entradas, double[][] saidas){
       int linhas = entradas.length;
       int colEntrada = entradas[0].length;
       int colSaida = saidas[0].length;
@@ -117,7 +141,7 @@ class AuxiliaresTreino implements Serializable{
     * @param fim índice final do lote.
     * @return lote contendo os dados de acordo com os índices fornecidos.
     */
-   public double[][] obterSubMatriz(double[][] dados, int inicio, int fim){
+   double[][] obterSubMatriz(double[][] dados, int inicio, int fim){
       if(inicio < 0 || fim > dados.length || inicio >= fim){
          throw new IllegalArgumentException("Índices de início ou fim inválidos.");
       }
@@ -139,7 +163,7 @@ class AuxiliaresTreino implements Serializable{
     * @param dados array contendo os dados
     * @return índice com o maior valor contido nos dados.
     */
-   public int indiceMaiorValor(double[] dados){
+   int indiceMaiorValor(double[] dados){
       int indiceMaiorValor = 0;
       double maiorValor = dados[0];
   
@@ -158,7 +182,7 @@ class AuxiliaresTreino implements Serializable{
     * Zera todos os gradientes para o cálculo do gradiente em lote.
     * @param redec rede neural no formade de lista de camadas.
     */
-   public void zerarGradientesAcumulados(ArrayList<Camada> redec){
+   void zerarGradientesAcumulados(ArrayList<Camada> redec){
       for(int i = 1; i < redec.size(); i++){ 
          
          Camada camadaAtual = redec.get(i);
