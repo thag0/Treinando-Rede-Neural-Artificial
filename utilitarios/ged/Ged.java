@@ -36,6 +36,7 @@ public class Ged{
    ConversorDados cd;//conversor de dados 
    TreinoTeste gtt;//gerenciador de treino e teste da rede
    OperadorMatriz om;//operador de matrizes
+   OperadorMatrizMultithread omt;
 
    /**
     * Objeto responsável pelo manuseio de um conjunto de dados contendo 
@@ -53,6 +54,8 @@ public class Ged{
       gtt = new TreinoTeste();
       cd = new ConversorDados();
       om = new OperadorMatriz();
+
+      omt = new OperadorMatrizMultithread(Runtime.getRuntime().availableProcessors()/2);
    }
 
 
@@ -1858,7 +1861,8 @@ public class Ged{
     * @throws IllegalArgumentException se as dimensões de A e B forem incompatíveis.
     */
    public int[][] multiplicarMatrizes(int[][] a, int[][] b){
-      return om.multiplicarMatrizes(a, b);
+      if(a.length >= 100) return om.multiplicarMatrizes(a, b);
+      else return omt.multiplicarMatrizes(a, b);
    }
 
 
@@ -1884,7 +1888,8 @@ public class Ged{
     * @throws IllegalArgumentException se as dimensões de A e B forem incompatíveis.
     */
    public float[][] multiplicarMatrizes(float[][] a, float[][] b){
-      return om.multiplicarMatrizes(a, b);
+      if(a.length >= 100) return om.multiplicarMatrizes(a, b);
+      else return omt.multiplicarMatrizes(a, b);
    }
 
 
@@ -1910,7 +1915,8 @@ public class Ged{
     * @throws IllegalArgumentException se as dimensões de A e B forem incompatíveis.
     */
    public double[][] multiplicarMatrizes(double[][] a, double[][] b){
-      return om.multiplicarMatrizes(a, b);
+      if(a.length >= 100) return om.multiplicarMatrizes(a, b);
+      else return omt.multiplicarMatrizes(a, b);
    }
 
 

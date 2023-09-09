@@ -47,7 +47,7 @@ public class Treino implements Serializable{
       double[] saida = new double[saidas[0].length];//tamanho de colunas da saída
 
       //transformar a rede numa lista de camadas pra facilitar minha vida
-      ArrayList<Camada> redec = auxiliarTreino.redeParaCamadas(rede);
+      Camada[] redec = auxiliarTreino.redeParaCamadas(rede);
 
       for(int i = 0; i < epochs; i++){//quantidade de épocas
          //aplicar gradiente estocástico
@@ -98,7 +98,7 @@ public class Treino implements Serializable{
     * @param taxaAprendizagem valor de taxa de aprendizagem da rede neural.
     * @param saidas array com as saídas esperadas das amostras.
     */
-   private void backpropagation(ArrayList<Camada> redec, double taxaAprendizagem, double[] saidas){
+   private void backpropagation(Camada[] redec, double taxaAprendizagem, double[] saidas){
       auxiliarTreino.calcularErroSaida(redec, saidas);
       auxiliarTreino.calcularErroOcultas(redec);
       calcularGradientes(redec, taxaAprendizagem);
@@ -111,12 +111,12 @@ public class Treino implements Serializable{
     * @param redec Rede Neural em formato de lista de camadas.
     * @param taxaAprendizagem valor de taxa de aprendizagem da rede neural.
     */
-   private void calcularGradientes(ArrayList<Camada> redec, double taxaAprendizagem){
+   private void calcularGradientes(Camada[] redec, double taxaAprendizagem){
       //percorrer rede, excluindo camada de entrada
-      for(int i = 1; i < redec.size(); i++){ 
+      for(int i = 1; i < redec.length; i++){ 
          
-         Camada camadaAtual = redec.get(i);
-         Camada camadaAnterior = redec.get(i-1);
+         Camada camadaAtual = redec[i];
+         Camada camadaAnterior = redec[i-1];
 
          //não precisa e nem faz diferença calcular os gradientes dos bias
          int nNeuronios = camadaAtual.quantidadeNeuronios();

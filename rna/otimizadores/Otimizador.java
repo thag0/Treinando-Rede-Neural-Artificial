@@ -1,7 +1,6 @@
 package rna.otimizadores;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 
 import rna.estrutura.Camada;
 
@@ -25,7 +24,7 @@ public abstract class Otimizador implements Serializable{
     * @param taxaAprendizagem valor de taxa de aprendizagem da Rede Neural.
     * @param momentum valor de taxa de momentum da Rede Neural.
     */
-    public void atualizar(ArrayList<Camada> redec, double taxaAprendizagem, double momentum){
+    public void atualizar(Camada[] redec, double taxaAprendizagem, double momentum){
         throw new java.lang.UnsupportedOperationException("Método de atualização do otimizador não foi implementado.");
     }
 }

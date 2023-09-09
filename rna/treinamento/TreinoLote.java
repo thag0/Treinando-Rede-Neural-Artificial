@@ -29,7 +29,7 @@ class TreinoLote implements Serializable{
 
 
    public void treino(RedeNeural rede, Otimizador otimizador, double[][] entradas, double[][] saidas, int epochs, boolean embaralhar, int tamanhoLote){
-      ArrayList<Camada> redec = auxiliarTreino.redeParaCamadas(rede);
+      Camada[] redec = auxiliarTreino.redeParaCamadas(rede);
 
       for(int i = 0; i < epochs; i++){
          if(embaralhar) auxiliarTreino.embaralharDados(entradas, saidas);
@@ -70,7 +70,7 @@ class TreinoLote implements Serializable{
     * @param taxaAprendizagem valor de taxa de aprendizagem da rede neural.
     * @param saidas array com as saídas esperadas das amostras.
     */
-   private void backpropagationLote(ArrayList<Camada> redec, double taxaAprendizagem, double[] saidas){
+   private void backpropagationLote(Camada[] redec, double taxaAprendizagem, double[] saidas){
       auxiliarTreino.calcularErroSaida(redec, saidas);
       auxiliarTreino.calcularErroOcultas(redec);
       calcularGradientesAcumulados(redec, taxaAprendizagem);
@@ -83,12 +83,12 @@ class TreinoLote implements Serializable{
     * @param redec Rede Neural em formato de lista de camadas.
     * @param taxaAprendizagem valor de taxa de aprendizagem da rede neural.
     */
-   private void calcularGradientesAcumulados(ArrayList<Camada> redec, double taxaAprendizagem){
+   private void calcularGradientesAcumulados(Camada[] redec, double taxaAprendizagem){
       //percorrer rede, excluindo camada de entrada
-      for(int i = 1; i < redec.size(); i++){ 
+      for(int i = 1; i < redec.length; i++){ 
          
-         Camada camadaAtual = redec.get(i);
-         Camada camadaAnterior = redec.get(i-1);
+         Camada camadaAtual = redec[i];
+         Camada camadaAnterior = redec[i-1];
 
          //não precisa e nem faz diferença calcular os gradientes dos bias
          int nNeuronios = camadaAtual.quantidadeNeuronios();
@@ -109,10 +109,10 @@ class TreinoLote implements Serializable{
     * @param redec Rede Neural em formato de lista de camadas.
     * @param tamanhoLote tamanho do lote.
     */
-   private void calcularMediaGradientesLote(ArrayList<Camada> redec, int tamanhoLote){
-      for(int i = 1; i < redec.size(); i++){ 
+   private void calcularMediaGradientesLote(Camada[] redec, int tamanhoLote){
+      for(int i = 1; i < redec.length; i++){ 
          
-         Camada camadaAtual = redec.get(i);
+         Camada camadaAtual = redec[i];
          int nNeuronios = camadaAtual.quantidadeNeuronios();
          nNeuronios -= (camadaAtual.temBias()) ? 1 : 0;
          for(int j = 0; j < nNeuronios; j++){//percorrer neurônios da camada atual

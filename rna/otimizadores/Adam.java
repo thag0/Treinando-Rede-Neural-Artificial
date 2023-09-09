@@ -1,7 +1,5 @@
 package rna.otimizadores;
 
-import java.util.ArrayList;
-
 import rna.estrutura.Camada;
 import rna.estrutura.Neuronio;
 
@@ -69,13 +67,13 @@ public class Adam extends Otimizador{
 
 
    @Override
-   public void atualizar(ArrayList<Camada> redec, double taxaAprendizagem, double momentum){
+   public void atualizar(Camada[] redec, double taxaAprendizagem, double momentum){
       double momentumCorrigido, segundaOrdemCorrigida;
 
       Neuronio neuronio;
       //percorrer rede, com exceção da camada de entrada
-      for(Camada camada : redec.subList(1, redec.size())){
-
+      for(int i = 1; i < redec.length; i++){
+         Camada camada = redec[i];
          int nNeuronios = camada.quantidadeNeuronios() - (camada.temBias() ? 1 : 0);
          for(int j = 0; j < nNeuronios; j++){//percorrer neurônios da camada atual
             
