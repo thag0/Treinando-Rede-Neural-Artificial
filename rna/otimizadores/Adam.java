@@ -82,6 +82,7 @@ public class Adam extends Otimizador{
             
             neuronio = camada.neuronio(j);
             for(int k = 0; k < neuronio.pesos.length; k++){//percorrer pesos do neurônio atual
+
                neuronio.momentum[k] = (beta1 * neuronio.momentum[k]) + ((1 - beta1) * neuronio.gradiente[k]);
                neuronio.acumuladorSegundaOrdem[k] = (beta2 * neuronio.acumuladorSegundaOrdem[k]) + ((1 - beta2) * neuronio.gradiente[k] * neuronio.gradiente[k]);
                
@@ -89,8 +90,9 @@ public class Adam extends Otimizador{
                segundaOrdemCorrigida = neuronio.acumuladorSegundaOrdem[k] / interBeta2;
                neuronio.pesos[k] += (taxaAprendizagem * momentumCorrigido) / (Math.sqrt(segundaOrdemCorrigida) + epsilon);
                
-               interacoes++;
             }
+            
+            interacoes++;
          }
       }
    }
