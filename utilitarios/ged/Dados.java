@@ -901,7 +901,8 @@ public class Dados{
          String valor1 = linha1[idCol];
          String valor2 = linha2[idCol];
 
-         Locale regiao = new Locale("pt", "BR");//configurando língua e região
+         //configurando língua e região
+         Locale regiao = Locale.of("pt");
          Collator collator = Collator.getInstance(regiao);
          collator.setStrength(Collator.TERTIARY);
 

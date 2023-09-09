@@ -23,10 +23,10 @@ class Main{
    static Geim geim = new Geim();
    
    // static final String caminhoArquivo = "/dados/32x32/bloco.png";
-   static final String caminhoArquivo = "/dados/mnist/3.png";
+   static final String caminhoArquivo = "/dados/mnist/5.png";
    static final String caminhoImagemExportada = "./resultados/imagem-ampliada";
-   static final int epocas = 5*1000;
-   static final float escalaRender = 10f;
+   static final int epocas = 100*1000;
+   static final float escalaRender = 9f;
    static final float escalaImagemExportada = 20f;
 
    // Sempre lembrar de quando mudar o dataset, também mudar a quantidade de dados de entrada e saída.
@@ -75,7 +75,7 @@ class Main{
       double perda = rede.avaliador.erroMedioQuadrado(dadosEntrada, dadosSaida);
 
       System.out.println("Perda = " + perda);
-      System.out.println("Precisão = " + (formatarFloat(precisao*100)) + "%");
+      System.out.println("Precisão = " + (formatarDecimal(precisao*100, 2)) + "%");
       System.out.println("Tempo de treinamento: " + horas + "h " + minutos + "m " + segundos + "s");
 
       // precisa treinar bastante
@@ -105,7 +105,7 @@ class Main{
 
    public static void treinoEmPainel(RedeNeural rede, BufferedImage imagem, double[][] dadosEntrada, double[][] dadosSaida){
       final int fps = 60;
-      int epocasPorFrame = 10;
+      int epocasPorFrame = 20;
 
       //acelerar o processo de desenho
       //bom em situações de janelas muito grandes
@@ -236,7 +236,7 @@ class Main{
          }
          System.out.print(" | Rede ->");
          for(int j = 0; j < nSaida; j++){
-            System.out.print("  " + formatarFloat(saida_rede[j]));
+            System.out.print("  " + formatarDecimal(saida_rede[j], 4));
          }
          System.out.println();
       }
@@ -275,10 +275,13 @@ class Main{
    }
 
 
-   public static String formatarFloat(double valor){
+   public static String formatarDecimal(double valor, int casas){
       String valorFormatado = "";
 
-      DecimalFormat df = new DecimalFormat("#.####");
+      String formato = "#.";
+      for(int i = 0; i < casas; i++) formato += "#";
+
+      DecimalFormat df = new DecimalFormat(formato);
       valorFormatado = df.format(valor);
 
       return valorFormatado;
