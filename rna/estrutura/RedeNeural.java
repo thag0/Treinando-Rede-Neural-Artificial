@@ -20,7 +20,7 @@ import rna.otimizadores.SGD;
 import rna.treinamento.Treino;
 
 //TODO
-//Implementar formas melhores de treinar com uma grande quantidade de dados;
+//Implementar formas melhores de treinar com uma grande quantidade de dados (mais necessário);
 //novos otimizadores;
 //Mais opções de métricas e funções de perda;
 //Poder configurar funções de ativação antes de compilar o modelo;
@@ -292,7 +292,7 @@ public class RedeNeural implements Cloneable, Serializable{
     * Certifique-se de não usar valores muito altos ou muito baixos para não gerar resultados inesperados 
     * durante o treino.
     * <p>
-    *    {@code O valor padrão da taxa de aprendizagem é 0.1}
+    *    {@code O valor padrão da taxa de aprendizagem é 0.01}
     * </p>
     * @param taxaAprendizagem novo valor de taxa de aprendizagem.
     * @throws IllegalArgumentException caso o novo valor de taxa de aprendizagem seja menor ou igual a zero.
@@ -427,10 +427,22 @@ public class RedeNeural implements Cloneable, Serializable{
     * </p>
     * @param camada camada que será configurada.
     * @param ativacao nova função de ativação.
+    * @throws IllegalArgumentException se o modelo não foi compilado previamente.
+    * @throws IllegalArgumentException se a camada for nula.
+    * @throws IllegalArgumentException se a camada for a camada de entrada da rede.
+    * @throws IllegalArgumentException se a função de ativação fornecida for nula.
     */
    public void configurarFuncaoAtivacao(Camada camada, FuncaoAtivacao ativacao){
+      this.modeloCompilado();
+
+      if(camada == null){
+         throw new IllegalArgumentException("A camada fornecida não pode ser nula.");
+      }
       if(camada.equals(this.entrada)){
          throw new IllegalArgumentException("Não é possível, nem necessário, configurar função de ativação para a camada de entrada.");
+      }
+      if(ativacao == null){
+         throw new IllegalArgumentException("A nova função de ativação não pode ser nula.");
       }
 
       camada.configurarAtivacao(ativacao);
@@ -461,8 +473,16 @@ public class RedeNeural implements Cloneable, Serializable{
     *    {@code A função de ativação padrão é a ReLU para todas as camadas}
     * </p>
     * @param ativacao nova função de ativação.
+    * @throws IllegalArgumentException se o modelo não foi compilado previamente.
+    * @throws IllegalArgumentException se a função de ativação fornecida for nula.
     */
    public void configurarFuncaoAtivacao(FuncaoAtivacao ativacao){
+      modeloCompilado();
+
+      if(ativacao == null){
+         throw new IllegalArgumentException("A nova função de ativação não pode ser nula.");
+      }
+
       for(Camada camada : this.ocultas){
          camada.configurarAtivacao(ativacao);
       }
@@ -517,8 +537,13 @@ public class RedeNeural implements Cloneable, Serializable{
     *    {@code O otimizador padrão é o SGD}
     * </p>
     * @param otimizador novo otimizador
+    * @throws IllegalArgumentException se o novo otimizador for nulo.
     */
    public void configurarOtimizador(Otimizador otimizador){
+      if(otimizador == null){
+         throw new IllegalArgumentException("O novo otimizador não pode ser nulo.");
+      }
+
       this.otimizadorAtual = otimizador;
    }
 
@@ -569,7 +594,6 @@ public class RedeNeural implements Cloneable, Serializable{
     * </p>
     */
    public void compilar(){
-
       //adicionando bias como neuronio adicional nas camadas
       //não adicionar na camada de saída
       for(int i = 0; i < arquitetura.length-1; i++){
@@ -579,6 +603,7 @@ public class RedeNeural implements Cloneable, Serializable{
       //passar as informações do bias paras as camadas
       boolean temBias = (this.BIAS == 1) ? true : false;
 
+      //identificar cada camada dentro da rede.
       int idCamada = 0;
       
       //inicializar camada de entrada
@@ -637,6 +662,7 @@ public class RedeNeural implements Cloneable, Serializable{
    private void consistenciaDados(double[][] entrada, double[][] saida){
       int nEntrada = this.obterCamadaEntrada().quantidadeNeuronios();
       nEntrada -= (this.obterCamadaEntrada().temBias()) ? 1 : 0;
+
       int nSaida = this.obterCamadaSaida().quantidadeNeuronios();
 
       if(entrada.length != saida.length){

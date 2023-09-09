@@ -160,8 +160,13 @@ public class Camada implements Serializable{
     * As exceções de funções de ativação que não podem ser configuradas por esse 
     * métrodo são {@code Softmax} e {@code Argmax} devido às suas estruturas.
     * @param ativacao nova função de ativação.
+    * @throws IllegalArgumentException se a função de ativação fornecida for nula.
     */
    public void configurarAtivacao(FuncaoAtivacao ativacao){
+      if(ativacao == null){
+         throw new IllegalArgumentException("A nova função de ativação não pode ser nula.");
+      }
+
       this.ativacao = ativacao;
    }
 
