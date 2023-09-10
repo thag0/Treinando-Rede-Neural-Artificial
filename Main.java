@@ -25,7 +25,7 @@ class Main{
    // static final String caminhoArquivo = "/dados/32x32/bloco.png";
    static final String caminhoArquivo = "/dados/mnist/8.png";
    static final String caminhoImagemExportada = "./resultados/imagem-ampliada";
-   static final int epocas = 5*1000;
+   static final int epocas = 100*1000;
    static final float escalaRender = 8f;
    static final float escalaImagemExportada = 20f;
 
@@ -83,7 +83,6 @@ class Main{
       if(qSaidas == 1)geim.exportarImagemEscalaCinza(imagem, rede, escalaImagemExportada, caminhoImagemExportada);
       else if(qSaidas == 3) geim.exportarImagemRGB(imagem, rede, escalaImagemExportada, caminhoImagemExportada);
       else System.out.println("Não é possível exportar a imagem");
-      exportarHistoricoCustos(rede, ged);
    }
 
 
@@ -93,12 +92,12 @@ class Main{
       RedeNeural rede = new RedeNeural(arq);
 
       rede.compilar();
+      rede.configurarAlcancePesos(0.5);
       rede.configurarTaxaAprendizagem(0.001);
       rede.configurarMomentum(0.99);
       rede.configurarInicializacaoPesos(2);
       rede.configurarOtimizador(new SGD());
       rede.configurarFuncaoAtivacao(new Sigmoid());
-      rede.configurarHistoricoCusto(true);
 
       return rede;
    }

@@ -32,16 +32,17 @@ import rna.treinamento.Treinador;
  *    O modelo pode ser usado para problemas de regressão e classificação, contando com algoritmos de treino 
  *    atualmente baseados no backpropagation com adição da ideia de momentum na atualização dos pesos.
  * </p>
- * Possui opções de configuração tanto para hiperparâmetros como taxa de aprendizagem e momentun, quanto para
- * funções de ativações de camadas individuais, valor de alcance máximo e mínimo na aleatorização dos pesos iniciais e 
- * otimizadores que serão usados durante o treino. 
+ * Possui opções de configuração tanto para hiperparâmetros como taxa de aprendizagem e momentum, 
+ * quanto para funções de ativações de camadas individuais, valor de alcance máximo e mínimo na 
+ * aleatorização dos pesos iniciais e otimizadores que serão usados durante o treino. 
  * <p>
- *    Após configurar as propriedades da rede, o modelo precisará ser compilado para efetivamente poder ser utilizado.
+ *    Após configurar as propriedades da rede, o modelo precisará ser compilado para efetivamente 
+ *    poder ser utilizado.
  * </p>
- * @author Thiago Barroso, acadêmico de Engenharia da Computação pela Universidade Federal do Pará, Campus Tucuruí. Maio/2023.
+ * @author Thiago Barroso, acadêmico de Engenharia da Computação pela Universidade Federal do Pará, 
+ * Campus Tucuruí. Maio/2023.
  */
 public class RedeNeural implements Cloneable, Serializable{
-   //estrutura
 
    /**
     * Camada de entrada da Rede Neural.
@@ -64,8 +65,6 @@ public class RedeNeural implements Cloneable, Serializable{
     * presente na camada correspondente.
     */
    private int[] arquitetura;
-   
-   //parâmertos importantes
 
    /**
     * Valor de taxa de aprendizagem da Rede Neural. Define o 
@@ -129,15 +128,15 @@ public class RedeNeural implements Cloneable, Serializable{
     */
    public Avaliador avaliador = new Avaliador(this);
 
-
    /**
     * <p>
-    *    Cria uma instância de rede neural artificial. A arquitetura da rede será baseada de acordo com cada posição do array,
-    *    cada valor contido nele representará a quantidade de neurônios da camada correspondente.
+    *    Cria uma instância de rede neural artificial. A arquitetura da rede será baseada de acordo 
+    *    com cada posição do array, cada valor contido nele representará a quantidade de neurônios da 
+    *    camada correspondente.
     * </p> 
     * <p>
-    *    A camada de entrada deverá ser especificada pelo indice 0, a camada de saída 
-    *    será representada pelo último valor do array e as camadas ocultas serão representadas pelos valores intermediários.
+    *    A camada de entrada deverá ser especificada pelo indice 0, a camada de saída será representada 
+    *    pelo último valor do array e as camadas ocultas serão representadas pelos valores intermediários.
     * </p>
     * <p>
     *   Os valores de todos os parâmetros pedidos <strong>NÃO devem</strong> ser menores que 1.
@@ -150,7 +149,8 @@ public class RedeNeural implements Cloneable, Serializable{
     *    como, alcance dos pesos iniciais, taxa de aprendizagem e uso de bias. Caso não seja usada nenhuma 
     *    das funções de configuração, a rede será compilada com os valores padrão.
     * </p>
-    * @author Thiago Barroso, acadêmico de Engenharia da Computação pela Universidade Federal do Pará, Campus Tucuruí. Maio/2023.
+    * @author Thiago Barroso, acadêmico de Engenharia da Computação pela Universidade Federal do Pará, 
+    * Campus Tucuruí. Maio/2023.
     * @param arquitetura modelo de arquitetura específico da rede.
     * @throws IllegalArgumentException se o array de arquitetura não possuir, pelo menos, três elementos.
     * @throws IllegalArgumentException se os valores fornecidos forem menores que um.
@@ -170,11 +170,10 @@ public class RedeNeural implements Cloneable, Serializable{
       this.arquitetura[this.arquitetura.length-1] = arquitetura[arquitetura.length-1];
    }
 
-
    /**
     * <p>
-    *    Cria uma instância de rede neural artificial. A arquitetura da rede será baseada de acordo com os valores 
-    *    de número de neurônios fornecidos.
+    *    Cria uma instância de rede neural artificial. A arquitetura da rede será baseada 
+    *    de acordo com os valores de número de neurônios fornecidos.
     * </p>
     * <p>
     *   Os valores de todos os parâmetros pedidos <strong>NÃO devem</strong> ser menores que 1.
@@ -183,15 +182,16 @@ public class RedeNeural implements Cloneable, Serializable{
     *    Após instanciar o modelo, é necessário compilar por meio da função {@code compilar()}
     * </p>
     * <p>
-    *    Certifique-se de configurar as propriedades da rede por meio das funções de configuração fornecidas
-    *    como, alcance dos pesos iniciais, taxa de aprendizagem e uso de bias. Caso não seja usada nenhuma 
-    *    das funções de configuração, a rede será compilada com os valores padrão.
+    *    Certifique-se de configurar as propriedades da rede por meio das funções de configuração 
+    *    fornecidas como, alcance dos pesos iniciais, taxa de aprendizagem e uso de bias. Caso não 
+    *    seja usada nenhuma das funções de configuração, a rede será compilada com os valores padrão.
     * </p>
     * @param nEntrada número de neurônios da camada de entrada.
     * @param nOcultas número de neurônios das camadas ocultas.
     * @param nSaida número de neurônios da camada de saída.
     * @param qOcultas quantidade de camadas ocultas.
-    * @author Thiago Barroso, acadêmico de Engenharia da Computação pela Universidade Federal do Pará, Campus Tucuruí. Maio/2023.
+    * @author Thiago Barroso, acadêmico de Engenharia da Computação pela Universidade Federal do Pará, 
+    * Campus Tucuruí. Maio/2023.
     * @throws IllegalArgumentException se algum dos valores fornecidos for menor que 1.
     */
    public RedeNeural(int nEntrada, int nOcultas, int nSaida, int qOcultas){
@@ -207,7 +207,6 @@ public class RedeNeural implements Cloneable, Serializable{
       }
       this.arquitetura[this.arquitetura.length-1] = nSaida;
    }
-
 
    /**
     * <p>
@@ -230,27 +229,25 @@ public class RedeNeural implements Cloneable, Serializable{
       this.nome = nome;
    }
 
-
    /**
     * Define o valor máximo e mínimo na hora de aleatorizar os pesos da rede 
     * para a compilação, os novos valores não podem ser menores ou iguais a zero.
     * <p>
     *    {@code O valor padrão de alcance é 1}
     * </p>
-    * @param alcancePesos novo valor máximo e mínimo.
+    * @param alcance novo valor máximo e mínimo.
     * @throws IllegalArgumentException se o novo valor for menor ou igual a zero.
     */
-   public void configurarAlcancePesos(double alcancePesos){
-      if(alcancePesos <= 0){
+   public void configurarAlcancePesos(double alcance){
+      if(alcance <= 0){
          throw new IllegalArgumentException("Os novos valores de alcance dos pesos não podem ser menores ou iguais a zero.");
       }
-      this.alcancePeso = alcancePesos;
+      this.alcancePeso = alcance;
    }
 
-
    /**
-    * Configura a inicialização dos pesos da rede neural. A forma de inicialização pode
-    * afetar o tempo de convergência da rede durante o treinamento.
+    * Configura a inicialização dos pesos da rede neural. A forma de inicialização 
+    * pode afetar o tempo de convergência da rede durante o treinamento.
     * <p>
     *    Inicializadores disponíveis:
     * </p>
@@ -264,14 +261,14 @@ public class RedeNeural implements Cloneable, Serializable{
     * </p>
     * @param inicializador novo valor de inicializador de pesos da rede.
     * @throws IllegalArgumentException se o novo valor de otimizador for menor que um.
-    * @throws IllegalArgumentException se o novo valor de otimização for inválido, no momento da compilação.
+    * @throws IllegalArgumentException se o novo valor de otimização for inválido, no 
+    * momento da compilação.
     */
    public void configurarInicializacaoPesos(int inicializador){
       if(inicializador < 1) throw new IllegalArgumentException("O novo valor de otimizador não pode ser menor que um.");
 
       this.inicializadorPeso = inicializador;
    }
-
 
    /**
     * Define se a rede neural usará um neurônio adicional como bias nas camadas da rede.
@@ -285,12 +282,11 @@ public class RedeNeural implements Cloneable, Serializable{
       this.BIAS = (usarBias) ? 1 : 0;
    }
 
-
    /**
-    * Define o novo valor de taxa de aprendizagem da rede. O valor é usado durante o método de treino.
-    * O valor da taxa de aprendizagem difine "o quanto a rede vai aprender com o erro durante o treinamento".
-    * Certifique-se de não usar valores muito altos ou muito baixos para não gerar resultados inesperados 
-    * durante o treino.
+    * Define o novo valor de taxa de aprendizagem da rede. O valor é usado durante o método de 
+    * treino. O valor da taxa de aprendizagem difine "o quanto a rede vai aprender com o erro 
+    * durante o treinamento". Certifique-se de não usar valores muito altos ou muito baixos para 
+    * não gerar resultados inesperados durante o treino.
     * <p>
     *    {@code O valor padrão da taxa de aprendizagem é 0.01}
     * </p>
@@ -304,16 +300,15 @@ public class RedeNeural implements Cloneable, Serializable{
       this.TAXA_APRENDIZAGEM = taxaAprendizagem;
    }
 
-
    /**
     * Define o novo valor do momentum que vai ser usado no treinamento da rede.
     * <p>
-    *    O momentum é uma técnica utilizada no treinamento de redes neurais para acelerar a convergência e
-    *    melhorar a estabilidade das atualizações dos pesos. Ele introduz um termo de momento nas atualizações
-    *    dos pesos, permitindo que as atualizações tenham inércia, acumulando uma fração dos gradientes das
-    *    iterações anteriores.
+    *    O momentum é uma técnica utilizada no treinamento de redes neurais para acelerar 
+    *    a convergência e melhorar a estabilidade das atualizações dos pesos. Ele introduz 
+    *    um termo de momento nas atualizações dos pesos, permitindo que as atualizações tenham 
+    *    inércia, acumulando uma fração dos gradientes das iterações anteriores.
     * </p>
-    * Normalmente esse valor fica entre 0 e 1, onde 0 significa que o momentum não terá efeito  e 1 
+    * Normalmente esse valor fica entre 0 e 1, onde 0 significa que o momentum não terá efeito e 1 
     * significa que o momentum terá o máximo de inércia, acumulando totalmente os gradientes anteriores. 
     * <p>
     *    {@code O valor padrão do momentum é 0}
@@ -328,26 +323,25 @@ public class RedeNeural implements Cloneable, Serializable{
       this.TAXA_MOMENTUM = momentum;
    }
 
-
    /**
     * Configura a função de ativação da camada correspondente. É preciso
     * compilar o modelo previamente para poder configurar suas funções de ativação.
     * <p>
-    *    segue a lista das funções disponíveis:
+    *    Segue a lista das funções disponíveis:
     * </p>
     * <ul>
-    *    <li>1 - ReLU.</li>
-    *    <li>2 - Sigmoid.</li>
-    *    <li>3 - Tangente Hiperbólica.</li>
-    *    <li>4 - Leaky ReLU.</li>
-    *    <li>5 - ELU.</li>
-    *    <li>6 - Swish.</li>
-    *    <li>7 - GELU.</li>
-    *    <li>8 - Linear.</li>
-    *    <li>9 - Seno.</li>
-    *    <li>10 - Argmax.</li>
-    *    <li>11 - Softmax.</li>
-    *    <li>12 - Softplus.</li>
+    *    <li> 1 - ReLU. </li>
+    *    <li> 2 - Sigmoid. </li>
+    *    <li> 3 - Tangente Hiperbólica. </li>
+    *    <li> 4 - Leaky ReLU. </li>
+    *    <li> 5 - ELU .</li>
+    *    <li> 6 - Swish. </li>
+    *    <li> 7 - GELU. </li>
+    *    <li> 8 - Linear. </li>
+    *    <li> 9 - Seno. </li>
+    *    <li> 10 - Argmax. </li>
+    *    <li> 11 - Softmax. </li>
+    *    <li> 12 - Softplus. </li>
     * </ul>
     * <p>
     *    {@code A função de ativação padrão é a ReLU para todas as camadas}
@@ -365,26 +359,25 @@ public class RedeNeural implements Cloneable, Serializable{
       camada.configurarAtivacao(ativacao);
    }
 
-
    /**
     * Configura a função de ativação de todas as camadas da rede. É preciso
     * compilar o modelo previamente para poder configurar suas funções de ativação.
     * <p>
-    *    segue a lista das funções disponíveis:
+    *    Segue a lista das funções disponíveis:
     * </p>
     * <ul>
-    *    <li>1 - ReLU.</li>
-    *    <li>2 - Sigmoid.</li>
-    *    <li>3 - Tangente Hiperbólica.</li>
-    *    <li>4 - Leaky ReLU.</li>
-    *    <li>5 - ELU.</li>
-    *    <li>6 - Swish.</li>
-    *    <li>7 - GELU.</li>
-    *    <li>8 - Linear.</li>
-    *    <li>9 - Seno.</li>
-    *    <li>10 - Argmax.</li>
-    *    <li>11 - Softmax.</li>
-    *    <li>12 - Softplus.</li>
+    *    <li> 1 - ReLU. </li>
+    *    <li> 2 - Sigmoid. </li>
+    *    <li> 3 - Tangente Hiperbólica. </li>
+    *    <li> 4 - Leaky ReLU. </li>
+    *    <li> 5 - ELU .</li>
+    *    <li> 6 - Swish. </li>
+    *    <li> 7 - GELU. </li>
+    *    <li> 8 - Linear. </li>
+    *    <li> 9 - Seno. </li>
+    *    <li> 10 - Argmax. </li>
+    *    <li> 11 - Softmax. </li>
+    *    <li> 12 - Softplus. </li>
     * </ul>
     * <p>
     *    {@code A função de ativação padrão é a ReLU para todas as camadas}
@@ -401,26 +394,25 @@ public class RedeNeural implements Cloneable, Serializable{
       this.saida.configurarAtivacao(ativacao);
    }
 
-
    /**
     * Configura a função de ativação de todas as camadas da rede. É preciso
     * compilar o modelo previamente para poder configurar suas funções de ativação.
     * <p>
-    *    segue a lista das funções disponíveis:
+    *    Segue a lista das funções disponíveis:
     * </p>
     * <ul>
-    *    <li>ReLU.</li>
-    *    <li>Sigmoid.</li>
-    *    <li>Tangente Hiperbólica.</li>
-    *    <li>Leaky ReLU.</li>
-    *    <li>ELU.</li>
-    *    <li>Swish.</li>
-    *    <li>GELU.</li>
-    *    <li>Linear.</li>
-    *    <li>Seno.</li>
-    *    <li>Argmax.</li>
-    *    <li>Softmax.</li>
-    *    <li>Softplus.</li>
+    *    <li> ReLU. </li>
+    *    <li> Sigmoid. </li>
+    *    <li> Tangente Hiperbólica. </li>
+    *    <li> Leaky ReLU. </li>
+    *    <li> ELU .</li>
+    *    <li> Swish. </li>
+    *    <li> GELU. </li>
+    *    <li> Linear. </li>
+    *    <li> Seno. </li>
+    *    <li> Argmax. </li>
+    *    <li> Softmax. </li>
+    *    <li> Softplus. </li>
     * </ul>
     * <p>
     *    {@code A função de ativação padrão é a ReLU para todas as camadas}
@@ -448,26 +440,25 @@ public class RedeNeural implements Cloneable, Serializable{
       camada.configurarAtivacao(ativacao);
    }
 
-
    /**
     * Configura a função de ativação de todas as camadas da rede. É preciso
     * compilar o modelo previamente para poder configurar suas funções de ativação.
     * <p>
-    *    segue a lista das funções disponíveis:
+    *    Segue a lista das funções disponíveis:
     * </p>
     * <ul>
-    *    <li>ReLU.</li>
-    *    <li>Sigmoid.</li>
-    *    <li>Tangente Hiperbólica.</li>
-    *    <li>Leaky ReLU.</li>
-    *    <li>ELU.</li>
-    *    <li>Swish.</li>
-    *    <li>GELU.</li>
-    *    <li>Linear.</li>
-    *    <li>Seno.</li>
-    *    <li>Argmax.</li>
-    *    <li>Softmax.</li>
-    *    <li>Softplus.</li>
+    *    <li> ReLU. </li>
+    *    <li> Sigmoid. </li>
+    *    <li> Tangente Hiperbólica. </li>
+    *    <li> Leaky ReLU. </li>
+    *    <li> ELU .</li>
+    *    <li> Swish. </li>
+    *    <li> GELU. </li>
+    *    <li> Linear. </li>
+    *    <li> Seno. </li>
+    *    <li> Argmax. </li>
+    *    <li> Softmax. </li>
+    *    <li> Softplus. </li>
     * </ul>
     * <p>
     *    {@code A função de ativação padrão é a ReLU para todas as camadas}
@@ -489,7 +480,6 @@ public class RedeNeural implements Cloneable, Serializable{
       this.saida.configurarAtivacao(ativacao);
    }
 
-
    /**
     * Configura o otimizador usado durante o treino da rede neural. Cada otimizador possui sua 
     * própia maneira de atualizar os pesos da rede e cada um deles pode ser apropriado em uma 
@@ -498,12 +488,30 @@ public class RedeNeural implements Cloneable, Serializable{
     *    Os otimizadores disponíveis são:
     * </p>
     * <ol>
-    *    <li> Backpropagation: Método clássico de retropropagação de erro para treinamento de redes neurais.</li>
-    *    <li>SGD (Gradiente Descendente Estocástico): Atualiza os pesos usando o conjunto de treino embaralhado.</li>
-    *    <li>AdaGrad: Um otimizador que adapta a taxa de aprendizado para cada parâmetro da rede com base em iterações anteriores.</li>
-    *    <li>RMSProp: Um otimizador que utiliza a média móvel dos quadrados dos gradientes acumulados para ajustar a taxa de aprendizado.</li>
-    *    <li>Adam: Um otimizador que combina o AdaGrad e o Momentum para convergência rápida e estável.</li>
-    *    <li>Nadam: Possui as mesmas vantagens de se utilizar o adam, com o adicional do acelerador de Nesterov na atualização dos pesos.</li>
+    *    <li>
+    *       <strong> GradientDescent </strong>: Método clássico de retropropagação de erro e 
+    *       ajuste de pesos para treinamento de Redes Neurais.
+    *    </li>
+    *    <li>
+    *       <strong> SGD (Gradiente Descendente Estocástico) </strong>: Atualiza os pesos usando 
+    *       o conjunto de treino embaralhado a cada época.
+    *    </li>
+    *    <li>
+    *       <strong> AdaGrad </strong>: Um otimizador que adapta a taxa de aprendizado para cada 
+    *       parâmetro da rede com base em iterações anteriores.
+    *    </li>
+    *    <li>
+    *       <strong> RMSProp </strong>: Um otimizador que utiliza a média móvel dos quadrados dos 
+    *       gradientes acumulados para ajustar a taxa de aprendizado.
+    *    </li>
+    *    <li>
+    *       <strong> Adam </strong>: Um otimizador que combina o AdaGrad e o Momentum para convergência 
+    *       rápida e estável.
+    *    </li>
+    *    <li>
+    *       <strong> Nadam </strong>: Possui as mesmas vantagens de se utilizar o adam, com o adicional 
+    *       do acelerador de Nesterov na atualização dos pesos.
+    *    </li>
     * </ol>
     * <p>
     *    {@code O otimizador padrão é o SGD}
@@ -524,7 +532,6 @@ public class RedeNeural implements Cloneable, Serializable{
          default-> throw new IllegalArgumentException("Valor fornecido do otimizador é inválido.");
       }
    }
-
 
    /**
     * Configura o novo otimizdor da Rede Neural com base numa nova instância de otimizador.
@@ -547,7 +554,6 @@ public class RedeNeural implements Cloneable, Serializable{
       this.otimizadorAtual = otimizador;
    }
 
-
    /**
     * Define se durante o processo de treinamento, a rede vai salvar dados relacionados a 
     * função de custo de cada época.
@@ -563,7 +569,6 @@ public class RedeNeural implements Cloneable, Serializable{
    public void configurarHistoricoCusto(boolean historicoCusto){
       this.treinador.configurarHistoricoCusto(historicoCusto);
    }
-
 
    /**
     * Compila o modelo de rede inicializando as camadas, neurônios e pesos respectivos, 
@@ -634,7 +639,6 @@ public class RedeNeural implements Cloneable, Serializable{
       compilado = true;//modelo pode ser usado
    }
 
-
    /**
     * Verifica se o modelo já foi compilado para evitar problemas de uso indevido, bem como componentes nulos.
     * @throws IllegalArgumentException se o modelo não foi compilado.
@@ -644,7 +648,6 @@ public class RedeNeural implements Cloneable, Serializable{
          throw new IllegalArgumentException("O modelo ainda não foi compilado");
       }
    }
-
 
    /**
     * Verifica se os dados são apropriados para serem usados dentro da rede neural, incluindo:
@@ -676,7 +679,6 @@ public class RedeNeural implements Cloneable, Serializable{
       }      
    }
 
-
    /**
     * <p>
     *    Propaga os dados de entrada pela rede neural pelo método de feedforward.
@@ -685,7 +687,8 @@ public class RedeNeural implements Cloneable, Serializable{
     * No final é aplicado a função de ativação da camada no neurônio e o resultado fica armazenado na saída dele.
     * @param entradas dados usados para alimentar a camada de entrada.
     * @throws IllegalArgumentException se o modelo não foi compilado previamente.
-    * @throws IllegalArgumentException se o tamanho dos dados de entrada for diferente do tamanho dos neurônios de entrada, excluindo o bias.
+    * @throws IllegalArgumentException se o tamanho dos dados de entrada for diferente do tamanho dos 
+    * neurônios de entrada, excluindo o bias.
     */
    public void calcularSaida(double[] entradas){
       this.modeloCompilado();
@@ -709,17 +712,18 @@ public class RedeNeural implements Cloneable, Serializable{
       this.saida.ativarNeuronios(this.ocultas[this.ocultas.length-1]);
    }
 
-
    /**
+    * Propaga os dados de entrada pela rede neural pelo método de feedforward através do conjunto 
+    * de dados fornecido.
     * <p>
-    *    Propaga os dados de entrada pela rede neural pelo método de feedforward através do conjunto 
-    *    de dados fornecido.
+    *    Os dados são alimentados para as entradas dos neurônios e é calculado o produto junto 
+    *    com os pesos. No final é aplicado a função de ativação da camada no neurônio e o resultado 
+    *    fica armazenado na saída dele.
     * </p>
-    * Os dados são alimentados para as entradas dos neurônios e é calculado o produto junto com os pesos.
-    * No final é aplicado a função de ativação da camada no neurônio e o resultado fica armazenado na saída dele.
     * @param entradas dados usados para alimentar a camada de entrada.
     * @throws IllegalArgumentException se o modelo não foi compilado previamente.
-    * @throws IllegalArgumentException se o tamanho dos dados de entrada for diferente do tamanho dos neurônios de entrada, excluindo o bias.
+    * @throws IllegalArgumentException se o tamanho dos dados de entrada for diferente do tamanho dos 
+    * neurônios de entrada, excluindo o bias.
     * @return matriz contendo os resultados das predições da rede.
     */
    public double[][] calcularSaida(double[][] entradas){
@@ -749,13 +753,12 @@ public class RedeNeural implements Cloneable, Serializable{
       return resultados;
    }
 
-
    /**
+    * Treina a rede de acordo com as configurações predefinidas.
     * <p>
-    *    Treina a rede de acordo com as configurações predefinidas.
+    *    Certifique-se de configurar adequadamente o modelo para obter os 
+    *    melhores resultados.
     * </p>
-    * Certifique-se de configurar adequadamente o modelo para obter os 
-    * melhores resultados.
     * @param entradas dados de entrada do treino (features).
     * @param saidas dados de saída correspondente a entrada (class).
     * @param epochs quantidade de épocas.
@@ -777,11 +780,8 @@ public class RedeNeural implements Cloneable, Serializable{
       treinador.treino(this, this.otimizadorAtual, entradas.clone(), saidas.clone(), epochs, embaralhar);
    }
 
-
    /**
-    * <p>
-    *    Treina a rede de acordo com as configurações predefinidas.
-    * </p>
+    * Treina a rede de acordo com as configurações predefinidas.
     * <p>
     *    O modo de treinamento em lote ainda ta em teste e costuma demorar pra convergir
     *    se forem usados os mesmo parâmetros do treino convencional.
@@ -815,15 +815,15 @@ public class RedeNeural implements Cloneable, Serializable{
       treinador.treino(this, this.otimizadorAtual, entradas.clone(), saidas.clone(), epochs, embaralhar, tamanhoLote);
    }
    
-
    /**
-    * Método alternativo no treino da rede neural usando diferenciação finita (finite difference), que calcula a "derivada" da 
-    * função de custo levando a rede ao mínimo local dela. É importante encontrar um bom balanço entre a taxa de aprendizagem da 
-    * rede e o valor de perturbação usado.
+    * Método alternativo no treino da rede neural usando diferenciação finita (finite difference), 
+    * que calcula a "derivada" da função de custo levando a rede ao mínimo local dela. É importante 
+    * encontrar um bom balanço entre a taxa de aprendizagem da rede e o valor de perturbação usado.
     * <p>
-    *    Vale ressaltar que esse método é mais lento e menos eficiente que o backpropagation, em arquiteturas de rede maiores e 
-    *    que tenha uma grande volume de dados de treino ou para problemas mais complexos ele pode demorar muito para convergir 
-    *    ou simplemente não funcionar como esperado.
+    *    Vale ressaltar que esse método é mais lento e menos eficiente que o backpropagation, em 
+    *    arquiteturas de rede maiores e que tenha uma grande volume de dados de treino ou para 
+    *    problemas mais complexos ele pode demorar muito para convergir ou simplemente não funcionar 
+    *    como esperado.
     * </p>
     * <p>
     *    Ainda sim não deixa de ser uma abordagem válida.
@@ -832,8 +832,8 @@ public class RedeNeural implements Cloneable, Serializable{
     * @param saidas matriz com os dados de saída
     * @param eps valor de perturbação
     * @param epochs número de épocas do treinamento
-    * @param custoMinimo valor de custo desejável, o treino será finalizado caso o valor de custo mínimo seja atingido. Caso o custo mínimo seja 
-    * zero, o treino irá continuar até o final das épocas fornecidas
+    * @param custoMinimo valor de custo desejável, o treino será finalizado caso o valor de custo mínimo 
+    * seja atingido. Caso o custo mínimo seja zero, o treino irá continuar até o final das épocas fornecidas
     * @throws IllegalArgumentException se o modelo não foi compilado previamente.
     * @throws IllegalArgumentException se houver alguma inconsistência dos dados de entrada e saída para a operação.
     * @throws IllegalArgumentException se o valor de perturbação for igual a zero.
@@ -897,36 +897,32 @@ public class RedeNeural implements Cloneable, Serializable{
 
    }
 
-
    /**
-    * Informa o valor do hiperparâmetro de taxa de aprendizagem da Rede Neural.
+    * Informa o valor do hiperparâmetro de {@code taxa de aprendizagem} da Rede Neural.
     * @return valor de taxa de aprendizagem da rede.
     */
    public double obterTaxaAprendizagem(){
       return this.TAXA_APRENDIZAGEM;
    }
 
-
    /**
-    * Informa o valor do hiperparâmetro de taxa de momentum da Rede Neural.
+    * Informa o valor do hiperparâmetro de {@code taxa de momentum} da Rede Neural.
     * @return valor de taxa de momentum da rede.
     */
    public double obterTaxaMomentum(){
       return this.TAXA_MOMENTUM;
    }
 
-
    /**
-    * Informa qual tipo de otimizador está sendo usado para o treino da Rede Neural.
+    * Retorna a instâcia de otimizador está sendo usado para o treino da Rede Neural.
     * @return otimizador atual da rede.
     */
    public Otimizador obterOtimizador(){
       return this.otimizadorAtual;
    }
 
-
    /**
-    * Retorna a camada de entrada da rede.
+    * Retorna a {@code camada de entrada} da Rede Neural.
     * @return camada de entrada.
     * @throws IllegalArgumentException se o modelo não foi compilado previamente.
     */
@@ -934,7 +930,6 @@ public class RedeNeural implements Cloneable, Serializable{
       this.modeloCompilado();
       return this.entrada;
    }
-
 
    /**
     * Informa a quantidade de camadas ocultas presentes na Rede Neural.
@@ -946,13 +941,14 @@ public class RedeNeural implements Cloneable, Serializable{
       return this.ocultas.length;
    }
 
-
    /**
-    * Retorna a camada oculta correspondente ao índice fornecido.
+    * Retorna a {@code camada oculta} da Rede Neural correspondente 
+    * ao índice fornecido.
     * @param indice índice da busca.
     * @return camada oculta baseada na busca.
     * @throws IllegalArgumentException se o modelo não foi compilado previamente.
-    * @throws IllegalArgumentException se o índice estiver fora do alcance do tamanho das camadas ocultas.
+    * @throws IllegalArgumentException se o índice estiver fora do alcance do tamanho 
+    * das camadas ocultas.
     */
    public Camada obterCamadaOculta(int indice){
       this.modeloCompilado();
@@ -963,9 +959,8 @@ public class RedeNeural implements Cloneable, Serializable{
       return this.ocultas[indice];
    }
 
-
    /**
-    * Retorna a camada de saída da rede.
+    * Retorna a {@code camada de saída} da Rede Neural.
     * @return camada de saída.
     * @throws IllegalArgumentException se o modelo não foi compilado previamente.
     */
@@ -974,11 +969,13 @@ public class RedeNeural implements Cloneable, Serializable{
       return this.saida;
    }
 
-
    /**
-    * Copia os dados da saída de cada neurônio da camada de saída da Rede Neural para um array.
-    * A ordem de cópia é crescente, do primeiro neurônio da saída ao último.
-    * @return vetor com os dados das saídas da rede.
+    * Copia os dados da saída de cada neurônio da camada de saída da Rede Neural para 
+    * um array. 
+    * <p>
+    *    A ordem de cópia é crescente, do primeiro neurônio da saída ao último.
+    * </p>
+    * @return array com os dados das saídas da rede.
     * @throws IllegalArgumentException se o modelo não foi compilado previamente.
     */
    public double[] obterSaidas(){
@@ -992,14 +989,13 @@ public class RedeNeural implements Cloneable, Serializable{
       return saida;
    }
 
-
    /**
-    * Cria um array que representa a estrutura da Rede Neural. Nele cada elemento indica uma camada 
-    * da rede e cada valor contido nesse elementos indica a quantidade de neurônios daquela camada
-    * correspondente.
+    * Cria um array que representa a estrutura da Rede Neural. Nele cada elemento 
+    * indica uma camada da rede e cada valor contido nesse elementos indica a 
+    * quantidade de neurônios daquela camada correspondente.
     * <p>
-    *    Os valores podem sofrer alteração caso a rede possua o bias adicionado na hora da compilação, 
-    *    incluindo um neurônio a mais em cada elementos do array.
+    *    Os valores podem sofrer alteração caso a rede possua o bias adicionado 
+    *    na hora da compilação, incluindo um neurônio a mais em cada elementos do array.
     * </p>
     * @return array com a arquitetura da rede.
     * @throws IllegalArgumentException se o modelo não foi compilado previamente.
@@ -1009,7 +1005,6 @@ public class RedeNeural implements Cloneable, Serializable{
       return this.arquitetura;
    }
 
-
    /**
     * Informa o nome configurado da Rede Neural.
     * @return nome específico da rede.
@@ -1018,12 +1013,12 @@ public class RedeNeural implements Cloneable, Serializable{
       return this.nome;
    }
 
-
    /**
     * Disponibiliza o histórico da função de custo da rede neural durante cada época
     * de treinamento.
     * @return lista contendo o histórico de custos durante o treinamento da rede.
-    * @throws IllegalArgumentException se não foi habilitado previamente o cálculo do histórico de custos.
+    * @throws IllegalArgumentException se não foi habilitado previamente o cálculo do 
+    * histórico de custos.
     */
    public ArrayList<Double> obterHistoricoCusto(){
       if(!this.treinador.calcularHistorico){
@@ -1031,7 +1026,6 @@ public class RedeNeural implements Cloneable, Serializable{
       }
       return this.treinador.obterHistorico();
    }
-
 
    /**
     * Exibe algumas informações importantes sobre a Rede Neural, como:
@@ -1080,8 +1074,7 @@ public class RedeNeural implements Cloneable, Serializable{
 
       return buffer;
    }
-
-   
+ 
    /**
     * Clona a instância da rede.
     * @throws IllegalArgumentException se o modelo não foi compilado previamente.
@@ -1119,7 +1112,6 @@ public class RedeNeural implements Cloneable, Serializable{
       }
    }
 
-
    /**
     * Clona uma instância de camada da rede neural.
     * @param camada camada original
@@ -1136,7 +1128,6 @@ public class RedeNeural implements Cloneable, Serializable{
 
       return clone;
    }
-
 
    /**
     * Clona uma instância de neurônio da rede neural.
@@ -1158,11 +1149,10 @@ public class RedeNeural implements Cloneable, Serializable{
       return clone;
    }
 
-
    /**
     * Salva a classe da rede em um arquivo especificado, o caminho não leva em consideração
-    * o formato, de preferência deve ser .dat, caso seja especificado apenas o nome, o arquivo
-    * será salvo no mesmo diretório que o arquivo principal.
+    * o formato, de preferência deve ser .dat, caso seja especificado apenas o nome, o 
+    * arquivo será salvo no mesmo diretório que o arquivo principal.
     * @param caminho caminho de destino do arquivo que será salvo.
     */
    public void salvarArquivoRede(String caminho){
@@ -1179,10 +1169,9 @@ public class RedeNeural implements Cloneable, Serializable{
       }
    }
 
-
    /**
-    * Lê um arquivo de Rede Neural no caminho especificado, o caminho não leva em consideração
-    * o formato, logo precisa ser especificado.
+    * Lê um arquivo de Rede Neural no caminho especificado, o caminho não leva em 
+    * consideração o formato, logo precisa ser especificado.
     * @param caminho caminho do arquivo de rede salvo
     * @return objeto do tipo {@code RedeNeural} lido pelo arquivo.
     */
@@ -1203,7 +1192,6 @@ public class RedeNeural implements Cloneable, Serializable{
 
       return rede;
    }
-
 
    @Override
    public String toString(){

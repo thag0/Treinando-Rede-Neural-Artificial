@@ -4,19 +4,24 @@ import java.io.Serializable;
 import java.util.Random;
 
 /**
- * Representa um neurônio individual dentro da estrutura da rede neural.
- * Cada neurônio possui um conjunto de pesos para suas conexões com os neurônios da camada anterior,
- * além de valores de entrada, saída e alguns parâmetros adicionais para facilitar o uso dos otimizadores.
+ * Representa um neurônio individual dentro da estrutura da Rede Neural.
+ * <p>
+ *    Cada neurônio possui um conjunto de pesos para suas conexões com os 
+ *    neurônios da camada anterior, além de valores de entrada, saída e 
+ *    alguns parâmetros adicionais para facilitar o uso dos otimizadores.
+ * </p>
  */
 public class Neuronio implements Serializable{
 
    /**
-    * Corresponde às saídas dos neurônios da camada anterior.
+    * Array que representa às saídas dos neurônios da camada anterior.
     */
    public double[] entradas;
 
    /**
-    * <p>Região crítica</p>
+    * <p>
+    *    Região crítica
+    * </p>
     * Representa os pesos responsáveis por associar a conexão recebida com a 
     * intensidade que ela deve receber.
     * Essa região é fundamental para o cálculo da saída de cada neurônio e
@@ -79,7 +84,6 @@ public class Neuronio implements Serializable{
     */
    private Random random = new Random();
 
-
    /**
     * Instancia um neurônio individual da rede, com pesos aleatórios para cada ligação.
     * <p>
@@ -94,14 +98,18 @@ public class Neuronio implements Serializable{
     *    <li>2 - He.</li>
     *    <li>3 - LeCun.</li>
     * </ul>
-    * @param conexoes quantidade de conexões, deve estar relacionada com a quatidade de neurônios da camada anterior (incluindo bias, caso tenha).
-    * @param alcancePeso valor de alcance em que o peso aleatório será gerado, deve ser um valor positivo e diferente de zero.
+    * @param conexoes quantidade de conexões, deve estar relacionada com a quatidade de neurônios 
+    * da camada anterior (incluindo bias, caso tenha).
+    * @param alcancePeso valor de alcance em que o peso aleatório será gerado, deve ser um valor 
+    * positivo e diferente de zero.
     * @param inicializador algoritmo inicializador dos pesos.
     * @throws IllegalArgumentException se o valor de alcance dos pesos for menor ou igual a zero.
     * @throws IllegalArgumentException se o otimizador fornecido for inválido.
     */
    public Neuronio(int conexoes, double alcancePeso, int inicializador){
-      if (alcancePeso <= 0) throw new IllegalArgumentException("O valor de alcance do peso deve ser positivo e diferente de zero.");
+      if (alcancePeso <= 0){
+         throw new IllegalArgumentException("O valor de alcance do peso deve ser positivo e diferente de zero.");
+      }
    
       this.entradas = new double[conexoes];
       this.momentum = new double[conexoes];
@@ -132,7 +140,6 @@ public class Neuronio implements Serializable{
       this.erro = 0;
    }
 
-
    /**
     * Calcula o resultado do somatório da multiplicação entre cada entrada 
     * e seu peso respectivo. O resultado será usado como entrada para a função
@@ -145,7 +152,6 @@ public class Neuronio implements Serializable{
       }
    }
 
-
    /**
     * Boa no geral.
     * @param alcancePeso valor máximo e mínimo na hora de aleatorizar os pesos.
@@ -155,7 +161,6 @@ public class Neuronio implements Serializable{
          this.pesos[i] = random.nextDouble(-alcancePeso, alcancePeso);
       }
    }
-
 
    /**
     * Boa com a relu.
@@ -168,9 +173,8 @@ public class Neuronio implements Serializable{
       }
    }
 
-
    /**
-    * Boa com leakyRelu
+    * Boa com leakyRelu.
     * @param entradas quantidade de entrada de cada neurônio da camada.
     */
    private void inicializacaoLeCun(int entradas){
@@ -179,7 +183,6 @@ public class Neuronio implements Serializable{
          this.pesos[i] = random.nextGaussian() * desvioPadrao;
       }
    }
-
 
    /**
     * Retorna informações dos pesos do neurônio.

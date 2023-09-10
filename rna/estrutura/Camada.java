@@ -17,7 +17,11 @@ import rna.ativacoes.TanH;
 
 /**
  * Representa uma camada de neurônios individual dentro de uma Rede Neural.
- * Cada camada possui um conjunto de neurônios e uma função de ativação que pode ser configurada.
+ * Cada camada possui um conjunto de neurônios e uma função de ativação que 
+ * pode ser configurada.
+ * <p>
+ *    Após instanciar a camada é necessário inicializar seus neurônios.
+ * </p>
  */
 public class Camada implements Serializable{
 
@@ -57,18 +61,17 @@ public class Camada implements Serializable{
     */ 
    private boolean softmax = false;
 
-
    /**
     * Inicializa uma instância de camada de RedeNeural.
-    *
-    * Após instanciar a camada é preciso inicialiar os neurônios dela.
-    * @param temBias define se a camada possui um neurônio de bias. Se true, será adicionado um neurônio adicional
-    * que a saída é sempre 1.
+    * <p>
+    *    Após instanciar a camada é preciso inicialiar os neurônios dela.
+    * </p>
+    * @param temBias define se a camada possui um neurônio de bias. Se true, será 
+    * adicionado um neurônio adicional que a saída é sempre 1.
     */
    public Camada(boolean temBias){
       this.b = (temBias) ? 1 : 0;
    }
-
 
    /**
     * Configura o id da camada. O id deve indicar dentro da rede neural, em 
@@ -79,22 +82,20 @@ public class Camada implements Serializable{
       this.id = id;
    }
 
-
    /**
     * Instancia os neurônios da camada correspondente.
-    * @param qNeuronios quantidade de neurônios que a camada deve possuir, incluindo bias.
-    * @param qConexoes quantidade de pesos de cada neurônio, deve corresponder a quantidade de neurônios da camada anterior.
+    * @param nNeuronios quantidade de neurônios que a camada deve possuir, incluindo bias.
+    * @param nConexoes quantidade de pesos de cada neurônio, deve corresponder a quantidade de neurônios da camada anterior.
     * @param alcancePeso valor de alcance da aleatorização dos pesos.
     * @param inicializador inicializador customizado para os pesos iniciais da rede.
     */
-   public void inicializarNeuronios(int qNeuronios, int qConexoes, double alcancePeso, int inicializador){
-      this.neuronios = new Neuronio[qNeuronios];
+   public void inicializarNeuronios(int nNeuronios, int nConexoes, double alcancePeso, int inicializador){
+      this.neuronios = new Neuronio[nNeuronios];
       
       for(int i = 0; i < this.neuronios.length; i++){
-         this.neuronios[i] = new Neuronio(qConexoes, alcancePeso, inicializador);
+         this.neuronios[i] = new Neuronio(nConexoes, alcancePeso, inicializador);
       }
    }
-
 
    /**
     * Calcula a soma dos valores de saída multiplicado pelo peso correspondente ao neurônio da próxima 
@@ -125,7 +126,6 @@ public class Camada implements Serializable{
       else if(this.softmax) softmax();
    }
 
-
    /**
     * Configura a função de ativação da camada.
     * @param ativacao valor da nova função de ativação.
@@ -149,7 +149,6 @@ public class Camada implements Serializable{
       }
    }
 
-
    /**
     * Configura a função de ativação da camada.
     * <p>
@@ -170,7 +169,6 @@ public class Camada implements Serializable{
       this.ativacao = ativacao;
    }
 
-
    /**
     * Executa a função de ativação derivada específica da camada.
     * @param valor valor anterior do cálculo da função de ativação
@@ -179,7 +177,6 @@ public class Camada implements Serializable{
    public double funcaoAtivacaoDx(double valor){
       return ativacao.derivada(valor);
    }
-
 
    /**
     * Retrona o nome da função de ativação configurada para a camada.
@@ -190,7 +187,6 @@ public class Camada implements Serializable{
       else if(softmax) return "Softmax";
       return this.ativacao.getClass().getSimpleName();
    }
-
 
    /**
     * Devolve o neurônio correspondente dentro da camada baseado 
@@ -206,7 +202,6 @@ public class Camada implements Serializable{
       return this.neuronios[id];
    }
 
-
    /**
     * Devolve todo o conjunto de neurônios da camada.
     * @return todos os neurônios presentes na camada, incluindo bias.
@@ -214,7 +209,6 @@ public class Camada implements Serializable{
    public Neuronio[] neuronios(){
       return this.neuronios;
    }
-
 
    /**
     * Retorna o valor da quantidade de neurônios da camada, incluindo bias.
@@ -224,7 +218,6 @@ public class Camada implements Serializable{
       return this.neuronios.length;
    }
 
-
    /**
     * Checa se a camada atual possui bias configurado como neurônio adicional.
     * @return true caso possua um neurônio adicional como bias, false caso contrário.
@@ -232,7 +225,6 @@ public class Camada implements Serializable{
    public boolean temBias(){
       return (b == 1) ? true : false;
    }
-
 
    /**
     * Auxiliar na verificação da função de ativação argmax para a camada.
@@ -242,7 +234,6 @@ public class Camada implements Serializable{
       return this.argmax;
    }
 
-
    /**
     * Auxiliar na verificação da função de ativação softmax para a camada.
     * @return caso a camada possua a função de ativação softmax configurada.
@@ -250,7 +241,6 @@ public class Camada implements Serializable{
    public boolean temSoftmax(){
       return this.softmax;
    }
-
 
    /**
     * Aplica a função de ativação argmax na saída dos neurônios.
@@ -274,7 +264,6 @@ public class Camada implements Serializable{
       }
    }
 
-
    /**
     * Aplica a função de ativação softmax na saída dos neurônios.
     * Ela normaliza as saídas dos neurônios para formar uma distribuição de probabilidade.
@@ -291,7 +280,6 @@ public class Camada implements Serializable{
       }
    }
 
-   
    /**
     * Indica algumas informações sobre a camada, como:
     * <ul>
