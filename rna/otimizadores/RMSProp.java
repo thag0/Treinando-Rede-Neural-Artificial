@@ -9,6 +9,10 @@ import rna.estrutura.Neuronio;
  * Ele é uma adaptação do Gradiente Descendente Estocástico (SGD) que ajuda a lidar com a
  * oscilação do gradiente, permitindo que a taxa de aprendizado seja adaptada para cada parâmetro 
  * individualmente.
+ * <p>
+ * 	Os hiperparâmetros do RMSProp podem ser ajustados para controlar 
+ *    o comportamento do otimizador durante o treinamento.
+ * </p
  */
 public class RMSProp extends Otimizador{
 

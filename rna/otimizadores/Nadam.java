@@ -86,10 +86,10 @@ public class Nadam extends Otimizador{
             neuronio = camada.neuronio(j);
             for(int k = 0; k < neuronio.pesos.length; k++){//percorrer pesos do neurônio atual
                neuronio.momentum[k] = (beta1 * neuronio.momentum[k]) + ((1 - beta1) * neuronio.gradiente[k]);
-               neuronio.acumuladorSegundaOrdem[k] = (beta2 * neuronio.acumuladorSegundaOrdem[k]) + ((1 - beta2) * neuronio.gradiente[k] * neuronio.gradiente[k]);
+               neuronio.momentum2ordem[k] = (beta2 * neuronio.momentum2ordem[k]) + ((1 - beta2) * neuronio.gradiente[k] * neuronio.gradiente[k]);
                
                momentumCorrigido = (beta1 * neuronio.momentum[k] + ((1 - beta1) * neuronio.gradiente[k]))  / interBeta1;
-               segundaOrdemCorrigida = (beta2 * neuronio.acumuladorSegundaOrdem[k] + ((1 - beta2) * neuronio.gradiente[k] * neuronio.gradiente[k])) / interBeta2;
+               segundaOrdemCorrigida = (beta2 * neuronio.momentum2ordem[k] + ((1 - beta2) * neuronio.gradiente[k] * neuronio.gradiente[k])) / interBeta2;
                neuronio.pesos[k] += (taxaAprendizagem * momentumCorrigido) / (Math.sqrt(segundaOrdemCorrigida) + epsilon);
                
                interacoes++;

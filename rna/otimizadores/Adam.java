@@ -9,6 +9,10 @@ import rna.estrutura.Neuronio;
  *    O algoritmo ajusta os pesos da rede neural usando o gradiente descendente 
  *    com momento e a estimativa adaptativa de momentos de primeira e segunda ordem.
  * </p>
+ * <p>
+ * 	Os hiperparâmetros do Adam podem ser ajustados para controlar o 
+ * 	comportamento do otimizador durante o treinamento.
+ * </p>
  */
 public class Adam extends Otimizador{
 
@@ -84,10 +88,10 @@ public class Adam extends Otimizador{
             for(int k = 0; k < neuronio.pesos.length; k++){//percorrer pesos do neurônio atual
 
                neuronio.momentum[k] = (beta1 * neuronio.momentum[k]) + ((1 - beta1) * neuronio.gradiente[k]);
-               neuronio.acumuladorSegundaOrdem[k] = (beta2 * neuronio.acumuladorSegundaOrdem[k]) + ((1 - beta2) * neuronio.gradiente[k] * neuronio.gradiente[k]);
+               neuronio.momentum2ordem[k] = (beta2 * neuronio.momentum2ordem[k]) + ((1 - beta2) * neuronio.gradiente[k] * neuronio.gradiente[k]);
                
                momentumCorrigido = neuronio.momentum[k] / interBeta1;
-               segundaOrdemCorrigida = neuronio.acumuladorSegundaOrdem[k] / interBeta2;
+               segundaOrdemCorrigida = neuronio.momentum2ordem[k] / interBeta2;
                neuronio.pesos[k] += (taxaAprendizagem * momentumCorrigido) / (Math.sqrt(segundaOrdemCorrigida) + epsilon);
                
             }

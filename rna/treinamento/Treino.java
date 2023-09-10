@@ -24,7 +24,7 @@ public class Treino implements Serializable{
    ArrayList<Double> historicoCusto = new ArrayList<>();
    public boolean calcularHistoricoCusto;
     
-   AuxiliaresTreino auxiliarTreino = new AuxiliaresTreino();
+   AuxiliarTreino aux = new AuxiliarTreino();
    TreinoLote treinoLote = new TreinoLote(historicoCusto);
 
    public Treino(){
@@ -46,12 +46,13 @@ public class Treino implements Serializable{
       double[] entrada = new double[entradas[0].length];//tamanho de colunas da entrada
       double[] saida = new double[saidas[0].length];//tamanho de colunas da saída
 
+      
       //transformar a rede numa lista de camadas pra facilitar minha vida
-      Camada[] redec = auxiliarTreino.redeParaCamadas(rede);
+      Camada[] redec = aux.redeParaCamadas(rede);
 
       for(int i = 0; i < epochs; i++){//quantidade de épocas
          //aplicar gradiente estocástico
-         if(embaralhar) auxiliarTreino.embaralharDados(entradas, saidas);
+         if(embaralhar) aux.embaralharDados(entradas, saidas);
 
          for(int j = 0; j < entradas.length; j++){//percorrer amostras
             //preencher dados de entrada e saída
@@ -99,8 +100,8 @@ public class Treino implements Serializable{
     * @param saidas array com as saídas esperadas das amostras.
     */
    private void backpropagation(Camada[] redec, double taxaAprendizagem, double[] saidas){
-      auxiliarTreino.calcularErroSaida(redec, saidas);
-      auxiliarTreino.calcularErroOcultas(redec);
+      aux.calcularErroSaida(redec, saidas);
+      aux.calcularErroOcultas(redec);
       calcularGradientes(redec, taxaAprendizagem);
    }
 

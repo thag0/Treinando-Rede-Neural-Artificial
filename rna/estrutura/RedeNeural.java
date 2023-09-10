@@ -1151,7 +1151,7 @@ public class RedeNeural implements Cloneable, Serializable{
       System.arraycopy(neuronio.pesos, 0, clone.pesos, 0, clone.pesos.length);
       System.arraycopy(neuronio.momentum, 0, clone.momentum, 0, clone.momentum.length);
       System.arraycopy(neuronio.acumuladorGradiente, 0, clone.acumuladorGradiente, 0, clone.acumuladorGradiente.length);
-      System.arraycopy(neuronio.acumuladorSegundaOrdem, 0, clone.acumuladorSegundaOrdem, 0, clone.acumuladorSegundaOrdem.length);
+      System.arraycopy(neuronio.momentum2ordem, 0, clone.momentum2ordem, 0, clone.momentum2ordem.length);
       System.arraycopy(neuronio.gradiente, 0, clone.gradiente, 0, clone.gradiente.length);
       System.arraycopy(neuronio.gradienteAcumulado, 0, clone.gradienteAcumulado, 0, clone.gradienteAcumulado.length); 
 

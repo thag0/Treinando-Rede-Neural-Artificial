@@ -13,7 +13,7 @@ import rna.otimizadores.Otimizador;
  * Classe dedicada para lidar com o treinamento em lotes da rede neural.
  */
 class TreinoLote implements Serializable{
-   AuxiliaresTreino auxiliarTreino = new AuxiliaresTreino();
+   AuxiliarTreino auxiliarTreino = new AuxiliarTreino();
 
    public boolean calcularHistoricoCusto = false;
    ArrayList<Double> historicoCusto;//salvar mesmo historico de custo

@@ -36,14 +36,15 @@ public class Neuronio implements Serializable{
    public double[] momentum;
 
    /**
+    * Auxiliar no treino da Rede Neural usando otimizadores RMSprop e Adam.
+    */
+   public double[] momentum2ordem;
+   
+   /**
     * Auxiliar no treino usando otimizador AdaGrad.
     */
    public double[] acumuladorGradiente;
 
-   /**
-    * Auxiliar no treino da Rede Neural usando otimizadores RMSprop e Adam.
-    */
-   public double[] acumuladorSegundaOrdem;
 
    /**
     * Resultado do somatório das entradas multiplicadas pelos pesos do neurônio.
@@ -104,9 +105,9 @@ public class Neuronio implements Serializable{
    
       this.entradas = new double[conexoes];
       this.momentum = new double[conexoes];
-      this.acumuladorGradiente = new double[conexoes];
-      this.acumuladorSegundaOrdem = new double[conexoes];
+      this.momentum2ordem = new double[conexoes];
       this.gradiente = new double[conexoes];
+      this.acumuladorGradiente = new double[conexoes];
       this.gradienteAcumulado = new double[conexoes];
 
       this.pesos = new double[conexoes];
@@ -122,7 +123,7 @@ public class Neuronio implements Serializable{
          this.entradas[i] = 0;
          this.momentum[i] = 0;
          this.acumuladorGradiente[i] = 0;
-         this.acumuladorSegundaOrdem[i] = 0;
+         this.momentum2ordem[i] = 0;
          this.gradiente[i] = 0;
          this.gradienteAcumulado[i] = 0;
       }
