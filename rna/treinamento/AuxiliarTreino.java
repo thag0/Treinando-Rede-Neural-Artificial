@@ -67,7 +67,7 @@ class AuxiliarTreino implements Serializable{
          }
       
       }else{//regressão
-         saida.funcaoAtivacaoDx();
+         saida.ativacaoDerivada();
          for(int i = 0; i < saida.quantidadeNeuronios(); i++){
             neuronio = saida.neuronio(i);
             neuronio.erro = ((saidas[i] - neuronio.saida) * neuronio.derivada);
@@ -91,7 +91,7 @@ class AuxiliarTreino implements Serializable{
          camadaAtual = redec[i];
          int qNeuronioAtual = camadaAtual.quantidadeNeuronios();
          qNeuronioAtual -= (camadaAtual.temBias()) ? 1 : 0;
-         camadaAtual.funcaoAtivacaoDx();
+         camadaAtual.ativacaoDerivada();
          for (int j = 0; j < qNeuronioAtual; j++){//percorrer neurônios da camada atual
          
             neuronio = camadaAtual.neuronio(j);

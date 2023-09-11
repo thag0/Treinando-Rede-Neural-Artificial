@@ -10,6 +10,9 @@ import java.util.Random;
  *    neurônios da camada anterior, além de valores de entrada, saída e 
  *    alguns parâmetros adicionais para facilitar o uso dos otimizadores.
  * </p>
+ * O neurônio oferece métodos de inicialização de pesos e cálculo do somatório
+ * de seus pesos multiplicados pelas entradas. Métodos de funções de ativação
+ * e treino do neurônio se encontram em outros componentes da Rede Neural.
  */
 public class Neuronio implements Serializable{
 
@@ -100,23 +103,46 @@ public class Neuronio implements Serializable{
     *    É necessário configurar o otimizador previamente, opções atualmente disponíveis:
     * </p>
     * <ul>
-    *    <li>1 - Aleatória com valor dos pesos definido por {@code alcancePeso}.</li>
-    *    <li>2 - He.</li>
-    *    <li>3 - LeCun.</li>
+    *    <li>
+    *       1 - Inicialização aleatória com valor inicial dos pesos definido por 
+    *       {@code alcancePeso}, onde o valor de aleatorização dos pesos é definido 
+    *       por {@code -alcancePeso : alcancePeso}.
+    *    </li>
+    *    <li>
+    *       2 - Inicialização aleatória positiva com valor dos pesos definido por {@code alcancePeso}.
+    *       Sua diferença para a aleatória comum é que na aleatória positiva o valor de 
+    *       aleatorização é definido por {@code 0 : alcancePeso}.
+    *    </li>
+    *    <li>
+    *       3 - He - Boa com ReLU e suas derivadas.
+    *    </li>
+    *    <li>
+    *       4 - LeCun.
+    *    </li>
     * </ul>
-    * @param conexoes quantidade de conexões, deve estar relacionada com a quatidade de neurônios 
-    * da camada anterior (incluindo bias, caso tenha).
-    * @param alcancePeso valor de alcance em que o peso aleatório será gerado, deve ser um valor 
-    * positivo e diferente de zero.
+    * @param conexoes quantidade de conexões, deve estar relacionada com a quatidade de 
+    * neurônios da camada anterior (incluindo bias, caso tenha).
+    * @param alcancePeso valor de alcance em que o peso aleatório será gerado, deve ser 
+    * um valor positivo e diferente de zero.
     * @param inicializador algoritmo inicializador dos pesos.
-    * @throws IllegalArgumentException se o valor de alcance dos pesos for menor ou igual a zero.
+    * @throws IllegalArgumentException se o valor de alcance dos pesos for menor ou igual 
+    * a zero.
     * @throws IllegalArgumentException se o otimizador fornecido for inválido.
     */
    public Neuronio(int conexoes, double alcancePeso, int inicializador){
       if (alcancePeso <= 0){
          throw new IllegalArgumentException("O valor de alcance do peso deve ser positivo e diferente de zero.");
       }
-   
+
+      this.pesos = new double[conexoes];
+      switch(inicializador){
+         case 1 -> aleatoria(alcancePeso);
+         case 2 -> aleatoriaPositiva(alcancePeso);
+         case 3 -> he(conexoes);
+         case 4 -> leCun(conexoes);
+         default -> throw new IllegalArgumentException("Otimizador fornecido para otimização dos pesos é inválido.");
+      }
+
       this.entradas = new double[conexoes];
       this.momentum = new double[conexoes];
       this.momentum2ordem = new double[conexoes];
@@ -124,25 +150,17 @@ public class Neuronio implements Serializable{
       this.acumuladorGradiente = new double[conexoes];
       this.gradienteAcumulado = new double[conexoes];
 
-      this.pesos = new double[conexoes];
-      switch(inicializador){
-         case 0 -> inicializacaoAleatoria(alcancePeso);
-         case 1 -> inicializacaoHe(conexoes);
-         case 2 -> inicializacaoLeCun(conexoes);
-         default -> throw new IllegalArgumentException("Otimizador fornecido para otimização dos pesos é inválido.");
-      }
-
       //só por segurança
       for(int i = 0; i < this.pesos.length; i++){
          this.entradas[i] = 0;
          this.momentum[i] = 0;
-         this.acumuladorGradiente[i] = 0;
          this.momentum2ordem[i] = 0;
          this.gradiente[i] = 0;
+         this.acumuladorGradiente[i] = 0;
          this.gradienteAcumulado[i] = 0;
       }
    
-      this.saida = 1; //considerar que pode ter bias aplicado ao modelo
+      this.saida = 1;//considerar que pode ter bias aplicado ao modelo
       this.erro = 0;
    }
 
@@ -160,19 +178,29 @@ public class Neuronio implements Serializable{
 
    /**
     * Boa no geral.
-    * @param alcancePeso valor máximo e mínimo na hora de aleatorizar os pesos.
+    * @param alcance valor máximo e mínimo na hora de aleatorizar os pesos.
     */
-   private void inicializacaoAleatoria(double alcancePeso){
+   private void aleatoria(double alcance){
       for(int i = 0; i < pesos.length; i++){
-         this.pesos[i] = random.nextDouble(-alcancePeso, alcancePeso);
+         this.pesos[i] = random.nextDouble(-alcance, alcance);
       }
    }
 
    /**
-    * Boa com a relu.
+    * Boa no geral.
+    * @param alcance valor máximo e mínimo na hora de aleatorizar os pesos.
+    */
+   private void aleatoriaPositiva(double alcance){
+      for(int i = 0; i < pesos.length; i++){
+         this.pesos[i] = random.nextDouble(0, alcance);
+      }
+   }
+
+   /**
+    *
     * @param entradas quantidade de entrada de cada neurônio da camada.
     */
-   private void inicializacaoHe(int entradas){
+   private void he(int entradas){
       double desvioPadrao = Math.sqrt(2.0 / entradas);
       for(int i = 0; i < pesos.length; i++){
          this.pesos[i] = random.nextGaussian() * desvioPadrao;
@@ -180,15 +208,16 @@ public class Neuronio implements Serializable{
    }
 
    /**
-    * Boa com leakyRelu.
+    *
     * @param entradas quantidade de entrada de cada neurônio da camada.
     */
-   private void inicializacaoLeCun(int entradas){
-      double desvioPadrao = Math.sqrt(1.0 / entradas);
+   private void leCun(int entradas){
+      double desvioPadrao = Math.sqrt(1.0 / (entradas + entradas));
       for(int i = 0; i < pesos.length; i++){
          this.pesos[i] = random.nextGaussian() * desvioPadrao;
       }
    }
+  
 
    /**
     * Retorna informações dos pesos do neurônio.

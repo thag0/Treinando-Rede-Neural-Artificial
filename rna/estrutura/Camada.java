@@ -18,9 +18,13 @@ import rna.ativacoes.TanH;
 
 
 /**
- * Representa uma camada de neurônios individual dentro de uma Rede Neural.
- * Cada camada possui um conjunto de neurônios e uma função de ativação que 
- * pode ser configurada.
+ * Representa uma camada densa de neurônios dentro de uma Rede Neural.
+ * <p>
+ *    Cada camada possui um conjunto de neurônios e uma função de ativação que 
+ *    pode ser configurada.
+ * </p>
+ * O bias da camada atua apenas nos neurônios da camada seguinte, ele funciona
+ * como um neurônio adicional presente na camda {@code x} e atua na camada {@code x+1}.
  * <p>
  *    Após instanciar a camada é necessário inicializar seus neurônios.
  * </p>
@@ -38,35 +42,51 @@ public class Camada implements Serializable{
    /**
     * Auxiliar na contagem do neurônio adicional como bias
     * para verificação da quantidade de neurônios reais.
+    * <p>
+    *    Seu valor padrão é 1, indicando que há um bias atuando
+    *    como neurônio adicional.
+    * </p>
     */
    private int b = 1;
 
    /**
     * Identificador da camada dentro da Rede Neural.
+    * <p>
+    *    Esse identificador deve corresponder ao índice da camada
+    *    dentro do conjunto de camadas presente na rede.
+    * </p>
     */
    private int id;
 
    /**
     * Função de ativação da camada.
     */
-   public FuncaoAtivacao ativacao = new ReLU();
+   FuncaoAtivacao ativacao = new ReLU();
 
    /**
     * Auxiliar na verficação se a camada está com a função de ativação
     * Argmax configuarda.
+    * <p>
+    *    É importante ajustar corretamente esse indicador pois ele é 
+    *    usado durante o treinamento da Rede Neural.
+    * </p>
     */
    private boolean argmax = false;
 
    /**
     * Auxiliar na verficação se a camada está com a função de ativação
     * Softmax configuarda.
+    * <p>
+    *    É importante ajustar corretamente esse indicador pois ele é 
+    *    usado durante o treinamento da Rede Neural.
+    * </p>
     */ 
    private boolean softmax = false;
 
    /**
-    * Inicializa uma instância de camada de RedeNeural.
+    * Inicializa uma camada individual para a Rede Neural.
     * <p>
-    *    Após instanciar a camada é preciso inicialiar os neurônios dela.
+    *    Após instanciar a camada é preciso inicializar os neurônios dela.
     * </p>
     * @param temBias define se a camada possui um neurônio de bias. Se true, será 
     * adicionado um neurônio adicional que a saída é sempre 1.
@@ -87,11 +107,12 @@ public class Camada implements Serializable{
    /**
     * Instancia os neurônios da camada correspondente.
     * @param nNeuronios quantidade de neurônios que a camada deve possuir, incluindo bias.
-    * @param conexoes quantidade de pesos de cada neurônio, deve corresponder a quantidade de neurônios da camada anterior.
+    * @param conexoes quantidade de pesos de cada neurônio, deve corresponder a quantidade 
+    * de neurônios da camada anterior.
     * @param alcancePeso valor de alcance da aleatorização dos pesos.
     * @param inicializador inicializador customizado para os pesos iniciais da rede.
     */
-   public void inicializarNeuronios(int nNeuronios, int conexoes, double alcancePeso, int inicializador){
+   public void inicializar(int nNeuronios, int conexoes, double alcancePeso, int inicializador){
       this.neuronios = new Neuronio[nNeuronios];
       
       for(int i = 0; i < this.neuronios.length; i++){
@@ -100,16 +121,21 @@ public class Camada implements Serializable{
    }
 
    /**
-    * Calcula a soma dos valores de saída multiplicado pelo peso correspondente ao neurônio da próxima 
-    * anterior e aplica a função de ativação.
-    * @param anterior camada anterior que contém os valores de saída dos neurônios
+    * Realiza a operação do somatório de cada peso do neurônio com sua entrada.
+    * <p>
+    *    As entradas do neurônio corresponde ás saídas dos neurônios da camada anterior.
+    *    Com isso cada neurônio multiplica o peso da conexão pelo valor da entrada.
+    *    Após o somatório é aplicada a função de ativação em casa neurônio e o resultado
+    *    ficará salvo na sua saída.
+    * </p>
+    * @param anterior camada anterior que contém os valores de saída dos neurônios.
     */
    public void ativarNeuronios(Camada anterior){
       int nNeuronios = this.neuronios.length-b;//desconsiderar bias
-      Neuronio neuronio;
-
+      
       //preencher entradas dos neuronios
-      for(int i = 0; i < nNeuronios; i++){
+      Neuronio neuronio;
+      for(int i = 0; i < nNeuronios; i++){   
          neuronio = this.neuronios[i];
          for(int j = 0; j < neuronio.entradas.length; j++){
             neuronio.entradas[j] = anterior.neuronios[j].saida;
@@ -118,20 +144,35 @@ public class Camada implements Serializable{
 
       //calculando o somatorio das entradas com os pesos
       for(int i = 0; i < nNeuronios; i++){
-         neuronio = this.neuronios[i];
-         neuronio.somatorio();
+         this.neuronios[i].somatorio();
       }
 
+      //ativa todos os neuronios, tendo os resultado dos somatórios
       this.ativacao.ativar(this.neuronios, nNeuronios);
-
-      //sobrescreve a saída
-      if(this.argmax) argmax();
    }
 
    /**
     * Configura a função de ativação da camada.
+    * <p>
+    *    Ativações disponíveis:
+    * </p>
+    * <ul>
+    *    <li> 1 - ReLU. </li>
+    *    <li> 2 - Sigmoid. </li>
+    *    <li> 3 - Tangente Hiperbólica. </li>
+    *    <li> 4 - Leaky ReLU. </li>
+    *    <li> 5 - ELU .</li>
+    *    <li> 6 - Swish. </li>
+    *    <li> 7 - GELU. </li>
+    *    <li> 8 - Linear. </li>
+    *    <li> 9 - Seno. </li>
+    *    <li> 10 - Argmax. </li>
+    *    <li> 11 - Softmax. </li>
+    *    <li> 12 - Softplus. </li>
+    * </ul>
     * @param ativacao valor da nova função de ativação.
-    * @throws IllegalArgumentException se o valor fornecido não corresponder a nenhuma função de ativação suportada.
+    * @throws IllegalArgumentException se o valor fornecido não corresponder a nenhuma 
+    * função de ativação suportada.
     */
    public void configurarAtivacao(int ativacao){
       switch(ativacao){
@@ -160,14 +201,12 @@ public class Camada implements Serializable{
    }
 
    /**
-    * Configura a função de ativação da camada.
+    * Configura a função de ativação da camada através de uma instância de {@code FuncaoAtivacao}.
     * <p>
     *    Configurando a ativação da camada usando uma instância de função 
     *    de ativação aumenta a liberdade de personalização dos hiperparâmetros
     *    que algumas funções podem ter.
     * </p>
-    * As exceções de funções de ativação que não podem ser configuradas por esse 
-    * métrodo são {@code Softmax} e {@code Argmax} devido às suas estruturas.
     * @param ativacao nova função de ativação.
     * @throws IllegalArgumentException se a função de ativação fornecida for nula.
     */
@@ -180,27 +219,25 @@ public class Camada implements Serializable{
    }
 
    /**
-    * Executa a função de ativação derivada específica da camada.
-    * @param valor valor anterior do cálculo da função de ativação
-    * @return valor resultante do cálculo da função de ativação derivada.
+    * Executa a função de ativação derivada específica da camada
+    * em todos os neurônios dela, excluindo bias.
     */
-   public void funcaoAtivacaoDx(){
-      ativacao.derivada(this.neuronios, this.neuronios.length-b);
+   public void ativacaoDerivada(){
+      this.ativacao.derivada(this.neuronios, this.neuronios.length-b);
    }
 
    /**
     * Retrona o nome da função de ativação configurada para a camada.
-    * @return nome da função de ativação configurada para a camada.
+    * @return função de ativação configurada para a camada.
     */
    public FuncaoAtivacao obterAtivacao(){
       return this.ativacao;
    }
 
    /**
-    * Devolve o neurônio correspondente dentro da camada baseado 
-    * no identificador fornecido.
+    * Retorna o neurônio da camada baseado no identificador fornecido.
     * @param id índice do neurônio.
-    * @return neurõnio da camada indicado pelo índice.
+    * @return neurônio da camada indicado pelo índice.
     * @throws IllegalArgumentException se o índice for inválido.
     */
    public Neuronio neuronio(int id){
@@ -211,7 +248,7 @@ public class Camada implements Serializable{
    }
 
    /**
-    * Devolve todo o conjunto de neurônios da camada.
+    * Retorna todo o conjunto de neurônios da camada.
     * @return todos os neurônios presentes na camada, incluindo bias.
     */
    public Neuronio[] neuronios(){
@@ -227,11 +264,11 @@ public class Camada implements Serializable{
    }
 
    /**
-    * Checa se a camada atual possui bias configurado como neurônio adicional.
+    * Verifica se a camada atual possui o bias configurado como neurônio adicional.
     * @return true caso possua um neurônio adicional como bias, false caso contrário.
     */
    public boolean temBias(){
-      return (b == 1) ? true : false;
+      return (this.b == 1) ? true : false;
    }
 
    /**
@@ -251,28 +288,6 @@ public class Camada implements Serializable{
    }
 
    /**
-    * Aplica a função de ativação argmax na saída dos neurônios.
-    * Ela define a saída do neurônio de maior valor como 1 e dos demais como 0.
-    */
-   private void argmax(){
-      int indiceMaior = 0;
-      double maiorValor = this.neuronios[0].saida;
-
-      //buscar indice com maior valor
-      for(int i = 1; i < this.neuronios.length; i++){
-         if(this.neuronios[i].saida > maiorValor){
-            maiorValor = this.neuronios[i].saida;
-            indiceMaior = i;
-         }
-      }
-
-      //aplicar argmax
-      for(int i = 0; i < this.neuronios.length; i++){
-         this.neuronios[i].saida = (i == indiceMaior) ? 1.0 : 0.0;
-      }
-   }
-
-   /**
     * Indica algumas informações sobre a camada, como:
     * <ul>
     *    <li>Id da camada dentro da Rede Neural em que foi criada.</li>
@@ -286,11 +301,11 @@ public class Camada implements Serializable{
       String buffer = "";
       String espacamento = "    ";
       
-      buffer += "Informações " + this.getClass().getSimpleName() + " " + id + " = [\n";
+      buffer += "Informações " + this.getClass().getSimpleName() + " " + this.id + " = [\n";
 
-      buffer += espacamento + "Ativação: " + this.obterAtivacao() + "\n";
+      buffer += espacamento + "Ativação: " + this.obterAtivacao().getClass().getSimpleName() + "\n";
       buffer += espacamento + "Quantidade neurônios: " + this.neuronios.length + "\n";
-      buffer += espacamento + "Bias: " + ((b == 1) ? "true" : "false") + "\n"; 
+      buffer += espacamento + "Bias: " + ((this.b == 1) ? "true" : "false") + "\n"; 
 
       buffer += "]\n";
 

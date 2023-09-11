@@ -252,9 +252,22 @@ public class RedeNeural implements Cloneable, Serializable{
     *    Inicializadores disponíveis:
     * </p>
     * <ul>
-    *    <li>1 - Aleatória com valor dos pesos definido por {@code alcancePeso}.</li>
-    *    <li>2 - He.</li>
-    *    <li>3 - LeCun.</li>
+    *    <li>
+    *       1 - Inicialização aleatória com valor inicial dos pesos definido por 
+    *       {@code alcancePeso}, onde o valor de aleatorização dos pesos é definido 
+    *       por {@code -alcancePeso : alcancePeso}.
+    *    </li>
+    *    <li>
+    *       2 - Inicialização aleatória positiva com valor dos pesos definido por {@code alcancePeso}.
+    *       Sua diferença para a aleatória comum é que na aleatória positiva o valor de 
+    *       aleatorização é definido por {@code 0 : alcancePeso}.
+    *    </li>
+    *    <li>
+    *       3 - He - Boa com ReLU e suas derivadas.
+    *    </li>
+    *    <li>
+    *       4 - LeCun.
+    *    </li>
     * </ul>
     * <p>
     *    {@code O valor padrão de inicializador é 1}
@@ -481,9 +494,9 @@ public class RedeNeural implements Cloneable, Serializable{
    }
 
    /**
-    * Configura o otimizador usado durante o treino da rede neural. Cada otimizador possui sua 
-    * própia maneira de atualizar os pesos da rede e cada um deles pode ser apropriado em uma 
-    * determinada tarefa.
+    * Configura o otimizador usado durante o treino da rede neural. Cada otimizador possui 
+    * sua própia maneira de atualizar os pesos da rede e cada um deles pode ser apropriado 
+    * em uma determinada tarefa.
     * <p>
     *    Os otimizadores disponíveis são:
     * </p>
@@ -493,33 +506,34 @@ public class RedeNeural implements Cloneable, Serializable{
     *       ajuste de pesos para treinamento de Redes Neurais.
     *    </li>
     *    <li>
-    *       <strong> SGD (Gradiente Descendente Estocástico) </strong>: Atualiza os pesos usando 
-    *       o conjunto de treino embaralhado a cada época.
+    *       <strong> SGD (Gradiente Descendente Estocástico) </strong>: Atualiza os pesos 
+    *       usando o conjunto de treino embaralhado a cada época.
     *    </li>
     *    <li>
-    *       <strong> AdaGrad </strong>: Um otimizador que adapta a taxa de aprendizado para cada 
-    *       parâmetro da rede com base em iterações anteriores.
+    *       <strong> AdaGrad </strong>: Um otimizador que adapta a taxa de aprendizado para 
+    *       cada parâmetro da rede com base em iterações anteriores.
     *    </li>
     *    <li>
-    *       <strong> RMSProp </strong>: Um otimizador que utiliza a média móvel dos quadrados dos 
-    *       gradientes acumulados para ajustar a taxa de aprendizado.
+    *       <strong> RMSProp </strong>: Um otimizador que utiliza a média móvel dos quadrados 
+    *       dos gradientes acumulados para ajustar a taxa de aprendizado.
     *    </li>
     *    <li>
-    *       <strong> Adam </strong>: Um otimizador que combina o AdaGrad e o Momentum para convergência 
-    *       rápida e estável.
+    *       <strong> Adam </strong>: Um otimizador que combina o AdaGrad e o Momentum para 
+    *       convergência rápida e estável.
     *    </li>
     *    <li>
-    *       <strong> Nadam </strong>: Possui as mesmas vantagens de se utilizar o adam, com o adicional 
-    *       do acelerador de Nesterov na atualização dos pesos.
+    *       <strong> Nadam </strong>: Possui as mesmas vantagens de se utilizar o adam, com 
+    *       o adicional do acelerador de Nesterov na atualização dos pesos.
     *    </li>
     * </ol>
     * <p>
     *    {@code O otimizador padrão é o SGD}
     * </p>
-    * Ao utilziar essa abordagem de configuração de otimizador, os novos otimizadores congigurados serão
-    * inicializados usando seus valores padrão para os hiperparâmetros.
+    * Ao utilziar essa abordagem de configuração de otimizador, os novos otimizadores congigurados 
+    * serão inicializados usando seus valores padrão para os hiperparâmetros.
     * @param otimizador valor do novo otimizador.
-    * @throws IllegalArgumentException se o valor fornecido do otimizador estiver fora da lista dos disponíveis.
+    * @throws IllegalArgumentException se o valor fornecido do otimizador estiver fora da lista 
+    * dos otimizadores disponíveis.
     */
    public void configurarOtimizador(int otimizador){
       switch(otimizador){
@@ -575,14 +589,29 @@ public class RedeNeural implements Cloneable, Serializable{
     * baseado nos valores fornecidos. Antes da compilação é possível
     * informar alguns valores ajustáveis na inicialização da rede, como:
     * <ul>
-    *    <li>Valor máximo e mínimo para os pesos gerados aleatoriamente.</li>
-    *    <li>Funções de ativação para as camadas ocultas e para a camada de saída.</li>
-    *    <li>Neurônios adicionais nas camadas atuando como bias.</li>
-    *    <li>Taxa de aprendizagem.</li>
-    *    <li>Taxa de momentum.</li>
-    *    <li>Otimizador.</li>
-    *    <li>Habilitar histórico de custos durante o treino.</li>
-    *    <li>Inicializador de pesos.</li>
+    *    <li>
+    *       Valor máximo e mínimo para os pesos gerados aleatoriamente.
+    *    </li>
+    *    <li>
+    *       Funções de ativação para as camadas ocultas e para a camada de saída.
+    *    </li>
+    *    <li>
+    *       Neurônios adicionais nas camadas atuando como bias.</li>
+    *    <li>
+    *       Taxa de aprendizagem.
+    *    </li>
+    *    <li>
+    *       Taxa de momentum.
+    *    </li>
+    *    <li>
+    *       Otimizador que será usado durante o treinamento da Rede Neural.
+    *    </li>
+    *    <li>
+    *       Habilitar histórico de custos durante o treino.
+    *    </li>
+    *    <li>
+    *       Inicializador de pesos.
+    *    </li>
     * </ul>
     * <p>
     *    Caso nenhuma configuração seja feita, a rede será inicializada com os valores padrão. 
@@ -615,7 +644,7 @@ public class RedeNeural implements Cloneable, Serializable{
       this.entrada = new Camada(temBias);
       this.entrada.configurarId(idCamada);
       idCamada++;
-      this.entrada.inicializarNeuronios(arquitetura[0], 1, alcancePeso, inicializadorPeso);
+      this.entrada.inicializar(arquitetura[0], 1, alcancePeso, inicializadorPeso);
 
       //inicializar camadas ocultas
       int quantidadeOcultas = this.arquitetura.length-2;
@@ -623,8 +652,8 @@ public class RedeNeural implements Cloneable, Serializable{
       for(int i = 0; i < this.ocultas.length; i++){// percorrer ocultas
          Camada novaOculta = new Camada(temBias);
 
-         if(i == 0) novaOculta.inicializarNeuronios(arquitetura[i+1], arquitetura[0], alcancePeso, inicializadorPeso);
-         else novaOculta.inicializarNeuronios(arquitetura[i+1], arquitetura[i], alcancePeso, inicializadorPeso);
+         if(i == 0) novaOculta.inicializar(arquitetura[i+1], arquitetura[0], alcancePeso, inicializadorPeso);
+         else novaOculta.inicializar(arquitetura[i+1], arquitetura[i], alcancePeso, inicializadorPeso);
 
          this.ocultas[i] = novaOculta;
          this.ocultas[i].configurarId(idCamada);
@@ -634,13 +663,14 @@ public class RedeNeural implements Cloneable, Serializable{
       //inicializar camada de saída
       this.saida = new Camada(false);
       this.saida.configurarId(idCamada);
-      this.saida.inicializarNeuronios(arquitetura[arquitetura.length-1], arquitetura[arquitetura.length-2], alcancePeso, inicializadorPeso);
+      this.saida.inicializar(arquitetura[arquitetura.length-1], arquitetura[arquitetura.length-2], alcancePeso, inicializadorPeso);
 
       compilado = true;//modelo pode ser usado
    }
 
    /**
-    * Verifica se o modelo já foi compilado para evitar problemas de uso indevido, bem como componentes nulos.
+    * Verifica se o modelo já foi compilado para evitar problemas de uso indevido, 
+    * bem como componentes nulos.
     * @throws IllegalArgumentException se o modelo não foi compilado.
     */
    private void modeloCompilado(){
@@ -652,20 +682,24 @@ public class RedeNeural implements Cloneable, Serializable{
    /**
     * Verifica se os dados são apropriados para serem usados dentro da rede neural, incluindo:
     * <ul>
-    *    <li>Mesma quantidade de amostras nos dados de entrada e saída.</li>
-    *    <li>Dados de entrada possuem a mesma quantidade de exemplos que a quantidade de neurônios
-    *    da camada de entrada da rede, exluindo bias.</li>
-    *    <li>Dados de saída possuem a mesma quantidade de exemplos que a quantidade de neurônios
-    *    da camada de saída da rede.</li>
+    *    <li>
+    *       Mesma quantidade de amostras nos dados de entrada e saída.
+    *    </li>
+    *    <li>
+    *       Dados de entrada possuem a mesma quantidade de exemplos que a quantidade de 
+    *       neurônios da camada de entrada da rede, exluindo bias.
+    *    </li>
+    *    <li>
+    *       Dados de saída possuem a mesma quantidade de exemplos que a quantidade de 
+    *       neurônios da camada de saída da rede.
+    *    </li>
     * </ul>
     * Caso os dados fornecidos atendam a essas condições, o fluxo de execução segue normalmente.
     * @param entrada conjunto de dados de entrada.
     * @param saida conjunto de dados de saída.
     */
    private void consistenciaDados(double[][] entrada, double[][] saida){
-      int nEntrada = this.obterCamadaEntrada().quantidadeNeuronios();
-      nEntrada -= (this.obterCamadaEntrada().temBias()) ? 1 : 0;
-
+      int nEntrada = this.entrada.quantidadeNeuronios() - (this.entrada.temBias() ? 1 : 0);
       int nSaida = this.obterCamadaSaida().quantidadeNeuronios();
 
       if(entrada.length != saida.length){
@@ -693,12 +727,13 @@ public class RedeNeural implements Cloneable, Serializable{
    public void calcularSaida(double[] entradas){
       this.modeloCompilado();
       
-      if(entradas.length != (this.entrada.quantidadeNeuronios()-BIAS)){
+      int nEntrada = this.entrada.quantidadeNeuronios() - (this.entrada.temBias() ? 1 : 0);
+      if(entradas.length != nEntrada){
          throw new IllegalArgumentException("As dimensões dos dados de entrada com os neurônios de entrada da rede não são iguais.");
       }
 
       //carregar dados na camada de entrada
-      for(int i = 0; i < (this.entrada.quantidadeNeuronios()-BIAS); i++){
+      for(int i = 0; i < nEntrada; i++){
          this.entrada.neuronio(i).saida = entradas[i];
       }
       
@@ -722,6 +757,7 @@ public class RedeNeural implements Cloneable, Serializable{
     * </p>
     * @param entradas dados usados para alimentar a camada de entrada.
     * @throws IllegalArgumentException se o modelo não foi compilado previamente.
+    * @throws IllegalArgumentException se a quantidade de amostras em cada linha dos dados for diferente.
     * @throws IllegalArgumentException se o tamanho dos dados de entrada for diferente do tamanho dos 
     * neurônios de entrada, excluindo o bias.
     * @return matriz contendo os resultados das predições da rede.
@@ -729,7 +765,15 @@ public class RedeNeural implements Cloneable, Serializable{
    public double[][] calcularSaida(double[][] entradas){
       this.modeloCompilado();
 
-      if(entradas[0].length != (this.entrada.quantidadeNeuronios()-BIAS)){
+      int cols = entradas[0].length;
+      for(int i = 1; i < entradas.length; i++){
+         if(entradas[i].length != cols){
+            throw new IllegalArgumentException("As dimensões dos dados de entrada são diferentes.");
+         }
+      }
+
+      int nEntrada = this.entrada.quantidadeNeuronios() - (this.entrada.temBias() ? 1 : 0);
+      if(entradas[0].length != nEntrada){
          throw new IllegalArgumentException("As dimensões dos dados de entrada com os neurônios de entrada da rede não são iguais.");
       }
 
@@ -855,41 +899,43 @@ public class RedeNeural implements Cloneable, Serializable{
       }
 
       RedeNeural redeG = this.clone();//copia da rede para guardar os valores de "gradiente"
-      
-      ArrayList<Camada> camadasR = new ArrayList<Camada>();//copia da rede para camadas
-      ArrayList<Camada> camadasG = new ArrayList<Camada>();//copia da rede gradiente para camadas
-      
-      //colocando a rede de forma sequencial
-      camadasR.add(this.entrada);
-      for(Camada camada : this.ocultas) camadasR.add(camada);
-      camadasR.add(this.saida);
-      
-      //colocando a rede gradiente de forma sequencial
-      camadasG.add(redeG.entrada);
-      for(Camada camada : redeG.ocultas) camadasG.add(camada);
-      camadasG.add(redeG.saida);
+
+      //transformar as redes em arrays para facilitar
+      Camada[] camadasR = new Camada[this.arquitetura.length];
+      Camada[] camadasG = new Camada[this.arquitetura.length];
+
+      //copiando as camadas das redes para os arrays
+      camadasR[0] = this.entrada;
+      camadasG[0] = redeG.obterCamadaEntrada();
+      for(int i = 0; i < this.ocultas.length; i++){
+         camadasR[i+1] = this.ocultas[i];
+         camadasG[i+1] = redeG.obterCamadaOculta(i);
+      }
+      camadasR[camadasR.length-1] = this.saida;
+      camadasG[camadasG.length-1] = redeG.obterCamadaSaida();
 
       for(int epocas = 0; epocas < epochs; epocas++){
+         
          double custo = avaliador.erroMedioQuadrado(entradas, saidas);
          if(custo < custoMinimo) break;
 
          double valorAnterior = 0;
-         for(int i = 0; i < camadasR.size(); i++){//percorrer camadas da rede
-            for(int j = 0; j < camadasR.get(i).quantidadeNeuronios(); j++){//percorrer neuronios da camada
-               for(int k = 0; k < camadasR.get(i).neuronio(j).pesos.length; k++){//percorrer pesos do neuronio
-                  valorAnterior = camadasR.get(i).neuronio(j).pesos[k];
-                  camadasR.get(i).neuronio(j).pesos[k] += eps;
-                  camadasG.get(i).neuronio(j).pesos[k] = ((avaliador.erroMedioQuadrado(entradas, saidas) - custo)/eps);//"derivada" da função de custo
-                  camadasR.get(i).neuronio(j).pesos[k] = valorAnterior;
+         for(int i = 0; i < camadasR.length; i++){//percorrer camadas da rede
+            for(int j = 0; j < camadasR[i].quantidadeNeuronios(); j++){//percorrer neuronios da camada
+               for(int k = 0; k < camadasR[i].neuronio(j).pesos.length; k++){//percorrer pesos do neuronio
+                  valorAnterior = camadasR[i].neuronio(j).pesos[k];
+                  camadasR[i].neuronio(j).pesos[k] += eps;
+                  camadasG[i].neuronio(j).pesos[k] = ((avaliador.erroMedioQuadrado(entradas, saidas) - custo)/eps);//"derivada" da função de custo
+                  camadasR[i].neuronio(j).pesos[k] = valorAnterior;
                }
             }
          }
 
          //atualizar pesos
-         for(int i = 0; i < camadasR.size(); i++){
-            for(int j = 0; j < camadasR.get(i).quantidadeNeuronios(); j++){
-               for(int k = 0; k < camadasR.get(i).neuronio(j).pesos.length; k++){
-                  camadasR.get(i).neuronio(j).pesos[k] -= TAXA_APRENDIZAGEM * camadasG.get(i).neuronio(j).pesos[k];
+         for(int i = 0; i < camadasR.length; i++){
+            for(int j = 0; j < camadasR[i].quantidadeNeuronios(); j++){
+               for(int k = 0; k < camadasR[i].neuronio(j).pesos.length; k++){
+                  camadasR[i].neuronio(j).pesos[k] -= TAXA_APRENDIZAGEM * camadasG[i].neuronio(j).pesos[k];
                }
             }
          }
