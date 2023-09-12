@@ -44,11 +44,11 @@ public class AdaGrad extends Otimizador{
       for(int i = 1; i < redec.length; i++){
          Camada camada = redec[i];
   
-         int nNeuronios = camada.quantidadeNeuronios() - ((camada.temBias()) ? 1 : 0);
-         for(int j = 0; j < nNeuronios; j++){//percorrer neurônios da camada atual
+         int nNeuronios = camada.quantidadeNeuroniosSemBias();
+         for(int j = 0; j < nNeuronios; j++){
   
             neuronio = camada.neuronio(j);
-            for(int k = 0; k < neuronio.pesos.length; k++){//percorrer pesos do neurônio atual
+            for(int k = 0; k < neuronio.pesos.length; k++){
                neuronio.acumuladorGradiente[k] += neuronio.gradiente[k] * neuronio.gradiente[k];
                neuronio.pesos[k] += (taxaAprendizagem / Math.sqrt(neuronio.acumuladorGradiente[k] + epsilon)) * neuronio.gradiente[k];
             }

@@ -61,7 +61,9 @@ public class ExemploClassificacao{
       System.out.println("Custo = " + custo);
 
       int[][] matrizConfusao = rede.avaliador.matrizConfusao(testeEntrada, testeSaida);
-      ged.imprimirMatriz(matrizConfusao, "Matriz de confusão");
+      Dados m = new Dados(matrizConfusao);
+      m.editarNome("Matriz confusão");
+      m.imprimir();
    }
 
 

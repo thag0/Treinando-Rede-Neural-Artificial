@@ -273,6 +273,14 @@ public class Camada implements Serializable{
    }
 
    /**
+    * Retorna o valor da quantidade de neurônios da camada, excluindo bias.
+    * @return quantidade de neurônios presente na camada.
+    */
+   public int quantidadeNeuroniosSemBias(){
+      return this.neuronios.length-b;
+   }
+
+   /**
     * Verifica se a camada atual possui o bias configurado como neurônio adicional.
     * @return true caso possua um neurônio adicional como bias, false caso contrário.
     */

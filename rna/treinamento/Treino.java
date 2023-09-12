@@ -104,15 +104,12 @@ class Treino implements Serializable{
       for(int i = 1; i < redec.length; i++){ 
          
          Camada camadaAtual = redec[i];
-         Camada camadaAnterior = redec[i-1];
-
-         //não precisa e nem faz diferença calcular os gradientes dos bias
-         int nNeuronios = camadaAtual.quantidadeNeuronios() - (camadaAtual.temBias() ? 1 : 0);
+         int nNeuronios = camadaAtual.quantidadeNeuroniosSemBias();
          for(int j = 0; j < nNeuronios; j++){//percorrer neurônios da camada atual
             
             Neuronio neuronio = camadaAtual.neuronio(j);
             for(int k = 0; k < neuronio.pesos.length; k++){//percorrer pesos do neurônio atual
-               neuronio.gradiente[k] = taxaAprendizagem * neuronio.erro * camadaAnterior.neuronio(k).saida;
+               neuronio.gradiente[k] = taxaAprendizagem * neuronio.erro * neuronio.entradas[k];
             }
          }
       }

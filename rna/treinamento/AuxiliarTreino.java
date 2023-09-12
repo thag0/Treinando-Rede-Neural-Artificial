@@ -77,21 +77,27 @@ class AuxiliarTreino implements Serializable{
     * @param redec Rede Neural em formato de lista de camadas.
     */
    void calcularErroOcultas(Camada[] redec){
-      Camada camadaAtual;
-      Neuronio neuronio;
+      Camada camadaAtual, camadaProxima;
+      Neuronio neuronio, neuronioProxima;
 
       //começar da ultima oculta
-      for(int i = redec.length-2; i >= 1; i--){// percorrer camadas ocultas de trás pra frente
+      // percorrer camadas ocultas de trás pra frente
+      for(int i = redec.length-2; i >= 1; i--){
          
          camadaAtual = redec[i];
-         int nAtual = camadaAtual.quantidadeNeuronios() - (camadaAtual.temBias() ? 1 : 0 );
+         int nAtual = camadaAtual.quantidadeNeuroniosSemBias();
          camadaAtual.ativacaoDerivada();
-         for (int j = 0; j < nAtual; j++){//percorrer neurônios da camada atual
-         
+         for (int j = 0; j < nAtual; j++){
+
+            camadaProxima = redec[i+1];
+            int nProxima = camadaProxima.quantidadeNeuroniosSemBias(); 
+
             neuronio = camadaAtual.neuronio(j);
             double somaErros = 0.0;
-            for(Neuronio neuronioProximo : redec[i+1].neuronios()){//percorrer neurônios da camada seguinte
-               somaErros += neuronioProximo.pesos[j] * neuronioProximo.erro;
+            //percorrer neurônios da camada seguinte
+            for(int k = 0; k < nProxima; k++){
+               neuronioProxima = camadaProxima.neuronio(k);
+               somaErros += neuronioProxima.pesos[j] * neuronioProxima.erro;
             }
             neuronio.erro = somaErros * neuronio.derivada;
          }

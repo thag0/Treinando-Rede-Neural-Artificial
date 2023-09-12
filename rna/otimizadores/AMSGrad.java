@@ -73,26 +73,27 @@ public class AMSGrad extends Otimizador{
 	@Override
 	public void atualizar(Camada[] redec, double taxaAprendizagem, double momentum){
 		double momentumCorrigido, segundaOrdemCorrigida;
-
 		Neuronio neuronio;
+		
 		//percorrer rede, com exceção da camada de entrada
 		for(int i = 1; i < redec.length; i++){
+
 			Camada camada = redec[i];
-			int nNeuronios = camada.quantidadeNeuronios() - (camada.temBias() ? 1 : 0);
-			for(int j = 0; j < nNeuronios; j++){//percorrer neurônios da camada atual
+			int nNeuronios = camada.quantidadeNeuroniosSemBias();
+			for(int j = 0; j < nNeuronios; j++){
 
 				double interBeta1 = (1 - Math.pow(beta1, interacoes));
 				double interBeta2 = (1 - Math.pow(beta2, interacoes));
 
 				neuronio = camada.neuronio(j);
-				for(int k = 0; k < neuronio.pesos.length; k++){//percorrer pesos do neurônio atual
+				for(int k = 0; k < neuronio.pesos.length; k++){
 					neuronio.momentum[k] = (beta1 * neuronio.momentum[k]) + ((1 - beta1) * neuronio.gradiente[k]);
 					neuronio.momentum2ordem[k] = (beta2 * neuronio.momentum2ordem[k]) + ((1 - beta2) * neuronio.gradiente[k] * neuronio.gradiente[k]);
 
 					maxSegundaOrdem = Math.max(maxSegundaOrdem, neuronio.momentum2ordem[k]);
 
 					momentumCorrigido = neuronio.momentum[k] / interBeta1;
-					segundaOrdemCorrigida = maxSegundaOrdem / interBeta2; // Usar o máximo da segunda ordem do momento
+					segundaOrdemCorrigida = maxSegundaOrdem / interBeta2;
 					neuronio.pesos[k] += (taxaAprendizagem * momentumCorrigido) / (Math.sqrt(segundaOrdemCorrigida) + epsilon);
 				}
 

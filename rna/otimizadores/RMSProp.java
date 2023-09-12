@@ -20,13 +20,11 @@ public class RMSProp extends Otimizador{
     * Usado para evitar divisão por zero.
     */
    private double epsilon = 1e-8;
-
-   
+  
    /**
     * fator de decaimento do RMSprop.
     */
    double beta = 0.9;
-
 
    /**
     * Inicializa uma nova instância de otimizador RMSProp usando os valores 
@@ -38,7 +36,6 @@ public class RMSProp extends Otimizador{
       this.epsilon = epsilon;
       this.beta = beta;
    }
-
 
    /**
     * Inicializa uma nova instância de otimizador RMSProp.
@@ -54,16 +51,15 @@ public class RMSProp extends Otimizador{
       this(1e-8, 0.9);
    }
 
-
    @Override
     public void atualizar(Camada[] redec, double taxaAprendizagem, double momentum){
       Neuronio neuronio;
 
       //percorrer rede, com exceção da camada de entrada
       for(int i = 1; i < redec.length; i++){
+         
          Camada camada = redec[i];
-
-         int nNeuronios = camada.quantidadeNeuronios() - ((camada.temBias()) ? 1 : 0);
+         int nNeuronios = camada.quantidadeNeuroniosSemBias();
          for(int j = 0; j < nNeuronios; j++){//percorrer neurônios da camada atual
 
             neuronio = camada.neuronio(j);
