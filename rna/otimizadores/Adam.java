@@ -35,8 +35,7 @@ public class Adam extends Otimizador{
     * Contador de iterações.
     */
    long interacoes = 1;
-
-   
+ 
    /**
     * Inicializa uma nova instância de otimizador Adam usando os 
     * valores de hiperparâmetros fornecidos.
@@ -49,7 +48,6 @@ public class Adam extends Otimizador{
       this.beta1 = beta1;
       this.beta2 = beta2;
    }
-
 
    /**
     * Inicializa uma nova instância de otimizador Adam.
@@ -68,7 +66,6 @@ public class Adam extends Otimizador{
    public Adam(){
       this(1e-7, 0.9, 0.999);
    }
-
 
    @Override
    public void atualizar(Camada[] redec, double taxaAprendizagem, double momentum){

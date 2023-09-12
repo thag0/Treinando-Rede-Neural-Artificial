@@ -7,7 +7,7 @@ import utilitarios.ged.Dados;
 public class ExemploVariosPredicts{
    public static void main(String[] args){
       Ged ged = new Ged();
-      Dados dados = ged.lerCsv("./dados/portas-logicas/xorCascata.csv");
+      Dados dados = ged.lerCsv("./dados/portas-logicas/xor-cascata.csv");
       double[][] xor = ged.dadosParaDouble(dados);
 
       int nEntrada = 3;

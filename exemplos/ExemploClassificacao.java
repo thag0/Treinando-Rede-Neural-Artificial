@@ -2,6 +2,7 @@ package exemplos;
 
 import java.text.DecimalFormat;
 
+import rna.ativacoes.Softmax;
 import rna.estrutura.RedeNeural;
 import rna.otimizadores.Adam;
 import utilitarios.ged.Dados;
@@ -49,7 +50,7 @@ public class ExemploClassificacao{
       rede.configurarInicializacaoPesos(2);
       rede.compilar();
       rede.configurarFuncaoAtivacao(2);
-      rede.configurarFuncaoAtivacao(rede.obterCamadaSaida(), 11);//softmax
+      rede.configurarFuncaoAtivacao(rede.obterCamadaSaida(), new Softmax());
       
       //treinando e avaliando os resultados
       rede.treinar(treinoEntrada, treinoSaida, 3_000);

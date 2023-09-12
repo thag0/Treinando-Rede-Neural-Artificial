@@ -95,6 +95,7 @@ class Main{
       rede.configurarAlcancePesos(1);
       rede.configurarTaxaAprendizagem(0.001);
       rede.configurarMomentum(0.99);
+      rede.configurarAlcancePesos(0.6);
       rede.configurarInicializacaoPesos(1);
       rede.configurarOtimizador(new SGD());
       rede.configurarFuncaoAtivacao(new Sigmoid());

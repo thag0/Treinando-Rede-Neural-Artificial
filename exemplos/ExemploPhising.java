@@ -1,7 +1,9 @@
 package exemplos;
 
+import rna.ativacoes.LeakyReLU;
+import rna.ativacoes.TanH;
 import rna.estrutura.RedeNeural;
-import rna.otimizadores.Adam;
+import rna.otimizadores.SGD;
 import utilitarios.ged.Dados;
 import utilitarios.ged.Ged;
 
@@ -43,23 +45,24 @@ public class ExemploPhising{
       //criando, configurando e treinando a rede neural.
       //os valores de configuração não devem ser tomados como regra e 
       //devem se adaptar ao problema e os dados apresentados.
-      int[] arq = {colunasDados, 25, 25, colunasClasses};
+      int[] arq = {colunasDados, 10, 10, 10, colunasClasses};
       RedeNeural rede = new RedeNeural(arq);
       rede.compilar();
       rede.configurarTaxaAprendizagem(0.001);
       rede.configurarMomentum(0.99);
-      rede.configurarOtimizador(new Adam());
-      rede.configurarFuncaoAtivacao(2);
-      rede.configurarFuncaoAtivacao(rede.obterCamadaSaida(), 3);
-      rede.treinar(treinoX, treinoY, 5_000);
-
+      rede.configurarFuncaoAtivacao(new LeakyReLU(0.001));
+      rede.configurarFuncaoAtivacao(rede.obterCamadaSaida(), new TanH());
+      rede.configurarOtimizador(new SGD());
+      rede.configurarAlcancePesos(0.5);
+      rede.configurarInicializacaoPesos(1);
+      rede.treinar(treinoX, treinoY, 10_000);
 
       // avaliando os resultados da rede neural
-      double precisao = rede.avaliador.erroMedioAbsoluto(testeX, testeY);
+      double precisao = 1 - rede.avaliador.erroMedioAbsoluto(testeX, testeY);
       double custo = rede.avaliador.erroMedioQuadrado(testeX, testeY);
       System.out.println(rede.info());
-      System.out.println("Precisão: " + (precisao * 100) + "%");
       System.out.println("Custo: " + custo);
+      System.out.println("Precisão: " + (precisao * 100) + "%");
    }
 
 

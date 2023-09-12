@@ -9,14 +9,12 @@ import rna.estrutura.Neuronio;
  */
 public class GradientDescent extends Otimizador{
 
-
    /**
     * Inicializa uma nova instância de otimizador da Descida do Gradiente.
     */
    public GradientDescent(){
 
    }
-
 
    @Override
    public void atualizar(Camada[] redec, double taxaAprendizagem, double momentum){

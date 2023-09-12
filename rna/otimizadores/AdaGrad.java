@@ -16,7 +16,6 @@ public class AdaGrad extends Otimizador{
     */
    private double epsilon;
 
-
    /**
     * Inicializa uma nova instância de otimizador AdaGrad usando os valores 
     * de hiperparâmetros fornecidos.
@@ -25,7 +24,6 @@ public class AdaGrad extends Otimizador{
    public AdaGrad(double epsilon){
       this.epsilon = epsilon;
    }
-
 
    /**
     * Inicializa uma nova instância de otimizador AdaGrad.
@@ -38,7 +36,6 @@ public class AdaGrad extends Otimizador{
       this(1e-7);
    }
 
-   
    @Override
     public void atualizar(Camada[] redec, double taxaAprendizagem, double momentum){  
       Neuronio neuronio;

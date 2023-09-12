@@ -52,11 +52,10 @@ class Treino implements Serializable{
       double[] entrada = new double[entradas[0].length];//tamanho de colunas da entrada
       double[] saida = new double[saidas[0].length];//tamanho de colunas da saída
 
-      
       //transformar a rede numa lista de camadas pra facilitar minha vida
       Camada[] redec = aux.redeParaCamadas(rede);
 
-      for(int i = 0; i < epochs; i++){//quantidade de épocas
+      for(int i = 0; i < epochs; i++){
          //aplicar gradiente estocástico
          if(embaralhar) aux.embaralharDados(entradas, saidas);
 
@@ -108,8 +107,7 @@ class Treino implements Serializable{
          Camada camadaAnterior = redec[i-1];
 
          //não precisa e nem faz diferença calcular os gradientes dos bias
-         int nNeuronios = camadaAtual.quantidadeNeuronios();
-         nNeuronios -= (camadaAtual.temBias()) ? 1 : 0;
+         int nNeuronios = camadaAtual.quantidadeNeuronios() - (camadaAtual.temBias() ? 1 : 0);
          for(int j = 0; j < nNeuronios; j++){//percorrer neurônios da camada atual
             
             Neuronio neuronio = camadaAtual.neuronio(j);

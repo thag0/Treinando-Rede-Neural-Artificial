@@ -35,7 +35,6 @@ public class Nadam extends Otimizador{
     */
    long interacoes = 1;
 
-
    /**
     * Inicializa uma nova instância de otimizador Nadam usando os valores 
     * de hiperparâmetros fornecidos.
@@ -48,7 +47,6 @@ public class Nadam extends Otimizador{
       this.beta1 = beta1;
       this.beta2 = beta2;
    }
-
 
    /**
     * Inicializa uma nova instância de otimizador Nadam.
@@ -66,7 +64,6 @@ public class Nadam extends Otimizador{
    public Nadam(){
       this(1e-7, 0.9, 0.999);
    }
-
 
    @Override
    public void atualizar(Camada[] redec, double taxaAprendizagem, double momentum){

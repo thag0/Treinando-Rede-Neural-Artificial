@@ -48,10 +48,10 @@ public class ExemploIris{
       // criando, configurando e treinando a rede neural.
       // os valores de configuração não devem ser tomados como regra e 
       // devem se adaptar ao problema e os dados apresentados.
-      int[] arq = {colunasDados, 8, 7, colunasClasses};
+      int[] arq = {colunasDados, 8, 8, colunasClasses};
       RedeNeural rede = new RedeNeural(arq);
       rede.configurarTaxaAprendizagem(0.01);
-      rede.configurarMomentum(0.7);
+      rede.configurarMomentum(0.9);
       rede.compilar();
       rede.configurarFuncaoAtivacao(2);
       rede.configurarFuncaoAtivacao(rede.obterCamadaSaida(), 3);
@@ -59,7 +59,7 @@ public class ExemploIris{
 
 
       // avaliando os resultados da rede neural
-      double precisao = rede.avaliador.erroMedioAbsoluto(testeX, testeY);
+      double precisao = 1 - rede.avaliador.erroMedioAbsoluto(testeX, testeY);
       double custo = rede.avaliador.erroMedioQuadrado(testeX, testeY);
       System.out.println(rede.info());
       System.out.println("Custo: " + custo);

@@ -52,7 +52,6 @@ public class AMSGrad extends Otimizador{
 		this.beta2 = beta2;
 	}
 
-
 	/**
 	 * Inicializa uma nova instância de otimizador AMSGrad.
 	 * <p>
@@ -70,7 +69,6 @@ public class AMSGrad extends Otimizador{
 	public AMSGrad(){
 		this(1e-7, 0.9, 0.999);
 	}
-
 
 	@Override
 	public void atualizar(Camada[] redec, double taxaAprendizagem, double momentum){

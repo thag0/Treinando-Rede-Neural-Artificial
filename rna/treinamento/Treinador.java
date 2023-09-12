@@ -27,7 +27,6 @@ public class Treinador implements Serializable{
    Treino treino;
    TreinoLote treinoLote;
 
-
    /**
     * Objeto responsável por organizar os tipos de treino da rede neural.
     */

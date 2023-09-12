@@ -215,6 +215,15 @@ public class Camada implements Serializable{
          throw new IllegalArgumentException("A nova função de ativação não pode ser nula.");
       }
 
+      if(ativacao instanceof rna.ativacoes.Softmax){
+         this.softmax = true;
+         this.argmax = false;
+      
+      }else if(ativacao instanceof rna.ativacoes.Argmax){
+         this.argmax = true;
+         this.softmax = false;
+      }
+
       this.ativacao = ativacao;
    }
 

@@ -11,6 +11,7 @@ public class ExemploTratandoDados{
       Ged ged = new Ged();
 
       Dados breastCancer = ged.lerCsv("./dados/datasets-maiores/breast-cancer-wisconsin.csv");
+      breastCancer.editarNome("Breast Cancer");
 
       //removendo coluna que guarda ids porque não contribuem pro aprendizado
       ged.removerColuna(breastCancer, 0);
@@ -42,7 +43,7 @@ public class ExemploTratandoDados{
       double[][] testeSaida = ged.separarDadosSaida(teste, qSaidas);
 
       //construindo a rede neural
-      int[] arq = {qEntradas, 8, 8, qSaidas};
+      int[] arq = {qEntradas, 9, 9, qSaidas};
       RedeNeural rede = new RedeNeural(arq);
       rede.compilar();
       rede.configurarTaxaAprendizagem(0.01);
