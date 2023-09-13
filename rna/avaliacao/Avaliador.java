@@ -34,7 +34,6 @@ public class Avaliador implements Serializable{
       this.rede = rede;
    }
 
-
    /**
     * Calcula o erro médio quadrado da rede neural em relação aos dados de entrada e saída fornecidos.
     * @param entrada dados de entrada.
@@ -44,7 +43,6 @@ public class Avaliador implements Serializable{
    public double erroMedioQuadrado(double[][] entrada, double[][] saida){
       return erroMedioQuadrado.calcular(this.rede, entrada, saida);
    }
-
 
    /**
     * Calcula o erro médio absoluto entre as saídas previstas pela rede neural e os valores reais.
@@ -56,7 +54,6 @@ public class Avaliador implements Serializable{
       return erroMedioAbsoluto.calcular(this.rede, entrada, saida);
    }
 
-
    /**
     * Calcula a precisão da rede neural em relação aos dados de entrada e saída fornecidos (classificação).
     * @param entrada dados de entrada.
@@ -66,7 +63,6 @@ public class Avaliador implements Serializable{
    public double acuracia(double[][] entrada, double[][] saida){
       return acuracia.calcular(this.rede, entrada, saida);
    }
-
 
    /**
     * Calcula a entropia cruzada entre as saídas previstas pela rede neural
@@ -78,7 +74,6 @@ public class Avaliador implements Serializable{
    public double entropiaCruzada(double[][] entrada, double[][] saida){  
       return entropiaCruzada.calcular(this.rede, entrada, saida);
    }
-
 
    /**
     * Calcula a entropia cruzada binária entre as saídas previstas pela rede neural
@@ -105,7 +100,6 @@ public class Avaliador implements Serializable{
    public int[][] matrizConfusao(double[][] entradas, double[][] saidas){
       return matrizConfusao.calcularMatriz(this.rede, entradas, saidas);
    }
-
 
    /**
     * Calcula o F1-Score ponderado para o modelo de rede neural em relação às entradas e saídas fornecidas.

@@ -88,24 +88,25 @@ class Main{
 
    public static RedeNeural criarRede(int qEntradas, int qSaidas){
       // int[] arq = {qEntradas, 36, 36, 36, qSaidas};//32x32
-      int[] arq = {qEntradas, 12, 12, qSaidas};//28x28
+      int[] arq = {qEntradas, 10, 10, qSaidas};//28x28
       RedeNeural rede = new RedeNeural(arq);
 
       rede.compilar();
-      rede.configurarAlcancePesos(1);
+      rede.configurarAlcancePesos(0.5);
       rede.configurarTaxaAprendizagem(0.001);
       rede.configurarMomentum(0.99);
       rede.configurarAlcancePesos(0.6);
       rede.configurarInicializacaoPesos(1);
       rede.configurarOtimizador(new SGD());
-      rede.configurarFuncaoAtivacao(new Sigmoid());
+      rede.configurarFuncaoAtivacao(new Swish());
+      rede.configurarFuncaoAtivacao(rede.obterCamadaSaida(), new Sigmoid());
 
       return rede;
    }
 
 
    public static void treinoEmPainel(RedeNeural rede, BufferedImage imagem, double[][] dadosEntrada, double[][] dadosSaida){
-      final int fps = 60;
+      final int fps = 6000;
       int epocasPorFrame = 10;
 
       //acelerar o processo de desenho

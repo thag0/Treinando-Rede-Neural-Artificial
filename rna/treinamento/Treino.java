@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 import rna.estrutura.Camada;
-import rna.estrutura.Neuronio;
 import rna.estrutura.RedeNeural;
 import rna.otimizadores.Otimizador;
 
@@ -57,9 +56,11 @@ class Treino implements Serializable{
 
       for(int i = 0; i < epochs; i++){
          //aplicar gradiente estocástico
+         //alterando a organização dos dados em cada época
          if(embaralhar) aux.embaralharDados(entradas, saidas);
 
-         for(int j = 0; j < entradas.length; j++){//percorrer amostras
+         //percorrer amostras
+         for(int j = 0; j < entradas.length; j++){
             //preencher dados de entrada e saída
             System.arraycopy(entradas[j], 0, entrada, 0, entrada.length);
             System.arraycopy(saidas[j], 0, saida, 0, saida.length);
@@ -103,14 +104,9 @@ class Treino implements Serializable{
       //percorrer rede, excluindo camada de entrada
       for(int i = 1; i < redec.length; i++){ 
          
-         Camada camadaAtual = redec[i];
-         int nNeuronios = camadaAtual.quantidadeNeuroniosSemBias();
-         for(int j = 0; j < nNeuronios; j++){//percorrer neurônios da camada atual
-            
-            Neuronio neuronio = camadaAtual.neuronio(j);
-            for(int k = 0; k < neuronio.pesos.length; k++){//percorrer pesos do neurônio atual
-               neuronio.gradiente[k] = taxaAprendizagem * neuronio.erro * neuronio.entradas[k];
-            }
+         int nNeuronios = redec[i].quantidadeNeuroniosSemBias();
+         for(int j = 0; j < nNeuronios; j++){
+            redec[i].neuronio(j).calcularGradiente(taxaAprendizagem);
          }
       }
    }

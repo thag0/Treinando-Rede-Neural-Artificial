@@ -1,6 +1,7 @@
 package exemplos;
 
-import render.JanelaRede;
+import rna.ativacoes.Sigmoid;
+import rna.ativacoes.TanH;
 import rna.estrutura.RedeNeural;
 import utilitarios.ged.Dados;
 import utilitarios.ged.Ged;
@@ -48,13 +49,13 @@ public class ExemploIris{
       // criando, configurando e treinando a rede neural.
       // os valores de configuração não devem ser tomados como regra e 
       // devem se adaptar ao problema e os dados apresentados.
-      int[] arq = {colunasDados, 8, 8, colunasClasses};
+      int[] arq = {colunasDados, 9, 9, colunasClasses};
       RedeNeural rede = new RedeNeural(arq);
-      rede.configurarTaxaAprendizagem(0.01);
+      rede.configurarTaxaAprendizagem(0.001);
       rede.configurarMomentum(0.9);
       rede.compilar();
-      rede.configurarFuncaoAtivacao(2);
-      rede.configurarFuncaoAtivacao(rede.obterCamadaSaida(), 3);
+      rede.configurarFuncaoAtivacao(new Sigmoid());
+      rede.configurarFuncaoAtivacao(rede.obterCamadaSaida(), new TanH());
       rede.treinar(treinoX, treinoY, 10_000);
 
 
@@ -64,9 +65,6 @@ public class ExemploIris{
       System.out.println(rede.info());
       System.out.println("Custo: " + custo);
       System.out.println("Precisão: " + (precisao * 100) + "%");
-
-      JanelaRede jr = new JanelaRede();
-      jr.desenhar(rede);
    }
 
 

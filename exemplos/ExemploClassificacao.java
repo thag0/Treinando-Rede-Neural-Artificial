@@ -2,9 +2,10 @@ package exemplos;
 
 import java.text.DecimalFormat;
 
+import rna.ativacoes.Sigmoid;
 import rna.ativacoes.Softmax;
 import rna.estrutura.RedeNeural;
-import rna.otimizadores.Adam;
+import rna.otimizadores.Nadam;
 import utilitarios.ged.Dados;
 import utilitarios.ged.Ged;
 
@@ -22,7 +23,7 @@ public class ExemploClassificacao{
       int[] shape = ged.shapeDados(iris);
       int ultimoIndice = shape[1]-1;
       ged.categorizar(iris, ultimoIndice);
-      System.out.println("Shape dados = [" + shape[0] + ", " + shape[1] + "]");
+      System.out.println("Tamanho dados = " + iris.shapeInfo());
 
       //separando dados de treino e teste
       double[][] dados = ged.dadosParaDouble(iris);
@@ -33,34 +34,33 @@ public class ExemploClassificacao{
       int qEntradas = 4;// dados de entrada (features)
       int qSaidas = 3;// classificações (class)
 
-      ged.embaralharDados(treino);
-      double[][] treinoEntrada = ged.separarDadosEntrada(treino, qEntradas);
-      double[][] treinoSaida = ged.separarDadosSaida(treino, qSaidas);
+      double[][] treinoX = ged.separarDadosEntrada(treino, qEntradas);
+      double[][] treinoY = ged.separarDadosSaida(treino, qSaidas);
 
-      ged.embaralharDados(teste);
-      double[][] testeEntrada = ged.separarDadosEntrada(teste, qEntradas);
-      double[][] testeSaida = ged.separarDadosSaida(teste, qSaidas);
+      double[][] testeX = ged.separarDadosEntrada(teste, qEntradas);
+      double[][] testeY = ged.separarDadosSaida(teste, qSaidas);
 
       //criando e configurando a rede neural
-      int[] arq = {qEntradas, 4, 4, qSaidas};
+      int[] arq = {qEntradas, 6, 6, qSaidas};
       RedeNeural rede = new RedeNeural(arq);
+      rede.compilar();
       rede.configurarTaxaAprendizagem(0.001);
       rede.configurarMomentum(0.99);
-      rede.configurarOtimizador(new Adam());
-      rede.configurarInicializacaoPesos(2);
-      rede.compilar();
-      rede.configurarFuncaoAtivacao(2);
+      rede.configurarAlcancePesos(0.5);
+      rede.configurarInicializacaoPesos(1);
+      rede.configurarFuncaoAtivacao(new Sigmoid());
+      rede.configurarOtimizador(new Nadam());
       rede.configurarFuncaoAtivacao(rede.obterCamadaSaida(), new Softmax());
+      System.out.println(rede.info());
       
       //treinando e avaliando os resultados
-      rede.treinar(treinoEntrada, treinoSaida, 3_000);
-      System.out.println(rede.info());
-      double acuraria = rede.avaliador.acuracia(testeEntrada, testeSaida);
-      double custo = rede.avaliador.entropiaCruzada(testeEntrada, testeSaida);
-      System.out.println("Acurácia = " + (acuraria * 100) + "%");
-      System.out.println("Custo = " + custo);
+      rede.treinar(treinoX, treinoY, 5_000);
+      double acuraria = rede.avaliador.acuracia(testeX, testeY);
+      double perda = rede.avaliador.entropiaCruzada(testeX, testeY);
+      System.out.println("Acurácia = " + formatarDecimal(acuraria*100, 4) + "%");
+      System.out.println("Perda = " + perda);
 
-      int[][] matrizConfusao = rede.avaliador.matrizConfusao(testeEntrada, testeSaida);
+      int[][] matrizConfusao = rede.avaliador.matrizConfusao(testeX, testeY);
       Dados m = new Dados(matrizConfusao);
       m.editarNome("Matriz confusão");
       m.imprimir();
@@ -119,17 +119,20 @@ public class ExemploClassificacao{
          }
          System.out.print(" | Rede ->");
          for(int j = 0; j < nSaida; j++){
-            System.out.print("  " + formatarFloat(saida_rede[j]));
+            System.out.print("  " + formatarDecimal(saida_rede[j], 4));
          }
          System.out.println();
       }
    }
 
 
-   public static String formatarFloat(double valor){
+   public static String formatarDecimal(double valor, int casas){
       String valorFormatado = "";
 
-      DecimalFormat df = new DecimalFormat("#.####");
+      String formato = "#.";
+      for(int i = 0; i < casas; i++) formato += "#";
+
+      DecimalFormat df = new DecimalFormat(formato);
       valorFormatado = df.format(valor);
 
       return valorFormatado;

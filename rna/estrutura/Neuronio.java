@@ -151,7 +151,7 @@ public class Neuronio implements Serializable{
       this.gradienteAcumulado = new double[conexoes];
 
       //só por segurança
-      for(int i = 0; i < this.pesos.length; i++){
+      for(int i = 0; i < conexoes; i++){
          this.entradas[i] = 0;
          this.momentum[i] = 0;
          this.momentum2ordem[i] = 0;
@@ -160,7 +160,10 @@ public class Neuronio implements Serializable{
          this.gradienteAcumulado[i] = 0;
       }
    
-      this.saida = 1;//considerar que pode ter bias aplicado ao modelo
+      //considerar que pode ter bias aplicado ao modelo
+      //a saída do bias é sempre 1.
+      this.saida = 1;
+
       this.erro = 0;
    }
 
@@ -173,6 +176,33 @@ public class Neuronio implements Serializable{
       this.somatorio = 0;
       for(int i = 0; i < this.entradas.length; i++){
          this.somatorio += this.entradas[i] * this.pesos[i];
+      }
+   }
+
+   /**
+    * Calcula o gradiente de cada peso do neurônio usando a expressão:
+    * <pre>
+    *    g[i] = lr * e * en[i]
+    * </pre>
+    * onde:
+    * <p>
+    *    g - vetor de gradientes do neurônio.
+    * </p>
+    * <p>
+    *    lr- valor de taxa de aprendizagem (learning rate).
+    * </p>
+    * <p>
+    *    e - erro do neurônio. 
+    * </p>
+    * <p>
+    *    en - vetor de entradas do neurônio. 
+    * </p>
+    * @param taxaAprendizagem valor de taxa de aprendizagem.
+    */
+   public void calcularGradiente(double taxaAprendizagem){
+      int numPesos = this.pesos.length;
+      for(int i = 0; i < numPesos; i++){
+         this.gradiente[i] = taxaAprendizagem * this.erro * this.entradas[i];
       }
    }
 
@@ -217,7 +247,6 @@ public class Neuronio implements Serializable{
          this.pesos[i] = random.nextGaussian() * desvioPadrao;
       }
    }
-  
 
    /**
     * Retorna informações dos pesos do neurônio.
