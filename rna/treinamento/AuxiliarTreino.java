@@ -40,7 +40,23 @@ class AuxiliarTreino implements Serializable{
     * Método exclusivo para separar a forma de calcular os erros da camada de saída.
     * Dando suporte não apenas para problemas de regressão.
     * <p>
-    *    Isso ainda ta em teste para problemas de classificação, para regressão funciona normalmente.
+    *    O erro para problemas de regressão de dá por:
+    *    <pre>
+    *       er = (p - y) * d
+    *    </pre>
+    *    Onde:
+    *    <p>
+    *       er - erro do neurônio.
+    *    </p>
+    *    <p>
+    *       p - saída prevista pelo neurônio.
+    *    </p>
+    *    <p>
+    *       y - saída desejada.
+    *    </p>
+    *    <p>
+    *       d - derivada da funcão de ativacao do neurônio.
+    *    </p>
     * </p>
     * @param redec Rede Neural em formato de array de camadas.
     * @param saidas array com as saídas esperadas.
@@ -66,7 +82,7 @@ class AuxiliarTreino implements Serializable{
          saida.ativacaoDerivada();
          for(int i = 0; i < saida.quantidadeNeuronios(); i++){
             neuronio = saida.neuronio(i);
-            neuronio.erro = ((saidas[i] - neuronio.saida) * neuronio.derivada);
+            neuronio.erro = ((neuronio.saida - saidas[i]) * neuronio.derivada);
          }
       }
    }

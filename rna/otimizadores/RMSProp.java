@@ -65,7 +65,7 @@ public class RMSProp extends Otimizador{
             neuronio = camada.neuronio(j);
             for(int k = 0; k < neuronio.pesos.length; k++){//percorrer pesos do neurônio atual
                neuronio.acumuladorGradiente[k] = (beta * neuronio.acumuladorGradiente[k]) + ((1 - beta) * neuronio.gradiente[k] * neuronio.gradiente[k]);
-               neuronio.pesos[k] += (taxaAprendizagem / Math.sqrt(neuronio.acumuladorGradiente[k] + epsilon)) * neuronio.gradiente[k];
+               neuronio.pesos[k] -= (taxaAprendizagem / Math.sqrt(neuronio.acumuladorGradiente[k] + epsilon)) * neuronio.gradiente[k];
             }
          }
       }

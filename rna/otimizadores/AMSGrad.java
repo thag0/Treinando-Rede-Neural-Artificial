@@ -94,7 +94,7 @@ public class AMSGrad extends Otimizador{
 
 					momentumCorrigido = neuronio.momentum[k] / interBeta1;
 					segundaOrdemCorrigida = maxSegundaOrdem / interBeta2;
-					neuronio.pesos[k] += (taxaAprendizagem * momentumCorrigido) / (Math.sqrt(segundaOrdemCorrigida) + epsilon);
+					neuronio.pesos[k] -= (taxaAprendizagem * momentumCorrigido) / (Math.sqrt(segundaOrdemCorrigida) + epsilon);
 				}
 
 				interacoes++;

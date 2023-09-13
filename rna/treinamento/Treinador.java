@@ -6,9 +6,6 @@ import java.util.ArrayList;
 import rna.estrutura.RedeNeural;
 import rna.otimizadores.Otimizador;
 
-//TODO 
-//implementar treino em lotes multithread
-
 /**
  * 
  */

@@ -30,14 +30,14 @@ public class AdaGrad extends Otimizador{
     * <p>
     *    Os hiperparâmetros do AdaGrad serão inicializados com os valores padrão, que são:
     * </p>
-    * {@code epsilon = 1e-7}
+    * {@code epsilon = 1e-8}
     */
    public AdaGrad(){
-      this(1e-7);
+      this(1e-8);
    }
 
    @Override
-    public void atualizar(Camada[] redec, double taxaAprendizagem, double momentum){  
+   public void atualizar(Camada[] redec, double taxaAprendizagem, double momentum){  
       Neuronio neuronio;
 
       //percorrer rede, com exceção da camada de entrada
@@ -50,7 +50,7 @@ public class AdaGrad extends Otimizador{
             neuronio = camada.neuronio(j);
             for(int k = 0; k < neuronio.pesos.length; k++){
                neuronio.acumuladorGradiente[k] += neuronio.gradiente[k] * neuronio.gradiente[k];
-               neuronio.pesos[k] += (taxaAprendizagem / Math.sqrt(neuronio.acumuladorGradiente[k] + epsilon)) * neuronio.gradiente[k];
+               neuronio.pesos[k] -= (taxaAprendizagem / Math.sqrt(neuronio.acumuladorGradiente[k] + epsilon)) * neuronio.gradiente[k];
             }
          }
       }

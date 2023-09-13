@@ -29,7 +29,7 @@ public class GradientDescent extends Otimizador{
             
             neuronio = camada.neuronio(j);
             for(int k = 0; k < neuronio.pesos.length; k++){//percorrer pesos do neurônio atual
-               neuronio.pesos[k] += neuronio.gradiente[k];
+               neuronio.pesos[k] -= neuronio.gradiente[k];
             }
          }
       } 

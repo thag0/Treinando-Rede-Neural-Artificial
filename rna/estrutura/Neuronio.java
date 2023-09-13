@@ -77,8 +77,32 @@ public class Neuronio implements Serializable{
    public double erro;
 
    /**
-    * Auxiliar usado pelos otimizadores para o ajuste dos pesos da
-    * Rede Neural durante o treinamento.
+    * Vetor de gradientes do neurônio utilizado pelos otimizadores para 
+    * ajustar os pesos da Rede Neural durante o treinamento.
+    * <p>
+    *    Cada elemento do vetor de gradientes {@code g[i]} corresponde ao 
+    *    gradiente da conexão entre a entrada {@code en[i]} e o peso 
+    *    correspondente {@code p[i]}.
+    * </p>
+    * <p>
+    *    O gradiente de cada conexão do neurônio é dado por:
+    * </p>
+    * <pre>
+    *    g[i] = lr * e * en[i]
+    * </pre>
+    * onde:
+    * <p>
+    *    g - vetor de gradientes do neurônio.
+    * </p>
+    * <p>
+    *    lr- valor de taxa de aprendizagem (learning rate).
+    * </p>
+    * <p>
+    *    e - erro do neurônio. 
+    * </p>
+    * <p>
+    *    en - vetor de entradas do neurônio. 
+    * </p>
     */
    public double[] gradiente;
 

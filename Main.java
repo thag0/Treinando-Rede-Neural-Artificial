@@ -88,18 +88,17 @@ class Main{
 
    public static RedeNeural criarRede(int qEntradas, int qSaidas){
       // int[] arq = {qEntradas, 36, 36, 36, qSaidas};//32x32
-      int[] arq = {qEntradas, 10, 10, qSaidas};//28x28
+      int[] arq = {qEntradas, 12, 12, qSaidas};//28x28
       RedeNeural rede = new RedeNeural(arq);
 
       rede.compilar();
-      rede.configurarAlcancePesos(0.5);
-      rede.configurarTaxaAprendizagem(0.001);
+      rede.configurarAlcancePesos(0.8);
+      rede.configurarTaxaAprendizagem(0.01);
       rede.configurarMomentum(0.99);
       rede.configurarAlcancePesos(0.6);
       rede.configurarInicializacaoPesos(1);
       rede.configurarOtimizador(new SGD());
-      rede.configurarFuncaoAtivacao(new Swish());
-      rede.configurarFuncaoAtivacao(rede.obterCamadaSaida(), new Sigmoid());
+      rede.configurarFuncaoAtivacao(new Sigmoid());
 
       return rede;
    }

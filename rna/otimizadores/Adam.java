@@ -90,7 +90,7 @@ public class Adam extends Otimizador{
                
                momentumCorrigido = neuronio.momentum[k] / interBeta1;
                segundaOrdemCorrigida = neuronio.momentum2ordem[k] / interBeta2;
-               neuronio.pesos[k] += (taxaAprendizagem * momentumCorrigido) / (Math.sqrt(segundaOrdemCorrigida) + epsilon);
+               neuronio.pesos[k] -= (taxaAprendizagem * momentumCorrigido) / (Math.sqrt(segundaOrdemCorrigida) + epsilon);
                
             }
             
