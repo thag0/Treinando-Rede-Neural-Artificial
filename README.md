@@ -29,6 +29,14 @@ Uma evolução agora foi converter os dados de imagem na escala rgb ao invés de
 
 *imagem original comparada com imagem criada pela rede neural, agora com cores.*
 
+# Implementando momentum para acelerar o aprendizado
+
+A ideia de adicionar o momentum para dar uma "velocidade" na convergência da rede deu um bom resultado.
+
+![graficos_desempenho_rede](https://github.com/thag0/Treinando-Rede-Neural-Artificial/assets/91092364/db85a625-b164-47d4-ba61-049578338c8a)
+
+*Em ambos os casos foi utilizado o sgd (stochastic gradient descent) e cada rede possuia o valor de taxa de aprendizagem igual a 0.01*
+
 # Algumas dificuldades
 
 Pelo que to vendo na experiência de uso, o treino da rede neural fica muito lento quando uso conjunto de dados muito grandes. Testei ela no mesmo cenário de ampliar imagens mas com imagens maiores que as do mnist (28x28), além de que com imagens coloridas o resultado ficou pior ainda. 
