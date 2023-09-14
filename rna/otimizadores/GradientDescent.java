@@ -17,6 +17,11 @@ public class GradientDescent extends Otimizador{
    }
 
    @Override
+   /**
+    * @param redec rede neural em formato de array de camadas
+    * @param taxaAprendizagem valor de taxa de aprendizagem da rede neural
+    * @param momentum valor de taxa de momentum da rede neural
+    */
    public void atualizar(Camada[] redec, double taxaAprendizagem, double momentum){
       Neuronio neuronio;
 

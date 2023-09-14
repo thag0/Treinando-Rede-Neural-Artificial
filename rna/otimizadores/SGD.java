@@ -49,7 +49,7 @@ public class SGD extends Otimizador{
                for(int k = 0; k < neuronio.pesos.length; k++){
                   double momentumAnterior = neuronio.momentum[k];
                   neuronio.pesos[k] -= momentum * momentumAnterior;
-                  neuronio.momentum[k] = momentum * momentumAnterior + neuronio.gradiente[k];
+                  neuronio.momentum[k] = (momentum * momentumAnterior) + neuronio.gradiente[k];
                   neuronio.pesos[k] += taxaAprendizagem * neuronio.momentum[k];
                }
                   

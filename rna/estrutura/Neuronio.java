@@ -33,12 +33,12 @@ public class Neuronio implements Serializable{
    public double[] pesos;
 
    /**
-    * Coeficientes de momentum para cada peso do neurônio.
+    * Array de coeficientes de momentum para cada peso do neurônio.
     * <p>
-    * Os coeficientes de momentum são usados nos algoritmos de otimização
-    * para controlar a influência das atualizações anteriores de peso nas
-    * atualizações atuais. Eles ajudam a evitar oscilações excessivas durante
-    * o treinamento da Rede Neural e podem ajudar ela a escapar de mínimos locais.
+    *    Os coeficientes de momentum são usados nos algoritmos de otimização
+    *    para controlar a influência das atualizações anteriores de peso nas
+    *    atualizações atuais. Eles ajudam a evitar oscilações excessivas durante
+    *    o treinamento da Rede Neural e podem ajudar ela a escapar de mínimos locais.
     * </p>
     */
    public double[] momentum;
@@ -53,7 +53,6 @@ public class Neuronio implements Serializable{
     */
    public double[] acumuladorGradiente;
 
-
    /**
     * Resultado do somatório das entradas multiplicadas pelos pesos do neurônio.
     */
@@ -66,7 +65,7 @@ public class Neuronio implements Serializable{
 
    /**
     * Auxiliar no treino, deve conter o resultado da função de 
-    * ativação derivada.
+    * ativação derivada aplicada ao somatório.
     */
    public double derivada;
 
@@ -88,14 +87,14 @@ public class Neuronio implements Serializable{
     *    O gradiente de cada conexão do neurônio é dado por:
     * </p>
     * <pre>
-    *    g[i] = lr * e * en[i]
+    *    g[i] = -tA * e * en[i]
     * </pre>
     * onde:
     * <p>
     *    g - vetor de gradientes do neurônio.
     * </p>
     * <p>
-    *    lr- valor de taxa de aprendizagem (learning rate).
+    *    tA- valor de taxa de aprendizagem (learning rate).
     * </p>
     * <p>
     *    e - erro do neurônio. 
@@ -195,6 +194,12 @@ public class Neuronio implements Serializable{
     * Calcula o resultado do somatório da multiplicação entre os elementos do
     * array de entradas pelo array de pesos. O resultado será usado como entrada 
     * para a função de ativação.
+    * <p>
+    *    O algoritmo padrão do feedforward se baseia em fazer o somatório dos 
+    *    produtos entre a entrada com o peso respectivo e ao final adicionar o bias. 
+    *    Como o neurônio do bias sempre tem saída igual a 1, dá pra generalizar num
+    *    loop só.
+    * </p>
     */
    public void somatorio(){
       this.somatorio = 0;
@@ -206,14 +211,14 @@ public class Neuronio implements Serializable{
    /**
     * Calcula o gradiente de cada peso do neurônio usando a expressão:
     * <pre>
-    *    g[i] = lr * e * en[i]
+    *    g[i] = -tA * e * en[i]
     * </pre>
     * onde:
     * <p>
     *    g - vetor de gradientes do neurônio.
     * </p>
     * <p>
-    *    lr- valor de taxa de aprendizagem (learning rate).
+    *    tA- valor de taxa de aprendizagem (learning rate).
     * </p>
     * <p>
     *    e - erro do neurônio. 
@@ -221,17 +226,30 @@ public class Neuronio implements Serializable{
     * <p>
     *    en - vetor de entradas do neurônio. 
     * </p>
-    * @param taxaAprendizagem valor de taxa de aprendizagem.
+    * <strong>Observação</strong>: em alguns lugares o erro se calcula como 
+    * {@code y-p} (onde {@code y} é o dado real e {@code p} é o dado previsto), 
+    * mas também encontrei outros lugares onde o erro é calculado como {@code p-y},
+    * para padronizar decidi que o erro é calculado como {@code y-p} e multiplicar o valor
+    * do gradiente por -1, assim faz mais sentido o termo "gradiente descendente" onde é 
+    * usado o oposto do gradiente para minimizar a perda da rede.
+    * <p>
+    *    Além de que essa abordagem de {@code p-y} não estava funcionando para calcular
+    *    o erro dos neurônio quando a camada de saída de rede usava a função argmax.
+    * </p>
+    * @param taxaAprendizagem valor de taxa de aprendizagem da Rede Neural.
     */
    public void calcularGradiente(double taxaAprendizagem){
       int numPesos = this.pesos.length;
       for(int i = 0; i < numPesos; i++){
-         this.gradiente[i] = taxaAprendizagem * this.erro * this.entradas[i];
+         this.gradiente[i] = -taxaAprendizagem * this.erro * this.entradas[i];
       }
    }
 
    /**
     * Boa no geral.
+    * <p>
+    *    Inicializa aleatoriamente um valor no intervalo entre {@code -alcane : alcance}
+    * </p>
     * @param alcance valor máximo e mínimo na hora de aleatorizar os pesos.
     */
    private void aleatoria(double alcance){
@@ -242,6 +260,9 @@ public class Neuronio implements Serializable{
 
    /**
     * Boa no geral.
+    * <p>
+    *    Inicializa aleatoriamente um valor no intervalo entre {@code 0 : alcance}
+    * </p>
     * @param alcance valor máximo e mínimo na hora de aleatorizar os pesos.
     */
    private void aleatoriaPositiva(double alcance){
@@ -251,11 +272,16 @@ public class Neuronio implements Serializable{
    }
 
    /**
-    *
-    * @param entradas quantidade de entrada de cada neurônio da camada.
+    * Inicializa os pesos do neurônio usando o método de inicialização He.
+    * <p>
+    *    Esse método adequado para inicializar pesos em redes profundas e 
+    *    ajuda a mitigar o problema da dissipação e explosão de gradientes 
+    *    durante o treinamento.
+    * </p>
+    * @param entradas A quantidade de entradas do neurônio.
     */
    private void he(int entradas){
-      double desvioPadrao = Math.sqrt(2.0 / entradas);
+      double desvioPadrao = Math.sqrt(2.0 / (entradas));
       for(int i = 0; i < pesos.length; i++){
          this.pesos[i] = random.nextGaussian() * desvioPadrao;
       }

@@ -48,8 +48,8 @@ public class ExemploClassificacao{
       rede.configurarMomentum(0.99);
       rede.configurarAlcancePesos(0.5);
       rede.configurarInicializacaoPesos(1);
-      rede.configurarFuncaoAtivacao(new Sigmoid());
       rede.configurarOtimizador(new Nadam());
+      rede.configurarFuncaoAtivacao(new Sigmoid());
       rede.configurarFuncaoAtivacao(rede.obterCamadaSaida(), new Softmax());
       System.out.println(rede.info());
       

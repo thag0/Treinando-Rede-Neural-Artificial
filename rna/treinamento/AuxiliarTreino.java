@@ -42,7 +42,7 @@ class AuxiliarTreino implements Serializable{
     * <p>
     *    O erro para problemas de regressão de dá por:
     *    <pre>
-    *       er = (p - y) * d
+    *       er = (y - p) * d
     *    </pre>
     *    Onde:
     *    <p>
@@ -66,7 +66,6 @@ class AuxiliarTreino implements Serializable{
       Neuronio neuronio;
       
       if(saida.temArgmax()){//classificação
-         //TODO corrigir convergencia do argmax
          int indiceMaior = indiceMaiorValor(saidas);
          for(int i = 0; i < saida.quantidadeNeuronios(); i++){
             neuronio = saida.neuronio(i);
@@ -76,14 +75,14 @@ class AuxiliarTreino implements Serializable{
       }else if(saida.temSoftmax()){//classificação
          for(int i = 0; i < saida.quantidadeNeuronios(); i++){
             neuronio = saida.neuronio(i);
-            neuronio.erro = (neuronio.saida - saidas[i]);
+            neuronio.erro = (saidas[i] - neuronio.saida);
          }
       
       }else{//regressão
          saida.ativacaoDerivada();
          for(int i = 0; i < saida.quantidadeNeuronios(); i++){
             neuronio = saida.neuronio(i);
-            neuronio.erro = ((neuronio.saida - saidas[i]) * neuronio.derivada);
+            neuronio.erro = ((saidas[i] - neuronio.saida) * neuronio.derivada);
          }
       }
    }
