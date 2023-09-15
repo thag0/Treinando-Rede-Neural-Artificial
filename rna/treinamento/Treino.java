@@ -48,8 +48,8 @@ class Treino implements Serializable{
     * @param embaralhar embaralhar dados de treino para cada época.
     */
    public void treino(RedeNeural rede, Otimizador otimizador, double[][] entradas, double[][] saidas, int epochs, boolean embaralhar){
-      double[] entrada = new double[entradas[0].length];//tamanho de colunas da entrada
-      double[] saida = new double[saidas[0].length];//tamanho de colunas da saída
+      double[] entrada = new double[entradas[0].length];// quantidade de colunas da entrada
+      double[] saida = new double[saidas[0].length];// quantidade de colunas da saída
 
       //transformar a rede numa lista de camadas pra facilitar minha vida
       Camada[] redec = aux.redeParaCamadas(rede);

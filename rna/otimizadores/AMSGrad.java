@@ -31,7 +31,7 @@ public class AMSGrad extends Otimizador{
 	/**
 	 * Contador de iterações.
 	 */
-	private long interacoes = 1;
+	private long interacoes = 0;
 
 	/**
 	 * Variável para armazenar o valor máximo da segunda ordem acumulada.
@@ -70,35 +70,84 @@ public class AMSGrad extends Otimizador{
 		this(1e-7, 0.9, 0.999);
 	}
 
+   /**
+    * Aplica o algoritmo do AMSGrad para cada peso da rede neural.
+    * <p>
+    *    O AMSGrad funciona usando a seguinte expressão:
+    * </p>
+    * <pre>
+    *    p[i] -= (tA * mc) / ((√ m2c) + eps)
+    * </pre>
+    * Onde:
+    * <p>
+    *    {@code p} - peso que será atualizado.
+    * </p>
+    * <p>
+    *    {@code tA} - valor de taxa de aprendizagem (learning rate).
+    * </p>
+    * <p>
+    *    {@code mc} - valor de momentum corrigido.
+    * </p>
+    * <p>
+    *    {@code m2c} - valor de momentum de segunda ordem corrigido.
+    * </p>
+    * Os valores de momentum corrigido (mc) e momentum de segunda ordem
+    * corrigido (m2c) se dão por:
+    * <pre>
+    *    mc = m[i] / (1 - beta1ⁱ)
+    * </pre>
+    * <pre>
+    *    m2c = max(max2ordem, m2[i]) / (1 - beta2ⁱ)
+    * </pre>
+    * Onde:
+    * <p>
+    *    {@code m} - valor de momentum correspondete a conexão do peso que está
+    *     sendo atualizado.
+    * </p>
+	 *	<p>
+	 *		{@code max2ordem} - valor máximo de segunda ordem calculado.
+	 *	</p>
+    * <p>
+    *    {@code m2} - valor de momentum de segunda ordem correspondete a conexão 
+    *    do peso que está sendo atualizado.
+    * </p>
+    * <p>
+    *    {@code i} - contador de interações (épocas passadas em que o otimizador 
+	 *		foi usado).
+    * </p>
+    */
 	@Override
 	public void atualizar(Camada[] redec, double taxaAprendizagem, double momentum){
-		double momentumCorrigido, segundaOrdemCorrigida;
+		double mc, m2c, divB1, divB2, g;
 		Neuronio neuronio;
 		
 		//percorrer rede, com exceção da camada de entrada
+		interacoes++;
 		for(int i = 1; i < redec.length; i++){
 
 			Camada camada = redec[i];
 			int nNeuronios = camada.quantidadeNeuroniosSemBias();
 			for(int j = 0; j < nNeuronios; j++){
 
-				double interBeta1 = (1 - Math.pow(beta1, interacoes));
-				double interBeta2 = (1 - Math.pow(beta2, interacoes));
+				divB1 = (1 - Math.pow(beta1, interacoes));
+				divB2 = (1 - Math.pow(beta2, interacoes));
 
 				neuronio = camada.neuronio(j);
 				for(int k = 0; k < neuronio.pesos.length; k++){
-					neuronio.momentum[k] = (beta1 * neuronio.momentum[k]) + ((1 - beta1) * neuronio.gradiente[k]);
-					neuronio.momentum2ordem[k] = (beta2 * neuronio.momentum2ordem[k]) + ((1 - beta2) * neuronio.gradiente[k] * neuronio.gradiente[k]);
+					g = neuronio.gradiente[k];
+					
+					neuronio.momentum[k] =  (beta1 * neuronio.momentum[k])  + ((1 - beta1) * g);
+					neuronio.momentum2[k] = (beta2 * neuronio.momentum2[k]) + ((1 - beta2) * g * g);
 
-					maxSegundaOrdem = Math.max(maxSegundaOrdem, neuronio.momentum2ordem[k]);
+					maxSegundaOrdem = Math.max(maxSegundaOrdem, neuronio.momentum2[k]);
 
-					momentumCorrigido = neuronio.momentum[k] / interBeta1;
-					segundaOrdemCorrigida = maxSegundaOrdem / interBeta2;
-					neuronio.pesos[k] -= (taxaAprendizagem * momentumCorrigido) / (Math.sqrt(segundaOrdemCorrigida) + epsilon);
+					mc = neuronio.momentum[k] / divB1;
+					m2c = maxSegundaOrdem / divB2;
+					neuronio.pesos[k] -= (taxaAprendizagem * mc) / (Math.sqrt(m2c) + epsilon);
 				}
 
-				interacoes++;
 			}
 		}
   	}
+
 }

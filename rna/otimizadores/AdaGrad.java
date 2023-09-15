@@ -36,8 +36,36 @@ public class AdaGrad extends Otimizador{
       this(1e-8);
    }
 
+   /**
+    * Aplica o algoritmo do AdaGrad para cada peso da rede neural.
+    * <p>
+    *    O Adagrad funciona usando a seguinte expressão:
+    * </p>
+    * <pre>
+    *    p[i] -= (tA * g[i]) / (√ ac[i] + eps)
+    * </pre>
+    * Onde:
+    * <p>
+    *    {@code p} - peso que será atualizado.
+    * </p>
+    * <p>
+    *    {@code tA} - valor de taxa de aprendizagem (learning rate).
+    * </p>
+    * <p>
+    *    {@code g} - gradiente correspondente a conexão do peso que será
+    *    atualizado.
+    * </p>
+    * <p>
+    *    {@code ac} - acumulador de gradiente correspondente a conexão
+    *    do peso que será atualizado.
+    * </p>
+    * <p>
+    *    {@code eps} - um valor pequeno para evitar divizões por zero.
+    * </p>
+    */
    @Override
    public void atualizar(Camada[] redec, double taxaAprendizagem, double momentum){  
+      double g;
       Neuronio neuronio;
 
       //percorrer rede, com exceção da camada de entrada
@@ -49,8 +77,9 @@ public class AdaGrad extends Otimizador{
   
             neuronio = camada.neuronio(j);
             for(int k = 0; k < neuronio.pesos.length; k++){
-               neuronio.acumuladorGradiente[k] += neuronio.gradiente[k] * neuronio.gradiente[k];
-               neuronio.pesos[k] -= (taxaAprendizagem / Math.sqrt(neuronio.acumuladorGradiente[k] + epsilon)) * neuronio.gradiente[k];
+               g = neuronio.gradiente[k];
+               neuronio.acumuladorGradiente[k] += (g * g);
+               neuronio.pesos[k] -= (taxaAprendizagem * g) / Math.sqrt(neuronio.acumuladorGradiente[k] + epsilon);
             }
          }
       }

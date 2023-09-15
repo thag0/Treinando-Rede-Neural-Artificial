@@ -44,9 +44,12 @@ public class Neuronio implements Serializable{
    public double[] momentum;
 
    /**
-    * Auxiliar no treino da Rede Neural usando otimizadores RMSprop e Adam.
+    * Momentum de segunda ordem, ou também chamado de "velocity".
+    * <p>
+    *    Auxiliar no treino da Rede Neural usando otimizadores RMSprop e Adam.
+    * </p>
     */
-   public double[] momentum2ordem;
+   public double[] momentum2;
    
    /**
     * Auxiliar no treino usando otimizador AdaGrad.
@@ -168,7 +171,7 @@ public class Neuronio implements Serializable{
 
       this.entradas = new double[conexoes];
       this.momentum = new double[conexoes];
-      this.momentum2ordem = new double[conexoes];
+      this.momentum2 = new double[conexoes];
       this.gradiente = new double[conexoes];
       this.acumuladorGradiente = new double[conexoes];
       this.gradienteAcumulado = new double[conexoes];
@@ -177,7 +180,7 @@ public class Neuronio implements Serializable{
       for(int i = 0; i < conexoes; i++){
          this.entradas[i] = 0;
          this.momentum[i] = 0;
-         this.momentum2ordem[i] = 0;
+         this.momentum2[i] = 0;
          this.gradiente[i] = 0;
          this.acumuladorGradiente[i] = 0;
          this.gradienteAcumulado[i] = 0;

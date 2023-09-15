@@ -33,6 +33,31 @@ public class SGD extends Otimizador{
       this(false);
    }
 
+   /**
+    * Aplica o algoritmo do SGD com momentum para cada peso da rede neural.
+    * <p>
+    *    O SGD funciona usando a seguinte expressão:
+    * </p>
+    * <pre>
+    *    p[i] -= (M * m[i]) + g[i]
+    * </pre>
+    * Onde:
+    * <p>
+    *    {@code p} - peso que será atualizado.
+    * </p>
+    * <p>
+    *    {@code M} - valor de taxa de momentum (ou constante de momentum) 
+    *    da rede neural.
+    * </p>
+    * <p>
+    *    {@code m} - valor de momentum da conexão correspondente ao peso
+    *    que será atualizado.
+    * </p>
+    * <p>
+    *    {@code g} - gradiente correspondente a conexão do peso que será
+    *    atualizado.
+    * </p>
+    */
    @Override
    public void atualizar(Camada[] redec, double taxaAprendizagem, double momentum){
       Neuronio neuronio;
@@ -62,5 +87,5 @@ public class SGD extends Otimizador{
          }
       }
    }
-   
+
 }

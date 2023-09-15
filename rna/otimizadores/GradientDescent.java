@@ -16,12 +16,23 @@ public class GradientDescent extends Otimizador{
 
    }
 
-   @Override
    /**
-    * @param redec rede neural em formato de array de camadas
-    * @param taxaAprendizagem valor de taxa de aprendizagem da rede neural
-    * @param momentum valor de taxa de momentum da rede neural
+    * Aplica o algoritmo do Gradiente descendente para cada peso da rede neural.
+    * <p>
+    *    O Gradiente descendente funciona usando a seguinte expressão:
+    * </p>
+    * <pre>
+    *    p[i] -= g[i]
+    * </pre>
+    * Onde:
+    * <p>
+    *    {@code p} - peso que será atualizado.
+    * </p>
+    *    {@code g} - gradiente correspondente a conexão do peso que será
+    *    atualizado.
+    * </p>
     */
+    @Override
    public void atualizar(Camada[] redec, double taxaAprendizagem, double momentum){
       Neuronio neuronio;
 
@@ -30,10 +41,10 @@ public class GradientDescent extends Otimizador{
          
          Camada camada = redec[i];
          int nNeuronios = camada.quantidadeNeuroniosSemBias();
-         for(int j = 0; j < nNeuronios; j++){//percorrer neurônios da camada atual
+         for(int j = 0; j < nNeuronios; j++){
             
             neuronio = camada.neuronio(j);
-            for(int k = 0; k < neuronio.pesos.length; k++){//percorrer pesos do neurônio atual
+            for(int k = 0; k < neuronio.pesos.length; k++){
                neuronio.pesos[k] -= neuronio.gradiente[k];
             }
          }

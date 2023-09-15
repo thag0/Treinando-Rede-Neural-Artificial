@@ -90,6 +90,26 @@ class AuxiliarTreino implements Serializable{
    /**
     * Método exclusivo para separar a forma de calcular os erros das camadas ocultas
     * da rede neural.
+    * <p>
+    *    O erro do neurônio da camada oculta se da por:
+    * </p>
+    * <pre>
+    *    e = d * ∑(pn * epn)
+    * </pre>
+    * Onde:
+    * <p>
+    *    e - erro do neurônio oculto
+    * </p>
+    * <p>
+    *    d - resultado da derivada da função de ativação
+    * </p>
+    * <p>
+    *    pn - peso do neurônio da camada seguinte, relativo a conexão com 
+    *    o neurônio que terá o erro calculado
+    * </p>
+    * <p>
+    *    epn - erro do neurônio da camada seguinte.
+    * </p>
     * @param redec Rede Neural em formato de array de camadas.
     */
    void calcularErroOcultas(Camada[] redec){
@@ -97,7 +117,7 @@ class AuxiliarTreino implements Serializable{
       Neuronio neuronio, neuronioProxima;
       int numAtual, numProxima;
 
-      //começar da ultima oculta
+      // começar da ultima oculta
       // percorrer camadas ocultas de trás pra frente
       for(int i = redec.length-2; i >= 1; i--){
          
@@ -109,9 +129,9 @@ class AuxiliarTreino implements Serializable{
             camadaProxima = redec[i+1];
             numProxima = camadaProxima.quantidadeNeuroniosSemBias(); 
 
-            neuronio = camadaAtual.neuronio(j);
+            // percorrer neurônios da camada seguinte
             double somaErros = 0.0;
-            //percorrer neurônios da camada seguinte
+            neuronio = camadaAtual.neuronio(j);
             for(int k = 0; k < numProxima; k++){
                neuronioProxima = camadaProxima.neuronio(k);
                somaErros += neuronioProxima.pesos[j] * neuronioProxima.erro;
@@ -137,7 +157,7 @@ class AuxiliarTreino implements Serializable{
       int i, idAleatorio;
 
       for(i = linhas - 1; i > 0; i--){
-         idAleatorio = random.nextInt(i + 1);
+         idAleatorio = random.nextInt(i+1);
 
          //trocar entradas
          System.arraycopy(entradas[i], 0, tempEntradas, 0, colEntrada);
@@ -168,7 +188,7 @@ class AuxiliarTreino implements Serializable{
       double[][] subMatriz = new double[linhas][colunas];
 
       for(int i = 0; i < linhas; i++){
-         System.arraycopy(dados[inicio + i], 0, subMatriz[i], 0, colunas);
+         System.arraycopy(dados[inicio+i], 0, subMatriz[i], 0, colunas);
       }
 
       return subMatriz;
@@ -189,12 +209,12 @@ class AuxiliarTreino implements Serializable{
             indiceMaiorValor = i;
          }
       }
-  
+
       return indiceMaiorValor;
    }
 
    /**
-    * Zera todos os gradientes para o cálculo do gradiente em lote.
+    * Zera todos os gradientes dos neurônios para o cálculo do gradiente em lote.
     * @param redec Rede Neural em formato de array de camadas.
     */
    void zerarGradientesAcumulados(Camada[] redec){
@@ -205,7 +225,7 @@ class AuxiliarTreino implements Serializable{
          for(int j = 0; j < nNeuronios; j++){//percorrer neurônios da camada atual
             
             Neuronio neuronio = camadaAtual.neuronio(j);
-            for(int k = 0; k < neuronio.pesos.length; k++){//percorrer pesos do neurônio atual
+            for(int k = 0; k < neuronio.gradienteAcumulado.length; k++){
                neuronio.gradienteAcumulado[k] = 0;
             }
          }

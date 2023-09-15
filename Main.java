@@ -25,7 +25,7 @@ class Main{
    // static final String caminhoArquivo = "/dados/32x32/bloco.png";
    static final String caminhoArquivo = "/dados/mnist/8.png";
    static final String caminhoImagemExportada = "./resultados/imagem-ampliada";
-   static final int epocas = 10*1000;
+   static final int epocas = 100*1000;
    static final float escalaRender = 10f;
    static final float escalaImagemExportada = 20f;
 
@@ -92,7 +92,6 @@ class Main{
       RedeNeural rede = new RedeNeural(arq);
 
       rede.compilar();
-      rede.configurarAlcancePesos(0.5);
       rede.configurarTaxaAprendizagem(0.001);
       rede.configurarMomentum(0.99);
       rede.configurarAlcancePesos(0.6);
@@ -105,8 +104,8 @@ class Main{
 
 
    public static void treinoEmPainel(RedeNeural rede, BufferedImage imagem, double[][] dadosEntrada, double[][] dadosSaida){
-      final int fps = 6000;
-      int epocasPorFrame = 10;
+      final int fps = 60;
+      int epocasPorFrame = 20;
 
       //acelerar o processo de desenho
       //bom em situações de janelas muito grandes
