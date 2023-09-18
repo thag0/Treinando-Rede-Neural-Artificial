@@ -8,6 +8,7 @@ import rna.estrutura.Neuronio;
 import rna.estrutura.RedeNeural;
 import rna.otimizadores.Otimizador;
 
+//TODO verificar se está funcionando após as modificações do calculo do gradiente
 
 /**
  * Classe dedicada para lidar com o treinamento em lotes da rede neural.
@@ -68,12 +69,12 @@ class TreinoLote implements Serializable{
                double[] saida = saidaLote[k];
 
                rede.calcularSaida(entrada);
-               backpropagationLote(redec, rede.obterTaxaAprendizagem(), saida);
+               backpropagationLote(redec, saida);
             }
 
             //normalizar gradientes para enviar pro otimizador
             calcularMediaGradientesLote(redec, entradaLote.length);
-            otimizador.atualizar(redec, rede.obterTaxaAprendizagem(), rede.obterTaxaMomentum());
+            otimizador.atualizar(redec);
          }
 
          //feedback de avanço da rede
@@ -91,10 +92,10 @@ class TreinoLote implements Serializable{
     * @param taxaAprendizagem valor de taxa de aprendizagem da rede neural.
     * @param saidas array com as saídas esperadas das amostras.
     */
-   private void backpropagationLote(Camada[] redec, double taxaAprendizagem, double[] saidas){
+   private void backpropagationLote(Camada[] redec, double[] saidas){
       aux.calcularErroSaida(redec, saidas);
       aux.calcularErroOcultas(redec);
-      calcularGradientesAcumulados(redec, taxaAprendizagem);
+      calcularGradientesAcumulados(redec);
    }
 
    /**
@@ -103,7 +104,7 @@ class TreinoLote implements Serializable{
     * @param redec Rede Neural em formato de lista de camadas.
     * @param taxaAprendizagem valor de taxa de aprendizagem da rede neural.
     */
-   private void calcularGradientesAcumulados(Camada[] redec, double taxaAprendizagem){
+   private void calcularGradientesAcumulados(Camada[] redec){
       //percorrer rede, excluindo camada de entrada
       for(int i = 1; i < redec.length; i++){ 
          
@@ -117,7 +118,7 @@ class TreinoLote implements Serializable{
             
             Neuronio neuronio = camadaAtual.neuronio(j);
             for(int k = 0; k < neuronio.pesos.length; k++){//percorrer pesos do neurônio atual
-               neuronio.gradienteAcumulado[k] += taxaAprendizagem * neuronio.erro * camadaAnterior.neuronio(k).saida;
+               neuronio.gradienteAcumulado[k] += neuronio.erro * camadaAnterior.neuronio(k).saida;
             }
          }
       }

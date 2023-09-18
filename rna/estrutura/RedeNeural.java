@@ -67,18 +67,6 @@ public class RedeNeural implements Cloneable, Serializable{
    private int[] arquitetura;
 
    /**
-    * Valor de taxa de aprendizagem da Rede Neural. Define o 
-    * quanto a "rede absorve do erro" durante o processo de treino.
-    */
-   private double TAXA_APRENDIZAGEM = 0.01;
-
-   /**
-    * Auxiliar na aceleração do processo de aprendizagem, cria uma "inércia" que 
-    * ajuda a rede a acelerar o aprendizado e evita ela de ficar presa em mínimos locais.
-    */
-   private double TAXA_MOMENTUM = 0;
-
-   /**
     * Constante auxiliar que ajuda no controle do bias atuando como neurônio 
     * adicional para cálculos.
     */
@@ -293,47 +281,6 @@ public class RedeNeural implements Cloneable, Serializable{
     */
    public void configurarBias(boolean usarBias){
       this.BIAS = (usarBias) ? 1 : 0;
-   }
-
-   /**
-    * Define o novo valor de taxa de aprendizagem da rede. O valor é usado durante o método de 
-    * treino. O valor da taxa de aprendizagem difine "o quanto a rede vai aprender com o erro 
-    * durante o treinamento". Certifique-se de não usar valores muito altos ou muito baixos para 
-    * não gerar resultados inesperados durante o treino.
-    * <p>
-    *    {@code O valor padrão da taxa de aprendizagem é 0.01}
-    * </p>
-    * @param taxaAprendizagem novo valor de taxa de aprendizagem.
-    * @throws IllegalArgumentException caso o novo valor de taxa de aprendizagem seja menor ou igual a zero.
-    */
-   public void configurarTaxaAprendizagem(double taxaAprendizagem){
-      if(taxaAprendizagem <= 0){
-         throw new IllegalArgumentException("O valor da nova taxa de aprendizagem não pode ser menor ou igual a zero.");
-      }
-      this.TAXA_APRENDIZAGEM = taxaAprendizagem;
-   }
-
-   /**
-    * Define o novo valor do momentum que vai ser usado no treinamento da rede.
-    * <p>
-    *    O momentum é uma técnica utilizada no treinamento de redes neurais para acelerar 
-    *    a convergência e melhorar a estabilidade das atualizações dos pesos. Ele introduz 
-    *    um termo de momento nas atualizações dos pesos, permitindo que as atualizações tenham 
-    *    inércia, acumulando uma fração dos gradientes das iterações anteriores.
-    * </p>
-    * Normalmente esse valor fica entre 0 e 1, onde 0 significa que o momentum não terá efeito e 1 
-    * significa que o momentum terá o máximo de inércia, acumulando totalmente os gradientes anteriores. 
-    * <p>
-    *    {@code O valor padrão do momentum é 0}
-    * </p>
-    * @param momentum novo valor de momentum.
-    * @throws IllegalArgumentException se o valor de momentum for menor que zero.
-    */
-   public void configurarMomentum(double momentum){
-      if(momentum < 0){
-         throw new IllegalArgumentException("O valor de momentum não pode ser menor que zero.");
-      }
-      this.TAXA_MOMENTUM = momentum;
    }
 
    /**
@@ -888,6 +835,7 @@ public class RedeNeural implements Cloneable, Serializable{
       this.modeloCompilado();
       consistenciaDados(entradas, saidas);
 
+      
       if(eps == 0){
          throw new IllegalArgumentException("O valor de perturbação não pode ser igual a zero.");
       }
@@ -897,13 +845,13 @@ public class RedeNeural implements Cloneable, Serializable{
       if(custoMinimo < 0){
          throw new IllegalArgumentException("O valor de custo mínimo não pode ser negativo.");
       }
-
+      
       RedeNeural redeG = this.clone();//copia da rede para guardar os valores de "gradiente"
-
+      
       //transformar as redes em arrays para facilitar
       Camada[] camadasR = new Camada[this.arquitetura.length];
       Camada[] camadasG = new Camada[this.arquitetura.length];
-
+      
       //copiando as camadas das redes para os arrays
       camadasR[0] = this.entrada;
       camadasG[0] = redeG.obterCamadaEntrada();
@@ -913,6 +861,8 @@ public class RedeNeural implements Cloneable, Serializable{
       }
       camadasR[camadasR.length-1] = this.saida;
       camadasG[camadasG.length-1] = redeG.obterCamadaSaida();
+      
+      double taxaAprendizagem = 0.01;
 
       for(int epocas = 0; epocas < epochs; epocas++){
          
@@ -935,28 +885,12 @@ public class RedeNeural implements Cloneable, Serializable{
          for(int i = 0; i < camadasR.length; i++){
             for(int j = 0; j < camadasR[i].quantidadeNeuronios(); j++){
                for(int k = 0; k < camadasR[i].neuronio(j).pesos.length; k++){
-                  camadasR[i].neuronio(j).pesos[k] -= TAXA_APRENDIZAGEM * camadasG[i].neuronio(j).pesos[k];
+                  camadasR[i].neuronio(j).pesos[k] -= taxaAprendizagem * camadasG[i].neuronio(j).pesos[k];
                }
             }
          }
       }
 
-   }
-
-   /**
-    * Informa o valor do hiperparâmetro de {@code taxa de aprendizagem} da Rede Neural.
-    * @return valor de taxa de aprendizagem da rede.
-    */
-   public double obterTaxaAprendizagem(){
-      return this.TAXA_APRENDIZAGEM;
-   }
-
-   /**
-    * Informa o valor do hiperparâmetro de {@code taxa de momentum} da Rede Neural.
-    * @return valor de taxa de momentum da rede.
-    */
-   public double obterTaxaMomentum(){
-      return this.TAXA_MOMENTUM;
    }
 
    /**
@@ -1096,13 +1030,10 @@ public class RedeNeural implements Cloneable, Serializable{
 
       //otimizador
       buffer += espacamento + "Otimizador: " + this.otimizadorAtual.getClass().getSimpleName() + "\n";
-
-      //hiperparâmetros
-      buffer += espacamento + "Taxa de aprendizgem: " + this.TAXA_APRENDIZAGEM + "\n";
-      buffer += espacamento + "Taxa de momentum: " + this.TAXA_MOMENTUM + "\n";
+      buffer += this.otimizadorAtual.info();
 
       //bias
-      buffer += espacamento + "Bias = ";
+      buffer += "\n" + espacamento + "Bias = ";
       buffer += (this.BIAS == 1) ? "true" : "false";
       buffer += "\n\n";
 
@@ -1134,8 +1065,6 @@ public class RedeNeural implements Cloneable, Serializable{
          RedeNeural clone = (RedeNeural) super.clone();
 
          //dados importantes
-         clone.TAXA_APRENDIZAGEM = this.TAXA_APRENDIZAGEM;
-         clone.TAXA_MOMENTUM = this.TAXA_MOMENTUM;
          clone.BIAS = this.BIAS;
          clone.arquitetura = this.arquitetura;
 
@@ -1187,8 +1116,7 @@ public class RedeNeural implements Cloneable, Serializable{
       System.arraycopy(neuronio.entradas, 0, clone.entradas, 0, clone.entradas.length);
       System.arraycopy(neuronio.pesos, 0, clone.pesos, 0, clone.pesos.length);
       System.arraycopy(neuronio.momentum, 0, clone.momentum, 0, clone.momentum.length);
-      System.arraycopy(neuronio.acumuladorGradiente, 0, clone.acumuladorGradiente, 0, clone.acumuladorGradiente.length);
-      System.arraycopy(neuronio.momentum2, 0, clone.momentum2, 0, clone.momentum2.length);
+      System.arraycopy(neuronio.velocidade, 0, clone.velocidade, 0, clone.velocidade.length);
       System.arraycopy(neuronio.gradiente, 0, clone.gradiente, 0, clone.gradiente.length);
       System.arraycopy(neuronio.gradienteAcumulado, 0, clone.gradienteAcumulado, 0, clone.gradienteAcumulado.length); 
 

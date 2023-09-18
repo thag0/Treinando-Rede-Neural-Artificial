@@ -3,14 +3,12 @@ package exemplos;
 import java.util.concurrent.TimeUnit;
 
 import utilitarios.ged.Dados;
-import utilitarios.ged.Ged;
 
 public class Multithread {
    public static void main(String[] args){
-      Ged ged = new Ged();
 
-      int lin = 1024;
-      int col = 1024;
+      int lin = 1024 + 512;
+      int col = 1024 + 512;
       double[][] a = new double[lin][col];
       double[][] b = new double[lin][col];
       double[][] r = new double[lin][col];
@@ -25,7 +23,7 @@ public class Multithread {
       System.out.println("Multiplicando.");
    
       long t1 = System.nanoTime();
-      r = ged.multiplicarMatrizes(a, b);
+      mult(a, b, r, 4);
       long t2 = System.nanoTime();
 
       long t3 = TimeUnit.NANOSECONDS.toSeconds(t2 - t1);

@@ -53,13 +53,15 @@ public class Camada implements Serializable{
     * Identificador da camada dentro da Rede Neural.
     * <p>
     *    Esse identificador deve corresponder ao índice da camada
-    *    dentro do conjunto de camadas presente na rede.
+    *    dentro do conjunto de camadas presente na rede, sendo 0 o 
+    *    índice inicial.
     * </p>
     */
    private int id;
 
    /**
-    * Função de ativação da camada.
+    * Função de ativação da camada que atuará no resultado do somatório entre
+    * os pesos e entradas com a adição do bias (se houver).
     */
    FuncaoAtivacao ativacao = new ReLU();
 
@@ -105,7 +107,8 @@ public class Camada implements Serializable{
    }
 
    /**
-    * Instancia os neurônios da camada correspondente.
+    * Instancia os todos neurônios da camada correspondente, configurando suas entradas e 
+    * pesos.
     * @param nNeuronios quantidade de neurônios que a camada deve possuir, incluindo bias.
     * @param conexoes quantidade de pesos de cada neurônio, deve corresponder a quantidade 
     * de neurônios da camada anterior.
@@ -123,31 +126,34 @@ public class Camada implements Serializable{
    /**
     * Realiza a operação do somatório de cada peso do neurônio com sua entrada.
     * <p>
-    *    As entradas do neurônio corresponde ás saídas dos neurônios da camada anterior.
-    *    Com isso cada neurônio multiplica o peso da conexão pelo valor da entrada.
-    *    Após o somatório é aplicada a função de ativação em casa neurônio e o resultado
-    *    ficará salvo na sua saída.
+    *    As entradas do neurônio correspondem ás saídas dos neurônios da camada anterior.
+    *    Com isso cada neurônio multiplica o {@code peso} da conexão pelo valor da {@code entrada}
+    *    correspondente.
+    * </p>
+    * <p>
+    *    Após o somatório é aplicada a função de ativação em cada neurônio e o resultado
+    *    é salvo na sua {@code saída}.
     * </p>
     * @param anterior camada anterior que contém os valores de saída dos neurônios.
     */
    public void ativarNeuronios(Camada anterior){
-      int nNeuronios = this.neuronios.length-b;//desconsiderar bias
+      //desconsiderar bias
+      int nNeuronios = this.neuronios.length-b;
       
-      //preencher entradas dos neuronios
-      for(int i = 0; i < nNeuronios; i++){   
-
-         int numEntradas = this.neuronios[i].entradas.length;
-         for(int j = 0; j < numEntradas; j++){
+      // preencher entradas dos neuronios
+      // esse método de cópia é mais eficiente do que
+      // criar um array intermediário e usar o system.arraycopy
+      // nas entradas dos neurônios
+      for(int i = 0; i < nNeuronios; i++){
+         for(int j = 0; j < this.neuronios[i].entradas.length; j++){
             this.neuronios[i].entradas[j] = anterior.neuronios[j].saida;
          }
       }
 
-      //calculando o somatorio das entradas com os pesos
       for(int i = 0; i < nNeuronios; i++){
          this.neuronios[i].somatorio();
       }
 
-      //ativa todos os neuronios, tendo os resultado dos somatórios
       this.ativacao.ativar(this.neuronios, nNeuronios);
    }
 

@@ -21,10 +21,16 @@ public abstract class Otimizador implements Serializable{
     * Treina a rede neural de acordo com o otimizador configurado, atualizando 
     * seus pesos.
     * @param redec Rede Neural em formato de lista de camadas.
-    * @param taxaAprendizagem valor de taxa de aprendizagem da Rede Neural.
-    * @param momentum valor de taxa de momentum da Rede Neural.
     */
-    public void atualizar(Camada[] redec, double taxaAprendizagem, double momentum){
+    public void atualizar(Camada[] redec){
         throw new java.lang.UnsupportedOperationException("Método de atualização do otimizador não foi implementado.");
+    }
+
+   /**
+    * Mostra as opções de configurações do otimizador.
+    * @return buffer formatado.
+    */
+    public String info(){
+        throw new java.lang.UnsupportedOperationException("Método de informações do otimizador não foi implementado.");
     }
 }

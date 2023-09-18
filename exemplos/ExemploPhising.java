@@ -1,6 +1,6 @@
 package exemplos;
 
-import rna.ativacoes.LeakyReLU;
+import rna.ativacoes.Sigmoid;
 import rna.ativacoes.TanH;
 import rna.estrutura.RedeNeural;
 import rna.otimizadores.SGD;
@@ -48,9 +48,7 @@ public class ExemploPhising{
       int[] arq = {colunasDados, 10, 10, 10, colunasClasses};
       RedeNeural rede = new RedeNeural(arq);
       rede.compilar();
-      rede.configurarTaxaAprendizagem(0.001);
-      rede.configurarMomentum(0.99);
-      rede.configurarFuncaoAtivacao(new LeakyReLU(0.001));
+      rede.configurarFuncaoAtivacao(new Sigmoid());
       rede.configurarFuncaoAtivacao(rede.obterCamadaSaida(), new TanH());
       rede.configurarOtimizador(new SGD());
       rede.configurarAlcancePesos(0.5);

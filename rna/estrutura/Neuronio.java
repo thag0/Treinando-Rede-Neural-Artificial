@@ -49,12 +49,7 @@ public class Neuronio implements Serializable{
     *    Auxiliar no treino da Rede Neural usando otimizadores RMSprop e Adam.
     * </p>
     */
-   public double[] momentum2;
-   
-   /**
-    * Auxiliar no treino usando otimizador AdaGrad.
-    */
-   public double[] acumuladorGradiente;
+   public double[] velocidade;
 
    /**
     * Resultado do somatório das entradas multiplicadas pelos pesos do neurônio.
@@ -90,15 +85,13 @@ public class Neuronio implements Serializable{
     *    O gradiente de cada conexão do neurônio é dado por:
     * </p>
     * <pre>
-    *    g[i] = -tA * e * en[i]
+    *    g[i] = -e * en[i]
     * </pre>
     * onde:
     * <p>
     *    g - vetor de gradientes do neurônio.
     * </p>
     * <p>
-    *    tA- valor de taxa de aprendizagem (learning rate).
-    * </p>
     * <p>
     *    e - erro do neurônio. 
     * </p>
@@ -171,18 +164,16 @@ public class Neuronio implements Serializable{
 
       this.entradas = new double[conexoes];
       this.momentum = new double[conexoes];
-      this.momentum2 = new double[conexoes];
+      this.velocidade = new double[conexoes];
       this.gradiente = new double[conexoes];
-      this.acumuladorGradiente = new double[conexoes];
       this.gradienteAcumulado = new double[conexoes];
 
       //só por segurança
       for(int i = 0; i < conexoes; i++){
          this.entradas[i] = 0;
          this.momentum[i] = 0;
-         this.momentum2[i] = 0;
+         this.velocidade[i] = 0;
          this.gradiente[i] = 0;
-         this.acumuladorGradiente[i] = 0;
          this.gradienteAcumulado[i] = 0;
       }
    
@@ -214,14 +205,11 @@ public class Neuronio implements Serializable{
    /**
     * Calcula o gradiente de cada peso do neurônio usando a expressão:
     * <pre>
-    *    g[i] = -tA * e * en[i]
+    *    g[i] = -e * en[i]
     * </pre>
     * onde:
     * <p>
     *    g - vetor de gradientes do neurônio.
-    * </p>
-    * <p>
-    *    tA- valor de taxa de aprendizagem (learning rate).
     * </p>
     * <p>
     *    e - erro do neurônio. 
@@ -237,14 +225,15 @@ public class Neuronio implements Serializable{
     * usado o oposto do gradiente para minimizar a perda da rede.
     * <p>
     *    Além de que essa abordagem de {@code p-y} não estava funcionando para calcular
-    *    o erro dos neurônio quando a camada de saída de rede usava a função argmax.
+    *    o erro dos neurônio quando a camada de saída de rede usava a função argmax então
+    *    acabei sendo um pouco forçado em deixar dessa forma.
     * </p>
     * @param taxaAprendizagem valor de taxa de aprendizagem da Rede Neural.
     */
-   public void calcularGradiente(double taxaAprendizagem){
+   public void calcularGradiente(){
       int numPesos = this.pesos.length;
       for(int i = 0; i < numPesos; i++){
-         this.gradiente[i] = -taxaAprendizagem * this.erro * this.entradas[i];
+         this.gradiente[i] = -this.erro * this.entradas[i];
       }
    }
 

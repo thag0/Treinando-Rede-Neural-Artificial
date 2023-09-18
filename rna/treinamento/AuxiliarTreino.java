@@ -82,7 +82,7 @@ class AuxiliarTreino implements Serializable{
          saida.ativacaoDerivada();
          for(int i = 0; i < saida.quantidadeNeuronios(); i++){
             neuronio = saida.neuronio(i);
-            neuronio.erro = ((saidas[i] - neuronio.saida) * neuronio.derivada);
+            neuronio.erro = ((saidas[i] - neuronio.saida));
          }
       }
    }

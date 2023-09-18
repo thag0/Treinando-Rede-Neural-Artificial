@@ -17,24 +17,31 @@ import rna.estrutura.Neuronio;
 public class RMSProp extends Otimizador{
 
    /**
+    * Valor de taxa de aprendizagem do otimizador.
+    */
+   private double taxaAprendizagem;
+
+   /**
     * Usado para evitar divisão por zero.
     */
-   private double epsilon = 1e-8;
+   private double epsilon;
   
    /**
     * fator de decaimento do RMSprop.
     */
-   double beta = 0.9;
+   private double rho;
 
    /**
     * Inicializa uma nova instância de otimizador RMSProp usando os valores 
     * de hiperparâmetros fornecidos.
+    * @param tA valor de taxa de aprendizagem.
     * @param epsilon usado para evitar a divisão por zero.
-    * @param beta fator de decaimento do RMSProp.
+    * @param rho fator de decaimento do RMSProp.
     */
-   public RMSProp(double epsilon, double beta){
+   public RMSProp(double tA, double epsilon, double rho){
+      this.taxaAprendizagem = tA;
       this.epsilon = epsilon;
-      this.beta = beta;
+      this.rho = rho;
    }
 
    /**
@@ -42,13 +49,18 @@ public class RMSProp extends Otimizador{
     * <p>
     *    Os hiperparâmetros do RMSProp serão inicializados com os valores padrão, que são:
     * </p>
-    * {@code epsilon = 1e-8}
     * <p>
-    *    {@code beta = 0.9}
+    *    {@code taxaAprendizagem = 0.01}
+    * </p>
+    * <p>
+    *    {@code epsilon = 1e-7}
+    * </p>
+    * <p>
+    *    {@code rho = 0.99}
     * </p>
     */
    public RMSProp(){
-      this(1e-8, 0.9);
+      this(0.001, 1e-7, 0.99);
    }
 
    /**
@@ -71,13 +83,15 @@ public class RMSProp extends Otimizador{
     *    peso que será atualizado.
     * </p>
     * <p>
-    *    {@code m2c} - valor de momentum de segunda ordem corrigido
+    *    {@code g} - gradiente correspondente a conexão do peso que será
+    *    atualizado.
     * </p>
     */
    @Override
-   public void atualizar(Camada[] redec, double taxaAprendizagem, double momentum){
+   public void atualizar(Camada[] redec){
       double g;
       Neuronio neuronio;
+      //TODO corrigir problema de convergência
 
       //percorrer rede, com exceção da camada de entrada
       for(int i = 1; i < redec.length; i++){
@@ -89,11 +103,23 @@ public class RMSProp extends Otimizador{
             neuronio = camada.neuronio(j);
             for(int k = 0; k < neuronio.pesos.length; k++){
                g = neuronio.gradiente[k];
-               neuronio.acumuladorGradiente[k] = (beta * neuronio.acumuladorGradiente[k]) + ((1 - beta) * g * g);
-               neuronio.pesos[k] -= (taxaAprendizagem / Math.sqrt(neuronio.acumuladorGradiente[k] + epsilon)) * g;
+               neuronio.velocidade[k] = (rho * neuronio.velocidade[k]) + ((1 - rho) * g*g);
+               neuronio.pesos[k] -= (taxaAprendizagem * g) / (Math.sqrt(neuronio.velocidade[k] + epsilon));
             }
          }
       }
+   }
+
+   @Override
+   public String info(){
+      String buffer = "";
+
+      String espacamento = "    ";
+      buffer += espacamento + "TaxaAprendizagem: " + this.taxaAprendizagem + "\n";
+      buffer += espacamento + "Rho: " + this.rho + "\n";
+      buffer += espacamento + "Epsilon: " + this.epsilon + "\n";
+
+      return buffer;
    }
 
 }

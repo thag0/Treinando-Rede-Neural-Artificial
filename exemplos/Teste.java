@@ -1,10 +1,10 @@
 package exemplos;
 
+import java.util.concurrent.TimeUnit;
+
 import rna.ativacoes.Sigmoid;
 import rna.estrutura.RedeNeural;
 import rna.otimizadores.SGD;
-import utilitarios.ged.Dados;
-import utilitarios.ged.Ged;
 
 public class Teste{
    public static void main(String[] args) {
@@ -27,14 +27,17 @@ public class Teste{
       rede.compilar();
       rede.configurarFuncaoAtivacao(new Sigmoid());
       rede.configurarOtimizador(new SGD());
-      rede.configurarTaxaAprendizagem(0.1);
-      rede.configurarMomentum(0.99);
+      System.out.println(rede.info());
 
-      rede.diferencaFinita(e, s, 1e-2, 40_000, 0);
 
-      double[][] previsoes = rede.calcularSaida(e);
+      long t1 = System.nanoTime();
+      rede.treinar(e, s, 4000);
+      long t2 = System.nanoTime();
+      long t3 = TimeUnit.NANOSECONDS.toSeconds(t2 - t1);
+      long segundos = t3 % 60;
+      System.out.println("Terminado em " + segundos + "s");
+      System.out.println("c = " + rede.avaliador.erroMedioQuadrado(e, s));
 
-      Ged ged = new Ged();
-      ged.imprimirDados(new Dados(previsoes));
+      System.out.println(rede);
    }
 }

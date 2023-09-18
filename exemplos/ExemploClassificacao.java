@@ -44,8 +44,6 @@ public class ExemploClassificacao{
       int[] arq = {qEntradas, 6, 6, qSaidas};
       RedeNeural rede = new RedeNeural(arq);
       rede.compilar();
-      rede.configurarTaxaAprendizagem(0.001);
-      rede.configurarMomentum(0.99);
       rede.configurarAlcancePesos(0.5);
       rede.configurarInicializacaoPesos(1);
       rede.configurarOtimizador(new Nadam());

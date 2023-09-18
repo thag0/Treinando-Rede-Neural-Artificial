@@ -12,6 +12,11 @@ import rna.estrutura.Neuronio;
 public class AdaGrad extends Otimizador{
 
    /**
+    * Valor de taxa de aprendizagem do otimizador.
+    */
+   private double taxaAprendizagem;
+
+   /**
     * Usado para evitar divisão por zero.
     */
    private double epsilon;
@@ -19,9 +24,11 @@ public class AdaGrad extends Otimizador{
    /**
     * Inicializa uma nova instância de otimizador AdaGrad usando os valores 
     * de hiperparâmetros fornecidos.
+    * @param tA valor de taxa de aprendizagem.
     * @param epsilon usado para evitar a divisão por zero.
     */
-   public AdaGrad(double epsilon){
+   public AdaGrad(double tA, double epsilon){
+      this.taxaAprendizagem = tA;
       this.epsilon = epsilon;
    }
 
@@ -30,10 +37,15 @@ public class AdaGrad extends Otimizador{
     * <p>
     *    Os hiperparâmetros do AdaGrad serão inicializados com os valores padrão, que são:
     * </p>
-    * {@code epsilon = 1e-8}
+    * <p>
+    *    {@code taxaAprendizagem = 0.01}
+    * </p>
+    * <p>
+    *    {@code epsilon = 1e-7}
+    * </p>
     */
    public AdaGrad(){
-      this(1e-8);
+      this(0.01, 1e-7);
    }
 
    /**
@@ -64,7 +76,7 @@ public class AdaGrad extends Otimizador{
     * </p>
     */
    @Override
-   public void atualizar(Camada[] redec, double taxaAprendizagem, double momentum){  
+   public void atualizar(Camada[] redec){  
       double g;
       Neuronio neuronio;
 
@@ -78,11 +90,22 @@ public class AdaGrad extends Otimizador{
             neuronio = camada.neuronio(j);
             for(int k = 0; k < neuronio.pesos.length; k++){
                g = neuronio.gradiente[k];
-               neuronio.acumuladorGradiente[k] += (g * g);
-               neuronio.pesos[k] -= (taxaAprendizagem * g) / Math.sqrt(neuronio.acumuladorGradiente[k] + epsilon);
+               neuronio.velocidade[k] += (g * g);
+               neuronio.pesos[k] -= (taxaAprendizagem * g) / Math.sqrt(neuronio.velocidade[k] + epsilon);
             }
          }
       }
+   }
+
+   @Override
+   public String info(){
+      String buffer = "";
+
+      String espacamento = "    ";
+      buffer += espacamento + "TaxaAprendizagem: " + this.taxaAprendizagem + "\n";
+      buffer += espacamento + "Epsilon: " + this.epsilon + "\n";
+
+      return buffer;
    }
    
 }

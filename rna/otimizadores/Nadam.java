@@ -16,6 +16,11 @@ import rna.estrutura.Neuronio;
 public class Nadam extends Otimizador{
 
    /**
+    * Valor de taxa de aprendizagem do otimizador.
+    */
+   private double taxaAprendizagem;
+
+   /**
     * Usado para evitar divisão por zero.
     */
    private double epsilon;
@@ -38,11 +43,13 @@ public class Nadam extends Otimizador{
    /**
     * Inicializa uma nova instância de otimizador Nadam usando os valores 
     * de hiperparâmetros fornecidos.
+    * @param tA valor de taxa de aprendizagem.
     * @param epsilon usado para evitar a divisão por zero.
     * @param beta1 decaimento do momento de primeira ordem.
     * @param beta2 decaimento da segunda ordem.
     */
-   public Nadam(double epsilon, double beta1, double beta2){
+   public Nadam(double tA, double epsilon, double beta1, double beta2){
+      this.taxaAprendizagem = tA;
       this.epsilon = epsilon;
       this.beta1 = beta1;
       this.beta2 = beta2;
@@ -53,7 +60,12 @@ public class Nadam extends Otimizador{
     * <p>
     *    Os hiperparâmetros do Nadam serão inicializados com os valores padrão, que são:
     * </p>
-    * {@code epsilon = 1e-7}
+    * <p>
+    *    {@code taxaAprendizagem = 0.001}
+    * </p>
+    * <p>
+    *    {@code epsilon = 1e-7}
+    * </p>
     * <p>
     *    {@code beta1 = 0.9}
     * </p>
@@ -62,7 +74,7 @@ public class Nadam extends Otimizador{
     * </p>
     */
    public Nadam(){
-      this(1e-7, 0.9, 0.999);
+      this(0.001, 1e-7, 0.9, 0.999);
    }
 
    /**
@@ -112,7 +124,7 @@ public class Nadam extends Otimizador{
     * </p>
     */
    @Override
-   public void atualizar(Camada[] redec, double taxaAprendizagem, double momentum){
+   public void atualizar(Camada[] redec){
       double mc, m2c, divB1, divB2, g;
       Neuronio neuronio;
 
@@ -132,15 +144,28 @@ public class Nadam extends Otimizador{
                g = neuronio.gradiente[k];
 
                neuronio.momentum[k] =  (beta1 * neuronio.momentum[k])  + ((1 - beta1) * g);
-               neuronio.momentum2[k] = (beta2 * neuronio.momentum2[k]) + ((1 - beta2) * g * g);
+               neuronio.velocidade[k] = (beta2 * neuronio.velocidade[k]) + ((1 - beta2) * g * g);
                
                mc =  (beta1 * neuronio.momentum[k]  + ((1 - beta1) * g))  / divB1;
-               m2c = (beta2 * neuronio.momentum2[k] + ((1 - beta2) * g * g)) / divB2;
+               m2c = (beta2 * neuronio.velocidade[k] + ((1 - beta2) * g * g)) / divB2;
                
                neuronio.pesos[k] -= (taxaAprendizagem * mc) / (Math.sqrt(m2c) + epsilon);      
             }
          }
       }
+   }
+
+   @Override
+   public String info(){
+      String buffer = "";
+
+      String espacamento = "    ";
+      buffer += espacamento + "TaxaAprendizagem: " + this.taxaAprendizagem + "\n";
+      buffer += espacamento + "Beta1: " + this.beta1 + "\n";
+      buffer += espacamento + "Beta2: " + this.beta2 + "\n";
+      buffer += espacamento + "Epsilon: " + this.epsilon + "\n";
+
+      return buffer;
    }
 
 }
