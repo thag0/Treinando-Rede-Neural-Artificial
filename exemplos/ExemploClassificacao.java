@@ -2,10 +2,9 @@ package exemplos;
 
 import java.text.DecimalFormat;
 
-import rna.ativacoes.Sigmoid;
-import rna.ativacoes.Softmax;
 import rna.estrutura.RedeNeural;
-import rna.otimizadores.Nadam;
+import rna.ativacoes.*;
+import rna.otimizadores.*;
 import utilitarios.ged.Dados;
 import utilitarios.ged.Ged;
 
@@ -41,12 +40,12 @@ public class ExemploClassificacao{
       double[][] testeY = ged.separarDadosSaida(teste, qSaidas);
 
       //criando e configurando a rede neural
-      int[] arq = {qEntradas, 6, 6, qSaidas};
+      int[] arq = {qEntradas, 7, 7, qSaidas};
       RedeNeural rede = new RedeNeural(arq);
       rede.compilar();
-      rede.configurarAlcancePesos(0.5);
+      rede.configurarAlcancePesos(0.8);
       rede.configurarInicializacaoPesos(1);
-      rede.configurarOtimizador(new Nadam());
+      rede.configurarOtimizador(new SGD());
       rede.configurarFuncaoAtivacao(new Sigmoid());
       rede.configurarFuncaoAtivacao(rede.obterCamadaSaida(), new Softmax());
       System.out.println(rede.info());

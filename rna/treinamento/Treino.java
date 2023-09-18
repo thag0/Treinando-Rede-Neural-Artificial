@@ -85,7 +85,6 @@ class Treino implements Serializable{
     * Retropropaga o erro da rede neural de acordo com os dados de entrada e saída esperados e calcula
     * os gradientes dos pesos de cada neurônio.
     * @param redec Rede Neural em formato de lista de camadas.
-    * @param taxaAprendizagem valor de taxa de aprendizagem da rede neural.
     * @param saidas array com as saídas esperadas das amostras.
     */
    private void backpropagation(Camada[] redec, double[] saidas){
@@ -98,7 +97,6 @@ class Treino implements Serializable{
     * Método exclusivo para separar o cálculo dos gradientes das conexões de cada
     * neurônio dentro da rede.
     * @param redec Rede Neural em formato de lista de camadas.
-    * @param taxaAprendizagem valor de taxa de aprendizagem da rede neural.
     */
    private void calcularGradientes(Camada[] redec){
       //percorrer rede, excluindo camada de entrada

@@ -93,9 +93,9 @@ class Main{
       rede.compilar();
       rede.configurarAlcancePesos(0.7);
       rede.configurarInicializacaoPesos(1);
-      rede.configurarOtimizador(new SGD());
+      rede.configurarOtimizador(new SGD(0.001, 0.99, false));
       rede.configurarFuncaoAtivacao(new Sigmoid());
-
+      
       return rede;
    }
 

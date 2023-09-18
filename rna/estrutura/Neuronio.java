@@ -45,14 +45,11 @@ public class Neuronio implements Serializable{
 
    /**
     * Momentum de segunda ordem, ou também chamado de "velocity".
-    * <p>
-    *    Auxiliar no treino da Rede Neural usando otimizadores RMSprop e Adam.
-    * </p>
     */
    public double[] velocidade;
 
    /**
-    * Resultado do somatório das entradas multiplicadas pelos pesos do neurônio.
+    * Resultado da multiplicação entre os pesos e entradas com adição do bias (se houver).
     */
    public double somatorio;
 
@@ -62,8 +59,7 @@ public class Neuronio implements Serializable{
    public double saida;
 
    /**
-    * Auxiliar no treino, deve conter o resultado da função de 
-    * ativação derivada aplicada ao somatório.
+    * Resultado da derivada da função de ativação aplicada ao somatório do neurônio.
     */
    public double derivada;
 
@@ -113,7 +109,8 @@ public class Neuronio implements Serializable{
    private Random random = new Random();
 
    /**
-    * Instancia um neurônio individual da rede, com pesos aleatórios para cada ligação.
+    * Instancia um neurônio individual da rede, com pesos aleatórios para cada ligação 
+    * definidos pelo seu inicializador.
     * <p>
     *    A quantidade de entradas dos neurônios corresponde as saídas dos neurônios da 
     *    camada anterior respectivamente.
@@ -228,7 +225,6 @@ public class Neuronio implements Serializable{
     *    o erro dos neurônio quando a camada de saída de rede usava a função argmax então
     *    acabei sendo um pouco forçado em deixar dessa forma.
     * </p>
-    * @param taxaAprendizagem valor de taxa de aprendizagem da Rede Neural.
     */
    public void calcularGradiente(){
       int numPesos = this.pesos.length;

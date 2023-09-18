@@ -65,24 +65,17 @@ class AuxiliarTreino implements Serializable{
       Camada saida = redec[redec.length-1];
       Neuronio neuronio;
       
-      if(saida.temArgmax()){//classificação
+      if(saida.temArgmax()){//classificação binária
          int indiceMaior = indiceMaiorValor(saidas);
          for(int i = 0; i < saida.quantidadeNeuronios(); i++){
             neuronio = saida.neuronio(i);
             neuronio.erro = (i == indiceMaior) ? 1-neuronio.saida : 0-neuronio.saida;
          }
 
-      }else if(saida.temSoftmax()){//classificação
+      }else{// regressão (e softmax)
          for(int i = 0; i < saida.quantidadeNeuronios(); i++){
             neuronio = saida.neuronio(i);
-            neuronio.erro = (saidas[i] - neuronio.saida);
-         }
-      
-      }else{//regressão
-         saida.ativacaoDerivada();
-         for(int i = 0; i < saida.quantidadeNeuronios(); i++){
-            neuronio = saida.neuronio(i);
-            neuronio.erro = ((saidas[i] - neuronio.saida));
+            neuronio.erro = saidas[i] - neuronio.saida;
          }
       }
    }
