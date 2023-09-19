@@ -25,8 +25,8 @@ class Main{
    // static final String caminhoArquivo = "/dados/32x32/bloco.png";
    static final String caminhoArquivo = "/dados/mnist/8.png";
    static final String caminhoImagemExportada = "./resultados/imagem-ampliada";
-   static final int epocas = 100*1000;
-   static final float escalaRender = 10f;
+   static final int epocas = 10*1000;
+   static final float escalaRender = 8f;
    static final float escalaImagemExportada = 20f;
 
    // Sempre lembrar de quando mudar o dataset, também mudar a quantidade de dados de entrada e saída.
@@ -70,8 +70,8 @@ class Main{
       segundos = segundosTotais % 60;
 
       //avaliar resultados
-      double precisao = 1 - rede.avaliador.erroMedioAbsoluto(treinoX, treinoY);
       double perda = rede.avaliador.erroMedioQuadrado(treinoX, treinoY);
+      double precisao = 1 - rede.avaliador.erroMedioAbsoluto(treinoX, treinoY);
 
       System.out.println("Perda = " + perda);
       System.out.println("Precisão = " + (formatarDecimal(precisao*100, 2)) + "%");
@@ -91,9 +91,9 @@ class Main{
       RedeNeural rede = new RedeNeural(arq);
 
       rede.compilar();
-      rede.configurarAlcancePesos(0.7);
-      rede.configurarInicializacaoPesos(1);
-      rede.configurarOtimizador(new SGD(0.001, 0.99, false));
+      rede.configurarAlcancePesos(1);
+      rede.configurarInicializacaoPesos(2);
+      rede.configurarOtimizador(new RMSProp());
       rede.configurarFuncaoAtivacao(new Sigmoid());
       
       return rede;
@@ -101,7 +101,7 @@ class Main{
 
 
    public static void treinoEmPainel(RedeNeural rede, BufferedImage imagem, double[][] dadosEntrada, double[][] dadosSaida){
-      final int fps = 60;
+      final int fps = 6000;
       int epocasPorFrame = 10;
 
       //acelerar o processo de desenho

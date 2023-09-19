@@ -41,8 +41,8 @@ public class Nadam extends Otimizador{
    long interacoes = 0;
 
    /**
-    * Inicializa uma nova instância de otimizador Nadam usando os valores 
-    * de hiperparâmetros fornecidos.
+    * Inicializa uma nova instância de otimizador <strong> Nadam </strong> 
+    * usando os valores de hiperparâmetros fornecidos.
     * @param tA valor de taxa de aprendizagem.
     * @param epsilon usado para evitar a divisão por zero.
     * @param beta1 decaimento do momento de primeira ordem.
@@ -56,7 +56,7 @@ public class Nadam extends Otimizador{
    }
 
    /**
-    * Inicializa uma nova instância de otimizador Nadam.
+    * Inicializa uma nova instância de otimizador <strong> Nadam </strong>.
     * <p>
     *    Os hiperparâmetros do Nadam serão inicializados com os valores padrão, que são:
     * </p>
@@ -125,19 +125,19 @@ public class Nadam extends Otimizador{
     */
    @Override
    public void atualizar(Camada[] redec){
-      double mc, m2c, divB1, divB2, g;
+      double mChapeu, vChapeu, g;
       Neuronio neuronio;
 
       //percorrer rede, com exceção da camada de entrada
       interacoes++;
+      double forcaB1 = (1 - Math.pow(beta1, interacoes));
+      double forcaB2 = (1 - Math.pow(beta2, interacoes));
+
       for(int i = 1; i < redec.length; i++){
          
          Camada camada = redec[i];
          int nNeuronios = camada.quantidadeNeuroniosSemBias();
          for(int j = 0; j < nNeuronios; j++){
-
-            divB1 = (1 - Math.pow(beta1, interacoes));
-            divB2 = (1 - Math.pow(beta2, interacoes));
 
             neuronio = camada.neuronio(j);
             for(int k = 0; k < neuronio.pesos.length; k++){
@@ -146,10 +146,10 @@ public class Nadam extends Otimizador{
                neuronio.momentum[k] =  (beta1 * neuronio.momentum[k])  + ((1 - beta1) * g);
                neuronio.velocidade[k] = (beta2 * neuronio.velocidade[k]) + ((1 - beta2) * g * g);
                
-               mc =  (beta1 * neuronio.momentum[k]  + ((1 - beta1) * g))  / divB1;
-               m2c = (beta2 * neuronio.velocidade[k] + ((1 - beta2) * g * g)) / divB2;
+               mChapeu = (beta1 * neuronio.momentum[k]  + ((1 - beta1) * g))  / forcaB1;
+               vChapeu = (beta2 * neuronio.velocidade[k] + ((1 - beta2) * g * g)) / forcaB2;
                
-               neuronio.pesos[k] -= (taxaAprendizagem * mc) / (Math.sqrt(m2c) + epsilon);      
+               neuronio.pesos[k] -= (taxaAprendizagem * mChapeu) / (Math.sqrt(vChapeu) + epsilon);      
             }
          }
       }

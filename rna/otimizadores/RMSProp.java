@@ -32,8 +32,8 @@ public class RMSProp extends Otimizador{
    private double rho;
 
    /**
-    * Inicializa uma nova instância de otimizador RMSProp usando os valores 
-    * de hiperparâmetros fornecidos.
+    * Inicializa uma nova instância de otimizador <strong> RMSProp </strong> 
+    * usando os valores de hiperparâmetros fornecidos.
     * @param tA valor de taxa de aprendizagem.
     * @param epsilon usado para evitar a divisão por zero.
     * @param rho fator de decaimento do RMSProp.
@@ -45,12 +45,12 @@ public class RMSProp extends Otimizador{
    }
 
    /**
-    * Inicializa uma nova instância de otimizador RMSProp.
+    * Inicializa uma nova instância de otimizador <strong> RMSProp </strong>.
     * <p>
     *    Os hiperparâmetros do RMSProp serão inicializados com os valores padrão, que são:
     * </p>
     * <p>
-    *    {@code taxaAprendizagem = 0.01}
+    *    {@code taxaAprendizagem = 0.001}
     * </p>
     * <p>
     *    {@code epsilon = 1e-7}
@@ -64,7 +64,7 @@ public class RMSProp extends Otimizador{
    }
 
    /**
-    * Aplica o algoritmo do Nadam para cada peso da rede neural.
+    * Aplica o algoritmo do RMSProp para cada peso da rede neural.
     * <p>
     *    O Nadam funciona usando a seguinte expressão:
     * </p>

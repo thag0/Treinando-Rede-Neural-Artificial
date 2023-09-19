@@ -22,8 +22,8 @@ public class AdaGrad extends Otimizador{
    private double epsilon;
 
    /**
-    * Inicializa uma nova instância de otimizador AdaGrad usando os valores 
-    * de hiperparâmetros fornecidos.
+    * Inicializa uma nova instância de otimizador <strong> AdaGrad </strong> 
+    * usando os valores de hiperparâmetros fornecidos.
     * @param tA valor de taxa de aprendizagem.
     * @param epsilon usado para evitar a divisão por zero.
     */
@@ -33,7 +33,7 @@ public class AdaGrad extends Otimizador{
    }
 
    /**
-    * Inicializa uma nova instância de otimizador AdaGrad.
+    * Inicializa uma nova instância de otimizador <strong> AdaGrad </strong>.
     * <p>
     *    Os hiperparâmetros do AdaGrad serão inicializados com os valores padrão, que são:
     * </p>
@@ -91,7 +91,7 @@ public class AdaGrad extends Otimizador{
             for(int k = 0; k < neuronio.pesos.length; k++){
                g = neuronio.gradiente[k];
                neuronio.velocidade[k] += (g * g);
-               neuronio.pesos[k] -= (taxaAprendizagem * g) / Math.sqrt(neuronio.velocidade[k] + epsilon);
+               neuronio.pesos[k] -= (taxaAprendizagem * g) / (Math.sqrt(neuronio.velocidade[k] + epsilon));
             }
          }
       }

@@ -15,7 +15,7 @@ public class GradientDescent extends Otimizador{
     private double taxaAprendizagem;
 
    /**
-    * Inicializa uma nova instância de otimizador da Descida do Gradiente
+    * Inicializa uma nova instância de otimizador da <strong> Descida do Gradiente </strong>
     * usando os valores de hiperparâmetros fornecidos.
     * @param tA valor de taxa de aprendizagem.
     */
@@ -24,9 +24,9 @@ public class GradientDescent extends Otimizador{
    }
 
    /**
-    * Inicializa uma nova instância de otimizador da Descida do Gradiente.
+    * Inicializa uma nova instância de otimizador da <strong> Descida do Gradiente </strong>.
     * <p>
-    *    Os hiperparâmetros do GradientDescente serão inicializados com os valores padrão, que são:
+    *    Os hiperparâmetros do GradientDescent serão inicializados com os valores padrão, que são:
     * </p>
     * {@code taxaAprendizagem = 0.01}
     */

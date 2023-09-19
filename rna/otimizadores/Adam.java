@@ -42,12 +42,12 @@ public class Adam extends Otimizador{
    long interacoes = 0;
  
    /**
-    * Inicializa uma nova instância de otimizador Adam usando os 
-    * valores de hiperparâmetros fornecidos.
+    * Inicializa uma nova instância de otimizador <strong> Adam </strong> 
+    * usando os valores de hiperparâmetros fornecidos.
     * @param tA valor de taxa de aprendizagem.
     * @param epsilon usado para evitar a divisão por zero.
     * @param beta1 decaimento do momento de primeira ordem.
-    * @param beta2 decaimento da segunda ordem.
+    * @param beta2 decaimento do momento de segunda ordem.
     */
    public Adam(double tA, double epsilon, double beta1, double beta2){
       this.taxaAprendizagem = tA;
@@ -57,7 +57,7 @@ public class Adam extends Otimizador{
    }
 
    /**
-    * Inicializa uma nova instância de otimizador Adam.
+    * Inicializa uma nova instância de otimizador <strong> Adam </strong>.
     * <p>
     *    Os hiperparâmetros do Adam serão inicializados com os valores 
     *    padrão, que são:
@@ -118,37 +118,35 @@ public class Adam extends Otimizador{
     *    do peso que está sendo atualizado.
     * </p>
     * <p>
-    *    {@code i} - contador de interações (épocas passadas em que o otimizador 
-    *    foi usado).
+    *    {@code i} - contador de interações do otimizador.
     * </p>
     */
    @Override
    public void atualizar(Camada[] redec){
-      double mc, m2c, g, divB1, divB2;
-      Neuronio neuronio;
-
-      //percorrer rede, com exceção da camada de entrada
+      double g, mChapeu, vChapeu;
       interacoes++;
+
+      double forcaB1 = (1 - Math.pow(beta1, interacoes));
+      double forcaB2 = (1 - Math.pow(beta2, interacoes));
+      
+      Neuronio neuronio;
+      //percorrer rede, com exceção da camada de entrada
       for(int i = 1; i < redec.length; i++){
          
-         Camada camada = redec[i];
-         int nNeuronios = camada.quantidadeNeuroniosSemBias();
-         for(int j = 0; j < nNeuronios; j++){
-            
-            divB1 = (1 - Math.pow(beta1, interacoes));
-            divB2 = (1 - Math.pow(beta2, interacoes));
-            
-            neuronio = camada.neuronio(j);
+         int nNeuronios = redec[i].quantidadeNeuroniosSemBias();
+         for(int j = 0; j < nNeuronios; j++){   
+
+            neuronio = redec[i].neuronio(j);
             for(int k = 0; k < neuronio.pesos.length; k++){
                g = neuronio.gradiente[k];
                
-               neuronio.momentum[k] =  (beta1 * neuronio.momentum[k])  + ((1 - beta1) * g);
+               neuronio.momentum[k] =   (beta1 * neuronio.momentum[k])   + ((1 - beta1) * g);
                neuronio.velocidade[k] = (beta2 * neuronio.velocidade[k]) + ((1 - beta2) * g*g);
                
-               mc = neuronio.momentum[k] / divB1;
-               m2c = neuronio.velocidade[k] / divB2;
+               mChapeu = neuronio.momentum[k]   / forcaB1;
+               vChapeu = neuronio.velocidade[k] / forcaB2;
 
-               neuronio.pesos[k] -= ((taxaAprendizagem * mc) / (Math.sqrt(m2c) + epsilon));
+               neuronio.pesos[k] -= (taxaAprendizagem * mChapeu) / (Math.sqrt(vChapeu) + epsilon);
             }
             
          }

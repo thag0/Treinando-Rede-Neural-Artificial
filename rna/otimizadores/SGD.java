@@ -5,6 +5,10 @@ import rna.estrutura.Neuronio;
 
 /**
  * Classe que implementa o otimizador Gradiente Descentente Estocástico com momentum.
+ * <p>
+ *    Também possui o adicional do acelerador de nesterov, mas deve ser configurado.
+ * </p>
+ * Esse é o otimizador que me deu os melhores resultados de convergência até agora.
  */
 public class SGD extends Otimizador{
 
@@ -16,15 +20,15 @@ public class SGD extends Otimizador{
    /**
     * Valor de taxa de momentum do otimizador.
     */
-   double momentum;
+   private double momentum;
 
    /**
     * Usar acelerador de Nesterov.
     */
-   boolean nesterov;
+   private boolean nesterov;
 
    /**
-    * Inicializa uma nova instância de otimizador Stochastic Gradient Descent (SGD) 
+    * Inicializa uma nova instância de otimizador <strong> Stochastic Gradient Descent (SGD) </strong> 
     * usando os valores de hiperparâmetros fornecidos.
     * @param tA valor de taxa de aprendizagem.
     * @param momentum valor de taxa de momentum.
@@ -35,21 +39,21 @@ public class SGD extends Otimizador{
       this.momentum = momentum;
       this.nesterov = nesterov;
    }
-   
+
    /**
-    * Inicializa uma nova instância de otimizador Stochastic Gradient Descent (SGD) .
+    * Inicializa uma nova instância de otimizador <strong> Stochastic Gradient Descent (SGD) </strong>.
     * <p>
-    *    Os hiperparâmetros do SGD serão inicializados com os valores padrão, que são:
+    *    Os hiperparâmetros do SGD serão inicializados com seus os valores padrão, que são:
     * </p>
     * <p>
     *    {@code taxaAprendizagem = 0.001}
     * </p>
     * <p>
-    *    {@code nesterov = false}
-    * </p>
+    *    {@code momentum = 0.99}
     * </p>
     * <p>
-    *    {@code momentum = 0.99}
+    *    {@code nesterov = false}
+    * </p>
     * </p>
     */
    public SGD(){
@@ -57,7 +61,8 @@ public class SGD extends Otimizador{
    }
 
    /**
-    * Aplica o algoritmo do SGD com momentum para cada peso da rede neural.
+    * Aplica o algoritmo do SGD com momentum (e nesterov, se configurado) para cada peso 
+    * da rede neural.
     * <p>
     *    O SGD funciona usando a seguinte expressão:
     * </p>
@@ -70,7 +75,7 @@ public class SGD extends Otimizador{
     * </p>
     * <p>
     *    {@code M} - valor de taxa de momentum (ou constante de momentum) 
-    *    da rede neural.
+    *    do otimizador.
     * </p>
     * <p>
     *    {@code m} - valor de momentum da conexão correspondente ao peso
@@ -81,7 +86,7 @@ public class SGD extends Otimizador{
     *    atualizado.
     * </p>
     * <p>
-    *    {@code tA} - taxa de aprendizagem.
+    *    {@code tA} - taxa de aprendizagem do otimizador.
     * </p>
     */
    @Override
@@ -90,12 +95,11 @@ public class SGD extends Otimizador{
 
       //percorrer rede, com exceção da camada de entrada
       for(int i = 1; i < redec.length; i++){
-         
-         Camada camada = redec[i];
-         int nNeuronios = camada.quantidadeNeuroniosSemBias();
+
+         int nNeuronios = redec[i].quantidadeNeuroniosSemBias();
          for(int j = 0; j < nNeuronios; j++){
             
-            neuronio = camada.neuronio(j);
+            neuronio = redec[i].neuronio(j);
             if(nesterov){
                for(int k = 0; k < neuronio.pesos.length; k++){
                   double momentumAnterior = neuronio.momentum[k];

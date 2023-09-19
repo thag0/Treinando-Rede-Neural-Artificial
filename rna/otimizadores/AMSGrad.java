@@ -44,12 +44,12 @@ public class AMSGrad extends Otimizador{
 	private double maxSegundaOrdem = 0;
 
 	/**
-	 * Inicializa uma nova instância de otimizador AMSGrad usando os valores de
+	 * Inicializa uma nova instância de otimizador <strong> AMSGrad </strong> usando os valores de
 	 * hiperparâmetros fornecidos.
     * @param tA valor de taxa de aprendizagem.
 	 * @param epsilon usado para evitar a divisão por zero.
 	 * @param beta1 decaimento do momento.
-	 * @param beta2 decaimento da segunda ordem.
+	 * @param beta2 decaimento do momento de segunda ordem.
 	 */
 	public AMSGrad(double tA, double epsilon, double beta1, double beta2){
 		this.taxaAprendizagem = tA;
@@ -59,7 +59,7 @@ public class AMSGrad extends Otimizador{
 	}
 
 	/**
-	 * Inicializa uma nova instância de otimizador AMSGrad.
+	 * Inicializa uma nova instância de otimizador <strong> AMSGrad </strong>.
 	 * <p>
 	 * Os hiperparâmetros do AMSGrad serão inicializados com os valores padrão, que
 	 * são:
