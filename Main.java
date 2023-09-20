@@ -22,12 +22,13 @@ class Main{
    static Ged ged = new Ged();
    static Geim geim = new Geim();
    
+   // static final String caminhoArquivo = "/dados/imagens/dog.jpg";
    // static final String caminhoArquivo = "/dados/32x32/bloco.png";
    static final String caminhoArquivo = "/dados/mnist/8.png";
    static final String caminhoImagemExportada = "./resultados/imagem-ampliada";
-   static final int epocas = 10*1000;
-   static final float escalaRender = 8f;
-   static final float escalaImagemExportada = 20f;
+   static final int epocas = 100*1000;
+   static final float escalaRender = 10f;
+   static final float escalaImagemExportada = 30f;
 
    // Sempre lembrar de quando mudar o dataset, também mudar a quantidade de dados de entrada e saída.
    
@@ -86,14 +87,15 @@ class Main{
 
 
    public static RedeNeural criarRede(int qEntradas, int qSaidas){
+      // int[] arq = {qEntradas, 42, 42, 42, qSaidas};//dog
       // int[] arq = {qEntradas, 36, 36, 36, qSaidas};//32x32
-      int[] arq = {qEntradas, 12, 12, qSaidas};//28x28
+      int[] arq = {qEntradas, 13, 13, qSaidas};//28x28
       RedeNeural rede = new RedeNeural(arq);
 
       rede.compilar();
-      rede.configurarAlcancePesos(1);
-      rede.configurarInicializacaoPesos(2);
-      rede.configurarOtimizador(new RMSProp());
+      rede.configurarAlcancePesos(0.5);
+      rede.configurarInicializacaoPesos(1);
+      rede.configurarOtimizador(new SGD(0.001, 0.99, true));
       rede.configurarFuncaoAtivacao(new Sigmoid());
       
       return rede;
@@ -101,8 +103,8 @@ class Main{
 
 
    public static void treinoEmPainel(RedeNeural rede, BufferedImage imagem, double[][] dadosEntrada, double[][] dadosSaida){
-      final int fps = 6000;
-      int epocasPorFrame = 10;
+      final int fps = 60;
+      int epocasPorFrame = 5;
 
       //acelerar o processo de desenho
       //bom em situações de janelas muito grandes

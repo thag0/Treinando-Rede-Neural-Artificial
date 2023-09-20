@@ -85,28 +85,27 @@ public class Adam extends Otimizador{
     *    O Adam funciona usando a seguinte expressão:
     * </p>
     * <pre>
-    *    p[i] -= (tA * mc) / ((√ m2c) + eps)
+    *    p[i] -= (tA * mc) / ((√ vc) + eps)
     * </pre>
     * Onde:
     * <p>
     *    {@code p} - peso que será atualizado.
     * </p>
     * <p>
-    *    {@code tA} - valor de taxa de aprendizagem (learning rate).
+    *    {@code tA} - valor de taxa de aprendizagem do otimizador.
     * </p>
     * <p>
     *    {@code mc} - valor de momentum corrigido.
     * </p>
     * <p>
-    *    {@code m2c} - valor de momentum de segunda ordem corrigido.
+    *    {@code vc} - valor de velocidade (momentum de segunda ordem) corrigido.
     * </p>
-    * Os valores de momentum corrigido (mc) e momentum de segunda ordem
-    * corrigido (m2c) se dão por:
+    * Os valores de momentum e velocidade corrigidos se dão por:
     * <pre>
     *    mc = m[i] / (1 - beta1ⁱ)
     * </pre>
     * <pre>
-    *    m2c = m2[i] / (1 - beta2ⁱ)
+    *    vc = m2[i] / (1 - beta2ⁱ)
     * </pre>
     * Onde:
     * <p>
@@ -114,7 +113,7 @@ public class Adam extends Otimizador{
     *     sendo atualizado.
     * </p>
     * <p>
-    *    {@code m2} - valor de momentum de segunda ordem correspondete a conexão 
+    *    {@code v} - valor de velocidade correspondete a conexão 
     *    do peso que está sendo atualizado.
     * </p>
     * <p>
@@ -124,8 +123,8 @@ public class Adam extends Otimizador{
    @Override
    public void atualizar(Camada[] redec){
       double g, mChapeu, vChapeu;
-      interacoes++;
 
+      interacoes++;
       double forcaB1 = (1 - Math.pow(beta1, interacoes));
       double forcaB2 = (1 - Math.pow(beta2, interacoes));
       
@@ -135,14 +134,15 @@ public class Adam extends Otimizador{
          
          int nNeuronios = redec[i].quantidadeNeuroniosSemBias();
          for(int j = 0; j < nNeuronios; j++){   
-
+            
             neuronio = redec[i].neuronio(j);
             for(int k = 0; k < neuronio.pesos.length; k++){
                g = neuronio.gradiente[k];
                
-               neuronio.momentum[k] =   (beta1 * neuronio.momentum[k])   + ((1 - beta1) * g);
-               neuronio.velocidade[k] = (beta2 * neuronio.velocidade[k]) + ((1 - beta2) * g*g);
+               neuronio.momentum[k]   = (beta1 * neuronio.momentum[k])   + ((1 - beta1) * g);
+               neuronio.velocidade[k] = (beta2 * neuronio.velocidade[k]) + ((1 - beta2) * (g*g));
                
+               // correções de vies
                mChapeu = neuronio.momentum[k]   / forcaB1;
                vChapeu = neuronio.velocidade[k] / forcaB2;
 

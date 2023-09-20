@@ -56,11 +56,11 @@ public class RMSProp extends Otimizador{
     *    {@code epsilon = 1e-7}
     * </p>
     * <p>
-    *    {@code rho = 0.99}
+    *    {@code rho = 0.9}
     * </p>
     */
    public RMSProp(){
-      this(0.001, 1e-7, 0.99);
+      this(0.001, 1e-7, 0.9);
    }
 
    /**
@@ -90,20 +90,21 @@ public class RMSProp extends Otimizador{
    @Override
    public void atualizar(Camada[] redec){
       double g;
+      Camada camada;
       Neuronio neuronio;
       //TODO corrigir problema de convergência
 
       //percorrer rede, com exceção da camada de entrada
       for(int i = 1; i < redec.length; i++){
          
-         Camada camada = redec[i];
+         camada = redec[i];
          int nNeuronios = camada.quantidadeNeuroniosSemBias();
          for(int j = 0; j < nNeuronios; j++){
 
             neuronio = camada.neuronio(j);
             for(int k = 0; k < neuronio.pesos.length; k++){
                g = neuronio.gradiente[k];
-               neuronio.velocidade[k] = (rho * neuronio.velocidade[k]) + ((1 - rho) * g*g);
+               neuronio.velocidade[k] = (rho * neuronio.velocidade[k]) + ((1 - rho) * (g*g));
                neuronio.pesos[k] -= (taxaAprendizagem * g) / (Math.sqrt(neuronio.velocidade[k] + epsilon));
             }
          }

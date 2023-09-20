@@ -91,7 +91,7 @@ public class AdaGrad extends Otimizador{
             for(int k = 0; k < neuronio.pesos.length; k++){
                g = neuronio.gradiente[k];
                neuronio.velocidade[k] += (g * g);
-               neuronio.pesos[k] -= (taxaAprendizagem * g) / (Math.sqrt(neuronio.velocidade[k] + epsilon));
+               neuronio.pesos[k] -= (taxaAprendizagem / (Math.sqrt(neuronio.velocidade[k] + epsilon)) * g);
             }
          }
       }

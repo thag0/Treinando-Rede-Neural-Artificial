@@ -83,28 +83,27 @@ public class Nadam extends Otimizador{
     *    O Nadam funciona usando a seguinte expressão:
     * </p>
     * <pre>
-    *    p[i] -= (tA * mc) / ((√ m2c) + eps)
+    *    p[i] -= (tA * mc) / ((√ vc) + eps)
     * </pre>
     * Onde:
     * <p>
     *    {@code p} - peso que será atualizado.
     * </p>
     * <p>
-    *    {@code tA} - valor de taxa de aprendizagem (learning rate).
+    *    {@code tA} - valor de taxa de aprendizagem do otimizador.
     * </p>
     * <p>
     *    {@code mc} - valor de momentum corrigido
     * </p>
     * <p>
-    *    {@code m2c} - valor de momentum de segunda ordem corrigido
+    *    {@code m2c} - valor de velocidade (momentum de segunda ordem) corrigido
     * </p>
-    * Os valores de momentum corrigido (mc) e momentum de segunda ordem
-    * corrigido (m2c) se dão por:
+    * Os valores de momentum e velocidade corrigidos se dão por:
     * <pre>
-    *    mc = (beta1 * m) + ((1 - beta1) * g[i]) / (1 - beta1ⁱ)
+    *    mc = ((beta1 * m) + ((1 - beta1) * g[i])) / (1 - beta1ⁱ)
     * </pre>
     * <pre>
-    *    m2c = (beta2 * m2) + ((1 - beta2) * g[i]²) / (1 - beta2ⁱ)
+    *    vc = (beta2 * v) / (1 - beta2ⁱ)
     * </pre>
     * Onde:
     * <p>
@@ -112,8 +111,8 @@ public class Nadam extends Otimizador{
     *     sendo atualizado.
     * </p>
     * <p>
-    *    {@code m2} - valor de momentum de segunda ordem correspondete a conexão 
-    *    do peso que está sendo atualizado.
+    *    {@code v} - valor de velocidade correspondete a conexão do peso que está 
+    *    sendo atualizado.
     * </p>
     * <p>
     *    {@code g} - gradiente correspondente a conexão do peso que será
@@ -144,12 +143,13 @@ public class Nadam extends Otimizador{
                g = neuronio.gradiente[k];
 
                neuronio.momentum[k] =  (beta1 * neuronio.momentum[k])  + ((1 - beta1) * g);
-               neuronio.velocidade[k] = (beta2 * neuronio.velocidade[k]) + ((1 - beta2) * g * g);
+               neuronio.velocidade[k] = (beta2 * neuronio.velocidade[k]) + ((1 - beta2) * (g*g));
                
-               mChapeu = (beta1 * neuronio.momentum[k]  + ((1 - beta1) * g))  / forcaB1;
-               vChapeu = (beta2 * neuronio.velocidade[k] + ((1 - beta2) * g * g)) / forcaB2;
+               // correções
+               mChapeu = (beta1 * neuronio.momentum[k] + ((1 - beta1) * g)) / forcaB1;
+               vChapeu = (beta2 * neuronio.velocidade[k]) / forcaB2;
                
-               neuronio.pesos[k] -= (taxaAprendizagem * mChapeu) / (Math.sqrt(vChapeu) + epsilon);      
+               neuronio.pesos[k] -= (taxaAprendizagem * mChapeu) / (Math.sqrt(vChapeu) + epsilon); 
             }
          }
       }

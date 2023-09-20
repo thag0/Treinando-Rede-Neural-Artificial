@@ -100,20 +100,15 @@ public class SGD extends Otimizador{
          for(int j = 0; j < nNeuronios; j++){
             
             neuronio = redec[i].neuronio(j);
-            if(nesterov){
-               for(int k = 0; k < neuronio.pesos.length; k++){
-                  double momentumAnterior = neuronio.momentum[k];
-                  double novoMomentum = (momentum * momentumAnterior) + neuronio.gradiente[k];
-                  neuronio.pesos[k] -= taxaAprendizagem * novoMomentum;
-                  neuronio.momentum[k] = novoMomentum;
-               }
-                  
-            }else{
-               for(int k = 0; k < neuronio.pesos.length; k++){
-                  neuronio.momentum[k] = (momentum * neuronio.momentum[k]) + (neuronio.gradiente[k] * taxaAprendizagem);
+            for(int k = 0; k < neuronio.pesos.length; k++){
+               neuronio.momentum[k] = (momentum * neuronio.momentum[k]) + (neuronio.gradiente[k] * taxaAprendizagem);
+
+               if(nesterov){
+                  neuronio.pesos[k] -= (neuronio.gradiente[k] * taxaAprendizagem) + (momentum * neuronio.momentum[k]);
+               }else{
                   neuronio.pesos[k] -= neuronio.momentum[k];
                }
-            }
+            }      
          }
       }
    }
