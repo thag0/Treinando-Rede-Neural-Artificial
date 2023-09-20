@@ -83,6 +83,8 @@ class Main{
       if(qSaidas == 1)geim.exportarImagemEscalaCinza(imagem, rede, escalaImagemExportada, caminhoImagemExportada);
       else if(qSaidas == 3) geim.exportarImagemRGB(imagem, rede, escalaImagemExportada, caminhoImagemExportada);
       else System.out.println("Não é possível exportar a imagem");
+
+      exportarHistoricoCustos(rede, ged);
    }
 
 
@@ -95,8 +97,10 @@ class Main{
       rede.compilar();
       rede.configurarAlcancePesos(0.5);
       rede.configurarInicializacaoPesos(1);
-      rede.configurarOtimizador(new SGD(0.001, 0.99, true));
+      rede.configurarOtimizador(new SGD());
       rede.configurarFuncaoAtivacao(new Sigmoid());
+
+      rede.configurarHistoricoCusto(true);
       
       return rede;
    }

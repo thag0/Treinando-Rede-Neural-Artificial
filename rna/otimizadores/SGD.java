@@ -111,6 +111,10 @@ public class SGD extends Otimizador{
             }      
          }
       }
+
+      //experimental
+      // this.taxaAprendizagem *= 0.999999999;
+      // this.momentum *= 0.999999999;
    }
 
    @Override
