@@ -13,6 +13,33 @@ import rna.estrutura.Neuronio;
  * 	Os hiperparâmetros do Adam podem ser ajustados para controlar o 
  * 	comportamento do otimizador durante o treinamento.
  * </p>
+ * <strong> Observação </strong> :
+ * <p>
+ *    Testei a abordagem mais clássica do Adam que encontrei em vários lugares da 
+ *    internet que é dada pelas expresões:
+ * </p>
+ * 
+ *<pre>
+ *m[i] = (beta1 * m[i]) + ((1 - beta1) * g)
+ *v[i] = (beta2 * v[i]) + ((1 - beta2) * g²)
+ *</pre>
+ *<pre>
+ *mChapeu = m[i] / (1 - beta1ⁱ)
+ *vChapeu = v[i] / (1 - beta2ⁱ)
+ *</pre>
+ * <pre>
+ *    p[i] -= (tA * mChapeu) / ((√ vChapeu) + eps)
+ * </pre>
+ * 
+ * Essa abordagem era uma solução boa mas estava tendo problemas de convergência e lentidão, 
+ * além de ter que precisar de muitos ajustes finos dos paramêtros do Adam pra conseguir ter
+ * um bom resultado comparado com o SGD, que é bem mais simples.
+ * <p>
+ *    Optei por implementar o adam seguindo esse novo ajuste de pesos, essa implementação foi
+ *    completamente baseada no código fonte do Adam disponibilizado pelo Keras, então deixo os
+ *    créditos a eles.
+ * </p>
+ * @see https://d2l.ai/chapter_optimization/adam.html
  */
 public class Adam extends Otimizador{
 
@@ -22,12 +49,12 @@ public class Adam extends Otimizador{
    private double taxaAprendizagem;
 
    /**
-    * decaimento do momentum.
+    * Decaimento do momentum.
     */
    private double beta1;
     
    /**
-    * decaimento do momentum de segunda ordem.
+    * Decaimento do momentum de segunda ordem.
     */
    private double beta2;
     
@@ -42,7 +69,7 @@ public class Adam extends Otimizador{
    private double[] m;
 
    /**
-    * Coeficientes de momentum de segunda orgem.
+    * Coeficientes de momentum de segunda ordem.
     */
    private double[] v;
    
@@ -101,49 +128,58 @@ public class Adam extends Otimizador{
     *    O Adam funciona usando a seguinte expressão:
     * </p>
     * <pre>
-    *    p[i] -= (tA * mc) / ((√ vc) + eps)
+    *    p[i] -= (m[i] * alfa) / ((√ v[i]) + eps)
     * </pre>
     * Onde:
     * <p>
     *    {@code p} - peso que será atualizado.
     * </p>
     * <p>
-    *    {@code tA} - valor de taxa de aprendizagem do otimizador.
+    *    {@code m} - coeficiente de momentum correspondente ao peso
+    *    peso que será atualizado.
+    * <p>
+    *    {@code alfa} - correção aplicada a taxa de aprendizagem.
+    * </p>
     * </p>
     * <p>
-    *    {@code mc} - valor de momentum corrigido.
+    *    {@code v} - coeficiente de momentum de segunda orgem correspondente 
+    *    ao peso peso que será atualizado.
     * </p>
     * <p>
-    *    {@code vc} - valor de velocidade (momentum de segunda ordem) corrigido.
+    *    {@code eps} - pequeno valor usado para evitar divisão por zero.
     * </p>
-    * Os valores de momentum e velocidade corrigidos se dão por:
+    * O valor de {@code alfa} é dado por:
     * <pre>
-    *    mc = m[i] / (1 - beta1ⁱ)
-    * </pre>
-    * <pre>
-    *    vc = m2[i] / (1 - beta2ⁱ)
+    * alfa = taxaAprendizagem * √(1- beta1ⁱ) / (1 - beta2ⁱ)
     * </pre>
     * Onde:
     * <p>
-    *    {@code m} - valor de momentum correspondete a conexão do peso que está
-    *     sendo atualizado.
+    *    {@code i} - contador de interações do Adam.
+    * </p>
+    * As atualizações de momentum de primeira e segunda ordem se dão por:
+    *<pre>
+    *m[i] += (1 - beta1) * (g  - m[i])
+    *v[i] += (1 - beta2) * (g² - v[i])
+    *</pre>
+    * Onde:
+    * <p>
+    *    {@code beta1 e beta2} - valores de decaimento dos momentums de primeira
+    *    e segunda ordem.
     * </p>
     * <p>
-    *    {@code v} - valor de velocidade correspondete a conexão 
-    *    do peso que está sendo atualizado.
-    * </p>
-    * <p>
-    *    {@code i} - contador de interações do otimizador.
+    *    {@code g} - gradiente do peso que será atualizado
     * </p>
     */
    @Override
    public void atualizar(Camada[] redec){
-      double g, mChapeu, vChapeu;
+      double g;
       Neuronio neuronio;
       
       interacoes++;
-      double forcaB1 = (1 - Math.pow(beta1, interacoes));
-      double forcaB2 = (1 - Math.pow(beta2, interacoes));
+      double forcaB1 = Math.pow(beta1, interacoes);
+      double forcaB2 = Math.pow(beta2, interacoes);
+
+      double alfa = taxaAprendizagem * Math.sqrt(1 - forcaB2) / (1 - forcaB1);
       
       //percorrer rede, com exceção da camada de entrada
       int indice = 0;
@@ -156,14 +192,10 @@ public class Adam extends Otimizador{
             for(int k = 0; k < neuronio.pesos.length; k++){
                g = neuronio.gradiente[k];
                
-               m[indice] = (beta1 * m[indice]) + ((1 - beta1) * g);
-               v[indice] = (beta2 * v[indice]) + ((1 - beta2) * (g*g));
-               
-               // correções de vies
-               mChapeu = m[indice] / forcaB1;
-               vChapeu = v[indice] / forcaB2;
+               m[indice] += (1 - beta1) * (g - m[indice]);
+               v[indice] += (1 - beta2) * ((g*g) - v[indice]); 
 
-               neuronio.pesos[k] -= (taxaAprendizagem * mChapeu) / (Math.sqrt(vChapeu) + epsilon);
+               neuronio.pesos[k] -= (m[indice] * alfa) / (Math.sqrt(v[indice]) + epsilon);
             
                indice++;
             }

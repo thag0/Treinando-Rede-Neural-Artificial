@@ -113,8 +113,6 @@ public class AdaGrad extends Otimizador{
             }
          }
       }
-
-      // taxaAprendizagem *= 1.00001;
    }
 
    @Override

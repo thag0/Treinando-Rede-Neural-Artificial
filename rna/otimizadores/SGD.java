@@ -46,6 +46,18 @@ public class SGD extends Otimizador{
    }
 
    /**
+    * Inicializa uma nova instância de otimizador <strong> Stochastic Gradient Descent (SGD) </strong> 
+    * usando os valores de hiperparâmetros fornecidos.
+    * @param tA valor de taxa de aprendizagem.
+    * @param momentum valor de taxa de momentum.
+    */
+   public SGD(double tA, double momentum){
+      this.taxaAprendizagem = tA;
+      this.momentum = momentum;
+      this.nesterov = false;
+   }
+
+   /**
     * Inicializa uma nova instância de otimizador <strong> Stochastic Gradient Descent (SGD) </strong>.
     * <p>
     *    Os hiperparâmetros do SGD serão inicializados com seus os valores padrão, que são:

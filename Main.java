@@ -12,7 +12,7 @@ import render.JanelaTreino;
 import rna.estrutura.RedeNeural;
 import rna.ativacoes.*;
 import rna.otimizadores.*;
-
+import rna.serializacao.Serializador;
 import utilitarios.ged.Dados;
 import utilitarios.ged.Ged;
 import utilitarios.geim.Geim;
@@ -34,6 +34,11 @@ class Main{
    
    public static void main(String[] args){
       limparConsole();
+
+      RedeNeural r = lerRede("./rede-teste.txt");
+      r.configurarNome("Rede lida");
+      System.out.println(r.info());
+      System.exit(0);
       
       long t1, t2;
       long horas, minutos, segundos;
@@ -83,28 +88,35 @@ class Main{
       if(qSaidas == 1)geim.exportarImagemEscalaCinza(imagem, rede, escalaImagemExportada, caminhoImagemExportada);
       else if(qSaidas == 3) geim.exportarImagemRGB(imagem, rede, escalaImagemExportada, caminhoImagemExportada);
       else System.out.println("Não é possível exportar a imagem");
+      
+      Serializador s = new Serializador();
+      s.salvar(rede, "./rede.txt");
    }
 
 
    public static RedeNeural criarRede(int qEntradas, int qSaidas){
-      // int[] arq = {qEntradas, 42, 42, 42, qSaidas};//dog
+      // int[] arq = {qEntradas, 64, 32, 32, qSaidas};//dog
       // int[] arq = {qEntradas, 36, 36, 36, qSaidas};//32x32
       int[] arq = {qEntradas, 13, 13, qSaidas};//28x28
       RedeNeural rede = new RedeNeural(arq);
 
       rede.compilar();
-      rede.configurarAlcancePesos(1);
+      rede.configurarAlcancePesos(0.8);
       rede.configurarInicializacaoPesos(1);
-      rede.configurarOtimizador(new SGD());
+      rede.configurarOtimizador(new Adam());
       rede.configurarFuncaoAtivacao(new Sigmoid());
       
       return rede;
    }
 
+   public static RedeNeural lerRede(String caminho){
+      return RedeNeural.lerArquivo(caminho);
+   }
+
 
    public static void treinoEmPainel(RedeNeural rede, BufferedImage imagem, double[][] dadosEntrada, double[][] dadosSaida){
       final int fps = 60;
-      int epocasPorFrame = 5;
+      int epocasPorFrame = 10;
 
       //acelerar o processo de desenho
       //bom em situações de janelas muito grandes

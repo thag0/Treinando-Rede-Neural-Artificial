@@ -58,19 +58,23 @@ public class RMSProp extends Otimizador{
     *    {@code taxaAprendizagem = 0.001}
     * </p>
     * <p>
-    *    {@code epsilon = 1e-7}
+    *    {@code rho = 0.99}
     * </p>
     * <p>
-    *    {@code rho = 0.9}
+    *    {@code epsilon = 1e-7}
     * </p>
     */
    public RMSProp(){
-      this(0.001, 0.9, 1e-7);
+      this(0.001, 0.99, 1e-7);
    }
 
    @Override
    public void inicializar(int parametros){
       this.ac = new double[parametros];
+
+      for(int i = 0; i < this.ac.length; i++){
+         this.ac[i] = 0.1;
+      }
    }
 
    /**
@@ -100,22 +104,20 @@ public class RMSProp extends Otimizador{
    @Override
    public void atualizar(Camada[] redec){
       double g;
-      Camada camada;
       Neuronio neuronio;
-      //TODO corrigir problema de convergência
       
       //percorrer rede, com exceção da camada de entrada
       int indice = 0;
       for(int i = 1; i < redec.length; i++){
-         
-         camada = redec[i];
-         int nNeuronios = camada.quantidadeNeuroniosSemBias();
+
+         int nNeuronios = redec[i].quantidadeNeuroniosSemBias();
          for(int j = 0; j < nNeuronios; j++){
 
-            neuronio = camada.neuronio(j);
+            neuronio = redec[i].neuronio(j);
             for(int k = 0; k < neuronio.pesos.length; k++){
                g = neuronio.gradiente[k];
-               ac[indice] = (rho * ac[indice]) + ((1 - rho) * (g*g));
+               
+               ac[indice] = (rho * ac[indice]) + (1 - rho) * (g*g);
                neuronio.pesos[k] -= (taxaAprendizagem * g) / (Math.sqrt(ac[indice] + epsilon));
 
                indice++;

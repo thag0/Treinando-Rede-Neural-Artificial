@@ -19,6 +19,7 @@ import rna.otimizadores.Nadam;
 import rna.otimizadores.Otimizador;
 import rna.otimizadores.RMSProp;
 import rna.otimizadores.SGD;
+import rna.serializacao.Serializador;
 import rna.treinamento.Treinador;
 
 //TODO
@@ -1034,6 +1035,10 @@ public class RedeNeural implements Cloneable, Serializable{
       return this.treinador.obterHistorico();
    }
 
+   /**
+    * Retorna a quantiade de pesos total da rede, incluindo conexões com bias.
+    * @return quantiade de pesos total da rede.
+    */
    public int obterQuantidadePesos(){
       int numConexoes = 0;
       for(Camada camada : this.ocultas){
@@ -1042,6 +1047,10 @@ public class RedeNeural implements Cloneable, Serializable{
       numConexoes += this.saida.numConexoes();
 
       return numConexoes;
+   }
+
+   public boolean temBias(){
+      return (this.BIAS == 1) ? true : false;
    }
 
    /**
@@ -1208,6 +1217,16 @@ public class RedeNeural implements Cloneable, Serializable{
       }
 
       return rede;
+   }
+
+   /**
+    * TODO
+    * @param caminho
+    * @return
+    */
+   public static RedeNeural lerArquivo(String caminho){
+      Serializador s = new Serializador();
+      return s.ler(caminho);
    }
 
    @Override
