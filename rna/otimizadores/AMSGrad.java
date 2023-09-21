@@ -33,15 +33,25 @@ public class AMSGrad extends Otimizador{
 	 */
 	private double beta2;
 
+   /**
+    * Coeficientes de momentum.
+    */
+	private double[] m;
+
+	/**
+	 * Coeficientes de momentum de segunda orgem.
+	 */
+	private double[] v;
+
+	/**
+	 * Coeficientes de momentum de segunda orgem corrigidos.
+	 */
+	private double[] vCorrigido;
+
 	/**
 	 * Contador de iterações.
 	 */
-	private long interacoes = 0;
-
-	/**
-	 * Variável para armazenar o valor máximo da segunda ordem acumulada.
-	 */
-	private double maxSegundaOrdem = 0;
+	private long interacoes;
 
 	/**
 	 * Inicializa uma nova instância de otimizador <strong> AMSGrad </strong> usando os valores de
@@ -51,11 +61,11 @@ public class AMSGrad extends Otimizador{
 	 * @param beta1 decaimento do momento.
 	 * @param beta2 decaimento do momento de segunda ordem.
 	 */
-	public AMSGrad(double tA, double epsilon, double beta1, double beta2){
+	public AMSGrad(double tA, double beta1, double beta2, double epsilon){
 		this.taxaAprendizagem = tA;
-		this.epsilon = epsilon;
 		this.beta1 = beta1;
 		this.beta2 = beta2;
+		this.epsilon = epsilon;
 	}
 
 	/**
@@ -67,17 +77,25 @@ public class AMSGrad extends Otimizador{
     *    {@code taxaAprendizagem = 0.01}
     * </p>
     * <p>
-    *    {@code epsilon = 1e-7}
-    * </p>
-    * <p>
     *    {@code beta1 = 0.9}
     * </p>
     * <p>
     *    {@code beta2 = 0.999}
     * </p>
+    * <p>
+    *    {@code epsilon = 1e-7}
+    * </p>
 	 */
 	public AMSGrad(){
-		this(0.01, 1e-7, 0.9, 0.999);
+		this(0.01, 0.9, 0.999, 1e-7);
+	}
+
+	@Override
+	public void inicializar(int parametros){
+		this.m = new double[parametros];
+		this.v = new double[parametros];
+		this.vCorrigido = new double[parametros];
+		this.interacoes = 0;
 	}
 
    /**
@@ -128,32 +146,36 @@ public class AMSGrad extends Otimizador{
     */
 	@Override
 	public void atualizar(Camada[] redec){
-		double mc, m2c, divB1, divB2, g;
+		double mChapeu, vChapeu, g;
 		Neuronio neuronio;
 		
-		//percorrer rede, com exceção da camada de entrada
 		interacoes++;
+		double forcaB1 = (1 - Math.pow(beta1, interacoes));
+		double forcaB2 = (1 - Math.pow(beta2, interacoes));
+
+		//percorrer rede, com exceção da camada de entrada
+		int indice = 0;
 		for(int i = 1; i < redec.length; i++){
 
 			Camada camada = redec[i];
 			int nNeuronios = camada.quantidadeNeuroniosSemBias();
 			for(int j = 0; j < nNeuronios; j++){
 
-				divB1 = (1 - Math.pow(beta1, interacoes));
-				divB2 = (1 - Math.pow(beta2, interacoes));
-
 				neuronio = camada.neuronio(j);
 				for(int k = 0; k < neuronio.pesos.length; k++){
 					g = neuronio.gradiente[k];
 					
-					neuronio.momentum[k] =  (beta1 * neuronio.momentum[k])  + ((1 - beta1) * g);
-					neuronio.velocidade[k] = (beta2 * neuronio.velocidade[k]) + ((1 - beta2) * g * g);
+					m[indice] =  (beta1 * m[indice])  + ((1 - beta1) * g);
+					v[indice] = (beta2 * v[indice]) + ((1 - beta2) * g * g);
 
-					maxSegundaOrdem = Math.max(maxSegundaOrdem, neuronio.velocidade[k]);
+					vCorrigido[indice] = Math.max(vCorrigido[indice], v[indice]);
 
-					mc = neuronio.momentum[k] / divB1;
-					m2c = maxSegundaOrdem / divB2;
-					neuronio.pesos[k] -= (taxaAprendizagem * mc) / (Math.sqrt(m2c) + epsilon);
+					mChapeu = m[indice] / forcaB1;
+					vChapeu = vCorrigido[indice] / forcaB2;
+
+					neuronio.pesos[k] -= (taxaAprendizagem * mChapeu) / (Math.sqrt(vChapeu) + epsilon);
+
+					indice++;
 				}
 
 			}

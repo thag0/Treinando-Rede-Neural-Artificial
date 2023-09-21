@@ -32,16 +32,21 @@ public class RMSProp extends Otimizador{
    private double rho;
 
    /**
+    * Acumuladores
+    */
+   private double[] ac;
+
+   /**
     * Inicializa uma nova instância de otimizador <strong> RMSProp </strong> 
     * usando os valores de hiperparâmetros fornecidos.
     * @param tA valor de taxa de aprendizagem.
-    * @param epsilon usado para evitar a divisão por zero.
     * @param rho fator de decaimento do RMSProp.
+    * @param epsilon usado para evitar a divisão por zero.
     */
-   public RMSProp(double tA, double epsilon, double rho){
+   public RMSProp(double tA, double rho, double epsilon){
       this.taxaAprendizagem = tA;
-      this.epsilon = epsilon;
       this.rho = rho;
+      this.epsilon = epsilon;
    }
 
    /**
@@ -60,7 +65,12 @@ public class RMSProp extends Otimizador{
     * </p>
     */
    public RMSProp(){
-      this(0.001, 1e-7, 0.9);
+      this(0.001, 0.9, 1e-7);
+   }
+
+   @Override
+   public void inicializar(int parametros){
+      this.ac = new double[parametros];
    }
 
    /**
@@ -93,8 +103,9 @@ public class RMSProp extends Otimizador{
       Camada camada;
       Neuronio neuronio;
       //TODO corrigir problema de convergência
-
+      
       //percorrer rede, com exceção da camada de entrada
+      int indice = 0;
       for(int i = 1; i < redec.length; i++){
          
          camada = redec[i];
@@ -104,8 +115,10 @@ public class RMSProp extends Otimizador{
             neuronio = camada.neuronio(j);
             for(int k = 0; k < neuronio.pesos.length; k++){
                g = neuronio.gradiente[k];
-               neuronio.velocidade[k] = (rho * neuronio.velocidade[k]) + ((1 - rho) * (g*g));
-               neuronio.pesos[k] -= (taxaAprendizagem * g) / (Math.sqrt(neuronio.velocidade[k] + epsilon));
+               ac[indice] = (rho * ac[indice]) + ((1 - rho) * (g*g));
+               neuronio.pesos[k] -= (taxaAprendizagem * g) / (Math.sqrt(ac[indice] + epsilon));
+
+               indice++;
             }
          }
       }

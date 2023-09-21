@@ -33,22 +33,6 @@ public class Neuronio implements Serializable{
    public double[] pesos;
 
    /**
-    * Array de coeficientes de momentum para cada peso do neurônio.
-    * <p>
-    *    Os coeficientes de momentum são usados nos algoritmos de otimização
-    *    para controlar a influência das atualizações anteriores de peso nas
-    *    atualizações atuais. Eles ajudam a evitar oscilações excessivas durante
-    *    o treinamento da Rede Neural e podem ajudar ela a escapar de mínimos locais.
-    * </p>
-    */
-   public double[] momentum;
-
-   /**
-    * Momentum de segunda ordem, ou também chamado de "velocity".
-    */
-   public double[] velocidade;
-
-   /**
     * Resultado da multiplicação entre os pesos e entradas com adição do bias (se houver).
     */
    public double somatorio;
@@ -160,16 +144,12 @@ public class Neuronio implements Serializable{
       }
 
       this.entradas = new double[conexoes];
-      this.momentum = new double[conexoes];
-      this.velocidade = new double[conexoes];
       this.gradiente = new double[conexoes];
       this.gradienteAcumulado = new double[conexoes];
 
       //só por segurança
       for(int i = 0; i < conexoes; i++){
          this.entradas[i] = 0;
-         this.momentum[i] = 0;
-         this.velocidade[i] = 0;
          this.gradiente[i] = 0;
          this.gradienteAcumulado[i] = 0;
       }
@@ -177,7 +157,6 @@ public class Neuronio implements Serializable{
       //considerar que pode ter bias aplicado ao modelo
       //a saída do bias é sempre 1.
       this.saida = 1;
-
       this.erro = 0;
    }
 
@@ -284,6 +263,14 @@ public class Neuronio implements Serializable{
       for(int i = 0; i < pesos.length; i++){
          this.pesos[i] = random.nextGaussian() * desvioPadrao;
       }
+   }
+
+   /**
+    * Retorna a quantidade de conexões presentes (incluindo a do bias).
+    * @return quantidade de conexões presentes totais.
+    */
+   public int numConexoes(){
+      return this.pesos.length;
    }
 
    /**

@@ -483,6 +483,8 @@ public class RedeNeural implements Cloneable, Serializable{
     * dos otimizadores disponíveis.
     */
    public void configurarOtimizador(int otimizador){
+      modeloCompilado();
+
       switch(otimizador){
          case 1 -> this.otimizadorAtual = new GradientDescent();
          case 2 -> this.otimizadorAtual = new SGD();
@@ -492,6 +494,8 @@ public class RedeNeural implements Cloneable, Serializable{
          case 6 -> this.otimizadorAtual = new Nadam();
          default-> throw new IllegalArgumentException("Valor fornecido do otimizador é inválido.");
       }
+
+      this.otimizadorAtual.inicializar(this.obterQuantidadePesos());
    }
 
    /**
@@ -508,11 +512,14 @@ public class RedeNeural implements Cloneable, Serializable{
     * @throws IllegalArgumentException se o novo otimizador for nulo.
     */
    public void configurarOtimizador(Otimizador otimizador){
+      modeloCompilado();
+
       if(otimizador == null){
          throw new IllegalArgumentException("O novo otimizador não pode ser nulo.");
       }
 
       this.otimizadorAtual = otimizador;
+      this.otimizadorAtual.inicializar(this.obterQuantidadePesos());
    }
 
    /**
@@ -611,6 +618,9 @@ public class RedeNeural implements Cloneable, Serializable{
       this.saida = new Camada(false);
       this.saida.configurarId(idCamada);
       this.saida.inicializar(arquitetura[arquitetura.length-1], arquitetura[arquitetura.length-2], alcancePeso, inicializadorPeso);
+
+      //inicializar otimizador
+      this.otimizadorAtual.inicializar(this.obterQuantidadePesos());
 
       compilado = true;//modelo pode ser usado
    }
@@ -1007,6 +1017,16 @@ public class RedeNeural implements Cloneable, Serializable{
       return this.treinador.obterHistorico();
    }
 
+   public int obterQuantidadePesos(){
+      int numConexoes = 0;
+      for(Camada camada : this.ocultas){
+         numConexoes += camada.numConexoes();
+      }
+      numConexoes += this.saida.numConexoes();
+
+      return numConexoes;
+   }
+
    /**
     * Exibe algumas informações importantes sobre a Rede Neural, como:
     * <ul>
@@ -1115,8 +1135,6 @@ public class RedeNeural implements Cloneable, Serializable{
       //método nativo mais eficiente na cópia de vetores
       System.arraycopy(neuronio.entradas, 0, clone.entradas, 0, clone.entradas.length);
       System.arraycopy(neuronio.pesos, 0, clone.pesos, 0, clone.pesos.length);
-      System.arraycopy(neuronio.momentum, 0, clone.momentum, 0, clone.momentum.length);
-      System.arraycopy(neuronio.velocidade, 0, clone.velocidade, 0, clone.velocidade.length);
       System.arraycopy(neuronio.gradiente, 0, clone.gradiente, 0, clone.gradiente.length);
       System.arraycopy(neuronio.gradienteAcumulado, 0, clone.gradienteAcumulado, 0, clone.gradienteAcumulado.length); 
 

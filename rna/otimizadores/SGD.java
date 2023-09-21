@@ -28,6 +28,11 @@ public class SGD extends Otimizador{
    private boolean nesterov;
 
    /**
+    * Coeficientes de momentum.
+    */
+   private double[] m;
+
+   /**
     * Inicializa uma nova instância de otimizador <strong> Stochastic Gradient Descent (SGD) </strong> 
     * usando os valores de hiperparâmetros fornecidos.
     * @param tA valor de taxa de aprendizagem.
@@ -54,10 +59,14 @@ public class SGD extends Otimizador{
     * <p>
     *    {@code nesterov = false}
     * </p>
-    * </p>
     */
    public SGD(){
       this(0.001, 0.99, false);
+   }
+
+   @Override
+   public void inicializar(int parametros){
+      this.m = new double[parametros];
    }
 
    /**
@@ -92,8 +101,9 @@ public class SGD extends Otimizador{
    @Override
    public void atualizar(Camada[] redec){
       Neuronio neuronio;
-
+      
       //percorrer rede, com exceção da camada de entrada
+      int indice = 0;
       for(int i = 1; i < redec.length; i++){
 
          int nNeuronios = redec[i].quantidadeNeuroniosSemBias();
@@ -101,20 +111,18 @@ public class SGD extends Otimizador{
             
             neuronio = redec[i].neuronio(j);
             for(int k = 0; k < neuronio.pesos.length; k++){
-               neuronio.momentum[k] = (momentum * neuronio.momentum[k]) + (neuronio.gradiente[k] * taxaAprendizagem);
+               m[indice] = (momentum * m[indice]) + (neuronio.gradiente[k] * taxaAprendizagem);
 
                if(nesterov){
-                  neuronio.pesos[k] -= (neuronio.gradiente[k] * taxaAprendizagem) + (momentum * neuronio.momentum[k]);
+                  neuronio.pesos[k] -= (neuronio.gradiente[k] * taxaAprendizagem) + (momentum * m[indice]);
                }else{
-                  neuronio.pesos[k] -= neuronio.momentum[k];
+                  neuronio.pesos[k] -= m[indice];
                }
+
+               indice++;
             }      
          }
       }
-
-      //experimental
-      // this.taxaAprendizagem *= 0.999999999;
-      // this.momentum *= 0.999999999;
    }
 
    @Override

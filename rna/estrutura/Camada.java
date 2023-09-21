@@ -314,6 +314,18 @@ public class Camada implements Serializable{
    }
 
    /**
+    * TODO
+    * @return
+    */
+   public int numConexoes(){
+      int numConexoes = 0;
+      for(Neuronio neuronio : this.neuronios){
+         numConexoes += neuronio.numConexoes();
+      }
+      return numConexoes;
+   }
+
+   /**
     * Indica algumas informações sobre a camada, como:
     * <ul>
     *    <li>Id da camada dentro da Rede Neural em que foi criada.</li>

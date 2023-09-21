@@ -35,6 +35,16 @@ public class Adam extends Otimizador{
     * decaimento do momentum de segunda ordem.
     */
    private double beta2;
+
+   /**
+    * Coeficientes de momentum.
+    */
+   private double[] m;
+
+   /**
+    * Coeficientes de momentum de segunda orgem.
+    */
+   private double[] v;
    
    /**
     * Contador de iterações.
@@ -45,15 +55,15 @@ public class Adam extends Otimizador{
     * Inicializa uma nova instância de otimizador <strong> Adam </strong> 
     * usando os valores de hiperparâmetros fornecidos.
     * @param tA valor de taxa de aprendizagem.
-    * @param epsilon usado para evitar a divisão por zero.
     * @param beta1 decaimento do momento de primeira ordem.
     * @param beta2 decaimento do momento de segunda ordem.
+    * @param epsilon usado para evitar a divisão por zero.
     */
-   public Adam(double tA, double epsilon, double beta1, double beta2){
+   public Adam(double tA, double beta1, double beta2, double epsilon){
       this.taxaAprendizagem = tA;
-      this.epsilon = epsilon;
       this.beta1 = beta1;
       this.beta2 = beta2;
+      this.epsilon = epsilon;
    }
 
    /**
@@ -66,17 +76,23 @@ public class Adam extends Otimizador{
     *    {@code taxaAprendizagem = 0.001}
     * </p>
     * <p>
-    *    {@code epsilon = 1e-7}
-    * </p>
-    * <p>
     *    {@code beta1 = 0.9}
     * </p>
     * <p>
     *    {@code beta2 = 0.999}
     * </p>
+    * <p>
+    *    {@code epsilon = 1e-7}
+    * </p>
     */
    public Adam(){
-      this(0.001, 1e-7, 0.9, 0.999);
+      this(0.001, 0.9, 0.999, 1e-7);
+   }
+
+   @Override
+   public void inicializar(int parametros){
+      this.m = new double[parametros];
+      this.v = new double[parametros];
    }
 
    /**
@@ -123,13 +139,14 @@ public class Adam extends Otimizador{
    @Override
    public void atualizar(Camada[] redec){
       double g, mChapeu, vChapeu;
-
+      Neuronio neuronio;
+      
       interacoes++;
       double forcaB1 = (1 - Math.pow(beta1, interacoes));
       double forcaB2 = (1 - Math.pow(beta2, interacoes));
       
-      Neuronio neuronio;
       //percorrer rede, com exceção da camada de entrada
+      int indice = 0;
       for(int i = 1; i < redec.length; i++){
          
          int nNeuronios = redec[i].quantidadeNeuroniosSemBias();
@@ -139,16 +156,17 @@ public class Adam extends Otimizador{
             for(int k = 0; k < neuronio.pesos.length; k++){
                g = neuronio.gradiente[k];
                
-               neuronio.momentum[k]   = (beta1 * neuronio.momentum[k])   + ((1 - beta1) * g);
-               neuronio.velocidade[k] = (beta2 * neuronio.velocidade[k]) + ((1 - beta2) * (g*g));
+               m[indice] = (beta1 * m[indice])   + ((1 - beta1) * g);
+               v[indice] = (beta2 * v[indice]) + ((1 - beta2) * (g*g));
                
                // correções de vies
-               mChapeu = neuronio.momentum[k]   / forcaB1;
-               vChapeu = neuronio.velocidade[k] / forcaB2;
+               mChapeu = m[indice] / forcaB1;
+               vChapeu = v[indice] / forcaB2;
 
                neuronio.pesos[k] -= (taxaAprendizagem * mChapeu) / (Math.sqrt(vChapeu) + epsilon);
-            }
             
+               indice++;
+            }
          }
       }
    }

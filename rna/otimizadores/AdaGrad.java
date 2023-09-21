@@ -22,6 +22,11 @@ public class AdaGrad extends Otimizador{
    private double epsilon;
 
    /**
+    * acumuladores
+    */
+   private double[] acumulador;
+
+   /**
     * Inicializa uma nova instância de otimizador <strong> AdaGrad </strong> 
     * usando os valores de hiperparâmetros fornecidos.
     * @param tA valor de taxa de aprendizagem.
@@ -46,6 +51,15 @@ public class AdaGrad extends Otimizador{
     */
    public AdaGrad(){
       this(0.01, 1e-7);
+   }
+
+   @Override
+   public void inicializar(int parametros){
+      this.acumulador = new double[parametros];
+
+      for(int i = 0; i < this.acumulador.length; i++){
+         this.acumulador[i] = 0.1;
+      }
    }
 
    /**
@@ -81,6 +95,7 @@ public class AdaGrad extends Otimizador{
       Neuronio neuronio;
 
       //percorrer rede, com exceção da camada de entrada
+      int indice = 0;
       for(int i = 1; i < redec.length; i++){
          Camada camada = redec[i];
   
@@ -90,11 +105,16 @@ public class AdaGrad extends Otimizador{
             neuronio = camada.neuronio(j);
             for(int k = 0; k < neuronio.pesos.length; k++){
                g = neuronio.gradiente[k];
-               neuronio.velocidade[k] += (g * g);
-               neuronio.pesos[k] -= (taxaAprendizagem / (Math.sqrt(neuronio.velocidade[k] + epsilon)) * g);
+
+               acumulador[indice] += (g * g);
+               neuronio.pesos[k] -= (taxaAprendizagem * g) / (Math.sqrt(acumulador[indice] + epsilon));
+
+               indice++;
             }
          }
       }
+
+      // taxaAprendizagem *= 1.00001;
    }
 
    @Override
