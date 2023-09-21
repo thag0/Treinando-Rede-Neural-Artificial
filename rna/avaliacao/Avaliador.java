@@ -1,7 +1,5 @@
 package rna.avaliacao;
 
-import java.io.Serializable;
-
 import rna.avaliacao.metrica.Acuracia;
 import rna.avaliacao.metrica.F1Score;
 import rna.avaliacao.metrica.MatrizConfusao;
@@ -10,14 +8,14 @@ import rna.avaliacao.perda.EntropiaCruzada;
 import rna.avaliacao.perda.EntropiaCruzadaBinaria;
 import rna.avaliacao.perda.ErroMedioAbsoluto;
 import rna.avaliacao.perda.ErroMedioQuadrado;
-import rna.estrutura.RedeNeural;
 
+import rna.estrutura.RedeNeural;
 
 /**
  * Interface para os métodos de avaliação e desempenho da rede neural.
  */
-public class Avaliador implements Serializable{
-   RedeNeural rede;
+public class Avaliador{
+   private RedeNeural rede;
 
    //perda
    EntropiaCruzada entropiaCruzada = new EntropiaCruzada();
@@ -30,7 +28,15 @@ public class Avaliador implements Serializable{
    MatrizConfusao matrizConfusao = new MatrizConfusao();
    F1Score f1Score = new F1Score();
 
+   /**
+    * Instancia um novo avaliador destinado a uma Rede Neural.
+    * @param rede rede neural para o avaliador.
+    * @throws IllegalArgumentException se a rede fornecida for nula.
+    */
    public Avaliador(RedeNeural rede){
+      if(rede == null){
+         throw new IllegalArgumentException("A rede fornecida não pode ser nula.");
+      }
       this.rede = rede;
    }
 

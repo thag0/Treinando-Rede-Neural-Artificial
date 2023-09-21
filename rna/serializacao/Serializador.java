@@ -9,13 +9,35 @@ import rna.estrutura.Camada;
 import rna.estrutura.Neuronio;
 import rna.estrutura.RedeNeural;
 
+/**
+ * Classe responsável por tratar da serialização/desserialização de objetos
+ * da {@Rede Neural}.
+ * <p>
+ *    Manipula os arquivos {@code .txt} baseados na rede para escrita e leitura, 
+ *    possibilitando mais portabilidade de Redes Neurais treinadas.
+ * </p>
+ * Os pesos salvos são do tipo double (8 bytes), caso seja necessário mais economia
+ * de memória pode ser recomendável converter os arquivos escritos para o tipo float 
+ * (4 bytes).
+ */
 public class Serializador{
 
-   public Serializador(){
-
-   }
-
-   public void salvar(RedeNeural rede, String caminho){
+   /**
+    * Salva as informações mais essenciais sobre a Rede Neural incluindo arquitetura,
+    * funções de ativação de todas as camadas, bias configurado e o mais importante que
+    * são os pesos de cada neurônio da rede.
+    * <p>
+    *    <strong> Reforçando</strong>: as informações sobre o otimizador e todas suas 
+    *    configurações, treino, nome e outras pequenas coisas que não afetam diretamente 
+    *    o funcionamento da rede serão perdidas.
+    * </p>
+    * <p>
+    *    O arquivo deve ser salvo no formato {@code .txt}
+    * </p>
+    * @param rede instância de uma Rede Neural.
+    * @param caminho caminho onde o arquivo da rede será salvo.
+    */
+   public static void salvar(RedeNeural rede, String caminho){
       try(BufferedWriter writer = new BufferedWriter(new FileWriter(caminho))){
 
          //arquitetura da rede
@@ -43,9 +65,9 @@ public class Serializador{
          for(int i = 0; i < numOcultas; i++){
 
             Camada camada = rede.obterCamadaOculta(i);
-            for(int j = 0; j < camada.quantidadeNeuronios(); j++){
+            for(int j = 0; j < camada.quantidadeNeuroniosSemBias(); j++){
 
-               Neuronio neuronio = camada.neuronio(i);
+               Neuronio neuronio = camada.neuronio(j);
                for(int k = 0; k < neuronio.numConexoes(); k++){
                   double peso = neuronio.pesos[k];
                   writer.write(Double.toString((float)peso));
@@ -69,7 +91,28 @@ public class Serializador{
       }
    }
 
-   public RedeNeural ler(String caminho){
+   /**
+    * Lê o arquivo de uma {@code Rede Neural} serializada e converter numa
+    * instância pré configurada.
+    * <p>
+    *    Configurações mantidas: 
+    * </p> 
+    * <ul>
+    *    <li>
+    *       Pesos de todos os neurônios da rede.
+    *    </li>
+    *    <li>
+    *       Arquitetura.
+    *    </li>
+    *    <li>
+    *       Funções de ativação de todas as camadas.
+    *    </li>
+    * </ul>
+    * <strong>Demais configurações não são recuperadas</strong>.
+    * @param caminho caminho onde está salvo o arquivo {@code .txt} da Rede Neural.
+    * @return Instância de Rede Neural baseada nas configurações lidas pelo arquivo.
+    */
+   public static RedeNeural ler(String caminho){
       RedeNeural rede = null;
       DicionarioAtivacoes dicionario = new DicionarioAtivacoes();
 
@@ -93,12 +136,7 @@ public class Serializador{
             arq[i] -= (bias) ? 1 : 0;
          }
 
-         System.out.println("b = " + bias);
-         System.out.println(arq[0] + " " + arq[1] + " " + arq[2] + " " + arq[3]);
-         System.out.println(ativacoesStr[0] + " " + ativacoesStr[1] + " " + ativacoesStr[2]);
-
          //inicialização e configurações da rede
-         //TODO finalizar configuração completa
          rede = new RedeNeural(arq);
          rede.compilar();
          rede.configurarBias(bias);
@@ -108,7 +146,31 @@ public class Serializador{
          }
          rede.configurarFuncaoAtivacao(rede.obterCamadaSaida(), dicionario.obterAtivacao(ativacaoSaida));
 
+         //preencher pesos lidos
+         //camada de entrada
+         for(int i = 0; i < rede.obterQuantidadeOcultas(); i++){
+
+            Camada camada = rede.obterCamadaOculta(i);
+            for(int j = 0; j < camada.quantidadeNeuroniosSemBias(); j++){
+               
+               Neuronio neuronio = camada.neuronio(j);
+               for(int k = 0; k < neuronio.numConexoes(); k++){
+                  neuronio.pesos[k] = Double.parseDouble(reader.readLine());
+               }
+            }
+         }
+
+         //camada de saída
+         for(int i = 0; i < rede.obterCamadaSaida().quantidadeNeuronios(); i++){
+            
+            Neuronio neuronio = rede.obterCamadaSaida().neuronio(i);
+            for(int j = 0; j < neuronio.numConexoes(); j++){
+               neuronio.pesos[j] = Double.parseDouble(reader.readLine());
+            }
+         }
+
       }catch(Exception e){
+         System.out.println("Houve um erro ao ler o arquivo de Rede Neural.");
          e.printStackTrace();
          System.exit(0);
       }

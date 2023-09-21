@@ -2,7 +2,7 @@ package rna.avaliacao.perda;
 
 import rna.estrutura.RedeNeural;
 
-public class ErroMedioAbsoluto extends FuncaoPerda{
+public class ErroMedioAbsoluto extends Perda{
 
    @Override
    public double calcular(RedeNeural rede, double[][] entrada, double[][] saida){

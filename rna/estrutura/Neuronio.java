@@ -1,6 +1,5 @@
 package rna.estrutura;
 
-import java.io.Serializable;
 import java.util.Random;
 
 /**
@@ -14,7 +13,7 @@ import java.util.Random;
  * de seus pesos multiplicados pelas entradas. Métodos de funções de ativação
  * e treino do neurônio se encontram em outros componentes da Rede Neural.
  */
-public class Neuronio implements Serializable{
+public class Neuronio{
 
    /**
     * Array que representa às saídas dos neurônios da camada anterior.

@@ -1,7 +1,5 @@
 package rna.ativacoes;
 
-import java.io.Serializable;
-
 import rna.estrutura.Neuronio;
 
 /**
@@ -10,8 +8,7 @@ import rna.estrutura.Neuronio;
  *    Novas funções de ativações devem sobrescrever os métodos existentes {@code ativar()} e {@code derivada()}.
  * </p>
  */
-public abstract class FuncaoAtivacao implements Serializable{
-   
+public abstract class FuncaoAtivacao{
 
    /**
     * Calcula o resultado da ativação de acordo com a função configurada
@@ -24,7 +21,6 @@ public abstract class FuncaoAtivacao implements Serializable{
    public void ativar(Neuronio[] neuronios, int quantidade){
       throw new java.lang.UnsupportedOperationException("Método de atualização da função de ativação não foi implementado.");
    }
-
 
    /**
     * Calcula o resultado da derivada da função de ativação de acordo com a função configurada

@@ -12,7 +12,6 @@ import render.JanelaTreino;
 import rna.estrutura.RedeNeural;
 import rna.ativacoes.*;
 import rna.otimizadores.*;
-import rna.serializacao.Serializador;
 import utilitarios.ged.Dados;
 import utilitarios.ged.Ged;
 import utilitarios.geim.Geim;
@@ -31,14 +30,10 @@ class Main{
    static final float escalaImagemExportada = 30f;
 
    // Sempre lembrar de quando mudar o dataset, também mudar a quantidade de dados de entrada e saída.
+   static Otimizador sgd = new SGD();
    
    public static void main(String[] args){
       limparConsole();
-
-      RedeNeural r = lerRede("./rede-teste.txt");
-      r.configurarNome("Rede lida");
-      System.out.println(r.info());
-      System.exit(0);
       
       long t1, t2;
       long horas, minutos, segundos;
@@ -88,9 +83,6 @@ class Main{
       if(qSaidas == 1)geim.exportarImagemEscalaCinza(imagem, rede, escalaImagemExportada, caminhoImagemExportada);
       else if(qSaidas == 3) geim.exportarImagemRGB(imagem, rede, escalaImagemExportada, caminhoImagemExportada);
       else System.out.println("Não é possível exportar a imagem");
-      
-      Serializador s = new Serializador();
-      s.salvar(rede, "./rede.txt");
    }
 
 
@@ -103,14 +95,10 @@ class Main{
       rede.compilar();
       rede.configurarAlcancePesos(0.8);
       rede.configurarInicializacaoPesos(1);
-      rede.configurarOtimizador(new Adam());
+      rede.configurarOtimizador(sgd);
       rede.configurarFuncaoAtivacao(new Sigmoid());
       
       return rede;
-   }
-
-   public static RedeNeural lerRede(String caminho){
-      return RedeNeural.lerArquivo(caminho);
    }
 
 

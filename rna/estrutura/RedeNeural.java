@@ -1,11 +1,5 @@
 package rna.estrutura;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
-
 import java.util.ArrayList;
 
 import rna.ativacoes.FuncaoAtivacao;
@@ -19,7 +13,7 @@ import rna.otimizadores.Nadam;
 import rna.otimizadores.Otimizador;
 import rna.otimizadores.RMSProp;
 import rna.otimizadores.SGD;
-import rna.serializacao.Serializador;
+
 import rna.treinamento.Treinador;
 
 //TODO
@@ -44,7 +38,7 @@ import rna.treinamento.Treinador;
  * @author Thiago Barroso, acadêmico de Engenharia da Computação pela Universidade Federal do Pará, 
  * Campus Tucuruí. Maio/2023.
  */
-public class RedeNeural implements Cloneable, Serializable{
+public class RedeNeural implements Cloneable{
 
    /**
     * Camada de entrada da Rede Neural.
@@ -1173,60 +1167,6 @@ public class RedeNeural implements Cloneable, Serializable{
       System.arraycopy(neuronio.gradienteAcumulado, 0, clone.gradienteAcumulado, 0, clone.gradienteAcumulado.length); 
 
       return clone;
-   }
-
-   /**
-    * Salva a classe da rede em um arquivo especificado, o caminho não leva em consideração
-    * o formato, de preferência deve ser .dat, caso seja especificado apenas o nome, o 
-    * arquivo será salvo no mesmo diretório que o arquivo principal.
-    * @param caminho caminho de destino do arquivo que será salvo.
-    */
-   public void salvarArquivoRede(String caminho){
-      try{
-         FileOutputStream arquivo = new FileOutputStream(caminho);
-         ObjectOutputStream objeto = new ObjectOutputStream(arquivo);
-
-         objeto.writeObject(this);
-         objeto.close();
-         arquivo.close();
-
-      }catch(Exception e){
-         e.printStackTrace();
-      }
-   }
-
-   /**
-    * Lê um arquivo de Rede Neural no caminho especificado, o caminho não leva em 
-    * consideração o formato, logo precisa ser especificado.
-    * @param caminho caminho do arquivo de rede salvo
-    * @return objeto do tipo {@code RedeNeural} lido pelo arquivo.
-    */
-   public static RedeNeural lerArquivoRede(String caminho){
-      RedeNeural rede = null;
-
-      try{
-         FileInputStream arquivo = new FileInputStream(caminho);
-         ObjectInputStream objeto = new ObjectInputStream(arquivo);
-
-         rede = (RedeNeural) objeto.readObject();
-         objeto.close();
-         arquivo.close();
-
-      }catch(Exception e){
-         e.printStackTrace();
-      }
-
-      return rede;
-   }
-
-   /**
-    * TODO
-    * @param caminho
-    * @return
-    */
-   public static RedeNeural lerArquivo(String caminho){
-      Serializador s = new Serializador();
-      return s.ler(caminho);
    }
 
    @Override

@@ -3,7 +3,7 @@ package exemplos;
 import rna.estrutura.RedeNeural;
 import rna.serializacao.Serializador;
 
-public class Teste{
+public class ExemploUsandoSerializador {
    public static void main(String[] args){
       limparConsole();
 
@@ -21,11 +21,12 @@ public class Teste{
          {0}
       };
 
-      RedeNeural rede = Serializador.ler("./rede-xor.txt");
-      System.out.println(rede.info());
-
-      var perda = rede.avaliador.erroMedioQuadrado(e, s);
-      System.out.println("Perda = " + perda);
+      RedeNeural rede = new RedeNeural(2, 2, 1, 1);
+      rede.compilar();
+      rede.configurarFuncaoAtivacao(2);
+      rede.treinar(e, s, 10_000);
+      System.out.println("p = " + rede.avaliador.erroMedioQuadrado(e, s));
+      Serializador.salvar(rede, "./rede-xor.txt");
 
       System.out.println(rede.obterCamadaOculta(0).neuronio(0).info());
       System.out.println(rede.obterCamadaOculta(0).neuronio(1).info());

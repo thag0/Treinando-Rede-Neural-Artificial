@@ -2,7 +2,7 @@ package rna.avaliacao.perda;
 
 import rna.estrutura.RedeNeural;
 
-public class EntropiaCruzada extends FuncaoPerda{
+public class EntropiaCruzada extends Perda{
 
    @Override
    public double calcular(RedeNeural rede, double[][] entrada, double[][] saida){  
