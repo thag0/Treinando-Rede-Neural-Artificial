@@ -37,6 +37,15 @@ A ideia de adicionar o momentum para dar uma "velocidade" na convergência da re
 
 *Em ambos os casos foi utilizado o sgd (stochastic gradient descent) e cada rede possuia o valor de taxa de aprendizagem igual a 0.01*
 
+# Implementando novos algoritmos de otimização
+
+Estou tentando expandir as opções de configuração da rede neural e com isso trouxe novos otimizadores para ajudar no aprendizado dela, como exemplo 
+testei o otimizador Adam para uma rede que faz interpolação dos dados de uma imagem, com finalidade de redimensionar o conteúdo para diferentes resoluções.
+
+![adam](https://github.com/thag0/Treinando-Rede-Neural-Artificial/assets/91092364/500b9faf-3848-4f3c-9124-531917cc1bd5)
+
+*Resultado de uma execução usando otimizador Adam, é possível observar como ele consegue ser bem mais estável comparado com o SGD*
+
 # Algumas dificuldades
 
 Pelo que to vendo na experiência de uso, o treino da rede neural fica muito lento quando uso conjunto de dados muito grandes. Testei ela no mesmo cenário de ampliar imagens mas com imagens maiores que as do mnist (28x28), além de que com imagens coloridas o resultado ficou pior ainda. 
