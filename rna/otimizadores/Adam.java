@@ -19,22 +19,22 @@ public class Adam extends Otimizador{
    /**
     * Valor de taxa de aprendizagem do otimizador.
     */
-    private double taxaAprendizagem;
-
-   /**
-    * Usado para evitar divisão por zero.
-    */
-   private double epsilon;
+   private double taxaAprendizagem;
 
    /**
     * decaimento do momentum.
     */
    private double beta1;
-
+    
    /**
     * decaimento do momentum de segunda ordem.
     */
    private double beta2;
+    
+   /**
+    * Usado para evitar divisão por zero.
+    */
+   private double epsilon;
 
    /**
     * Coeficientes de momentum.
@@ -156,7 +156,7 @@ public class Adam extends Otimizador{
             for(int k = 0; k < neuronio.pesos.length; k++){
                g = neuronio.gradiente[k];
                
-               m[indice] = (beta1 * m[indice])   + ((1 - beta1) * g);
+               m[indice] = (beta1 * m[indice]) + ((1 - beta1) * g);
                v[indice] = (beta2 * v[indice]) + ((1 - beta2) * (g*g));
                
                // correções de vies

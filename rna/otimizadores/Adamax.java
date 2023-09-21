@@ -6,7 +6,7 @@ import rna.estrutura.Neuronio;
 public class Adamax extends Otimizador{
 
    /**
-    * 
+    * Valor de taxa de aprendizagem do otimizador.
     */
    private double taxaAprendizagem;
 
@@ -26,7 +26,7 @@ public class Adamax extends Otimizador{
    private double beta2;
 
    /**
-    * Acumulador de gradientes.
+    * Acumulador de primeira ordem.
     */
    private double[] m;
 
@@ -40,6 +40,14 @@ public class Adamax extends Otimizador{
     */
    private long interacoes;
 
+   /**
+    * Inicializa uma nova instância de otimizador <strong> Adamax </strong> 
+    * usando os valores de hiperparâmetros fornecidos.
+    * @param tA valor de taxa de aprendizagem.
+    * @param beta1 decaimento do momento de primeira ordem.
+    * @param beta2 decaimento do momento de segunda ordem.
+    * @param epsilon usado para evitar a divisão por zero.
+    */
    public Adamax(double tA, double beta1, double beta2, double epsilon){
       this.taxaAprendizagem = tA;
       this.epsilon = epsilon;
@@ -47,7 +55,24 @@ public class Adamax extends Otimizador{
       this.beta2 = beta2;
    }
 
-
+   /**
+    * Inicializa uma nova instância de otimizador <strong> Adamax </strong>.
+    * <p>
+    *    Os hiperparâmetros do Adamax serão inicializados com seus os valores padrão, que são:
+    * </p>
+    * <p>
+    *    {@code taxaAprendizagem = 0.001}
+    * </p>
+    * <p>
+    *    {@code beat1 = 0.9}
+    * </p>
+    * <p>
+    *    {@code beta2 = 0.999}
+    * </p>
+    * <p>
+    *    {@code epsilon = 1e-7}
+    * </p>
+    */
    public Adamax(){
       this(0.001, 0.9, 0.999, 1e-7);
    }

@@ -93,7 +93,7 @@ class Main{
       RedeNeural rede = new RedeNeural(arq);
 
       rede.compilar();
-      rede.configurarAlcancePesos(0.5);
+      rede.configurarAlcancePesos(1);
       rede.configurarInicializacaoPesos(1);
       rede.configurarOtimizador(new SGD());
       rede.configurarFuncaoAtivacao(new Sigmoid());

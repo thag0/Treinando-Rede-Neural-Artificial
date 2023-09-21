@@ -10,8 +10,10 @@ import java.util.ArrayList;
 
 import rna.ativacoes.FuncaoAtivacao;
 import rna.avaliacao.Avaliador;
+import rna.otimizadores.AMSGrad;
 import rna.otimizadores.AdaGrad;
 import rna.otimizadores.Adam;
+import rna.otimizadores.Adamax;
 import rna.otimizadores.GradientDescent;
 import rna.otimizadores.Nadam;
 import rna.otimizadores.Otimizador;
@@ -32,9 +34,8 @@ import rna.treinamento.Treinador;
  *    O modelo pode ser usado para problemas de regressão e classificação, contando com algoritmos de treino 
  *    atualmente baseados no backpropagation com adição da ideia de momentum na atualização dos pesos.
  * </p>
- * Possui opções de configuração tanto para hiperparâmetros como taxa de aprendizagem e momentum, 
- * quanto para funções de ativações de camadas individuais, valor de alcance máximo e mínimo na 
- * aleatorização dos pesos iniciais e otimizadores que serão usados durante o treino. 
+ * Possui opções de configuração para funções de ativações de camadas individuais, valor de alcance máximo e 
+ * mínimo na aleatorização dos pesos iniciais e otimizadores que serão usados durante o treino. 
  * <p>
  *    Após configurar as propriedades da rede, o modelo precisará ser compilado para efetivamente 
  *    poder ser utilizado.
@@ -93,7 +94,7 @@ public class RedeNeural implements Cloneable, Serializable{
     * Otimizador que será utilizado durante o processo de aprendizagem da
     * da Rede Neural.
     */
-   private Otimizador otimizadorAtual = new SGD();//otimizador padrão
+   private Otimizador otimizadorAtual;
 
    /**
     * Nome específico da instância da Rede Neural.
@@ -134,8 +135,8 @@ public class RedeNeural implements Cloneable, Serializable{
     * </p>
     * <p>
     *    Certifique-se de configurar as propriedades da rede por meio das funções de configuração fornecidas 
-    *    como, alcance dos pesos iniciais, taxa de aprendizagem e uso de bias. Caso não seja usada nenhuma 
-    *    das funções de configuração, a rede será compilada com os valores padrão.
+    *    para obter os melhores resultados na aplicação específica. Caso não seja usada nenhuma das funções de 
+    *    configuração, a rede será compilada com os valores padrão.
     * </p>
     * @author Thiago Barroso, acadêmico de Engenharia da Computação pela Universidade Federal do Pará, 
     * Campus Tucuruí. Maio/2023.
@@ -170,9 +171,9 @@ public class RedeNeural implements Cloneable, Serializable{
     *    Após instanciar o modelo, é necessário compilar por meio da função {@code compilar()}
     * </p>
     * <p>
-    *    Certifique-se de configurar as propriedades da rede por meio das funções de configuração 
-    *    fornecidas como, alcance dos pesos iniciais, taxa de aprendizagem e uso de bias. Caso não 
-    *    seja usada nenhuma das funções de configuração, a rede será compilada com os valores padrão.
+    *    Certifique-se de configurar as propriedades da rede por meio das funções de configuração fornecidas 
+    *    para obter os melhores resultados na aplicação específica. Caso não seja usada nenhuma das funções de 
+    *    configuração, a rede será compilada com os valores padrão.
     * </p>
     * @param nEntrada número de neurônios da camada de entrada.
     * @param nOcultas número de neurônios das camadas ocultas.
@@ -234,7 +235,7 @@ public class RedeNeural implements Cloneable, Serializable{
    }
 
    /**
-    * Configura a inicialização dos pesos da rede neural. A forma de inicialização 
+    * Configura a inicialização dos pesos da Rede Neural. A forma de inicialização 
     * pode afetar o tempo de convergência da rede durante o treinamento.
     * <p>
     *    Inicializadores disponíveis:
@@ -454,7 +455,8 @@ public class RedeNeural implements Cloneable, Serializable{
     *    </li>
     *    <li>
     *       <strong> SGD (Gradiente Descendente Estocástico) </strong>: Atualiza os pesos 
-    *       usando o conjunto de treino embaralhado a cada época.
+    *       usando o conjunto de treino embaralhado a cada época, com adicional de momentum
+    *       e correção de nesterov para a atualização.
     *    </li>
     *    <li>
     *       <strong> AdaGrad </strong>: Um otimizador que adapta a taxa de aprendizado para 
@@ -471,6 +473,16 @@ public class RedeNeural implements Cloneable, Serializable{
     *    <li>
     *       <strong> Nadam </strong>: Possui as mesmas vantagens de se utilizar o adam, com 
     *       o adicional do acelerador de Nesterov na atualização dos pesos.
+    *    </li>
+    *    <li>
+    *       <strong> AMSGrad </strong>: Um otimizador que mantém um histórico dos valores
+    *       dos gradientes acumulados para evitar a degradação da taxa de aprendizado,
+    *       proporcionando uma convergência mais estável.
+    *    </li>
+    *    <li>
+    *       <strong> Adamax </strong>: Um otimizador que é uma variação do Adam e
+    *       mantém o máximo absoluto dos valores dos gradientes acumulados em vez de usar
+    *       a média móvel dos quadrados dos gradientes.
     *    </li>
     * </ol>
     * <p>
@@ -492,6 +504,8 @@ public class RedeNeural implements Cloneable, Serializable{
          case 4 -> this.otimizadorAtual = new RMSProp();
          case 5 -> this.otimizadorAtual = new Adam();
          case 6 -> this.otimizadorAtual = new Nadam();
+         case 7 -> this.otimizadorAtual = new AMSGrad();
+         case 0 -> this.otimizadorAtual = new Adamax();
          default-> throw new IllegalArgumentException("Valor fornecido do otimizador é inválido.");
       }
 
@@ -620,7 +634,10 @@ public class RedeNeural implements Cloneable, Serializable{
       this.saida.inicializar(arquitetura[arquitetura.length-1], arquitetura[arquitetura.length-2], alcancePeso, inicializadorPeso);
 
       //inicializar otimizador
-      this.otimizadorAtual.inicializar(this.obterQuantidadePesos());
+      if(this.otimizadorAtual == null){
+         this.otimizadorAtual = new SGD();
+         this.otimizadorAtual.inicializar(this.obterQuantidadePesos());
+      }
 
       compilado = true;//modelo pode ser usado
    }
@@ -1030,13 +1047,21 @@ public class RedeNeural implements Cloneable, Serializable{
    /**
     * Exibe algumas informações importantes sobre a Rede Neural, como:
     * <ul>
-    *    <li>Otimizador atual.</li>
-    *    <li>Valor da taxa de aprendizagem.</li>
-    *    <li>Valor da taxa de momentum.</li>
-    *    <li>Contém bias como neurônio adicional.</li>
-    *    <li>Função de ativação de todas as camadas ocultas.</li>
-    *    <li>Função de ativação da camada de saída.</li>
-    *    <li>Arquitetura da rede.</li>
+    *    <li>
+    *       Otimizador atual e suas informações específicas.
+    *    </li>
+    *    <li>
+    *       Contém bias como neurônio adicional.
+    *    </li>
+    *    <li>
+    *       Função de ativação de todas as camadas ocultas.
+    *    </li>
+    *    <li>
+    *       Função de ativação da camada de saída.
+    *    </li>
+    *    <li>
+    *       Arquitetura da rede.
+    *    </li>
     * </ul>
     * @return buffer formatado contendo as informações.
     * @throws IllegalArgumentException se o modelo não foi compilado previamente.

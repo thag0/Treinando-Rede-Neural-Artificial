@@ -159,7 +159,7 @@ public class Nadam extends Otimizador{
             for(int k = 0; k < neuronio.pesos.length; k++){
                g = neuronio.gradiente[k];
 
-               m[indice] =  (beta1 * m[indice])  + ((1 - beta1) * g);
+               m[indice] = (beta1 * m[indice]) + ((1 - beta1) * g);
                v[indice] = (beta2 * v[indice]) + ((1 - beta2) * (g*g));
                
                // correções
