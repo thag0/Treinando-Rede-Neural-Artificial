@@ -10,123 +10,69 @@ class ImpressaoMatriz{
 
    }
 
-
-   public void imprimirMatriz(int[][] matriz){
-      String espacamento = "  ";
-
-      System.out.println("Matriz = [");
-      for(int i = 0; i < matriz.length; i++){
-         System.out.print(espacamento);
-         for(int j = 0; j < matriz[i].length; j++){
-            System.out.print(matriz[i][j] + "  ");
-         }
-         System.out.println();
-      }
-      System.out.println("]");
+   public void imprimirMatriz(Object matriz){
+      imprimirMatriz(matriz, "");
    }
-
-
-   public void imprimirMatriz(float[][] matriz){
-      String espacamento = "  ";
-
-      System.out.println("Matriz = [");
-      for(int i = 0; i < matriz.length; i++){
-         System.out.print(espacamento);
-         for(int j = 0; j < matriz[i].length; j++){
-            System.out.print(matriz[i][j] + "  ");
-         }
-         System.out.println();
-      }
-      System.out.println("]");
-   }
-
-
-   public void imprimirMatriz(double[][] matriz){
-      String espacamento = "  ";
-
-      System.out.println("Matriz = [");
-      for(int i = 0; i < matriz.length; i++){
-         System.out.print(espacamento);
-         for(int j = 0; j < matriz[i].length; j++){
-            System.out.print(matriz[i][j] + "  ");
-         }
-         System.out.println();
-      }
-      System.out.println("]");
-   }
-
-
-   public void imprimirMatriz(String[][] matriz){
-      String espacamento = "  ";
-
-      System.out.println("Matriz = [");
-      for(int i = 0; i < matriz.length; i++){
-         System.out.print(espacamento);
-         for(int j = 0; j < matriz[i].length; j++){
-            System.out.print(matriz[i][j] + "  ");
-         }
-         System.out.println();
-      }
-      System.out.println("]");
-   }
-
-
-   public void imprimirMatriz(int[][] matriz, String nome){
-      String espacamento = "  ";
-
-      System.out.println(nome + " = [");
-      for(int i = 0; i < matriz.length; i++){
-         System.out.print(espacamento);
-         for(int j = 0; j < matriz[i].length; j++){
-            System.out.print(matriz[i][j] + "  ");
-         }
-         System.out.println();
-      }
-      System.out.println("]");
-   }
-
-
-   public void imprimirMatriz(float[][] matriz, String nome){
-      String espacamento = "  ";
-
-      System.out.println(nome + " = [");
-      for(int i = 0; i < matriz.length; i++){
-         System.out.print(espacamento);
-         for(int j = 0; j < matriz[i].length; j++){
-            System.out.print(matriz[i][j] + "  ");
-         }
-         System.out.println();
-      }
-      System.out.println("]");
-   }
-
    
-   public void imprimirMatriz(double[][] matriz, String nome){
+   public void imprimirMatriz(Object matriz, String nome){
       String espacamento = "  ";
 
-      System.out.println(nome + " = [");
-      for(int i = 0; i < matriz.length; i++){
-         System.out.print(espacamento);
-         for(int j = 0; j < matriz[i].length; j++){
-            System.out.print(matriz[i][j] + "  ");
-         }
-         System.out.println();
+      if(nome.isEmpty()){
+         System.out.println("Matriz = [");
+      }else{
+         System.out.println(nome + " = [");
       }
-      System.out.println("]");
-   }
 
-   
-   public void imprimirMatriz(String[][] matriz, String nome){
-      String espacamento = "  ";
+      if(matriz instanceof int[][]){
+         int[][] mat = (int[][]) matriz;
 
-      System.out.println(nome + " = [");
-      for(int i = 0; i < matriz.length; i++){
-         System.out.print(espacamento);
-         for(int j = 0; j < matriz[i].length; j++){
-            System.out.print(matriz[i][j] + "  ");
+         for(int i = 0; i < mat.length; i++){
+            System.out.print(espacamento);
+            for(int j = 0; j < mat[i].length; j++){
+               System.out.print(mat[i][j] + "  ");
+            }
+            System.out.println();
          }
-         System.out.println();
+         System.out.println("]");
+      
+      }else if(matriz instanceof float[][]){
+         float[][] mat = (float[][]) matriz;
+
+         for(int i = 0; i < mat.length; i++){
+            System.out.print(espacamento);
+            for(int j = 0; j < mat[i].length; j++){
+               System.out.print(mat[i][j] + "  ");
+            }
+            System.out.println();
+         }
+         System.out.println("]");
+      
+      }else if(matriz instanceof double[][]){
+         double[][] mat = (double[][]) matriz;
+
+         for(int i = 0; i < mat.length; i++){
+            System.out.print(espacamento);
+            for(int j = 0; j < mat[i].length; j++){
+               System.out.print(mat[i][j] + "  ");
+            }
+            System.out.println();
+         }
+         System.out.println("]");
+      
+      }else if(matriz instanceof String[][]){
+         String[][] mat = (String[][]) matriz;
+
+         for(int i = 0; i < mat.length; i++){
+            System.out.print(espacamento);
+            for(int j = 0; j < mat[i].length; j++){
+               System.out.print(mat[i][j] + "  ");
+            }
+            System.out.println();
+         }
+         System.out.println("]");
+      
+      }else{
+         throw new IllegalArgumentException("Tipo de matriz não suportado.");
       }
-      System.out.println("]");
    }
 }

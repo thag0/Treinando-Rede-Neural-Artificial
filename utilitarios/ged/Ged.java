@@ -30,6 +30,7 @@ package utilitarios.ged;
 public class Ged{
 
    ImpressaoMatriz im;//exibição
+   ImpressaoArray ia;//exibição
    ImpressaoDados id;//exibição
    ManipuladorDados md;//manipulador de dados
    GerenciadorArquivos ga;//leitor de arquivos
@@ -48,6 +49,7 @@ public class Ged{
     */
    public Ged(){
       im = new ImpressaoMatriz();
+      ia = new ImpressaoArray();
       id = new ImpressaoDados();
       md = new ManipuladorDados();
       ga = new GerenciadorArquivos();
@@ -77,80 +79,106 @@ public class Ged{
       id.imprimirInicio(dados);
    }
 
+   /**
+    * Exibe as informações contidas no array fornecido.
+    * <p>
+    *    Tipos suportados:
+    * </p>
+    * <ul>
+    *    <li>
+    *       int[];
+    *    </li>
+    *    <li>
+    *       float[];
+    *    </li>
+    *    <li>
+    *       double[];
+    *    </li>
+    *    <li>
+    *       String[];
+    *    </li>
+    * </ul>
+    * @param array array com os dados.
+    */
+   public void imprimirArray(Object array){
+      ia.imprimirArray(array);
+   }
+
+   /**
+    * Exibe as informações contidas no array fornecido.
+    * <p>
+    *    Tipos suportados:
+    * </p>
+    * <ul>
+    *    <li>
+    *       int[];
+    *    </li>
+    *    <li>
+    *       float[];
+    *    </li>
+    *    <li>
+    *       double[];
+    *    </li>
+    *    <li>
+    *       String[];
+    *    </li>
+    * </ul>
+    * @param array array com os dados.
+    * @param nome nome personalizado para o array impresso.
+    */
+   public void imprimirArray(Object array, String nome){
+      ia.imprimirArray(array, nome);
+   }
 
    /**
     * Exibe as informações contidas na matriz fornecida.
-    * @param matriz matriz com os dados
+    * <p>
+    *    Tipos suportados:
+    * </p>
+    * <ul>
+    *    <li>
+    *       int[][];
+    *    </li>
+    *    <li>
+    *       float[][];
+    *    </li>
+    *    <li>
+    *       double[][];
+    *    </li>
+    *    <li>
+    *       String[][];
+    *    </li>
+    * </ul>
+    * @param matriz matriz com os dados.
     */
-   public void imprimirMatriz(int[][] matriz){
+   public void imprimirMatriz(Object matriz){
       im.imprimirMatriz(matriz);
    }
 
-
    /**
     * Exibe as informações contidas na matriz fornecida.
-    * @param matriz matriz com os dados
+    * <p>
+    *    Tipos suportados:
+    * </p>
+    * <ul>
+    *    <li>
+    *       int[][];
+    *    </li>
+    *    <li>
+    *       float[][];
+    *    </li>
+    *    <li>
+    *       double[][];
+    *    </li>
+    *    <li>
+    *       String[][];
+    *    </li>
+    * </ul>
+    * @param matriz matriz com os dados.
+    * @param nome nome personalizado para a matriz impressa.
     */
-   public void imprimirMatriz(float[][] matriz){
+   public void imprimirMatriz(Object matriz, String nome){
       im.imprimirMatriz(matriz);
-   }
-
-
-   /**
-    * Exibe as informações contidas na matriz fornecida.
-    * @param matriz matriz com os dados
-    */
-   public void imprimirMatriz(double[][] matriz){
-      im.imprimirMatriz(matriz);
-   }
-
-
-   /**
-    * Exibe as informações contidas na matriz fornecida.
-    * @param matriz matriz com os dados
-    */
-   public void imprimirMatriz(String[][] matriz){
-      im.imprimirMatriz(matriz);
-   }
-
-
-   /**
-    * Exibe as informações contidas na matriz fornecida.
-    * @param matriz matriz com os dados
-    * @param nome nome personalizado da matriz para a impressão
-    */
-   public void imprimirMatriz(int[][] matriz, String nome){
-      im.imprimirMatriz(matriz, nome);
-   }
-
-
-   /**
-    * Exibe as informações contidas na matriz fornecida.
-    * @param matriz matriz com os dados
-    * @param nome nome personalizado da matriz para a impressão
-    */
-   public void imprimirMatriz(float[][] matriz, String nome){
-      im.imprimirMatriz(matriz, nome);
-   }
-
-
-   /**
-    * Exibe as informações contidas na matriz fornecida.
-    * @param matriz matriz com os dados
-    * @param nome nome personalizado da matriz para a impressão
-    */
-   public void imprimirMatriz(double[][] matriz, String nome){
-      im.imprimirMatriz(matriz, nome);
-   }
-
-
-   /**
-    * Exibe as informações contidas na matriz fornecida.
-    * @param matriz matriz com os dados
-    * @param nome nome personalizado da matriz para a impressão
-    */
-   public void imprimirMatriz(String[][] matriz, String nome){
-      im.imprimirMatriz(matriz, nome);
    }
 
    

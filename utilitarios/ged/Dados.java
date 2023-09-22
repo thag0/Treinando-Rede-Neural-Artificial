@@ -39,7 +39,6 @@ public class Dados{
     */
    private String nome = this.getClass().getSimpleName();;
 
-
    /**
     * Inicializa um objeto do tipo Dados com seu conteúdo vazio.
     * <p>
@@ -52,7 +51,6 @@ public class Dados{
       this.conteudo = new ArrayList<>();
    }
 
-
    /**
     * Inicializa um objeto do tipo Dados de acordo com o conteúdo especificado.
     * <p>
@@ -60,50 +58,47 @@ public class Dados{
     *    dados, possui algumas funcionalidades mais básicas e é uma dependência para 
     *    algumas funcionalidades presentes dentro do {@code Ged}.
     * </p>
-    */
-   public Dados(int[][] conteudo){
-      this.atribuir(conteudo);
-   }
-
-
-   /**
-    * Inicializa um objeto do tipo Dados de acordo com o conteúdo especificado.
     * <p>
-    *    {@code Dados} é um objeto criado para armazenar informações de conjuntos de 
-    *    dados, possui algumas funcionalidades mais básicas e é uma dependência para 
-    *    algumas funcionalidades presentes dentro do {@code Ged}.
+    *    Tipos suportados:
     * </p>
+    * <ul>
+    *    <li>
+    *       int[][];
+    *    </li>
+    *    <li>
+    *       float[][];
+    *    </li>
+    *    <li>
+    *       double[][];
+    *    </li>
+    *    <li>
+    *       String[][];
+    *    </li>
+    * </ul>
+    * @param conteudo matriz contendo o conteúdo de dados.
+    * @throws IllegalArgumentException se o tipo de dado fornecido não for suportado.
     */
-   public Dados(float[][] conteudo){
-      this.atribuir(conteudo);
+   public Dados(Object conteudo){
+      if(conteudo instanceof int[][]){
+         int[][] c = (int[][]) conteudo;
+         this.atribuir(c);
+      
+      }else if(conteudo instanceof float[][]){
+         float[][] c = (float[][]) conteudo;
+         this.atribuir(c);
+      
+      }else if(conteudo instanceof double[][]){
+         double[][] c = (double[][]) conteudo;
+         this.atribuir(c);
+      
+      }else if(conteudo instanceof String[][]){
+         String[][] c = (String[][]) conteudo;
+         this.atribuir(c);
+      
+      }else{
+         throw new IllegalArgumentException("Tipo de dado não suportado.");
+      }
    }
-
-
-   /**
-    * Inicializa um objeto do tipo Dados de acordo com o conteúdo especificado.
-    * <p>
-    *    {@code Dados} é um objeto criado para armazenar informações de conjuntos de 
-    *    dados, possui algumas funcionalidades mais básicas e é uma dependência para 
-    *    algumas funcionalidades presentes dentro do {@code Ged}.
-    * </p>
-    */
-   public Dados(double[][] conteudo){
-      this.atribuir(conteudo);
-   }
-
-
-   /**
-    * Inicializa um objeto do tipo Dados de acordo com o conteúdo especificado.
-    * <p>
-    *    {@code Dados} é um objeto criado para armazenar informações de conjuntos de 
-    *    dados, possui algumas funcionalidades mais básicas e é uma dependência para 
-    *    algumas funcionalidades presentes dentro do {@code Ged}.
-    * </p>
-    */
-   public Dados(String[][] conteudo){
-      this.atribuir(conteudo);
-   }
-
 
    /**
     * Inicializa um objeto do tipo Dados de acordo com o conteúdo especificado.
@@ -116,7 +111,6 @@ public class Dados{
    public Dados(ArrayList<String[]> conteudo){
       this.atribuir(conteudo);
    }
-
 
    /**
     * Configura um novo nome personalizado para o conjunto de dados.
@@ -135,7 +129,6 @@ public class Dados{
       this.nome = nome;
       this.qAlteracoes++;
    }
-
 
    /**
     * Retorna o item correspondente pela linha e coluna fornecidos.
@@ -159,7 +152,6 @@ public class Dados{
       return this.conteudo.get(lin)[col];
    }
 
-
    /**
     * Edita o valor contido no espaço indicado pela linha e coluna.
     * @param lin linha para edição.
@@ -180,7 +172,6 @@ public class Dados{
       this.conteudo.set(lin, linha);
       this.qAlteracoes++;
    }
-
 
    /**
     * Edita o valor em todas as linhas de acordo com a coluna especificada.
@@ -207,7 +198,6 @@ public class Dados{
       this.qAlteracoes++;
    }
 
-
    /**
     * Substitui todo o conteúdo atual de Dados pela nova lista.
     * @param conteudo lista com os novos dados.
@@ -218,7 +208,6 @@ public class Dados{
          this.qAlteracoes++;
       }
    }
-
 
    /**
     * Atribui os valores contidos na matriz fonercida ao 
@@ -259,7 +248,6 @@ public class Dados{
       this.qAlteracoes++;
    }
 
-
    /**
     * Atribui os valores contidos na matriz fonercida ao 
     * conteúdo de Dados.
@@ -298,7 +286,6 @@ public class Dados{
       this.conteudo = lista;
       this.qAlteracoes++;
    }
-
 
    /**
     * Atribui os valores contidos na matriz fonercida ao 
@@ -339,7 +326,6 @@ public class Dados{
       this.qAlteracoes++;
    }
 
-
    /**
     * Atribui os valores contidos na matriz fonercida ao 
     * conteúdo de Dados.
@@ -379,7 +365,6 @@ public class Dados{
       this.qAlteracoes++;
    }
 
-
    /**
     * Retorna todo o conteúdo presente nos dados.
     * @return estrutura {@code ArrayList<String[]>} que armazena o conteúdo dos dados.
@@ -387,7 +372,6 @@ public class Dados{
    public ArrayList<String[]> conteudo(){
       return this.conteudo;
    }
-
 
    /**
     * Retorna um novo conjunto de dados simples contendo apenas o conteúdo da coluna
@@ -439,7 +423,6 @@ public class Dados{
       return d;
    }
 
-
    /**
     * Aumenta em uma unidade a quantidade de alterações
     * feitas dentro do conjunto de dados.
@@ -447,7 +430,6 @@ public class Dados{
    public void incrementarAlteracao(){
       this.qAlteracoes++;
    }
-
 
    /**
     * Calula a média do conteúdo que pode ser transformado para valor numérico 
@@ -481,7 +463,6 @@ public class Dados{
 
       return soma / contador;
    }
-
 
    /**
     * Calcula a mediana do conteúdo que pode ser transformado para valor numérico
@@ -520,7 +501,6 @@ public class Dados{
          return valoresNumericos.get(meio);
       }
    }
-
 
    /**
     * Calcula a moda do conteúdo que pode ser transformado para valor numérico
@@ -581,7 +561,6 @@ public class Dados{
       }
    }
 
-
    /**
     * Calcula o desvio padrão dos valores numéricos presentes na coluna especificada.
     * @param idCol índice da coluna desejada.
@@ -631,7 +610,6 @@ public class Dados{
       return desvioPadrao;
    }
 
-
    /**
     * Calcula o maior valor do conteúdo que pode ser transformado para valor numérico
     * presente na coluna especificada.
@@ -671,7 +649,6 @@ public class Dados{
       return valorMaximo;
    }
 
-
    /**
     * Calcula o menor valor do conteúdo que pode ser transformado para valor numérico
     * presente na coluna especificada.
@@ -710,7 +687,6 @@ public class Dados{
   
       return valorMaximo;
    }
-
 
    /**
     * Normaliza os valores numéricos contido na coluna fornecida.
@@ -763,7 +739,6 @@ public class Dados{
       this.qAlteracoes++;
    }
 
-
    /**
     * Capitaliza todo o conteúdo alfabético contido na coluna fornecida.
     * @param idCol índice da coluna desejada.
@@ -788,7 +763,6 @@ public class Dados{
       this.qAlteracoes++;
    }
 
-
    /**
     * Captaliza a palavra.
     * @param palavra palavra desejada.
@@ -807,7 +781,6 @@ public class Dados{
 
       return new String(caracteres);
    }
-
 
    /**
     * Substitui pelo novo valor todo o conteúdo encontrado na linha de acordo com a busca.
@@ -852,7 +825,6 @@ public class Dados{
       }
       this.qAlteracoes++;
    }
-
 
    /**
     * Ordena o conteúdo contido nos dados de acordo com a coluna desejada.
@@ -913,7 +885,6 @@ public class Dados{
       this.qAlteracoes++;
    }
 
-
    /**
     * Verifica se o conteúdo do conjunto de dados está vazio.
     * <p>
@@ -931,7 +902,6 @@ public class Dados{
 
       return true;
    }
-
 
    /**
     * Retorna um array contendo as linhas e colunas do conteúdo dos dados.
@@ -961,7 +931,6 @@ public class Dados{
       return shape;
    }
 
-
    /**
     * Retorna um buffer contendo as informações do conteúdo dos dados, onde:
     * <p>
@@ -981,7 +950,6 @@ public class Dados{
 
       return "[" + shape[0] + ", " + shape[1] + "]";
    }
-
 
    /**
     * Método de impressão básico, via console, de todo o 
@@ -1030,7 +998,6 @@ public class Dados{
 
       System.out.println("]\n");
    }
-
 
    /**
     * Exibe algumas informações sobre o conjunto de dados no geral.
@@ -1100,7 +1067,6 @@ public class Dados{
       return buffer;
    }
 
-
    /**
     * Exibe uma visão geral das informações da coluna especificada.
     * <p>
@@ -1141,7 +1107,6 @@ public class Dados{
       return buffer;
    }
 
-
    /**
     * Retorna o nome personalizado do conjunto de dados.
     * @return nome personalizado do conjunto de dados.
@@ -1149,7 +1114,6 @@ public class Dados{
    public String nome(){
       return this.nome;
    }
-
 
    /**
     * Verifica se a coluna indicada possui algum valor que não possa
@@ -1176,7 +1140,6 @@ public class Dados{
       return false;
    }
 
-
    /**
     * Verifica a quantidade de valores ausentes presentes na coluna especificada.
     * <p>
@@ -1202,7 +1165,6 @@ public class Dados{
   
       return contador;
    }
- 
 
    /**
     * Verifica se o conteúdo dos dados é simetrico. A simetria leva em conta 
@@ -1251,7 +1213,6 @@ public class Dados{
 
       return true;
    }
-
 
    /**
     * Clona o conteúdo em uma nova estrutura, devolvendo um novo objeto

@@ -12,7 +12,6 @@ import render.JanelaTreino;
 import rna.estrutura.RedeNeural;
 import rna.ativacoes.*;
 import rna.otimizadores.*;
-import rna.serializacao.Serializador;
 import utilitarios.ged.Dados;
 import utilitarios.ged.Ged;
 import utilitarios.geim.Geim;
@@ -83,8 +82,6 @@ class Main{
       if(qSaidas == 1)geim.exportarImagemEscalaCinza(imagem, rede, escalaImagemExportada, caminhoImagemExportada);
       else if(qSaidas == 3) geim.exportarImagemRGB(imagem, rede, escalaImagemExportada, caminhoImagemExportada);
       else System.out.println("Não é possível exportar a imagem");
-
-      Serializador.salvar(rede, "./rede.txt");
    }
 
 
