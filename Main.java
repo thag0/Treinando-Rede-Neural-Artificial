@@ -94,9 +94,8 @@ class Main{
       int[] arq = {qEntradas, 13, 13, qSaidas};//28x28
       RedeNeural rede = new RedeNeural(arq);
 
-      rede.compilar();
-      rede.configurarAlcancePesos(0.3);
       rede.configurarInicializador(5);
+      rede.compilar();
       rede.configurarOtimizador(new SGD());
       rede.configurarFuncaoAtivacao(new Sigmoid());
       

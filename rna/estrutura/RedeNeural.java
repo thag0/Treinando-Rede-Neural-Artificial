@@ -217,6 +217,9 @@ public class RedeNeural implements Cloneable{
     * Define o valor máximo e mínimo na hora de aleatorizar os pesos da rede 
     * para a compilação, os novos valores não podem ser menores ou iguais a zero.
     * <p>
+    *    É necessário informar o alcance <strong>antes</strong> de compilar a rede.
+    * </p>
+    * <p>
     *    {@code O valor padrão de alcance é 1}
     * </p>
     * @param alcance novo valor máximo e mínimo.
@@ -231,7 +234,11 @@ public class RedeNeural implements Cloneable{
 
    /**
     * Configura a inicialização dos pesos da Rede Neural. A forma de inicialização 
-    * pode afetar o tempo de convergência da rede durante o treinamento.
+    * pode afetar o tempo de convergência da rede durante o treinamento. 
+    * <p>
+    *    É necessário informar o inicializador <strong>antes</strong> de compilar a 
+    *    rede.
+    * </p>
     * <p>
     *    Inicializadores disponíveis:
     * </p>
@@ -501,7 +508,7 @@ public class RedeNeural implements Cloneable{
          case 5 -> this.otimizadorAtual = new Adam();
          case 6 -> this.otimizadorAtual = new Nadam();
          case 7 -> this.otimizadorAtual = new AMSGrad();
-         case 0 -> this.otimizadorAtual = new Adamax();
+         case 8 -> this.otimizadorAtual = new Adamax();
          default-> throw new IllegalArgumentException("Valor fornecido do otimizador é inválido.");
       }
 

@@ -155,8 +155,7 @@ public class Neuronio{
     * @throws IllegalArgumentException se o inicializdor fornecido for inválido.
     */
    public void inicializarPesos(int tamanhoSaida){
-
-      switch(inicializador){
+      switch(this.inicializador){
          case 1  -> Inicializador.aleatorio(this.pesos, this.alcanceInicial);
          case 2  -> Inicializador.aleatoriaPositiva(this.pesos, this.alcanceInicial);
          case 3  -> Inicializador.he(this.pesos, this.pesos.length);

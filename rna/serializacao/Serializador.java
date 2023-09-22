@@ -69,8 +69,8 @@ public class Serializador{
 
                Neuronio neuronio = camada.neuronio(j);
                for(int k = 0; k < neuronio.numConexoes(); k++){
-                  double peso = neuronio.pesos[k];
-                  writer.write(Double.toString((float)peso));
+                  writer.write(Float.toString((float)neuronio.pesos[k]));
+                  // writer.write(Double.toString(neuronio.pesos[k]));
                   writer.newLine();
                }
             }
@@ -80,8 +80,8 @@ public class Serializador{
          for(int i = 0; i < rede.obterCamadaSaida().quantidadeNeuronios(); i++){
             Neuronio neuronio = rede.obterCamadaSaida().neuronio(i);
             for(int k = 0; k < neuronio.numConexoes(); k++){
-               double peso = neuronio.pesos[k];
-               writer.write(Double.toString((float)peso));
+               writer.write(Float.toString((float)neuronio.pesos[k]));
+               // writer.write(Double.toString(neuronio.pesos[k]));
                writer.newLine();
             }
          }

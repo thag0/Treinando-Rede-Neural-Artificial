@@ -36,7 +36,9 @@ public class ExemploImagem{
 
       //avaliando resultados
       double precisao = 1 - rede.avaliador.erroMedioAbsoluto(dadosEntrada, dadosSaida);
+      double perda = rede.avaliador.erroMedioQuadrado(dadosEntrada, dadosSaida);
       System.out.println(rede.info());
       System.out.println("Precisão = " + (precisao * 100));
+      System.out.println("Perda = " + perda);
    }
 }
