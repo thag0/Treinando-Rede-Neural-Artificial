@@ -1,4 +1,4 @@
-package utilitarios.ged;
+package utilitarios.ged;;
 
 
 /**
@@ -15,10 +15,8 @@ class OperadorMatriz{
 
    }
 
-
    //sublinhas
    
-
    public int[][] obterSubLinhas(int[][] dados, int inicio, int fim){
       if(inicio < 0 || fim > dados.length || inicio >= fim){
          throw new IllegalArgumentException("Índices de início ou fim inválidos.");
@@ -34,7 +32,6 @@ class OperadorMatriz{
 
       return subMatriz;
    }
-
 
    public float[][] obterSubLinhas(float[][] dados, int inicio, int fim){
       if(inicio < 0 || fim > dados.length || inicio >= fim){
@@ -52,7 +49,6 @@ class OperadorMatriz{
       return subMatriz;
    }
 
-
    public double[][] obterSubLinhas(double[][] dados, int inicio, int fim){
       if(inicio < 0 || fim > dados.length || inicio >= fim){
          throw new IllegalArgumentException("Índices de início ou fim inválidos.");
@@ -69,9 +65,7 @@ class OperadorMatriz{
       return subMatriz;
    }
 
-
    //subcolunas
-
 
    public int[][] obterSubColunas(int[][] matriz, int inicio, int fim){
       if(inicio < 0 || fim > matriz[0].length || inicio >= fim){
@@ -91,7 +85,6 @@ class OperadorMatriz{
       return subColunas;
    }
 
-
    public float[][] obterSubColunas(float[][] matriz, int inicio, int fim){
       if(inicio < 0 || fim > matriz[0].length || inicio >= fim){
          throw new IllegalArgumentException("Índices de início ou fim inválidos para colunas.");
@@ -109,7 +102,6 @@ class OperadorMatriz{
 
       return subColunas;
    }
-
 
    public double[][] obterSubColunas(double[][] matriz, int inicio, int fim){
       if(inicio < 0 || fim > matriz[0].length || inicio >= fim){
@@ -129,28 +121,53 @@ class OperadorMatriz{
       return subColunas;
    }
 
-
    //preencher
    
-   public void preencherMatriz(int[][] matriz, int valor){
+   public void preencherMatriz(Object matriz, Number valor){
+      if(matriz == null || valor == null){
+         throw new IllegalArgumentException("Parâmetros fornecidos não podem ser nulos.");
+      }
+
+      if(matriz instanceof int[][]){
+         int[][] m = (int[][]) matriz;
+         int v = valor.intValue();
+         preencherMatriz(m, v);
+         matriz = (Object) m;
+      
+      }else if(matriz instanceof float[][]){
+         float[][] m = (float[][]) matriz;
+         float v = valor.floatValue();
+         preencherMatriz(m, v);
+         matriz = (Object) m;
+      
+      }else if(matriz instanceof double[][]){
+         double[][] m = (double[][]) matriz;
+         double v = valor.doubleValue();
+         preencherMatriz(m, v);
+         matriz = (Object) m;
+      
+      }else{
+         throw new IllegalArgumentException("Tipo de matriz não suportado.");
+      }
+   }
+
+   private void preencherMatriz(int[][] matriz, int valor){
       for(int i = 0; i < matriz.length; i++){
          for(int j = 0; j < matriz[i].length; j++){
             matriz[i][j] = valor;
          }
       }
    }
-   
 
-   public void preencherMatriz(float[][] matriz, float valor){
+   private void preencherMatriz(float[][] matriz, float valor){
       for(int i = 0; i < matriz.length; i++){
          for(int j = 0; j < matriz[i].length; j++){
             matriz[i][j] = valor;
          }
       }
    }
-   
 
-   public void preencherMatriz(double[][] matriz, double valor){
+   private void preencherMatriz(double[][] matriz, double valor){
       for(int i = 0; i < matriz.length; i++){
          for(int j = 0; j < matriz[i].length; j++){
             matriz[i][j] = valor;
@@ -161,8 +178,32 @@ class OperadorMatriz{
 
    //identidade
 
+   public void matrizIdentidade(Object matriz){
+      if(matriz == null){
+         throw new IllegalArgumentException("A matriz fornecida não pode ser nula.");
+      }
 
-   public void matrizIdentidade(int[][] matriz){
+      if(matriz instanceof int[][]){
+         int[][] mat = (int[][]) matriz;
+         matrizIdentidade(mat);
+         matriz = (Object) mat;
+      
+      }else if(matriz instanceof float[][]){
+         float[][] mat = (float[][]) matriz;
+         matrizIdentidade(mat);
+         matriz = (Object) mat;
+      
+      }else if(matriz instanceof double[][]){
+         double[][] mat = (double[][]) matriz;
+         matrizIdentidade(mat);
+         matriz = (Object) mat;
+      
+      }else{
+         throw new IllegalArgumentException("Tipo de matriz não suportado.");
+      }
+   }
+
+   private void matrizIdentidade(int[][] matriz){
       for(int i = 0; i < matriz.length; i++){
          for(int j = 0; j < matriz[i].length; j++){
             matriz[i][j] = (i == j) ? 1 : 0;
@@ -170,8 +211,7 @@ class OperadorMatriz{
       }       
    }
 
-
-   public void matrizIdentidade(float[][] matriz){
+   private void matrizIdentidade(float[][] matriz){
       for(int i = 0; i < matriz.length; i++){
          for(int j = 0; j < matriz[i].length; j++){
             matriz[i][j] = (i == j) ? 1 : 0;
@@ -179,8 +219,7 @@ class OperadorMatriz{
       }       
    }
 
-
-   public void matrizIdentidade(double[][] matriz){
+   private void matrizIdentidade(double[][] matriz){
       for(int i = 0; i < matriz.length; i++){
          for(int j = 0; j < matriz[i].length; j++){
             matriz[i][j] = (i == j) ? 1 : 0;
@@ -188,9 +227,7 @@ class OperadorMatriz{
       }       
    }
 
-
-   //transposição
-
+   //transposição (não consegui generalizar por causa do retorno)
    
    public int[][] transporMatriz(int[][] matriz){
       int linhas = matriz.length;
@@ -237,276 +274,365 @@ class OperadorMatriz{
    }
 
    
-   //verificação de dimensionalidade pra soma
+   //verificação de dimensionalidade pra soma, subtração, hadamard
    
-   
-   private void dimensoesIguais(int[][] a, int[][] b){
-      if((a.length != b.length) || (a[0].length != b[0].length)){
-         throw new IllegalArgumentException("Número de linhas de A e B são diferentes.");
+   private void dimensoesIguais(int[][] a, int[][] b, int[][] r){
+      if(a.length != b.length || a[0].length != b[0].length || a.length != r.length || a[0].length != r[0].length){
+         throw new IllegalArgumentException("As dimensões de A, B e R não são iguais.");
       }
-   }
+  }
 
-
-   private void dimensoesIguais(float[][] a, float[][] b){
-      if((a.length != b.length) || (a[0].length != b[0].length)){
-         throw new IllegalArgumentException("Número de linhas de A e B são diferentes.");
+   private void dimensoesIguais(float[][] a, float[][] b, float[][] r){
+      if(a.length != b.length || a[0].length != b[0].length || a.length != r.length || a[0].length != r[0].length){
+         throw new IllegalArgumentException("As dimensões de A, B e R não são iguais.");
       }
-   }
+  }
 
-
-   private void dimensoesIguais(double[][] a, double[][] b){
-      if((a.length != b.length) || (a[0].length != b[0].length)){
-         throw new IllegalArgumentException("Número de linhas de A e B são diferentes.");
+   private void dimensoesIguais(double[][] a, double[][] b, double[][] r){
+      if(a.length != b.length || a[0].length != b[0].length || a.length != r.length || a[0].length != r[0].length){
+         throw new IllegalArgumentException("As dimensões de A, B e R não são iguais.");
       }
-   }
+  }
 
 
    //verificação de dimensionalidade pra multiplicação
-
    
-   private void dimensoesIguaisMult(int[][] a, int[][] b){
+   private void dimensoesIguaisMult(int[][] a, int[][] b, int[][] r){
       if(a[0].length != b.length){
-         throw new IllegalArgumentException("Dimensões de A e B incompatíveis para multiplicação");
+          throw new IllegalArgumentException("Dimensões de A e B incompatíveis para multiplicação");
+      }
+      if(r.length != a.length || r[0].length != b[0].length){
+          throw new IllegalArgumentException("Dimensões de R incompatíveis com o resultado da multiplicação");
       }
    }
 
-
-   private void dimensoesIguaisMult(float[][] a, float[][] b){
+   private void dimensoesIguaisMult(float[][] a, float[][] b, float[][] r){
       if(a[0].length != b.length){
-         throw new IllegalArgumentException("Dimensões de A e B incompatíveis para multiplicação");
+          throw new IllegalArgumentException("Dimensões de A e B incompatíveis para multiplicação");
+      }
+      if(r.length != a.length || r[0].length != b[0].length){
+          throw new IllegalArgumentException("Dimensões de R incompatíveis com o resultado da multiplicação");
       }
    }
 
-
-   private void dimensoesIguaisMult(double[][] a, double[][] b){
+   private void dimensoesIguaisMult(double[][] a, double[][] b, double[][] r){
       if(a[0].length != b.length){
-         throw new IllegalArgumentException("Dimensões de A e B incompatíveis para multiplicação");
+          throw new IllegalArgumentException("Dimensões de A e B incompatíveis para multiplicação");
+      }
+      if(r.length != a.length || r[0].length != b[0].length){
+          throw new IllegalArgumentException("Dimensões de R incompatíveis com o resultado da multiplicação");
       }
    }
-
 
    // OPERAÇÕES MATRICIAIS -------------------------------------
    //soma
 
-
-   public int[][] somarMatrizes(int[][] a, int[][] b){
-      dimensoesIguais(a, b);
-      int[][] soma = new int[a.length][a[0].length];
-
-      for(int i = 0; i < soma.length; i++){
-         for(int j = 0; j < soma[i].length; j++){
-            soma[i][j] = a[i][j] + b[i][j];
-         }
+   public void somarMatrizes(Object a, Object b, Object r){
+      if(a == null || b == null || r == null){
+         throw new IllegalArgumentException("As matrizes fornecidas não podem ser nulas.");
       }
 
-      return soma;
+      if((a instanceof int[][]) && (b instanceof int[][]) && (r instanceof int[][])){
+         int[][] m1 = (int[][]) a;
+         int[][] m2 = (int[][]) b;
+         int[][] mr = (int[][]) r;
+         somarMatrizes(m1, m2, mr);
+         
+      }else if((a instanceof float[][]) && (b instanceof float[][]) && (r instanceof float[][])){
+         float[][] m1 = (float[][]) a;
+         float[][] m2 = (float[][]) b;
+         float[][] mr = (float[][]) r;
+         somarMatrizes(m1, m2, mr);
+         
+      }else if((a instanceof double[][]) && (b instanceof double[][]) && (r instanceof double[][])){
+         double[][] m1 = (double[][]) a;
+         double[][] m2 = (double[][]) b;
+         double[][] mr = (double[][]) r;
+         somarMatrizes(m1, m2, mr);
+         
+      }else{
+         throw new IllegalArgumentException("Tipos de matrizes fornecidas não suportados.");
+      }
    }
 
+   private void somarMatrizes(int[][] a, int[][] b, int[][] r){
+      dimensoesIguais(a, b, r);
 
-   public float[][] somarMatrizes(float[][] a, float[][] b){
-      dimensoesIguais(a, b);
-      float[][] soma = new float[a.length][a[0].length];
-
-      for(int i = 0; i < soma.length; i++){
-         for(int j = 0; j < soma[i].length; j++){
-            soma[i][j] = a[i][j] + b[i][j];
+      for(int i = 0; i < r.length; i++){
+         for(int j = 0; j < r[i].length; j++){
+            r[i][j] = a[i][j] + b[i][j];
          }
       }
-
-      return soma;
    }
 
+   private void somarMatrizes(float[][] a, float[][] b, float[][] r){
+      dimensoesIguais(a, b, r);
 
-   public double[][] somarMatrizes(double[][] a, double[][] b){
-      dimensoesIguais(a, b);
-      double[][] soma = new double[a.length][a[0].length];
-
-      for(int i = 0; i < soma.length; i++){
-         for(int j = 0; j < soma[i].length; j++){
-            soma[i][j] = a[i][j] + b[i][j];
+      for(int i = 0; i < r.length; i++){
+         for(int j = 0; j < r[i].length; j++){
+            r[i][j] = a[i][j] + b[i][j];
          }
       }
-
-      return soma;
    }
 
+   private void somarMatrizes(double[][] a, double[][] b, double[][] r){
+      dimensoesIguais(a, b, r);
+
+      for(int i = 0; i < r.length; i++){
+         for(int j = 0; j < r[i].length; j++){
+            r[i][j] = a[i][j] + b[i][j];
+         }
+      }
+   }
 
    //subtração
 
-
-   public int[][] subtrairMatrizes(int[][] a, int[][] b){
-      dimensoesIguais(a, b);
-      int[][] sub = new int[a.length][a[0].length];
-
-      for(int i = 0; i < sub.length; i++){
-         for(int j = 0; j < sub[i].length; j++){
-            sub[i][j] = a[i][j] - b[i][j];
-         }
+   public void subtrairMatrizes(Object a, Object b, Object r){
+      if(a == null || b == null || r == null){
+         throw new IllegalArgumentException("As matrizes fornecidas não podem ser nulas.");
       }
 
-      return sub;
+      if((a instanceof int[][]) && (b instanceof int[][]) && (r instanceof int[][])){
+         int[][] m1 = (int[][]) a;
+         int[][] m2 = (int[][]) b;
+         int[][] mr = (int[][]) r;
+         subtrairMatrizes(m1, m2, mr);
+         
+      }else if((a instanceof float[][]) && (b instanceof float[][]) && (r instanceof float[][])){
+         float[][] m1 = (float[][]) a;
+         float[][] m2 = (float[][]) b;
+         float[][] mr = (float[][]) r;
+         subtrairMatrizes(m1, m2, mr);
+         
+      }else if((a instanceof double[][]) && (b instanceof double[][]) && (r instanceof double[][])){
+         double[][] m1 = (double[][]) a;
+         double[][] m2 = (double[][]) b;
+         double[][] mr = (double[][]) r;
+         subtrairMatrizes(m1, m2, mr);
+         
+      }else{
+         throw new IllegalArgumentException("Tipos de matrizes fornecidas não suportados.");
+      }
    }
 
+   private void subtrairMatrizes(int[][] a, int[][] b, int[][] r){
+      dimensoesIguais(a, b, r);
 
-   public float[][] subtrairMatrizes(float[][] a, float[][] b){
-      dimensoesIguais(a, b);
-      float[][] sub = new float[a.length][a[0].length];
-
-      for(int i = 0; i < sub.length; i++){
-         for(int j = 0; j < sub[i].length; j++){
-            sub[i][j] = a[i][j] - b[i][j];
+      for(int i = 0; i < r.length; i++){
+         for(int j = 0; j < r[i].length; j++){
+            r[i][j] = a[i][j] - b[i][j];
          }
       }
-
-      return sub;
    }
 
+   private void subtrairMatrizes(float[][] a, float[][] b, float[][] r){
+      dimensoesIguais(a, b, r);
 
-   public double[][] subtrairMatrizes(double[][] a, double[][] b){
-      dimensoesIguais(a, b);
-      double[][] sub = new double[a.length][a[0].length];
-
-      for(int i = 0; i < sub.length; i++){
-         for(int j = 0; j < sub[i].length; j++){
-            sub[i][j] = a[i][j] - b[i][j];
+      for(int i = 0; i < r.length; i++){
+         for(int j = 0; j < r[i].length; j++){
+            r[i][j] = a[i][j] - b[i][j];
          }
       }
+   }
 
-      return sub;
+   private void subtrairMatrizes(double[][] a, double[][] b, double[][] r){
+      dimensoesIguais(a, b, r);
+
+      for(int i = 0; i < r.length; i++){
+         for(int j = 0; j < r[i].length; j++){
+            r[i][j] = a[i][j] - b[i][j];
+         }
+      }
    }
 
 
    //multiplicação
 
+   public void multiplicarMatrizes(Object a, Object b, Object r){
+      if(a == null || b == null || r == null){
+         throw new IllegalArgumentException("As matrizes fornecidas não podem ser nulas.");
+      }
 
-   public int[][] multiplicarMatrizes(int[][] a, int[][] b){
-      dimensoesIguaisMult(a, b);
+      if((a instanceof int[][]) && (b instanceof int[][]) && (r instanceof int[][])){
+         int[][] m1 = (int[][]) a;
+         int[][] m2 = (int[][]) b;
+         int[][] mr = (int[][]) r;
+         multiplicarMatrizes(m1, m2, mr);
+         
+      }else if((a instanceof float[][]) && (b instanceof float[][]) && (r instanceof float[][])){
+         float[][] m1 = (float[][]) a;
+         float[][] m2 = (float[][]) b;
+         float[][] mr = (float[][]) r;
+         multiplicarMatrizes(m1, m2, mr);
+         
+      }else if((a instanceof double[][]) && (b instanceof double[][]) && (r instanceof double[][])){
+         double[][] m1 = (double[][]) a;
+         double[][] m2 = (double[][]) b;
+         double[][] mr = (double[][]) r;
+         multiplicarMatrizes(m1, m2, mr);
+         
+      }else{
+         throw new IllegalArgumentException("Tipos de matrizes fornecidas não suportados.");   
+      }
+   }
 
-      int[][] mult = new int[b.length][a[0].length];
+   private void multiplicarMatrizes(int[][] a, int[][] b, int[][] r){
+      dimensoesIguaisMult(a, b, r);
+
       int tamInterno = a[0].length;
 
-      for(int i = 0; i < mult.length; i++){
-         for(int j = 0; j < mult[i].length; j++){
-            mult[i][j] = 0;
+      for(int i = 0; i < r.length; i++){
+         for(int j = 0; j < r[i].length; j++){
+
+            r[i][j] = 0;
             for(int k = 0; k < tamInterno; k++){
-               mult[i][j] += a[i][k] * b[k][j];
+               r[i][j] += a[i][k] * b[k][j];
             }
          }
       }
-
-      return mult;
    }
 
+   private void multiplicarMatrizes(float[][] a, float[][] b, float[][] r){
+      dimensoesIguaisMult(a, b, r);
 
-   public float[][] multiplicarMatrizes(float[][] a, float[][] b){
-      dimensoesIguaisMult(a, b);
-
-      float[][] mult = new float[b.length][a[0].length];
-      float tamInterno = a[0].length;
-
-      for(int i = 0; i < mult.length; i++){
-         for(int j = 0; j < mult[i].length; j++){
-            mult[i][j] = 0;
-            for(int k = 0; k < tamInterno; k++){
-               mult[i][j] += a[i][k] * b[k][j];
-            }
-         }
-      }
-
-      return mult;
-   }
-
-
-   public double[][] multiplicarMatrizes(double[][] a, double[][] b){
-      dimensoesIguaisMult(a, b);
-
-      double[][] mult = new double[b.length][a[0].length];
       int tamInterno = a[0].length;
 
-      for(int i = 0; i < mult.length; i++){
-         for(int j = 0; j < mult[i].length; j++){
-            mult[i][j] = 0;
+      for(int i = 0; i < r.length; i++){
+         for(int j = 0; j < r[i].length; j++){
+
+            r[i][j] = 0;
             for(int k = 0; k < tamInterno; k++){
-               mult[i][j] += a[i][k] * b[k][j];
+               r[i][j] += a[i][k] * b[k][j];
             }
          }
       }
-
-      return mult;
    }
 
+   private void multiplicarMatrizes(double[][] a, double[][] b, double[][] r){
+      dimensoesIguaisMult(a, b, r);
+
+      int tamInterno = a[0].length;
+
+      for(int i = 0; i < r.length; i++){
+         for(int j = 0; j < r[i].length; j++){
+
+            r[i][j] = 0;
+            for(int k = 0; k < tamInterno; k++){
+               r[i][j] += a[i][k] * b[k][j];
+            }
+         }
+      }
+   }
 
    //escalar
 
-   
-   public void multilpicarEscalar(int[][] matriz, int escalar){
+   public void multilpicarEscalar(Object mat, Number escalar){
+      if(mat == null || escalar == null){
+         throw new IllegalArgumentException("Os parâmetros fornecidos não podem ser nulos.");
+      }
+
+      if(mat instanceof int[][]){
+         int[][] m = (int[][]) mat;
+         int e = escalar.intValue();
+         multilpicarEscalar(m, e);
+      
+      }else if(mat instanceof float[][]){
+         float[][] m = (float[][]) mat;
+         float e = escalar.floatValue();
+         multilpicarEscalar(m, e);
+
+      }else if(mat instanceof double[][]){
+         double[][] m = (double[][]) mat;
+         double e = escalar.doubleValue();
+         multilpicarEscalar(m, e);
+      
+      }else{
+         throw new IllegalArgumentException("Tipo de matriz não suportado.");
+      }
+   }
+
+   private void multilpicarEscalar(int[][] matriz, int escalar){
       for(int i = 0; i < matriz.length; i++){
          for(int j = 0; j < matriz[i].length; j++){
             matriz[i][j] *= escalar;
          }
       }
    }
-
    
-   public void multilpicarEscalar(float[][] matriz, float escalar){
+   private void multilpicarEscalar(float[][] matriz, float escalar){
       for(int i = 0; i < matriz.length; i++){
          for(int j = 0; j < matriz[i].length; j++){
             matriz[i][j] *= escalar;
          }
       }
    }
-
    
-   public void multilpicarEscalar(double[][] matriz, double escalar){
+   private void multilpicarEscalar(double[][] matriz, double escalar){
       for(int i = 0; i < matriz.length; i++){
          for(int j = 0; j < matriz[i].length; j++){
             matriz[i][j] *= escalar;
          }
       }
    }
-
 
    //hadamard
 
-
-   public int[][] hadamard(int[][] a, int[][] b){
-      dimensoesIguais(a, b);
-      int[][] hadamard = new int[a.length][b[0].length];
-
-      for(int i = 0; i < hadamard.length; i++){
-         for(int j = 0; j < hadamard[i].length; j++){
-            hadamard[i][j] = a[i][j] * b[i][j];
-         }
+   public void hadamard(Object a, Object b, Object r){
+      if(a == null || b == null || r == null){
+         throw new IllegalArgumentException("As matrizes fornecidas não podem ser nulas.");
       }
 
-      return hadamard;
+      if((a instanceof int[][]) && (b instanceof int[][]) && (r instanceof int[][])){
+         int[][] m1 = (int[][]) a;
+         int[][] m2 = (int[][]) b;
+         int[][] mr = (int[][]) r;
+         hadamard(m1, m2, mr);
+         
+      }else if((a instanceof float[][]) && (b instanceof float[][]) && (r instanceof float[][])){
+         float[][] m1 = (float[][]) a;
+         float[][] m2 = (float[][]) b;
+         float[][] mr = (float[][]) r;
+         hadamard(m1, m2, mr);
+         
+      }else if((a instanceof double[][]) && (b instanceof double[][]) && (r instanceof double[][])){
+         double[][] m1 = (double[][]) a;
+         double[][] m2 = (double[][]) b;
+         double[][] mr = (double[][]) r;
+         hadamard(m1, m2, mr);
+         
+      }else{
+         throw new IllegalArgumentException("Tipos de matrizes fornecidas não suportados.");
+      }   
    }
 
+   private void hadamard(int[][] a, int[][] b, int[][] r){
+      dimensoesIguais(a, b, r);
 
-   public float[][] hadamard(float[][] a, float[][] b){
-      dimensoesIguais(a, b);
-      float[][] hadamard = new float[a.length][b[0].length];
-
-      for(int i = 0; i < hadamard.length; i++){
-         for(int j = 0; j < hadamard[i].length; j++){
-            hadamard[i][j] = a[i][j] * b[i][j];
+      for(int i = 0; i < r.length; i++){
+         for(int j = 0; j < r[i].length; j++){
+            r[i][j] = a[i][j] * b[i][j];
          }
       }
-
-      return hadamard;
    }
 
+   private void hadamard(float[][] a, float[][] b, float[][] r){
+      dimensoesIguais(a, b, r);
 
-   public double[][] hadamard(double[][] a, double[][] b){
-      dimensoesIguais(a, b);
-      double[][] hadamard = new double[a.length][b[0].length];
-
-      for(int i = 0; i < hadamard.length; i++){
-         for(int j = 0; j < hadamard[i].length; j++){
-            hadamard[i][j] = a[i][j] * b[i][j];
+      for(int i = 0; i < r.length; i++){
+         for(int j = 0; j < r[i].length; j++){
+            r[i][j] = a[i][j] * b[i][j];
          }
       }
+   }
 
-      return hadamard;
+   private void hadamard(double[][] a, double[][] b, double[][] r){
+      dimensoesIguais(a, b, r);
+
+      for(int i = 0; i < r.length; i++){
+         for(int j = 0; j < r[i].length; j++){
+            r[i][j] = a[i][j] * b[i][j];
+         }
+      }
    }
 }
+

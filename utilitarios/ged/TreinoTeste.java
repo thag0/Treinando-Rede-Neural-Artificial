@@ -15,8 +15,28 @@ class TreinoTeste{
 
    }
 
+   public void embaralharDados(Object dados){
+      if(dados instanceof int[][]){
+         int[][] d = (int[][]) dados;
+         embaralharDados(d);
+         dados = (Object) d;
+      
+      }else if(dados instanceof float[][]){
+         float[][] d = (float[][]) dados;
+         embaralharDados(d);
+         dados = (Object) d;
+      
+      }else if(dados instanceof double[][]){
+         double[][] d = (double[][]) dados;
+         embaralharDados(d);
+         dados = (Object) d;
+      
+      }else{
+         throw new IllegalArgumentException("Tipo de dados não suportado.");
+      }
+   }
 
-   public void embaralharDados(int[][] dados){
+   private void embaralharDados(int[][] dados){
       Random random = new Random();
       int linhas = dados.length;
 
@@ -31,8 +51,7 @@ class TreinoTeste{
       }
    }
 
-
-   public void embaralharDados(float[][] dados){
+   private void embaralharDados(float[][] dados){
       Random random = new Random();
       int linhas = dados.length;
 
@@ -47,8 +66,7 @@ class TreinoTeste{
       }
    }
 
-
-   public void embaralharDados(double[][] dados){
+   private void embaralharDados(double[][] dados){
       Random random = new Random();
       int linhas = dados.length;
 
@@ -62,7 +80,6 @@ class TreinoTeste{
          System.arraycopy(temp, 0, dados[j], 0, dados[j].length);
       }
    }
-
 
    public int[][] separarDadosEntrada(int[][] dados, int colunas){
       if (colunas > dados[0].length) {
@@ -80,7 +97,6 @@ class TreinoTeste{
       return dadosEntrada;
    }
 
-
    public float[][] separarDadosEntrada(float[][] dados, int colunas){
       if (colunas > dados[0].length) {
          throw new IllegalArgumentException("O número de colunas fornecido é maior do que o número de colunas disponíveis nos dados.");
@@ -97,7 +113,6 @@ class TreinoTeste{
       return dadosEntrada;
    }
 
-
    public double[][] separarDadosEntrada(double[][] dados, int colunas){
       if (colunas > dados[0].length) {
          throw new IllegalArgumentException("O número de colunas fornecido é maior do que o número de colunas disponíveis nos dados.");
@@ -113,7 +128,6 @@ class TreinoTeste{
       
       return dadosEntrada;
    }
-
 
    public int[][] separarDadosSaida(int[][] dados, int colunas){
       if(colunas > dados[0].length){
@@ -133,7 +147,6 @@ class TreinoTeste{
       return dadosSaida;
    }
 
-
    public float[][] separarDadosSaida(float[][] dados, int colunas){
       if(colunas > dados[0].length){
          throw new IllegalArgumentException("O número de colunas fornecido é maior do que o número de colunas disponíveis nos dados.");
@@ -152,7 +165,6 @@ class TreinoTeste{
       return dadosSaida;
    }
 
-
    public double[][] separarDadosSaida(double[][] dados, int colunas){
       if(colunas > dados[0].length){
          throw new IllegalArgumentException("O número de colunas fornecido é maior do que o número de colunas disponíveis nos dados.");
@@ -170,7 +182,6 @@ class TreinoTeste{
 
       return dadosSaida;
    }
-
 
    public int[][][] separarTreinoTeste(int[][] dados, float tamanhoTeste){
       if(dados == null) throw new IllegalArgumentException("O conjunto de dados é nulo.");
@@ -192,7 +203,6 @@ class TreinoTeste{
       return new int[][][]{treino, teste};
    }
 
-
    public float[][][] separarTreinoTeste(float[][] dados, float tamanhoTeste){
       if(dados == null) throw new IllegalArgumentException("O conjunto de dados é nulo.");
       if(tamanhoTeste < 0 || tamanhoTeste > 1){
@@ -212,7 +222,6 @@ class TreinoTeste{
 
       return new float[][][]{treino, teste};
    }
-
 
    public double[][][] separarTreinoTeste(double[][] dados, float tamanhoTeste){
       if(dados == null) throw new IllegalArgumentException("O conjunto de dados é nulo.");

@@ -36,7 +36,6 @@ class ManipuladorDados{
       dados.atribuir(conteudo);
   }  
 
-
    public void adicionarColuna(Dados dados, int indice){
       if(!dados.simetrico()){
          throw new IllegalArgumentException("O conteúdo dos dados deve ser simético.");
@@ -68,7 +67,6 @@ class ManipuladorDados{
       dados.atribuir(conteudo);
    }
 
-
    public void adicionarLinha(Dados dados){
       if(!dados.simetrico()){
          throw new IllegalArgumentException("O conteúdo dos dados deve ser simético.");
@@ -85,7 +83,6 @@ class ManipuladorDados{
 
       dados.atribuir(conteudo);
    }
-
 
    public void adicionarLinha(Dados dados, int indice){
       if(!dados.simetrico()){
@@ -108,7 +105,6 @@ class ManipuladorDados{
       dados.atribuir(conteudo);
    }
 
-
    public void removerLinha(Dados dados, int indice){
       ArrayList<String[]> conteudo = dados.conteudo();
 
@@ -120,7 +116,6 @@ class ManipuladorDados{
       conteudo.remove(indice);
       dados.atribuir(conteudo);
    }
-
 
    public void removerColuna(Dados dados, int indice){
       ArrayList<String[]> conteudo = dados.conteudo();
@@ -154,7 +149,6 @@ class ManipuladorDados{
       dados.atribuir(conteudo);
    }
 
-
    public void editarValor(Dados dados, int idLinha, int idColuna, String novoValor){
       ArrayList<String[]> conteudo = dados.conteudo();
 
@@ -173,7 +167,6 @@ class ManipuladorDados{
       dados.editarItem(idLinha, idColuna, novoValor);
    }
 
-
    public void editarValor(Dados dados, int idColuna, String busca, String novoValor){
       ArrayList<String[]> conteudo = dados.conteudo();
 
@@ -188,7 +181,6 @@ class ManipuladorDados{
 
       dados.editarItem(idColuna, busca, novoValor);
    }
-
 
    public void trocarColunas(Dados dados, int idColuna1, int idColuna2){
       ArrayList<String[]> conteudo = dados.conteudo();
@@ -209,7 +201,6 @@ class ManipuladorDados{
 
       dados.atribuir(conteudo);
    }
-
 
    public void removerNaoNumericos(Dados dados){
       ArrayList<String[]> conteudo = dados.conteudo();
@@ -237,7 +228,6 @@ class ManipuladorDados{
 
       dados.atribuir(conteudo);
    }
-
 
    public void categorizar(Dados dados, int indice){
       ArrayList<String[]> conteudo = dados.conteudo();
@@ -296,7 +286,6 @@ class ManipuladorDados{
       dados.atribuir(novaLista);
    }
 
-
    public Dados unir(Dados a, Dados b){
       //simetria
       if(!a.simetrico()){
@@ -326,7 +315,6 @@ class ManipuladorDados{
 
       return dados;
    }
-
 
    public Dados unirColuna(Dados a, Dados b){
       int[] shapeA = a.shape();
@@ -359,7 +347,6 @@ class ManipuladorDados{
       return dados;
    }
 
-
    public void removerDuplicadas(Dados dados){
       if(!dados.simetrico()){
          throw new IllegalArgumentException("O conjunto de dados deve ser simétrico.");
@@ -381,7 +368,6 @@ class ManipuladorDados{
       dados.atribuir(novoConteudo);
    }
 
-
    public void capitalizar(Dados dados){
       if(dados.vazio()){
          throw new IllegalArgumentException("O conteúdo dos dados está vazio.");
@@ -396,7 +382,6 @@ class ManipuladorDados{
       }
    }
 
-
    public void substituir(Dados dados, String busca, String valor){
       if(dados.vazio()){
          throw new IllegalArgumentException("O conteúdo dos dados está vazio.");
@@ -410,8 +395,7 @@ class ManipuladorDados{
          dados.substituir(i, busca, valor);
       }
    }
-
-   
+ 
    public void normalizar(Dados dados){
       if(dados.vazio()){
          throw new IllegalArgumentException("O conteúdo dos dados está vazio.");
@@ -426,7 +410,6 @@ class ManipuladorDados{
          dados.normalizar(nColunas);
       }
    }
-
 
    public Dados filtrar(Dados dados, int idCol, String busca){
       dadosSimetricos(dados);
@@ -454,7 +437,6 @@ class ManipuladorDados{
       return dadosFiltados;
    }
 
-
    public Dados filtrar(Dados dados, int idCol, String operador, String valor){
       dadosSimetricos(dados);
       if(dados.vazio()){
@@ -479,7 +461,6 @@ class ManipuladorDados{
       return dadosFiltados;
    }
 
-
    public void preencherAusentes(Dados dados, double valor){
       ArrayList<String[]> conteudo = dados.conteudo();
 
@@ -494,7 +475,6 @@ class ManipuladorDados{
       dados.atribuir(conteudo);
    }
 
-
    public void preencherAusentes(Dados dados, int idCol, double valor){
       ArrayList<String[]> conteudo = dados.conteudo();
 
@@ -507,11 +487,9 @@ class ManipuladorDados{
       dados.atribuir(conteudo);
    }
 
-
    public Dados clonarDados(Dados dados){
       return dados.clonar();
    }
-
 
    /**
     * Tenta converter o valor para um numérico do tipo int
@@ -528,7 +506,6 @@ class ManipuladorDados{
       }
    }
 
-
    /**
     * Tenta converter o valor para um numérico do tipo float.
     * @param valor valor que será testado.
@@ -544,7 +521,6 @@ class ManipuladorDados{
       }
    }
 
-
    /**
     * Tenta converter o valor para um numérico do tipo double
     * @param valor valor que será testado.
@@ -559,7 +535,6 @@ class ManipuladorDados{
          return false;
       }
    }
-
 
    /**
     * Verifica se a operação entre os dois valores é válida de acordo com a expressão.
@@ -582,9 +557,9 @@ class ManipuladorDados{
       }
 
       switch(operador){
-         case ">": return (valor1 > valor2);
+         case ">":  return (valor1 > valor2);
          case ">=": return (valor1 >= valor2);
-         case "<": return (valor1 < valor2);
+         case "<":  return (valor1 < valor2);
          case "<=": return (valor1 <= valor2);
          case "==": return (valor1 == valor2);
          case "!=": return (valor1 != valor2);
@@ -592,7 +567,6 @@ class ManipuladorDados{
       }
 
    }
-
 
    public boolean dadosSimetricos(Dados dados){
       return dados.simetrico();

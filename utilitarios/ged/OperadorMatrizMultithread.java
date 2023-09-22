@@ -1,8 +1,10 @@
 package utilitarios.ged;
 
 class OperadorMatrizMultithread{
+
+   //TODO implementar generaliação de uso usando Objetc igual com o OperadorMatriz
    
-   private int nThreads = 1;
+   private int nThreads = 2;
 
    public OperadorMatrizMultithread(int nThreads){
       this.nThreads = nThreads;

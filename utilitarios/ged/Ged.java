@@ -178,7 +178,7 @@ public class Ged{
     * @param nome nome personalizado para a matriz impressa.
     */
    public void imprimirMatriz(Object matriz, String nome){
-      im.imprimirMatriz(matriz);
+      im.imprimirMatriz(matriz, nome);
    }
 
    
@@ -989,45 +989,18 @@ public class Ged{
 
    // GERENCIADOR TREINO TESTE ---------------------
 
-   
    /**
     * Embaralha o conjunto de dados aleatoriamente.
     * <p>
     *    A alteração irá afetar o conteúdo dos dados recebidos.
     *    Caso queira manter os dados originais, é recomendado fazer uma cópia previamente.
     * </p>
-    * @param dados conjunto de dados completo.
+    * Dados suportados: {@code int[][]}, {@code float[][]}, {@code double[][]}.
+    * @param dados matriz de conjunto de dados.
     */
-   public void embaralharDados(int[][] dados){
+   public void embaralharDados(Object dados){
       gtt.embaralharDados(dados);
    }
-
-
-   /**
-    * Embaralha o conjunto de dados aleatoriamente.
-    * <p>
-    *    A alteração irá afetar o conteúdo dos dados recebidos.
-    *    Caso queira manter os dados originais, é recomendado fazer uma cópia previamente.
-    * </p>
-    * @param dados conjunto de dados completo.
-    */
-   public void embaralharDados(float[][] dados){
-      gtt.embaralharDados(dados);
-   }
-
-
-   /**
-    * Embaralha o conjunto de dados aleatoriamente.
-    * <p>
-    *    A alteração irá afetar o conteúdo dos dados recebidos.
-    *    Caso queira manter os dados originais, é recomendado fazer uma cópia previamente.
-    * </p>
-    * @param dados conjunto de dados completo.
-    */
-   public void embaralharDados(double[][] dados){
-      gtt.embaralharDados(dados);
-   }
-
 
    /**
     * <p>
@@ -1402,7 +1375,6 @@ public class Ged{
       return om.obterSubLinhas(dados, inicio, fim);
    }
 
-
    /**
     * Retorna uma nova matriz que possui o conteúdo das linhas 
     * de acordo com os índices fornecidos.
@@ -1433,7 +1405,6 @@ public class Ged{
       return om.obterSubLinhas(dados, inicio, fim);
    }
 
-
    /**
     * Retorna uma nova matriz que possui o conteúdo das linhas 
     * de acordo com os índices fornecidos.
@@ -1463,7 +1434,6 @@ public class Ged{
    public double[][] obterSubLinhas(double[][] dados, int inicio, int fim){
       return om.obterSubLinhas(dados, inicio, fim);
    }
-
 
    /**
     * Retorna uma nova matriz que possui o conteúdo das colunas 
@@ -1496,7 +1466,6 @@ public class Ged{
       return om.obterSubColunas(dados, inicio, fim);
    }
 
-
    /**
     * Retorna uma nova matriz que possui o conteúdo das colunas 
     * de acordo com os índices fornecidos.
@@ -1527,7 +1496,6 @@ public class Ged{
    public float[][] obterSubColunas(float[][] dados, int inicio, int fim){
       return om.obterSubColunas(dados, inicio, fim);
    }
-
 
    /**
     * Retorna uma nova matriz que possui o conteúdo das colunas 
@@ -1560,40 +1528,23 @@ public class Ged{
       return om.obterSubColunas(dados, inicio, fim);
    }
 
-
    /**
-    * Preenche o conteúdo da matriz de acordo com o valor fornecido.
+    * Preenche cada elemento da matriz de acordo com o valor fornecido.
+    * <p>
+    *    O valor de preenchimento é automaticamente convertido para o mesmo 
+    *    tipo da matriz fornecida.
+    * </p>
+    * Dados suportados: {@code int[][]}, {@code float[][]}, {@code double[][]}.
     * @param matriz matriz com os dados.
     * @param valor valor de preenchimento.
     */
-   public void preencherMatriz(int[][] matriz, int valor){
+   public void preencherMatriz(Object matriz, Number valor){
       om.preencherMatriz(matriz, valor);
    }
-
-
-   /**
-    * Preenche o conteúdo da matriz de acordo com o valor fornecido.
-    * @param matriz matriz com os dados.
-    * @param valor valor de preenchimento.
-    */
-   public void preencherMatriz(float[][] matriz, float valor){
-      om.preencherMatriz(matriz, valor);
-   }
-
-
-   /**
-    * Preenche o conteúdo da matriz de acordo com o valor fornecido.
-    * @param matriz matriz com os dados.
-    * @param valor valor de preenchimento.
-    */
-   public void preencherMatriz(double[][] matriz, double valor){
-      om.preencherMatriz(matriz, valor);
-   }
-
 
    /**
     * Preenche o conteúdo da matriz para que fique no formato identidade, onde
-    * apenas os elementos da diagonal esquerda para direita tem valores iguais a 1.
+    * apenas os elementos da diagonal principal têm valores iguais a 1.
     * <p>Exemplo:<pre>
     * m = [
     *  1, 0, 0
@@ -1601,46 +1552,12 @@ public class Ged{
     *  0, 0, 1
     * ]
     * </pre></p>
-    * @param matriz
+    * Dados suportados: {@code int[][]}, {@code float[][]}, {@code double[][]}.
+    * @param matriz matriz base.
     */
-   public void matrizIdentidade(int[][] matriz){
+   public void matrizIdentidade(Object matriz){
       om.matrizIdentidade(matriz);
    }
-
-
-   /**
-    * Preenche o conteúdo da matriz para que fique no formato identidade, onde
-    * apenas os elementos da diagonal esquerda para direita tem valores iguais a 1.
-    * <p>Exemplo:<pre>
-    * m = [
-    *  1, 0, 0
-    *  0, 1, 0
-    *  0, 0, 1
-    * ]
-    * </pre></p>
-    * @param matriz
-    */
-   public void matrizIdentidade(float[][] matriz){
-      om.matrizIdentidade(matriz);
-   }
-
-
-   /**
-    * Preenche o conteúdo da matriz para que fique no formato identidade, onde
-    * apenas os elementos da diagonal esquerda para direita tem valores iguais a 1.
-    * <p>Exemplo:<pre>
-    * m = [
-    *  1, 0, 0
-    *  0, 1, 0
-    *  0, 0, 1
-    * ]
-    * </pre></p>
-    * @param matriz
-    */
-   public void matrizIdentidade(double[][] matriz){
-      om.matrizIdentidade(matriz);
-   }
-
 
    /**
     * Realiza a transposição da matriz fornecida. A transposição consiste em 
@@ -1710,9 +1627,9 @@ public class Ged{
       return om.transporMatriz(matriz);
    }
 
-
    /**
-    * Realiza a soma entre as duas matrizes fornecidas.
+    * Realiza a soma entre as duas matrizes fornecidas de acordo com a expressão 
+    * <pre>R = A + B</pre>
     * <p>Exemplo:<pre>
     * a = [
     *   1, 1
@@ -1722,23 +1639,24 @@ public class Ged{
     *   2, 2
     *   2, 2
     * ]
-    * soma = [
+    * r = [
     *   3, 3
     *   3, 3
     * ]
     * </pre></p>
+    * Dados suportados: {@code int[][]}, {@code float[][]}, {@code double[][]}.
     * @param a primeira matriz.
     * @param b segunda matriz.
-    * @return matriz contendo o resultado da soma.
-    * @throws IllegalArgumentException se as dimensões de A e B forem incompatíveis.
+    * @param r matriz que conterá o resultado.
+    * @throws IllegalArgumentException se as dimensões de A, B e R forem incompatíveis.
     */
-   public int[][] somarMatrizes(int[][] a, int[][] b){
-      return om.somarMatrizes(a, b);
+   public void somarMatrizes(Object a, Object b, Object r){
+      om.somarMatrizes(a, b, r);
    }
 
-
    /**
-    * Realiza a soma entre as duas matrizes fornecidas.
+    * Realiza a subtração entre as duas matrizes fornecidas de acordo com a expressão 
+    * <pre>R = A - B</pre>
     * <p>Exemplo:<pre>
     * a = [
     *   1, 1
@@ -1748,124 +1666,20 @@ public class Ged{
     *   2, 2
     *   2, 2
     * ]
-    * soma = [
-    *   3, 3
-    *   3, 3
-    * ]
-    * </pre></p>
-    * @param a primeira matriz.
-    * @param b segunda matriz.
-    * @return matriz contendo o resultado da soma.
-    * @throws IllegalArgumentException se as dimensões de A e B forem incompatíveis.
-    */
-   public float[][] somarMatrizes(float[][] a, float[][] b){
-      return om.somarMatrizes(a, b);
-   }
-
-
-   /**
-    * Realiza a soma entre as duas matrizes fornecidas.
-    * <p>Exemplo:<pre>
-    * a = [
-    *   1, 1
-    *   1, 1
-    * ]
-    * b = [
-    *   2, 2
-    *   2, 2
-    * ]
-    * soma = [
-    *   3, 3
-    *   3, 3
-    * ]
-    * </pre></p>
-    * @param a primeira matriz.
-    * @param b segunda matriz.
-    * @return matriz contendo o resultado da soma.
-    * @throws IllegalArgumentException se as dimensões de A e B forem incompatíveis.
-    */
-   public double[][] somarMatrizes(double[][] a, double[][] b){
-      return om.somarMatrizes(a, b);
-   }
-
-
-   /**
-    * Realiza a subtração entre as duas matrizes fornecidas.
-    * <p>Exemplo:<pre>
-    * a = [
-    *   1, 1
-    *   1, 1
-    * ]
-    * b = [
-    *   2, 2
-    *   2, 2
-    * ]
-    * sub = [
+    * r = [
     *   -1, -1
     *   -1, -1
     * ]
     * </pre></p>
+    * Dados suportados: {@code int[][]}, {@code float[][]}, {@code double[][]}.
     * @param a primeira matriz.
     * @param b segunda matriz.
-    * @return matriz contendo o resultado da soma.
-    * @throws IllegalArgumentException se as dimensões de A e B forem incompatíveis.
+    * @param r matriz que conterá o resultado.
+    * @throws IllegalArgumentException se as dimensões de A, B e R forem incompatíveis.
     */
-   public int[][] subtrairMatrizes(int[][] a, int[][] b){
-      return om.subtrairMatrizes(a, b);
+   public void subtrairMatrizes(Object a, Object b, Object r){
+      om.subtrairMatrizes(a, b, r);
    }
-
-
-   /**
-    * Realiza a subtração entre as duas matrizes fornecidas.
-    * <p>Exemplo:<pre>
-    * a = [
-    *   1, 1
-    *   1, 1
-    * ]
-    * b = [
-    *   2, 2
-    *   2, 2
-    * ]
-    * sub = [
-    *   -1, -1
-    *   -1, -1
-    * ]
-    * </pre></p>
-    * @param a primeira matriz.
-    * @param b segunda matriz.
-    * @return matriz contendo o resultado da soma.
-    * @throws IllegalArgumentException se as dimensões de A e B forem incompatíveis.
-    */
-   public float[][] subtrairMatrizes(float[][] a, float[][] b){
-      return om.subtrairMatrizes(a, b);
-   }
-
-
-   /**
-    * Realiza a subtração entre as duas matrizes fornecidas.
-    * <p>Exemplo:<pre>
-    * a = [
-    *   1, 1
-    *   1, 1
-    * ]
-    * b = [
-    *   2, 2
-    *   2, 2
-    * ]
-    * sub = [
-    *   -1, -1
-    *   -1, -1
-    * ]
-    * </pre></p>
-    * @param a primeira matriz.
-    * @param b segunda matriz.
-    * @return matriz contendo o resultado da soma.
-    * @throws IllegalArgumentException se as dimensões de A e B forem incompatíveis.
-    */
-   public double[][] subtrairMatrizes(double[][] a, double[][] b){
-      return om.subtrairMatrizes(a, b);
-   }
-
 
    /**
     * Realiza a multiplicação da matriz A pela matriz B.
@@ -1878,105 +1692,47 @@ public class Ged{
     *   5, 6
     *   7, 8
     * ]
-    * mult = [
+    * r = [
     *   19.0, 22.0
     *   43.0, 50.0
     * ]
     * </pre></p>
+    * Dados suportados: {@code int[][]}, {@code float[][]}, {@code double[][]}.
     * @param a primeira matriz.
     * @param b segunda matriz.
-    * @return resultado da multiplicação A x B.
-    * @throws IllegalArgumentException se as dimensões de A e B forem incompatíveis.
+    * @param r matriz que conterá o resultado.
+    * @throws IllegalArgumentException se as dimensões de A, B e R forem incompatíveis.
     */
-   public int[][] multiplicarMatrizes(int[][] a, int[][] b){
-      if(a.length >= 100) return om.multiplicarMatrizes(a, b);
-      else return omt.multiplicarMatrizes(a, b);
+   public void multiplicarMatrizes(Object a, Object[][] b, Object r){
+      om.multiplicarMatrizes(a, b, r);
    }
 
-
    /**
-    * Realiza a multiplicação da matriz A pela matriz B.
+    * Multiplica cada elemento da matriz por um valor escalar fornecido.
     * <p>Exemplo:<pre>
     * a = [
     *   1, 2
     *   3, 4
     * ]
-    * b = [
-    *   5, 6
-    *   7, 8
-    * ]
-    * mult = [
-    *   19.0, 22.0
-    *   43.0, 50.0
-    * ]
-    * </pre></p>
-    * @param a primeira matriz.
-    * @param b segunda matriz.
-    * @return resultado da multiplicação A x B.
-    * @throws IllegalArgumentException se as dimensões de A e B forem incompatíveis.
-    */
-   public float[][] multiplicarMatrizes(float[][] a, float[][] b){
-      if(a.length >= 100) return om.multiplicarMatrizes(a, b);
-      else return omt.multiplicarMatrizes(a, b);
-   }
-
-
-   /**
-    * Realiza a multiplicação da matriz A pela matriz B.
-    * <p>Exemplo:<pre>
-    * a = [
-    *   1, 2
-    *   3, 4
-    * ]
-    * b = [
-    *   5, 6
-    *   7, 8
-    * ]
-    * mult = [
-    *   19.0, 22.0
-    *   43.0, 50.0
+    * 
+    * escalar = 2;
+    * 
+    * r = [
+    *   2, 4
+    *   6, 8
     * ]
     * </pre></p>
-    * @param a primeira matriz.
-    * @param b segunda matriz.
-    * @return resultado da multiplicação A x B.
-    * @throws IllegalArgumentException se as dimensões de A e B forem incompatíveis.
-    */
-   public double[][] multiplicarMatrizes(double[][] a, double[][] b){
-      if(a.length >= 100) return om.multiplicarMatrizes(a, b);
-      else return omt.multiplicarMatrizes(a, b);
-   }
-
-
-   /**
-    * Multiplica cada elemento da matriz por um valor escalar fornecido.
+    * <p>
+    *    O valor do escalar é automaticamente convertido para o mesmo 
+    *    tipo da matriz fornecida.
+    * </p>
+    * Dados suportados: {@code int[][]}, {@code float[][]}, {@code double[][]}.
     * @param matriz matriz contendo os dados.
     * @param escalar escalar para a ultiplicação.
     */
-   public void multilpicarEscalar(int[][] matriz, int escalar){
+   public void multilpicarEscalar(Object matriz, Number escalar){
       om.multilpicarEscalar(matriz, escalar);
    }
-
-
-   /**
-    * Multiplica cada elemento da matriz por um valor escalar fornecido.
-    * @param matriz matriz contendo os dados.
-    * @param escalar escalar para a ultiplicação.
-    */
-   public void multilpicarEscalar(float[][] matriz, float escalar){
-      om.multilpicarEscalar(matriz, escalar);
-   }
-
-
-   /**
-    * Multiplica cada elemento da matriz por um valor escalar fornecido.
-    * @param matriz matriz contendo os dados.
-    * @param escalar escalar para a ultiplicação.
-    */
-   public void multilpicarEscalar(double[][] matriz, double escalar){
-      om.multilpicarEscalar(matriz, escalar);
-   }
-
 
    /**
     * Multiplica cada elemento da matriz A pelo mesmo elementos correspondente
@@ -1990,71 +1746,18 @@ public class Ged{
     *   1, 2
     *   3, 4
     * ]
-    * had = [
+    * r = [
     *   1, 4
     *   16, 25
     * ]
     * </pre></p>
+    * Dados suportados: {@code int[][]}, {@code float[][]}, {@code double[][]}.
     * @param a primeira matriz.
     * @param b segunda matriz.
-    * @return matriz resultante do produto Hadamard.
-    * @throws IllegalArgumentException se as dimensões de A e B forem incompatíveis.
+    * @param r matriz que conterá o resultado.
+    * @throws IllegalArgumentException se as dimensões de A, B e R forem incompatíveis.
     */
-   public int[][] produtoHadamard(int[][] a, int[][] b){
-      return om.hadamard(a, b);
-   }
-
-
-   /**
-    * Multiplica cada elemento da matriz A pelo mesmo elementos correspondente
-    * na matriz B.
-    * <p>Exemplo:<pre>
-    * a = [
-    *   1, 2
-    *   3, 4
-    * ]
-    * b = [
-    *   1, 2
-    *   3, 4
-    * ]
-    * had = [
-    *   1, 4
-    *   16, 25
-    * ]
-    * </pre></p>
-    * @param a primeira matriz.
-    * @param b segunda matriz.
-    * @return matriz resultante do produto Hadamard.
-    * @throws IllegalArgumentException se as dimensões de A e B forem incompatíveis.
-    */
-   public float[][] produtoHadamard(float[][] a, float[][] b){
-      return om.hadamard(a, b);
-   }
-
-
-   /**
-    * Multiplica cada elemento da matriz A pelo mesmo elementos correspondente
-    * na matriz B.
-    * <p>Exemplo:<pre>
-    * a = [
-    *   1, 2
-    *   3, 4
-    * ]
-    * b = [
-    *   1, 2
-    *   3, 4
-    * ]
-    * had = [
-    *   1, 4
-    *   16, 25
-    * ]
-    * </pre></p>
-    * @param a primeira matriz.
-    * @param b segunda matriz.
-    * @return matriz resultante do produto Hadamard.
-    * @throws IllegalArgumentException se as dimensões de A e B forem incompatíveis.
-    */
-   public double[][] produtoHadamard(double[][] a, double[][] b){
-      return om.hadamard(a, b);
+   public void produtoHadamard(Object a, Object b, Object r){
+      om.hadamard(a, b, r);
    }
 }

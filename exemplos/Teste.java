@@ -1,23 +1,29 @@
 package exemplos;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import rna.inicializadores.Inicializador;
 import utilitarios.ged.Ged;
 
+@SuppressWarnings("unused")
 public class Teste{
    static Ged ged = new Ged();
 
    public static void main(String[] args){
       limparConsole();
 
-      double[] array = new double[5];
-      double[][] mat = new double[1][];
-      mat[0] = array;
-      ged.imprimirMatriz(mat, "Array antes");
-      
-      Inicializador.aleatorio(array, 10);
+      int[][] mat = {
+         {1},
+         {2},
+         {3},
+         {4},
+         {5},
+         {6},
+      };
 
-      mat[0] = array;
-      ged.imprimirMatriz(mat, "Array depois");
+      ged.embaralharDados(mat);
+      ged.imprimirMatriz(mat);
    }
 
    static void limparConsole(){
