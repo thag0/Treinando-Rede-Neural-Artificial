@@ -15,13 +15,16 @@ import rna.ativacoes.Swish;
 import rna.ativacoes.TanH;
 
 class DicionarioAtivacoes{
+
    public DicionarioAtivacoes(){
 
    }
 
    public FuncaoAtivacao obterAtivacao(String nome){
+      //essa provavelmente não é a melhor abordagem
+      //mas é a mais fácil de implementar
+      
       nome = nome.toLowerCase();
-
       switch(nome){
          case "argmax": return new Argmax();
          case "elu": return new ELU();

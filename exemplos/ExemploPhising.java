@@ -52,7 +52,7 @@ public class ExemploPhising{
       rede.configurarFuncaoAtivacao(rede.obterCamadaSaida(), new TanH());
       rede.configurarOtimizador(new SGD());
       rede.configurarAlcancePesos(0.5);
-      rede.configurarInicializacaoPesos(1);
+      rede.configurarInicializador(1);
       rede.treinar(treinoX, treinoY, 10_000);
 
       // avaliando os resultados da rede neural

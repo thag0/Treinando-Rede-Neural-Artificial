@@ -1,6 +1,5 @@
 package rna.treinamento;
 
-import java.io.Serializable;
 import java.util.Random;
 
 import rna.estrutura.Camada;
@@ -10,7 +9,7 @@ import rna.estrutura.RedeNeural;
 /**
  * Operadores auxiliares para o treino da rede neural;
  */
-class AuxiliarTreino implements Serializable{
+class AuxiliarTreino{
    Random random = new Random();
 
    public AuxiliarTreino(){
@@ -40,22 +39,19 @@ class AuxiliarTreino implements Serializable{
     * Método exclusivo para separar a forma de calcular os erros da camada de saída.
     * Dando suporte não apenas para problemas de regressão.
     * <p>
-    *    O erro para problemas de regressão de dá por:
+    *    O cálculo do erro é dado por:
     *    <pre>
-    *       er = (y - p) * d
+    *       er = (y - p)
     *    </pre>
     *    Onde:
     *    <p>
-    *       er - erro do neurônio.
+    *       {@code er} - erro do neurônio.
     *    </p>
     *    <p>
-    *       p - saída prevista pelo neurônio.
+    *       {@code y} - saída desejada.
     *    </p>
     *    <p>
-    *       y - saída desejada.
-    *    </p>
-    *    <p>
-    *       d - derivada da funcão de ativacao do neurônio.
+    *       {@code p} - saída prevista pelo neurônio.
     *    </p>
     * </p>
     * @param redec Rede Neural em formato de array de camadas.

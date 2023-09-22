@@ -1,6 +1,5 @@
 package rna.treinamento;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
 import rna.estrutura.Camada;
@@ -17,7 +16,7 @@ import rna.otimizadores.Otimizador;
  *    gradientes e atualizando seus pesos de acordo com o otimizador configurado.
  * </p>
  */
-class TreinoLote implements Serializable{
+class TreinoLote{
    public boolean calcularHistorico = false;
    ArrayList<Double> historico;
    AuxiliarTreino aux = new AuxiliarTreino();

@@ -47,6 +47,10 @@ public class Serializador{
          }
          writer.newLine();
 
+         //bias
+         writer.write(Boolean.toString(rede.temBias()));
+         writer.newLine();
+
          //funções de ativação
          int numOcultas = rede.obterQuantidadeOcultas();
          writer.write(rede.obterCamadaOculta(0).obterAtivacao().getClass().getSimpleName());
@@ -55,10 +59,6 @@ public class Serializador{
             writer.write(rede.obterCamadaOculta(i).obterAtivacao().getClass().getSimpleName() + " ");
          }
          writer.write(rede.obterCamadaSaida().obterAtivacao().getClass().getSimpleName());
-         writer.newLine();
-
-         //bias
-         writer.write(Boolean.toString(rede.temBias()));
          writer.newLine();
 
          //pesos das camadas ocultas
@@ -124,17 +124,17 @@ public class Serializador{
             arq[i] = Integer.parseInt(arqStr[i]);
          }
 
-         //funções de ativação
-         String[] ativacoesStr = reader.readLine().split(" ");
-         String[] ativacaoOcultas = new String[ativacoesStr.length-1];
-         System.arraycopy(ativacoesStr, 0, ativacaoOcultas, 0, ativacoesStr.length - 1);
-         String ativacaoSaida = ativacoesStr[ativacaoOcultas.length-1];
-
          //bias
          boolean bias = Boolean.parseBoolean(reader.readLine());
          for(int i = 0; i < arq.length-1; i++){//desconsiderar saída
             arq[i] -= (bias) ? 1 : 0;
          }
+
+         //funções de ativação
+         String[] ativacoesStr = reader.readLine().split(" ");
+         String[] ativacaoOcultas = new String[ativacoesStr.length-1];
+         System.arraycopy(ativacoesStr, 0, ativacaoOcultas, 0, ativacoesStr.length - 1);
+         String ativacaoSaida = ativacoesStr[ativacaoOcultas.length-1];
 
          //inicialização e configurações da rede
          rede = new RedeNeural(arq);

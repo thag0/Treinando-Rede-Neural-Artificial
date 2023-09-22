@@ -1,6 +1,5 @@
 package rna.treinamento;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
 import rna.estrutura.RedeNeural;
@@ -10,7 +9,7 @@ import rna.otimizadores.Otimizador;
  * Disponibilzia uma interface para usar os métodos de treino e treino em
  * lote da Rede Neural.
  */
-public class Treinador implements Serializable{
+public class Treinador{
 
    /**
     * Dados de custo da rede neural durante cada época de treinamento.

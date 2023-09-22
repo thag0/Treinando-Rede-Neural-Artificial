@@ -145,7 +145,6 @@ public class SGD extends Otimizador{
       buffer += espacamento + "TaxaAprendizagem: " + this.taxaAprendizagem + "\n";
       buffer += espacamento + "Momentum: " + this.momentum + "\n";
       buffer += espacamento + "Nesterov: " + this.nesterov + "\n";
-      buffer += espacamento + "M: " + this.m.length + "\n";
 
       return buffer;
    }

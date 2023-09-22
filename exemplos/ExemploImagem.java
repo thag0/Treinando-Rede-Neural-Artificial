@@ -14,7 +14,7 @@ public class ExemploImagem{
       Geim geim = new Geim();
 
       //importando imagem para treino da rede
-      final String caminho = "/dados/mnist/7.png";
+      final String caminho = "/dados/mnist/8.png";
       BufferedImage imagem = geim.lerImagem(caminho);
       double[][] dados = geim.imagemParaDadosTreinoEscalaCinza(imagem);
       int nEntrada = 2;// posição x y do pixel
@@ -29,7 +29,7 @@ public class ExemploImagem{
       int[] arq = {nEntrada, 11, 11, nSaida};
       RedeNeural rede = new RedeNeural(arq);
       rede.configurarOtimizador(new SGD());
-      rede.configurarInicializacaoPesos(2);
+      rede.configurarInicializador(2);
       rede.compilar();
       rede.configurarFuncaoAtivacao(2);
       rede.treinar(dadosEntrada, dadosSaida, 6_000);

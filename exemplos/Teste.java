@@ -1,35 +1,23 @@
 package exemplos;
 
-import rna.estrutura.RedeNeural;
-import rna.serializacao.Serializador;
+import rna.inicializadores.Inicializador;
+import utilitarios.ged.Ged;
 
 public class Teste{
+   static Ged ged = new Ged();
+
    public static void main(String[] args){
       limparConsole();
 
-      double[][] e = {
-         {0, 0},
-         {0, 1},
-         {1, 0},
-         {1, 1}
-      };
+      double[] array = new double[5];
+      double[][] mat = new double[1][];
+      mat[0] = array;
+      ged.imprimirMatriz(mat, "Array antes");
+      
+      Inicializador.aleatorio(array, 10);
 
-      double[][] s = {
-         {0},
-         {1},
-         {1},
-         {0}
-      };
-
-      RedeNeural rede = Serializador.ler("./rede-xor.txt");
-      System.out.println(rede.info());
-
-      var perda = rede.avaliador.erroMedioQuadrado(e, s);
-      System.out.println("Perda = " + perda);
-
-      System.out.println(rede.obterCamadaOculta(0).neuronio(0).info());
-      System.out.println(rede.obterCamadaOculta(0).neuronio(1).info());
-      System.out.println(rede.obterCamadaSaida().neuronio(0).info());
+      mat[0] = array;
+      ged.imprimirMatriz(mat, "Array depois");
    }
 
    static void limparConsole(){

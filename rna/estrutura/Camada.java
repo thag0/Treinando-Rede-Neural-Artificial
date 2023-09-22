@@ -118,6 +118,7 @@ public class Camada{
       
       for(int i = 0; i < this.neuronios.length; i++){
          this.neuronios[i] = new Neuronio(conexoes, alcancePeso, inicializador);
+         this.neuronios[i].inicializarPesos(this.neuronios.length);
       }
    }
 

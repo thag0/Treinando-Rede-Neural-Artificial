@@ -19,7 +19,7 @@ public class ExemploVariosPredicts{
       int[] arq = {nEntrada, 6, nSaida};
       RedeNeural rede = new RedeNeural(arq);
       rede.configurarOtimizador(new SGD());
-      rede.configurarInicializacaoPesos(2);
+      rede.configurarInicializador(2);
       rede.compilar();
       rede.configurarFuncaoAtivacao(2);
 

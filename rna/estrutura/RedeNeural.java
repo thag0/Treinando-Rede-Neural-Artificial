@@ -237,32 +237,33 @@ public class RedeNeural implements Cloneable{
     * </p>
     * <ul>
     *    <li>
-    *       1 - Inicialização aleatória com valor inicial dos pesos definido por 
-    *       {@code alcancePeso}, onde o valor de aleatorização dos pesos é definido 
-    *       por {@code -alcancePeso : alcancePeso}.
+    *       1 - Inicialização aleatória no intervalo {@code [-alcancePeso, alcancePeso]}.
     *    </li>
     *    <li>
-    *       2 - Inicialização aleatória positiva com valor dos pesos definido por {@code alcancePeso}.
-    *       Sua diferença para a aleatória comum é que na aleatória positiva o valor de 
-    *       aleatorização é definido por {@code 0 : alcancePeso}.
+    *       2 - Inicialização aleatória positiva no intervalo {@code [0, alcancePeso]}.
     *    </li>
     *    <li>
-    *       3 - He - Boa com ReLU e suas derivadas.
+    *       3 - Inicialização He: Adequada para funções de ativação ReLU e suas derivadas.
     *    </li>
     *    <li>
-    *       4 - LeCun.
+    *       4 - Inicialização LeCun: Recomendada para funções de ativação como a Tangente Hiperbólica (tanh).
+    *    </li>
+    *    <li>
+    *       5 - Inicialização Xavier/Glorot: Ideal para funções de ativação comuns, como a Sigmoid ou tanh.
     *    </li>
     * </ul>
     * <p>
     *    {@code O valor padrão de inicializador é 1}
     * </p>
     * @param inicializador novo valor de inicializador de pesos da rede.
-    * @throws IllegalArgumentException se o novo valor de otimizador for menor que um.
-    * @throws IllegalArgumentException se o novo valor de otimização for inválido, no 
+    * @throws IllegalArgumentException se o novo valor de inicializdor for menor que um.
+    * @throws IllegalArgumentException se o novo valor de inicializador for inválido, no 
     * momento da compilação.
     */
-   public void configurarInicializacaoPesos(int inicializador){
-      if(inicializador < 1) throw new IllegalArgumentException("O novo valor de otimizador não pode ser menor que um.");
+   public void configurarInicializador(int inicializador){
+      if(inicializador < 1){
+         throw new IllegalArgumentException("O novo valor de inicializador não pode ser menor que um.");
+      } 
 
       this.inicializadorPeso = inicializador;
    }

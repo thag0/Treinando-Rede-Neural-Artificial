@@ -1,6 +1,6 @@
 package rna.estrutura;
 
-import java.util.Random;
+import rna.inicializadores.Inicializador;
 
 /**
  * Representa um neurônio individual dentro da estrutura da Rede Neural.
@@ -87,9 +87,14 @@ public class Neuronio{
    public double[] gradienteAcumulado;
 
    /**
-    * Auxiliar no uso da aleatorização dos pesos iniciais.
+    * Inicializador de pesos do neurônio.
     */
-   private Random random = new Random();
+   private int inicializador;
+
+   /**
+    * Alcance inicial de aleatorização dos pesos para inicializadores randômicos.
+    */
+   private double alcanceInicial;
 
    /**
     * Instancia um neurônio individual da rede, com pesos aleatórios para cada ligação 
@@ -116,47 +121,49 @@ public class Neuronio{
     *       3 - He - Boa com ReLU e suas derivadas.
     *    </li>
     *    <li>
-    *       4 - LeCun.
+    *       4 - LeCun - Boa com tangente hiperbólica.
+    *    </li>
+    *    <li>
+    *       5 - Xavier - Boa com tangente hiperbólica e sigmoid.
     *    </li>
     * </ul>
     * @param conexoes quantidade de conexões, deve estar relacionada com a quatidade de 
     * neurônios da camada anterior (incluindo bias, caso tenha).
-    * @param alcancePeso valor de alcance em que o peso aleatório será gerado, deve ser 
-    * um valor positivo e diferente de zero.
+    * @param alcanceInicial valor de alcance em que o peso aleatório será gerado.
     * @param inicializador algoritmo inicializador dos pesos.
-    * @throws IllegalArgumentException se o valor de alcance dos pesos for menor ou igual 
-    * a zero.
-    * @throws IllegalArgumentException se o otimizador fornecido for inválido.
+    * @throws IllegalArgumentException se o inicializdor fornecido for inválido.
     */
-   public Neuronio(int conexoes, double alcancePeso, int inicializador){
-      if (alcancePeso <= 0){
-         throw new IllegalArgumentException("O valor de alcance do peso deve ser positivo e diferente de zero.");
-      }
-
+   public Neuronio(int conexoes, double alcanceInicial, int inicializador){
       this.pesos = new double[conexoes];
-      switch(inicializador){
-         case 1 -> aleatoria(alcancePeso);
-         case 2 -> aleatoriaPositiva(alcancePeso);
-         case 3 -> he(conexoes);
-         case 4 -> leCun(conexoes);
-         default -> throw new IllegalArgumentException("Otimizador fornecido para otimização dos pesos é inválido.");
-      }
-
       this.entradas = new double[conexoes];
       this.gradiente = new double[conexoes];
       this.gradienteAcumulado = new double[conexoes];
 
-      //só por segurança
-      for(int i = 0; i < conexoes; i++){
-         this.entradas[i] = 0;
-         this.gradiente[i] = 0;
-         this.gradienteAcumulado[i] = 0;
-      }
+      this.inicializador = inicializador;
+      this.alcanceInicial = alcanceInicial;
    
       //considerar que pode ter bias aplicado ao modelo
       //a saída do bias é sempre 1.
       this.saida = 1;
       this.erro = 0;
+   }
+
+   /**
+    * Inicialza os pesos do neurônio baseado no otimizador fornecido.
+    * @param tamanhoSaida quantidade de neurônios de saída na camada em que o 
+    * neurônio está sendo gerado.
+    * @throws IllegalArgumentException se o inicializdor fornecido for inválido.
+    */
+   public void inicializarPesos(int tamanhoSaida){
+
+      switch(inicializador){
+         case 1  -> Inicializador.aleatorio(this.pesos, this.alcanceInicial);
+         case 2  -> Inicializador.aleatoriaPositiva(this.pesos, this.alcanceInicial);
+         case 3  -> Inicializador.he(this.pesos, this.pesos.length);
+         case 4  -> Inicializador.leCun(this.pesos, this.pesos.length);
+         case 5  -> Inicializador.xavier(this.pesos, this.pesos.length, tamanhoSaida);
+         default -> throw new IllegalArgumentException("Otimizador fornecido para inicialização dos pesos é inválido.");
+      }
    }
 
    /**
@@ -212,59 +219,6 @@ public class Neuronio{
    }
 
    /**
-    * Boa no geral.
-    * <p>
-    *    Inicializa aleatoriamente um valor no intervalo entre {@code -alcane : alcance}
-    * </p>
-    * @param alcance valor máximo e mínimo na hora de aleatorizar os pesos.
-    */
-   private void aleatoria(double alcance){
-      for(int i = 0; i < pesos.length; i++){
-         this.pesos[i] = random.nextDouble(-alcance, alcance);
-      }
-   }
-
-   /**
-    * Boa no geral.
-    * <p>
-    *    Inicializa aleatoriamente um valor no intervalo entre {@code 0 : alcance}
-    * </p>
-    * @param alcance valor máximo e mínimo na hora de aleatorizar os pesos.
-    */
-   private void aleatoriaPositiva(double alcance){
-      for(int i = 0; i < pesos.length; i++){
-         this.pesos[i] = random.nextDouble(0, alcance);
-      }
-   }
-
-   /**
-    * Inicializa os pesos do neurônio usando o método de inicialização He.
-    * <p>
-    *    Esse método adequado para inicializar pesos em redes profundas e 
-    *    ajuda a mitigar o problema da dissipação e explosão de gradientes 
-    *    durante o treinamento.
-    * </p>
-    * @param entradas A quantidade de entradas do neurônio.
-    */
-   private void he(int entradas){
-      double desvioPadrao = Math.sqrt(2.0 / (entradas));
-      for(int i = 0; i < pesos.length; i++){
-         this.pesos[i] = random.nextGaussian() * desvioPadrao;
-      }
-   }
-
-   /**
-    *
-    * @param entradas quantidade de entrada de cada neurônio da camada.
-    */
-   private void leCun(int entradas){
-      double desvioPadrao = Math.sqrt(1.0 / (entradas + entradas));
-      for(int i = 0; i < pesos.length; i++){
-         this.pesos[i] = random.nextGaussian() * desvioPadrao;
-      }
-   }
-
-   /**
     * Retorna a quantidade de conexões presentes (incluindo a do bias).
     * @return quantidade de conexões presentes totais.
     */
@@ -282,7 +236,7 @@ public class Neuronio{
 
       buffer += "Informações " + this.getClass().getSimpleName() + " = [\n";
 
-      buffer += espacamento + "Quantidade de pesos: " + this.pesos.length + "\n\n";
+      buffer += espacamento + "Quantidade de pesos: " + this.numConexoes() + "\n\n";
       for(int i = 0; i < this.pesos.length; i++){
          buffer += espacamento + "p" + i + ": " + this.pesos[i] + "\n";
       }

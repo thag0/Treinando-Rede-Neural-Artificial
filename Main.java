@@ -12,6 +12,7 @@ import render.JanelaTreino;
 import rna.estrutura.RedeNeural;
 import rna.ativacoes.*;
 import rna.otimizadores.*;
+import rna.serializacao.Serializador;
 import utilitarios.ged.Dados;
 import utilitarios.ged.Ged;
 import utilitarios.geim.Geim;
@@ -30,7 +31,6 @@ class Main{
    static final float escalaImagemExportada = 30f;
 
    // Sempre lembrar de quando mudar o dataset, também mudar a quantidade de dados de entrada e saída.
-   static Otimizador sgd = new SGD();
    
    public static void main(String[] args){
       limparConsole();
@@ -83,6 +83,8 @@ class Main{
       if(qSaidas == 1)geim.exportarImagemEscalaCinza(imagem, rede, escalaImagemExportada, caminhoImagemExportada);
       else if(qSaidas == 3) geim.exportarImagemRGB(imagem, rede, escalaImagemExportada, caminhoImagemExportada);
       else System.out.println("Não é possível exportar a imagem");
+
+      Serializador.salvar(rede, "./rede.txt");
    }
 
 
@@ -93,9 +95,9 @@ class Main{
       RedeNeural rede = new RedeNeural(arq);
 
       rede.compilar();
-      rede.configurarAlcancePesos(0.8);
-      rede.configurarInicializacaoPesos(1);
-      rede.configurarOtimizador(sgd);
+      rede.configurarAlcancePesos(0.3);
+      rede.configurarInicializador(5);
+      rede.configurarOtimizador(new SGD());
       rede.configurarFuncaoAtivacao(new Sigmoid());
       
       return rede;

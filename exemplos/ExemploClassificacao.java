@@ -44,7 +44,7 @@ public class ExemploClassificacao{
       RedeNeural rede = new RedeNeural(arq);
       rede.compilar();
       rede.configurarAlcancePesos(0.8);
-      rede.configurarInicializacaoPesos(1);
+      rede.configurarInicializador(1);
       rede.configurarOtimizador(new SGD());
       rede.configurarFuncaoAtivacao(new Sigmoid());
       rede.configurarFuncaoAtivacao(rede.obterCamadaSaida(), new Softmax());
