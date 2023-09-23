@@ -1,9 +1,9 @@
 package exemplos;
 
-import rna.ativacoes.Sigmoid;
-import rna.ativacoes.TanH;
 import rna.estrutura.RedeNeural;
 import rna.otimizadores.SGD;
+import rna.inicializadores.*;
+import rna.ativacoes.*;
 import utilitarios.ged.Dados;
 import utilitarios.ged.Ged;
 
@@ -21,21 +21,20 @@ public class ExemploPhising{
       ged.removerColuna(phishing, 0);
       ged.removerNaoNumericos(phishing);
       ged.removerDuplicadas(phishing);
+      ged.categorizar(phishing, phishing.shape()[1]-1);
 
       //converter os dados da estrutura de texto em valores 
       //numéricos para o treino da rede neural.
       //separar em treino e teste para evitar overfitting
       double[][] dados = ged.dadosParaDouble(phishing);
       ged.embaralharDados(dados);
-      double[][][] treinoTeste = ged.separarTreinoTeste(dados, 0.25f);
+      double[][][] treinoTeste = ged.separarTreinoTeste(dados, 0.3f);
       double[][] treino = treinoTeste[0];
       double[][] teste = treinoTeste[1];
-      ged.embaralharDados(treino);
-      ged.embaralharDados(teste);
 
       double[][] treinoX, treinoY, testeX, testeY;
       int colunasDados = 9;// quantidade de características dos dados (feature)
-      int colunasClasses = 1;// quantidade de classificações dos dados (class)
+      int colunasClasses = 3;// quantidade de classificações dos dados (class)
 
       treinoX = ged.separarDadosEntrada(treino, colunasDados);
       treinoY = ged.separarDadosSaida(treino, colunasClasses);
@@ -45,22 +44,17 @@ public class ExemploPhising{
       //criando, configurando e treinando a rede neural.
       //os valores de configuração não devem ser tomados como regra e 
       //devem se adaptar ao problema e os dados apresentados.
-      int[] arq = {colunasDados, 10, 10, 10, colunasClasses};
+      int[] arq = {colunasDados, 30, 30, 30, colunasClasses};
       RedeNeural rede = new RedeNeural(arq);
-      rede.compilar();
+      rede.compilar(new SGD(), new Xavier());
       rede.configurarFuncaoAtivacao(new Sigmoid());
-      rede.configurarFuncaoAtivacao(rede.obterCamadaSaida(), new TanH());
-      rede.configurarOtimizador(new SGD());
-      rede.configurarAlcancePesos(0.5);
-      rede.configurarInicializador(1);
+      rede.configurarFuncaoAtivacao(rede.obterCamadaSaida(), new Softmax());
       rede.treinar(treinoX, treinoY, 10_000);
 
       // avaliando os resultados da rede neural
-      double precisao = 1 - rede.avaliador.erroMedioAbsoluto(testeX, testeY);
-      double custo = rede.avaliador.erroMedioQuadrado(testeX, testeY);
+      double perda = rede.avaliador.entropiaCruzada(testeX, testeY);
       System.out.println(rede.info());
-      System.out.println("Custo: " + custo);
-      System.out.println("Precisão: " + (precisao * 100) + "%");
+      System.out.println("Custo: " + perda);
    }
 
 

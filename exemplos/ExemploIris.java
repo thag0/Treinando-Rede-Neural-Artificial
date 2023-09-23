@@ -49,7 +49,7 @@ public class ExemploIris{
       // criando, configurando e treinando a rede neural.
       // os valores de configuração não devem ser tomados como regra e 
       // devem se adaptar ao problema e os dados apresentados.
-      int[] arq = {colunasDados, 9, 9, colunasClasses};
+      int[] arq = {colunasDados, 10, 10, colunasClasses};
       RedeNeural rede = new RedeNeural(arq);
       rede.compilar();
       rede.configurarFuncaoAtivacao(new Sigmoid());

@@ -2,7 +2,6 @@ package exemplos;
 
 import utilitarios.ged.Ged;
 import rna.estrutura.RedeNeural;
-import rna.otimizadores.SGD;
 import utilitarios.ged.Dados;
 
 public class ExemploVariosPredicts{
@@ -18,8 +17,6 @@ public class ExemploVariosPredicts{
 
       int[] arq = {nEntrada, 6, nSaida};
       RedeNeural rede = new RedeNeural(arq);
-      rede.configurarOtimizador(new SGD());
-      rede.configurarInicializador(2);
       rede.compilar();
       rede.configurarFuncaoAtivacao(2);
 

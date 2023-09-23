@@ -28,9 +28,7 @@ public class ExemploImagem{
       //nesse exemplo queremos que ela tenha overfitting
       int[] arq = {nEntrada, 11, 11, nSaida};
       RedeNeural rede = new RedeNeural(arq);
-      rede.configurarOtimizador(new SGD());
-      rede.configurarInicializador(2);
-      rede.compilar();
+      rede.compilar(new SGD());
       rede.configurarFuncaoAtivacao(2);
       rede.treinar(dadosEntrada, dadosSaida, 6_000);
 

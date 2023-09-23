@@ -9,9 +9,10 @@ import java.util.concurrent.TimeUnit;
 import render.JanelaRede;
 import render.JanelaTreino;
 
-import rna.estrutura.RedeNeural;
+import rna.inicializadores.*;
 import rna.ativacoes.*;
 import rna.otimizadores.*;
+import rna.estrutura.RedeNeural;
 import utilitarios.ged.Dados;
 import utilitarios.ged.Ged;
 import utilitarios.geim.Geim;
@@ -91,12 +92,9 @@ class Main{
       int[] arq = {qEntradas, 13, 13, qSaidas};//28x28
       RedeNeural rede = new RedeNeural(arq);
 
-      rede.configurarInicializador(5);
-      rede.compilar();
+      rede.compilar(new Lion(), new Xavier());
       rede.configurarFuncaoAtivacao(new Sigmoid());
 
-      rede.configurarOtimizador(new GDM());
-      
       return rede;
    }
 
