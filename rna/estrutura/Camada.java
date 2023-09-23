@@ -62,7 +62,7 @@ public class Camada{
     * Função de ativação da camada que atuará no resultado do somatório entre
     * os pesos e entradas com a adição do bias (se houver).
     */
-   FuncaoAtivacao ativacao = new ReLU();
+   FuncaoAtivacao ativacao;
 
    /**
     * Auxiliar na verficação se a camada está com a função de ativação
@@ -94,6 +94,7 @@ public class Camada{
     */
    public Camada(boolean temBias){
       this.b = (temBias) ? 1 : 0;
+      this.ativacao = new ReLU();
    }
 
    /**
@@ -108,14 +109,14 @@ public class Camada{
    /**
     * Instancia os todos neurônios da camada correspondente, configurando suas entradas e 
     * pesos.
-    * @param nNeuronios quantidade de neurônios que a camada deve possuir, incluindo bias.
+    * @param neuronios quantidade de neurônios que a camada deve possuir, incluindo bias.
     * @param conexoes quantidade de pesos de cada neurônio, deve corresponder a quantidade 
     * de neurônios da camada anterior.
     * @param alcancePeso valor de alcance da aleatorização dos pesos.
     * @param inicializador inicializador customizado para os pesos iniciais da rede.
     */
-   public void inicializar(int nNeuronios, int conexoes, double alcancePeso, Inicializador inicializador){
-      this.neuronios = new Neuronio[nNeuronios];
+   public void inicializar(int neuronios, int conexoes, double alcancePeso, Inicializador inicializador){
+      this.neuronios = new Neuronio[neuronios];
       
       for(int i = 0; i < this.neuronios.length; i++){
          this.neuronios[i] = new Neuronio(conexoes);
@@ -148,9 +149,6 @@ public class Camada{
          for(int j = 0; j < this.neuronios[i].entradas.length; j++){
             this.neuronios[i].entradas[j] = anterior.neuronios[j].saida;
          }
-      }
-
-      for(int i = 0; i < nNeuronios; i++){
          this.neuronios[i].somatorio();
       }
 
@@ -221,11 +219,11 @@ public class Camada{
          throw new IllegalArgumentException("A nova função de ativação não pode ser nula.");
       }
 
-      if(ativacao instanceof rna.ativacoes.Softmax){
+      if(ativacao instanceof Softmax){
          this.softmax = true;
          this.argmax = false;
       
-      }else if(ativacao instanceof rna.ativacoes.Argmax){
+      }else if(ativacao instanceof Argmax){
          this.argmax = true;
          this.softmax = false;
       }
@@ -294,7 +292,7 @@ public class Camada{
     * @return true caso possua um neurônio adicional como bias, false caso contrário.
     */
    public boolean temBias(){
-      return (this.b == 1) ? true : false;
+      return (this.b == 1);
    }
 
    /**

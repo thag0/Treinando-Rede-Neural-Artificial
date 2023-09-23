@@ -3,6 +3,7 @@ package exemplos;
 import java.util.ArrayList;
 import java.util.List;
 
+import rna.estrutura.RedeNeural;
 import rna.inicializadores.Inicializador;
 import utilitarios.ged.Ged;
 
@@ -13,17 +14,28 @@ public class Teste{
    public static void main(String[] args){
       limparConsole();
 
-      int[][] mat = {
+      double[][] in = {
+         {0, 0},
+         {0, 1},
+         {1, 0},
+         {1, 1}
+      };
+      double[][] out = {
+         {0},
          {1},
-         {2},
-         {3},
-         {4},
-         {5},
-         {6},
+         {1},
+         {0}
       };
 
-      ged.embaralharDados(mat);
-      ged.imprimirMatriz(mat);
+      int[] arq = {2, 2, 1};
+      RedeNeural rede = new RedeNeural(arq);
+      rede.compilar();
+      rede.configurarFuncaoAtivacao(2);
+
+      rede.treinar(in, out, 10_000);
+
+      System.out.println(rede);
+      System.out.println("c = " + rede.avaliador.erroMedioQuadrado(in, out));
    }
 
    static void limparConsole(){
