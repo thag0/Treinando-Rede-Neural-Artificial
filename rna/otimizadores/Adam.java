@@ -66,12 +66,12 @@ public class Adam extends Otimizador{
    /**
     * Coeficientes de momentum.
     */
-   private double[] m;
+   private double[] momentum;
 
    /**
     * Coeficientes de momentum de segunda ordem.
     */
-   private double[] v;
+   private double[] velocidade;
    
    /**
     * Contador de iterações.
@@ -118,8 +118,8 @@ public class Adam extends Otimizador{
 
    @Override
    public void inicializar(int parametros){
-      this.m = new double[parametros];
-      this.v = new double[parametros];
+      this.momentum = new double[parametros];
+      this.velocidade = new double[parametros];
    }
 
    /**
@@ -128,18 +128,18 @@ public class Adam extends Otimizador{
     *    O Adam funciona usando a seguinte expressão:
     * </p>
     * <pre>
-    *    p[i] -= (m[i] * alfa) / ((√ v[i]) + eps)
+    *    p[i] -= (alfa * m[i]) / ((√ v[i]) + eps)
     * </pre>
     * Onde:
     * <p>
     *    {@code p} - peso que será atualizado.
     * </p>
     * <p>
-    *    {@code m} - coeficiente de momentum correspondente ao peso
-    *    peso que será atualizado.
-    * <p>
     *    {@code alfa} - correção aplicada a taxa de aprendizagem.
     * </p>
+    * <p>
+    *    {@code m} - coeficiente de momentum correspondente ao peso
+    *    peso que será atualizado.
     * </p>
     * <p>
     *    {@code v} - coeficiente de momentum de segunda orgem correspondente 
@@ -192,10 +192,10 @@ public class Adam extends Otimizador{
             for(int k = 0; k < neuronio.pesos.length; k++){
                g = neuronio.gradiente[k];
                
-               m[indice] += (1 - beta1) * (g - m[indice]);
-               v[indice] += (1 - beta2) * ((g*g) - v[indice]); 
+               momentum[indice]   += (1 - beta1) * (g - momentum[indice]);
+               velocidade[indice] += (1 - beta2) * ((g*g) - velocidade[indice]); 
 
-               neuronio.pesos[k] -= (m[indice] * alfa) / (Math.sqrt(v[indice]) + epsilon);
+               neuronio.pesos[k] -= (alfa * momentum[indice]) / (Math.sqrt(velocidade[indice]) + epsilon);
             
                indice++;
             }

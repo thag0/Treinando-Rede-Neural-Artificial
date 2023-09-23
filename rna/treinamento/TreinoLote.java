@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import rna.estrutura.Camada;
 import rna.estrutura.Neuronio;
 import rna.estrutura.RedeNeural;
+import rna.otimizadores.GD;
+import rna.otimizadores.GDM;
 import rna.otimizadores.Otimizador;
 
 //TODO verificar se está funcionando após as modificações do calculo do gradiente
@@ -50,8 +52,13 @@ class TreinoLote{
     * @param embaralhar embaralhar dados de treino para cada época.
     * @param tamLote tamanho do lote.
     */
-   public void treino(RedeNeural rede, Otimizador otimizador, double[][] entradas, double[][] saidas, int epochs, boolean embaralhar, int tamLote){
+   public void treino(RedeNeural rede, Otimizador otimizador, double[][] entradas, double[][] saidas, int epochs, int tamLote){
       Camada[] redec = aux.redeParaCamadas(rede);
+
+      boolean embaralhar = true;
+      if(otimizador instanceof GD || otimizador instanceof GDM){
+         embaralhar = false;
+      }
 
       for(int i = 0; i < epochs; i++){
          if(embaralhar) aux.embaralharDados(entradas, saidas);

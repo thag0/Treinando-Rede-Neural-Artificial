@@ -3,23 +3,25 @@ package rna.otimizadores;
 import rna.estrutura.Camada;
 
 /**
- * Classe genérica para implementações de otimizadores do treino da rede neural.
+ * Classe base para implementações de otimizadores do treino da Rede Neural.
  * <p>
- *      O otimizador já deve levar em consideração que os gradientes foram calculados previamente.
+ *      O otimizador já deve levar em consideração que os gradientes foram 
+ *      calculados previamente.
  * </p>
  * <p>
- *      Novos otimizadores devem implementar o método {@code atualizar()}, que atualizará os pesos
- *      da rede neural de acordo com seu próprio algoritmo.
+ *      Novos otimizadores devem implementar (pelo menos) os métodos {@code inicialziar()} 
+ *      e {@code atualizar()} que são chamados obrigatoriamente no momento da compilação e 
+ *      treino da Rede Neural.
+ * </p>
+ * <p>
+ *      O método {@code inicialziar()} é útil para aqueles otimizadores que possuem atributos 
+ *      especiais, como o coeficiente de momentum por exemplo.
  * </p>
  */
 public abstract class Otimizador{
 
     /**
      * Inicializa os parâmetros do otimizador para que possa ser usado.
-     * <p>
-     *      Essa função deve ser chamada antes de usar o método de atualização de pesos
-     *      do otimizador.
-     * </p>
      * @param parametros quantidade de pesos da rede neural.
      */
     public void inicializar(int parametros){

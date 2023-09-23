@@ -38,12 +38,12 @@ public class Nadam extends Otimizador{
    /**
     * Coeficientes de momentum.
     */
-   private double[] m;
+   private double[] momentum;
 
    /**
     * Coeficientes de momentum de segunda orgem.
     */
-   private double[] v;
+   private double[] velocidade;
 
    /**
     * Contador de iterações.
@@ -89,8 +89,8 @@ public class Nadam extends Otimizador{
 
    @Override
    public void inicializar(int parametros){
-      this.m = new double[parametros];
-      this.v = new double[parametros];
+      this.momentum = new double[parametros];
+      this.velocidade = new double[parametros];
    }
 
    /**
@@ -159,12 +159,12 @@ public class Nadam extends Otimizador{
             for(int k = 0; k < neuronio.pesos.length; k++){
                g = neuronio.gradiente[k];
 
-               m[indice] = (beta1 * m[indice]) + ((1 - beta1) * g);
-               v[indice] = (beta2 * v[indice]) + ((1 - beta2) * (g*g));
+               momentum[indice] =   (beta1 * momentum[indice])   + ((1 - beta1) * g);
+               velocidade[indice] = (beta2 * velocidade[indice]) + ((1 - beta2) * (g*g));
                
                // correções
-               mChapeu = (beta1 * m[indice] + ((1 - beta1) * g)) / forcaB1;
-               vChapeu = (beta2 * v[indice]) / forcaB2;
+               mChapeu = (beta1 * momentum[indice] + ((1 - beta1) * g)) / forcaB1;
+               vChapeu = (beta2 * velocidade[indice]) / forcaB2;
                
                neuronio.pesos[k] -= (taxaAprendizagem * mChapeu) / (Math.sqrt(vChapeu) + epsilon);
 

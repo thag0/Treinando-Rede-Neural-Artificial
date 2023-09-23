@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 import rna.estrutura.Camada;
 import rna.estrutura.RedeNeural;
+import rna.otimizadores.GDM;
+import rna.otimizadores.GD;
 import rna.otimizadores.Otimizador;
 
 /**
@@ -46,9 +48,14 @@ class Treino{
     * @param epochs quantidade de épocas de treinamento.
     * @param embaralhar embaralhar dados de treino para cada época.
     */
-   public void treino(RedeNeural rede, Otimizador otimizador, double[][] entradas, double[][] saidas, int epochs, boolean embaralhar){
+   public void treino(RedeNeural rede, Otimizador otimizador, double[][] entradas, double[][] saidas, int epochs){
       double[] entrada = new double[entradas[0].length];// quantidade de colunas da entrada
       double[] saida = new double[saidas[0].length];// quantidade de colunas da saída
+
+      boolean embaralhar = true;
+      if(otimizador instanceof GD || otimizador instanceof GDM){
+         embaralhar = false;
+      }
 
       //transformar a rede numa lista de camadas pra facilitar minha vida
       Camada[] redec = aux.redeParaCamadas(rede);

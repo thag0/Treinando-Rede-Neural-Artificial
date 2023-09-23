@@ -36,12 +36,12 @@ public class AMSGrad extends Otimizador{
    /**
     * Coeficientes de momentum.
     */
-	private double[] m;
+	private double[] momentum;
 
 	/**
 	 * Coeficientes de momentum de segunda orgem.
 	 */
-	private double[] v;
+	private double[] velocidade;
 
 	/**
 	 * Coeficientes de momentum de segunda orgem corrigidos.
@@ -92,8 +92,8 @@ public class AMSGrad extends Otimizador{
 
 	@Override
 	public void inicializar(int parametros){
-		this.m = new double[parametros];
-		this.v = new double[parametros];
+		this.momentum = new double[parametros];
+		this.velocidade = new double[parametros];
 		this.vCorrigido = new double[parametros];
 		this.interacoes = 0;
 	}
@@ -104,7 +104,7 @@ public class AMSGrad extends Otimizador{
     *    O AMSGrad funciona usando a seguinte expressão:
     * </p>
     * <pre>
-    *    p[i] -= (tA * mc) / ((√ m2c) + eps)
+    *    p[i] -= (tA * mc) / ((√ vc) + eps)
     * </pre>
     * Onde:
     * <p>
@@ -117,15 +117,15 @@ public class AMSGrad extends Otimizador{
     *    {@code mc} - valor de momentum corrigido.
     * </p>
     * <p>
-    *    {@code m2c} - valor de momentum de segunda ordem corrigido.
+    *    {@code vc} - valor de momentum de segunda ordem corrigido.
     * </p>
     * Os valores de momentum corrigido (mc) e momentum de segunda ordem
-    * corrigido (m2c) se dão por:
+    * corrigido (vc) se dão por:
     * <pre>
     *    mc = m[i] / (1 - beta1ⁱ)
     * </pre>
     * <pre>
-    *    m2c = max(max2ordem, m2[i]) / (1 - beta2ⁱ)
+    *    vc = vC[i] / (1 - beta2ⁱ)
     * </pre>
     * Onde:
     * <p>
@@ -136,12 +136,20 @@ public class AMSGrad extends Otimizador{
 	 *		{@code max2ordem} - valor máximo de segunda ordem calculado.
 	 *	</p>
     * <p>
-    *    {@code m2} - valor de momentum de segunda ordem correspondete a conexão 
-    *    do peso que está sendo atualizado.
+    *    {@code vC} - valor de momentum de segunda ordem corrigido correspondente a 
+	 *		conexão do peso que está sendo atualizado.
     * </p>
     * <p>
-    *    {@code i} - contador de interações (épocas passadas em que o otimizador 
-	 *		foi usado).
+    *    {@code i} - contador de interações do otimizador.
+    * </p>
+	 * O valor de momentum de segunda ordem corrigido (vC) é dado por:
+	 * <pre>
+	 * vC[i] = max(vC[i], v[i])
+	 * </pre>
+	 * Onde:
+	 * <p>
+    *    {@code v} - coeficiente de momentum de segunda ordem correspondente a
+	 *		conexão do peso que está sendo atualizado.
     * </p>
     */
 	@Override
@@ -165,12 +173,12 @@ public class AMSGrad extends Otimizador{
 				for(int k = 0; k < neuronio.pesos.length; k++){
 					g = neuronio.gradiente[k];
 					
-					m[indice] =  (beta1 * m[indice])  + ((1 - beta1) * g);
-					v[indice] = (beta2 * v[indice]) + ((1 - beta2) * g * g);
+					momentum[indice] =   (beta1 * momentum[indice])   + ((1 - beta1) * g);
+					velocidade[indice] = (beta2 * velocidade[indice]) + ((1 - beta2) * g * g);
 
-					vCorrigido[indice] = Math.max(vCorrigido[indice], v[indice]);
+					vCorrigido[indice] = Math.max(vCorrigido[indice], velocidade[indice]);
 
-					mChapeu = m[indice] / forcaB1;
+					mChapeu = momentum[indice] / forcaB1;
 					vChapeu = vCorrigido[indice] / forcaB2;
 
 					neuronio.pesos[k] -= (taxaAprendizagem * mChapeu) / (Math.sqrt(vChapeu) + epsilon);

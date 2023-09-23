@@ -54,8 +54,8 @@ public class Treinador{
     * @param epochs quantidade de épocas de treinamento.
     * @param embaralhar embaralhar dados de treino para cada época.
     */
-   public void treino(RedeNeural rede, Otimizador otimizador, double[][] entradas, double[][] saidas, int epochs, boolean embaralhar){
-      treino.treino(rede, otimizador, entradas, saidas, epochs, embaralhar);
+   public void treino(RedeNeural rede, Otimizador otimizador, double[][] entradas, double[][] saidas, int epochs){
+      treino.treino(rede, otimizador, entradas, saidas, epochs);
    }
 
    /**
@@ -69,8 +69,8 @@ public class Treinador{
     * @param embaralhar embaralhar dados de treino para cada época.
     * @param tamLote tamanho do lote.
     */
-   public void treino(RedeNeural rede, Otimizador otimizador, double[][] entradas, double[][] saidas, int epochs, boolean embaralhar, int tamLote){
-      treinoLote.treino(rede, otimizador, entradas, saidas, epochs, embaralhar, tamLote);
+   public void treino(RedeNeural rede, Otimizador otimizador, double[][] entradas, double[][] saidas, int epochs, int tamLote){
+      treinoLote.treino(rede, otimizador, entradas, saidas, epochs, tamLote);
    }
 
    /**

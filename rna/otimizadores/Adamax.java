@@ -26,14 +26,14 @@ public class Adamax extends Otimizador{
    private double beta2;
 
    /**
-    * Acumulador de primeira ordem.
+    * Coeficientes de momentum.
     */
-   private double[] m;
+   private double[] momentum;
 
    /**
-    * Acumulador de segunda ordem
+    * Coeficientes de momentum de segunda ordem
     */
-   private double[] v;
+   private double[] velocidade;
 
    /**
     * Contador de interações
@@ -79,13 +79,52 @@ public class Adamax extends Otimizador{
 
    @Override
    public void inicializar(int parametros){
-      this.m = new double[parametros];
-      this.v = new double[parametros];
+      this.momentum = new double[parametros];
+      this.velocidade = new double[parametros];
       this.interacoes = 0;
    }
 
    /**
-    * oi
+    * Aplica o algoritmo do Adamax para cada peso da rede neural.
+    * <p>
+    *    O Adamax funciona usando a seguinte expressão:
+    * </p>
+    * <pre>
+    *    p[i] -= (tA * m[i]) / ((1 - beta1ⁱ) * (v[i] + eps))
+    * </pre>
+    * Onde:
+    * <p>
+    *    {@code tA} - valor de taxa de aprendizagem do otimizador.
+    * </p>
+    * <p>
+    *    {@code m} - coeficiente de momentum correspondente ao peso
+    *    que será atualizado.
+    * </p>
+    * <p>
+    *    {@code beta1} - fator de decaimento do momento de primeira ordem.
+    * </p>
+    * <p>
+    *    {@code i} - contador de interações do otimizador.
+    * </p>
+    * <p>
+    *    {@code v} - coeficiente de momentum de segunda ordem correspondente 
+    *    ao peso que será atualizado.
+    * </p>
+    * <p>
+    *    {@code eps} - pequeno valor usado para evitar divisão por zero.
+    * </p>
+    * Os valores de <strong>m</strong> e <strong>v</strong> são dados por:
+    *<pre>
+    *m[i] = m[i] + ((g[i] - m[i]) * (1 - beta1))
+    *v[i] = max((beta2 * v[i]), abs(g[i]))
+    *</pre>
+    * Onde:
+    * <p>
+    *    {@code g} - gradiente correspondente ao peso que sera atualizado.
+    * </p>
+    * <p>
+    *    {@code beta2} - fator de decaimento do momentum de segunda ordem.
+    * </p>
     */
    @Override
    public void atualizar(Camada[] redec){
@@ -105,11 +144,10 @@ public class Adamax extends Otimizador{
             for(int k = 0; k < neuronio.pesos.length; k++){
                double g = neuronio.gradiente[k];
 
-               m[indice] += (g - m[indice]) * (1 - beta1);
-               v[indice] = Math.max(beta2 * v[indice], Math.abs(g));
+               momentum[indice] += (g - momentum[indice]) * (1 - beta1);
+               velocidade[indice] = Math.max(beta2 * velocidade[indice], Math.abs(g));
 
-               double correcao = (taxaAprendizagem * m[indice] / ((1 - forcaB1) * (v[indice] + epsilon)));
-               neuronio.pesos[k] -= correcao;
+               neuronio.pesos[k] -= taxaAprendizagem * momentum[indice] / ((1 - forcaB1) * (velocidade[indice] + epsilon));
 
                indice++;
             }

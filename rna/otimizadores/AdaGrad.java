@@ -22,7 +22,7 @@ public class AdaGrad extends Otimizador{
    private double epsilon;
 
    /**
-    * acumuladores
+    * Acumuladores dos gradientes ao quadrado.
     */
    private double[] acumulador;
 

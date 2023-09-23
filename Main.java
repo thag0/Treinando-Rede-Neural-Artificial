@@ -94,9 +94,8 @@ class Main{
       rede.configurarInicializador(5);
       rede.compilar();
       rede.configurarFuncaoAtivacao(new Sigmoid());
-      
-      SGD sgd = new SGD();
-      rede.configurarOtimizador(sgd);
+
+      rede.configurarOtimizador(new GDM());
       
       return rede;
    }

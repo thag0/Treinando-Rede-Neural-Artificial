@@ -8,7 +8,7 @@ import rna.otimizadores.AMSGrad;
 import rna.otimizadores.AdaGrad;
 import rna.otimizadores.Adam;
 import rna.otimizadores.Adamax;
-import rna.otimizadores.GradientDescent;
+import rna.otimizadores.GD;
 import rna.otimizadores.Nadam;
 import rna.otimizadores.Otimizador;
 import rna.otimizadores.RMSProp;
@@ -501,7 +501,7 @@ public class RedeNeural implements Cloneable{
       modeloCompilado();
 
       switch(otimizador){
-         case 1 -> this.otimizadorAtual = new GradientDescent();
+         case 1 -> this.otimizadorAtual = new GD();
          case 2 -> this.otimizadorAtual = new SGD();
          case 3 -> this.otimizadorAtual = new AdaGrad();
          case 4 -> this.otimizadorAtual = new RMSProp();
@@ -793,12 +793,8 @@ public class RedeNeural implements Cloneable{
 
       if(epochs < 1) throw new IllegalArgumentException("O valor de epochs deve ser maior que zero.");
 
-      boolean embaralhar;
-      if(otimizadorAtual.getClass().equals(rna.otimizadores.GradientDescent.class)) embaralhar = false;
-      else embaralhar = true;
-      
       //enviar clones pra não embaralhar os dados originais
-      treinador.treino(this, this.otimizadorAtual, entradas.clone(), saidas.clone(), epochs, embaralhar);
+      treinador.treino(this, this.otimizadorAtual, entradas.clone(), saidas.clone(), epochs);
    }
 
    /**
@@ -812,28 +808,24 @@ public class RedeNeural implements Cloneable{
     * @param entradas dados de entrada do treino (features).
     * @param saidas dados de saída correspondente a entrada (class).
     * @param epochs quantidade de épocas.
-    * @param tamanhoLote tamanho que o lote vai assumir durante o treino.
+    * @param tamLote tamanho que o lote vai assumir durante o treino.
     * @throws IllegalArgumentException se o modelo não foi compilado previamente.
     * @throws IllegalArgumentException se houver alguma inconsistência dos dados de entrada e saída para a operação.
     * @throws IllegalArgumentException se o valor de épocas for menor que um.
     */
-   public void treinar(double[][] entradas, double[][] saidas, int epochs, int tamanhoLote){
+   public void treinar(double[][] entradas, double[][] saidas, int epochs, int tamLote){
       this.modeloCompilado();
       consistenciaDados(entradas, saidas);
 
       if(epochs < 1){
          throw new IllegalArgumentException("O valor de epochs não pode ser menor que um");
       }
-      if(tamanhoLote <= 0 || tamanhoLote > entradas.length){
+      if(tamLote <= 0 || tamLote > entradas.length){
          throw new IllegalArgumentException("O valor de tamanho do lote é inválido.");
       }
 
-      boolean embaralhar;
-      if(otimizadorAtual.getClass().equals(rna.otimizadores.GradientDescent.class)) embaralhar = false;
-      else embaralhar = true;
-
       //enviar clones pra não embaralhar os dados originais
-      treinador.treino(this, this.otimizadorAtual, entradas.clone(), saidas.clone(), epochs, embaralhar, tamanhoLote);
+      treinador.treino(this, this.otimizadorAtual, entradas.clone(), saidas.clone(), epochs, tamLote);
    }
    
    /**
