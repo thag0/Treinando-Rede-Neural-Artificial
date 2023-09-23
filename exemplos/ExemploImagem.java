@@ -3,6 +3,7 @@ package exemplos;
 import java.awt.image.BufferedImage;
 
 import rna.estrutura.RedeNeural;
+import rna.inicializadores.Xavier;
 import rna.otimizadores.SGD;
 import utilitarios.ged.Ged;
 import utilitarios.geim.Geim;
@@ -26,11 +27,11 @@ public class ExemploImagem{
 
       //criando rede neural para lidar com a imagem
       //nesse exemplo queremos que ela tenha overfitting
-      int[] arq = {nEntrada, 11, 11, nSaida};
+      int[] arq = {nEntrada, 12, 12, nSaida};
       RedeNeural rede = new RedeNeural(arq);
-      rede.compilar(new SGD());
+      rede.compilar(new SGD(), new Xavier());
       rede.configurarFuncaoAtivacao(2);
-      rede.treinar(dadosEntrada, dadosSaida, 6_000);
+      rede.treinar(dadosEntrada, dadosSaida, 5_000);
 
       //avaliando resultados
       double precisao = 1 - rede.avaliador.erroMedioAbsoluto(dadosEntrada, dadosSaida);

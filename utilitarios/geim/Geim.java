@@ -3,6 +3,7 @@ package utilitarios.geim;
 import java.awt.image.BufferedImage;
 
 import rna.estrutura.RedeNeural;
+import utilitarios.ged.Dados;
 
 
 /**
@@ -117,6 +118,17 @@ public class Geim{
       ga.exportarImagemPng(estruturaImagem, caminho);
    }
 
+   /**
+    * Transforma a imagem num conjunto de dados disposto na seguinte estrutura:
+    * <pre>
+    *    linha = [x][y][r][g][b]
+    * </pre>
+    * @param imagem
+    * @return
+    */
+   public Dados imagemParaDados(BufferedImage imagem){
+      return gdi.imagemParaDados(imagem);
+   }
 
    /**
     * Converte a imagem em uma matriz de dados para treino.

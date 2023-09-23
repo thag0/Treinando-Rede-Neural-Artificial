@@ -3,7 +3,7 @@ package exemplos;
 import java.text.DecimalFormat;
 
 import rna.estrutura.RedeNeural;
-import rna.inicializadores.Aleatorio;
+import rna.inicializadores.*;
 import rna.ativacoes.*;
 import rna.otimizadores.*;
 import utilitarios.ged.Dados;
@@ -41,12 +41,12 @@ public class ExemploClassificacao{
       double[][] testeY = ged.separarDadosSaida(teste, qSaidas);
 
       //criando e configurando a rede neural
-      int[] arq = {qEntradas, 7, 7, qSaidas};
+      int[] arq = {qEntradas, 8, 8, qSaidas};
       RedeNeural rede = new RedeNeural(arq);
-      rede.configurarAlcancePesos(0.8);
-      rede.compilar(new SGD(), new Aleatorio());
+      rede.compilar(new SGD(), new Xavier());
       rede.configurarFuncaoAtivacao(new Sigmoid());
       rede.configurarFuncaoAtivacao(rede.obterCamadaSaida(), new Softmax());
+
       System.out.println(rede.info());
       
       //treinando e avaliando os resultados

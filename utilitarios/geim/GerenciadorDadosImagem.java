@@ -2,6 +2,8 @@ package utilitarios.geim;
 
 import java.awt.image.BufferedImage;
 
+import utilitarios.ged.Dados;
+
 /**
  * Gerenciador de dados de imagem para o Geim
  */
@@ -86,6 +88,33 @@ class GerenciadorDadosImagem{
       int rgb = imagem.getRGB(x, y);
       int b = rgb & 0xFF;
       return b;
+   }
+
+
+   public Dados imagemParaDados(BufferedImage imagem){
+      int largura = imagem.getWidth();
+      int altura = imagem.getHeight();
+      int informacoes = 1 + 1 + 3;// x + y + r + g + b
+      
+      double[][] dados = new double[largura*altura][informacoes];
+      
+      for(int y = 0; y < largura; y++){
+         for(int x = 0; x < altura; x++){
+            int r = getR(imagem, x, y);
+            int g = getG(imagem, x, y);
+            int b = getB(imagem, x, y);
+         
+            int linha = y * largura + x;
+            dados[linha][0] = x;
+            dados[linha][1] = y;
+            dados[linha][2] = r;
+            dados[linha][3] = g;
+            dados[linha][4] = b;
+         }
+      }
+      
+      Dados d = new Dados(dados);
+      return d;
    }
 
 

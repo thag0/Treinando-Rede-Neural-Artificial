@@ -19,7 +19,7 @@ public class EntropiaCruzada extends Perda{
          System.arraycopy(saida[i], 0, dadosSaida, 0, saida[i].length);
   
          rede.calcularSaida(dadosEntrada);
-         saidaRede = rede.obterSaidas();
+         System.arraycopy(rede.obterSaidas(), 0, saidaRede, 0, saidaRede.length);
          
          double perdaExemplo = 0.0;
          for(int j = 0; j < saidaRede.length; j++){

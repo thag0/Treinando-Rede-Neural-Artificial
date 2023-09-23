@@ -9,7 +9,7 @@ import rna.estrutura.Neuronio;
 public class Softmax extends FuncaoAtivacao{
 
    /**
-    * Intancia uma nova função de ativação Softmax.
+    * Instancia uma nova função de ativação Softmax.
     */
    public Softmax(){
 

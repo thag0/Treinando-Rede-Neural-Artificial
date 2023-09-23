@@ -26,8 +26,8 @@ class Main{
    // static final String caminhoArquivo = "/dados/32x32/bloco.png";
    static final String caminhoArquivo = "/dados/mnist/8.png";
    static final String caminhoImagemExportada = "./resultados/imagem-ampliada";
-   static final int epocas = 10*1000;
-   static final float escalaRender = 8f;
+   static final int epocas = 100*1000;
+   static final float escalaRender = 9f;
    static final float escalaImagemExportada = 30f;
 
    // Sempre lembrar de quando mudar o dataset, também mudar a quantidade de dados de entrada e saída.
@@ -42,9 +42,9 @@ class Main{
       int qEntradas = 2;//quantidade de dados de entrada / entrada da rede
       int qSaidas = 1;//quantidade de dados de saída / saída da rede
       BufferedImage imagem = geim.lerImagem(caminhoArquivo);
-      double[][] dados;
-
+      
       //escolher a forma de importação dos dados
+      double[][] dados;
       if(qSaidas == 1) dados = geim.imagemParaDadosTreinoEscalaCinza(imagem);
       else if(qSaidas == 3) dados = geim.imagemParaDadosTreinoRGB(imagem);
       else return;
@@ -78,26 +78,23 @@ class Main{
       System.out.println("Precisão = " + (formatarDecimal(precisao*100, 2)) + "%");
       System.out.println("Tempo de treinamento: " + horas + "h " + minutos + "m " + segundos + "s");
 
-      // precisa treinar bastante
+      //salvando resultado
       System.out.println("\nSalvando imagem");
       if(qSaidas == 1)geim.exportarImagemEscalaCinza(imagem, rede, escalaImagemExportada, caminhoImagemExportada);
       else if(qSaidas == 3) geim.exportarImagemRGB(imagem, rede, escalaImagemExportada, caminhoImagemExportada);
       else System.out.println("Não é possível exportar a imagem");
    }
 
-
-   public static RedeNeural criarRede(int qEntradas, int qSaidas){
+   public static RedeNeural criarRede(int entradas, int saidas){
       // int[] arq = {qEntradas, 64, 32, 32, qSaidas};//dog
       // int[] arq = {qEntradas, 36, 36, 36, qSaidas};//32x32
-      int[] arq = {qEntradas, 13, 13, qSaidas};//28x28
+      int[] arq = {entradas, 12, 12, saidas};//28x28
       RedeNeural rede = new RedeNeural(arq);
-
       rede.compilar(new SGD(), new Xavier());
       rede.configurarFuncaoAtivacao(new Sigmoid());
 
       return rede;
    }
-
 
    public static void treinoEmPainel(RedeNeural rede, BufferedImage imagem, double[][] dadosEntrada, double[][] dadosSaida){
       final int fps = 600;
@@ -105,7 +102,7 @@ class Main{
 
       //acelerar o processo de desenho
       //bom em situações de janelas muito grandes
-      int numThreads = (int)(Runtime.getRuntime().availableProcessors() * 1);
+      int numThreads = (int)(Runtime.getRuntime().availableProcessors() * 0.5);
 
       JanelaTreino jt = new JanelaTreino(imagem.getWidth(), imagem.getHeight(), escalaRender);
       jt.desenharTreino(rede, 0, numThreads);

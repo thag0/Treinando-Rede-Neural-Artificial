@@ -535,8 +535,8 @@ public class RedeNeural implements Cloneable{
    public void compilar(Otimizador otimizador, Inicializador inicializador){
       //adicionando bias como neuronio adicional nas camadas
       //não adicionar na camada de saída
-      for(int i = 0; i < arquitetura.length-1; i++){
-         arquitetura[i] += BIAS;
+      for(int i = 0; i < this.arquitetura.length-1; i++){
+         this.arquitetura[i] += BIAS;
       }
 
       //passar as informações do bias paras as camadas
@@ -553,18 +553,18 @@ public class RedeNeural implements Cloneable{
       
       //inicializar camada de entrada
       this.entrada = new Camada(temBias);
+      this.entrada.inicializar(this.arquitetura[0], 0, alcancePeso, ini);
       this.entrada.configurarId(idCamada);
       idCamada++;
-      this.entrada.inicializar(arquitetura[0], 1, alcancePeso, ini);
 
       //inicializar camadas ocultas
       int quantidadeOcultas = this.arquitetura.length-2;
       this.ocultas = new Camada[quantidadeOcultas];
-      for(int i = 0; i < this.ocultas.length; i++){// percorrer ocultas
+      for(int i = 0; i < this.ocultas.length; i++){
          Camada novaOculta = new Camada(temBias);
 
-         if(i == 0) novaOculta.inicializar(arquitetura[i+1], arquitetura[0], alcancePeso, ini);
-         else novaOculta.inicializar(arquitetura[i+1], arquitetura[i], alcancePeso, ini);
+         if(i == 0) novaOculta.inicializar(this.arquitetura[i+1], this.arquitetura[0], alcancePeso, ini);
+         else novaOculta.inicializar(this.arquitetura[i+1], this.arquitetura[i], alcancePeso, ini);
 
          this.ocultas[i] = novaOculta;
          this.ocultas[i].configurarId(idCamada);
@@ -573,8 +573,8 @@ public class RedeNeural implements Cloneable{
 
       //inicializar camada de saída
       this.saida = new Camada(false);
+      this.saida.inicializar(this.arquitetura[this.arquitetura.length-1], this.arquitetura[this.arquitetura.length-2], alcancePeso, ini);
       this.saida.configurarId(idCamada);
-      this.saida.inicializar(arquitetura[arquitetura.length-1], arquitetura[arquitetura.length-2], alcancePeso, ini);
 
       //inicializar otimizador
       if(otimizador == null){
@@ -583,7 +583,7 @@ public class RedeNeural implements Cloneable{
       this.otimizadorAtual = otimizador;
       this.otimizadorAtual.inicializar(this.obterQuantidadePesos());
 
-      compilado = true;//modelo pode ser usado
+      this.compilado = true;//modelo pode ser usado
    }
 
    /**
@@ -617,7 +617,7 @@ public class RedeNeural implements Cloneable{
     * @param saida conjunto de dados de saída.
     */
    private void consistenciaDados(double[][] entrada, double[][] saida){
-      int nEntrada = this.entrada.quantidadeNeuronios() - (this.entrada.temBias() ? 1 : 0);
+      int nEntrada = this.entrada.quantidadeNeuroniosSemBias();
       int nSaida = this.obterCamadaSaida().quantidadeNeuronios();
 
       if(entrada.length != saida.length){
@@ -635,7 +635,7 @@ public class RedeNeural implements Cloneable{
     * <p>
     *    Propaga os dados de entrada pela rede neural pelo método de feedforward.
     * </p>
-    * Os dados são alimentados para as entradas dos neurônios e é calculado o produto junto com os pesos.
+    * Os dados são alimentados para as entradas dos neurônios e então é calculado o produto junto com os pesos.
     * No final é aplicado a função de ativação da camada no neurônio e o resultado fica armazenado na saída dele.
     * @param entradas dados usados para alimentar a camada de entrada.
     * @throws IllegalArgumentException se o modelo não foi compilado previamente.
@@ -645,7 +645,7 @@ public class RedeNeural implements Cloneable{
    public void calcularSaida(double[] entradas){
       this.modeloCompilado();
       
-      int nEntrada = this.entrada.quantidadeNeuronios() - (this.entrada.temBias() ? 1 : 0);
+      int nEntrada = this.entrada.quantidadeNeuroniosSemBias();
       if(entradas.length != nEntrada){
          throw new IllegalArgumentException("As dimensões dos dados de entrada com os neurônios de entrada da rede não são iguais.");
       }
@@ -797,7 +797,6 @@ public class RedeNeural implements Cloneable{
    public void diferencaFinita(double[][] entradas, double[][] saidas, double eps, int epochs, double custoMinimo){
       this.modeloCompilado();
       consistenciaDados(entradas, saidas);
-
       
       if(eps == 0){
          throw new IllegalArgumentException("O valor de perturbação não pode ser igual a zero.");
@@ -1086,7 +1085,7 @@ public class RedeNeural implements Cloneable{
       clone.neuronios = new Neuronio[camada.quantidadeNeuronios()];
       clone.ativacao = camada.ativacao;
 
-      for (int i = 0; i < camada.quantidadeNeuronios(); i++) {
+      for(int i = 0; i < camada.quantidadeNeuronios(); i++){
          clone.neuronios[i] = cloneNeuronio(camada.neuronio(i));
       }
 

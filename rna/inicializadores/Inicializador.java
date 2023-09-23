@@ -24,9 +24,7 @@ public class Inicializador{
     * @param alcance valor de alcance da aleatorização
     */
    public void inicializar(double[] array, double alcance){
-      throw new java.lang.UnsupportedOperationException(
-         "Método de inicialização não implementado."
-      );
+      throw new UnsupportedOperationException("Método de inicialização não implementado.");
    }
 
    /**
@@ -35,9 +33,7 @@ public class Inicializador{
     * @param alcance valor de alcance da aleatorização
     */
    public void inicializar(double[] array, int entradas){
-      throw new java.lang.UnsupportedOperationException(
-         "Método de inicialização não implementado."
-      );
+      throw new UnsupportedOperationException("Método de inicialização não implementado.");
    }
 
    /**
@@ -48,8 +44,6 @@ public class Inicializador{
     * @param saidas quantidade de saídas da camada em que o neurônio está.
     */
    public void inicializar(double[] array, int entradas, int saidas){
-      throw new java.lang.UnsupportedOperationException(
-         "Método de inicialização não implementado."
-      );
+      throw new UnsupportedOperationException("Método de inicialização não implementado.");
    }
 }

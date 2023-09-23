@@ -18,9 +18,9 @@ public class EntropiaCruzadaBinaria extends Perda{
          //método nativo mais eficiente
          System.arraycopy(entrada[i], 0, dadosEntrada, 0, entrada[i].length);
          System.arraycopy(saida[i], 0, dadosSaida, 0, saida[i].length);
-         
+
          rede.calcularSaida(dadosEntrada);
-         saidaRede = rede.obterSaidas();
+         System.arraycopy(rede.obterSaidas(), 0, saidaRede, 0, saidaRede.length);
 
          double perdaExemplo = 0.0;
          for(int j = 0; j < dadosSaida.length; j++){
