@@ -61,7 +61,9 @@ public class Lion extends Otimizador{
       String espacamento = "    ";
       String buffer = "";
 
-      buffer += espacamento + "Liao";
+      buffer += espacamento + "TaxaAprendizagem: " + this.taxaAprendizagem + "\n";
+      buffer += espacamento + "Beta1: " + this.beta1 + "\n";
+      buffer += espacamento + "Beta2: " + this.beta2 + "\n";
 
       return buffer;
    }

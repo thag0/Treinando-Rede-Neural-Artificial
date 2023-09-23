@@ -34,7 +34,7 @@ class Main{
    
    public static void main(String[] args){
       limparConsole();
-      
+
       long t1, t2;
       long horas, minutos, segundos;
 
@@ -92,7 +92,7 @@ class Main{
       int[] arq = {qEntradas, 13, 13, qSaidas};//28x28
       RedeNeural rede = new RedeNeural(arq);
 
-      rede.compilar(new Lion(), new Xavier());
+      rede.compilar(new Lion(), new Aleatorio());
       rede.configurarFuncaoAtivacao(new Sigmoid());
 
       return rede;
