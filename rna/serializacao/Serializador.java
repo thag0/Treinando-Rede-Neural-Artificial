@@ -2,6 +2,7 @@ package rna.serializacao;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 
@@ -34,12 +35,80 @@ public class Serializador{
     * <p>
     *    O arquivo deve ser salvo no formato {@code .txt}
     * </p>
+    * O tipo de dado para salvar os pesos será o tipo padrão {@code Double}.
     * @param rede instância de uma Rede Neural.
     * @param caminho caminho onde o arquivo da rede será salvo.
     */
    public static void salvar(RedeNeural rede, String caminho){
-      try(BufferedWriter writer = new BufferedWriter(new FileWriter(caminho))){
+      salvar(rede, caminho, Double.TYPE);
+   }
 
+   /**
+    * Salva as informações mais essenciais sobre a Rede Neural incluindo arquitetura,
+    * funções de ativação de todas as camadas, bias configurado e o mais importante que
+    * são os pesos de cada neurônio da rede.
+    * <p>
+    *    <strong> Reforçando</strong>: as informações sobre o otimizador e todas suas 
+    *    configurações, treino, nome e outras pequenas coisas que não afetam diretamente 
+    *    o funcionamento da rede serão perdidas.
+    * </p>
+    * <p>
+    *    O arquivo deve ser salvo no formato {@code .txt}
+    * </p>
+    * @param rede instância de uma Rede Neural.
+    * @param caminho caminho onde o arquivo da rede será salvo.
+    * @param tipo tipo de valor que será usado para salvar os pesos da Rede Neural. O tipo 
+    * pode ser um objeto do tipo {@code String} contendo o nome (por exemplo "float") ou uma
+    * instância de objeto do tipo {@code Number}.
+    */
+   public static void salvar(RedeNeural rede, String caminho, Object tipo){
+      if(tipo instanceof String){
+         String t = (String) tipo;
+         
+         if(t.toLowerCase().equals("double")){
+            salvar(rede, caminho, Double.TYPE);
+
+         }else if(t.toLowerCase().endsWith("float")){
+            salvar(rede, caminho, Float.TYPE);
+         
+         }else if(t.toLowerCase().endsWith("int") || t.toLowerCase().endsWith("integer")){
+            salvar(rede, caminho, Integer.TYPE);
+         
+         }else if(t.toLowerCase().endsWith("short")){
+            salvar(rede, caminho, Short.TYPE);
+         
+         }else if(t.toLowerCase().endsWith("byte")){
+            salvar(rede, caminho, Byte.TYPE);
+         }
+      
+      }else{
+         throw new IllegalArgumentException("Tipo não suportado.");
+      }
+   }
+
+   /**
+    * Salva as informações mais essenciais sobre a Rede Neural incluindo arquitetura,
+    * funções de ativação de todas as camadas, bias configurado e o mais importante que
+    * são os pesos de cada neurônio da rede.
+    * <p>
+    *    <strong> Reforçando</strong>: as informações sobre o otimizador e todas suas 
+    *    configurações, treino, nome e outras pequenas coisas que não afetam diretamente 
+    *    o funcionamento da rede serão perdidas.
+    * </p>
+    * <p>
+    *    O arquivo deve ser salvo no formato {@code .txt}
+    * </p>
+    * @param rede instância de uma Rede Neural.
+    * @param caminho caminho onde o arquivo da rede será salvo.
+    * @param tipo classe contendo tipo de valor que será usado para salvar os pesos da Rede Neural.
+    */
+   public static void salvar(RedeNeural rede, String caminho, Class<?> tipo){
+      File arquivo = new File(caminho);
+      if(!arquivo.getName().toLowerCase().endsWith(".txt")){
+         throw new IllegalArgumentException("O caminho especificado não é um arquivo de texto válido.");
+      }
+
+      try(BufferedWriter writer = new BufferedWriter(new FileWriter(arquivo))){
          //arquitetura da rede
          int[] arq = rede.obterArquitetura();
          for(int i = 0; i < arq.length; i++){
@@ -69,8 +138,24 @@ public class Serializador{
 
                Neuronio neuronio = camada.neuronio(j);
                for(int k = 0; k < neuronio.numConexoes(); k++){
-                  writer.write(Float.toString((float)neuronio.pesos[k]));
-                  // writer.write(Double.toString(neuronio.pesos[k]));
+                  double peso = neuronio.pesos[k];
+
+                  if(tipo.equals(Double.TYPE)){
+                     writer.write(Double.toString(peso));
+                  
+                  }else if(tipo.equals(Float.TYPE)){
+                     writer.write(Float.toString((float)peso));
+                  
+                  }else if(tipo.equals(Integer.TYPE)){
+                     writer.write(Float.toString((int)peso));
+                     
+                  }else if(tipo.equals(Short.TYPE)){
+                     writer.write(Float.toString((short)peso));
+
+                  }else if(tipo.equals(Byte.TYPE)){
+                     writer.write(Float.toString((byte)peso));
+                  }
+
                   writer.newLine();
                }
             }
@@ -79,14 +164,31 @@ public class Serializador{
          //pesos da saída
          for(int i = 0; i < rede.obterCamadaSaida().quantidadeNeuronios(); i++){
             Neuronio neuronio = rede.obterCamadaSaida().neuronio(i);
-            for(int k = 0; k < neuronio.numConexoes(); k++){
-               writer.write(Float.toString((float)neuronio.pesos[k]));
-               // writer.write(Double.toString(neuronio.pesos[k]));
+            for(int j = 0; j < neuronio.numConexoes(); j++){
+               double peso = neuronio.pesos[j];
+
+                  if(tipo.equals(Double.TYPE)){
+                     writer.write(Double.toString(peso));
+                  
+                  }else if(tipo.equals(Float.TYPE)){
+                     writer.write(Float.toString((float)peso));
+                  
+                  }else if(tipo.equals(Integer.TYPE)){
+                     writer.write(Float.toString((int)peso));
+                     
+                  }else if(tipo.equals(Short.TYPE)){
+                     writer.write(Float.toString((short)peso));
+
+                  }else if(tipo.equals(Byte.TYPE)){
+                     writer.write(Float.toString((byte)peso));
+                  }
+
                writer.newLine();
             }
          }
 
       }catch(Exception e){
+         System.out.println("Houve um erro ao salvar o arquivo da Rede Neural.");
          e.printStackTrace();
       }
    }

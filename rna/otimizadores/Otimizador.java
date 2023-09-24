@@ -25,7 +25,7 @@ public abstract class Otimizador{
      * @param parametros quantidade de pesos da rede neural.
      */
     public void inicializar(int parametros){
-        throw new java.lang.UnsupportedOperationException("Inicialização do otimizador não implementada.");
+        throw new UnsupportedOperationException("Inicialização do otimizador não implementada.");
     }
 
     /**
@@ -36,7 +36,7 @@ public abstract class Otimizador{
      * @param redec Rede Neural em formato de lista de camadas.
      */
     public void atualizar(Camada[] redec){
-        throw new java.lang.UnsupportedOperationException("Método de atualização do otimizador não foi implementado.");
+        throw new UnsupportedOperationException("Método de atualização do otimizador não foi implementado.");
     }
 
    /**
@@ -44,6 +44,6 @@ public abstract class Otimizador{
     * @return buffer formatado.
     */
     public String info(){
-        throw new java.lang.UnsupportedOperationException("Método de informações do otimizador não foi implementado.");
+        throw new UnsupportedOperationException("Método de informações do otimizador não foi implementado.");
     }
 }

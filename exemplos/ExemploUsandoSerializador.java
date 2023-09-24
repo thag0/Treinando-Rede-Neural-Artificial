@@ -26,11 +26,7 @@ public class ExemploUsandoSerializador {
       rede.configurarFuncaoAtivacao(2);
       rede.treinar(e, s, 10_000);
       System.out.println("p = " + rede.avaliador.erroMedioQuadrado(e, s));
-      Serializador.salvar(rede, "./rede-xor.txt");
-
-      System.out.println(rede.obterCamadaOculta(0).neuronio(0).info());
-      System.out.println(rede.obterCamadaOculta(0).neuronio(1).info());
-      System.out.println(rede.obterCamadaSaida().neuronio(0).info());
+      Serializador.salvar(rede, "./rede-xor.txt", "float");
    }
 
    static void limparConsole(){

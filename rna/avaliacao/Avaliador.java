@@ -17,16 +17,13 @@ import rna.estrutura.RedeNeural;
 public class Avaliador{
    private RedeNeural rede;
 
-   //perda
    EntropiaCruzada entropiaCruzada = new EntropiaCruzada();
    EntropiaCruzadaBinaria entropiaCruzadaBinaria = new EntropiaCruzadaBinaria();
-   ErroMedioQuadrado erroMedioQuadrado = new ErroMedioQuadrado();
-
-   //métrica
    Acuracia acuracia = new Acuracia();
-   ErroMedioAbsoluto erroMedioAbsoluto = new ErroMedioAbsoluto();
    MatrizConfusao matrizConfusao = new MatrizConfusao();
    F1Score f1Score = new F1Score();
+   ErroMedioQuadrado emq = new ErroMedioQuadrado();
+   ErroMedioAbsoluto ema = new ErroMedioAbsoluto();
 
    /**
     * Instancia um novo avaliador destinado a uma Rede Neural.
@@ -44,20 +41,20 @@ public class Avaliador{
     * Calcula o erro médio quadrado da rede neural em relação aos dados de entrada e saída fornecidos.
     * @param entrada dados de entrada.
     * @param saida dados de saída contendo os resultados respectivos para as entradas.
-    * @return erro médio quadrado da rede em relação ao dados fornecidos (custo/perda).
+    * @return valor do erro médio quadrado da rede em relação ao dados fornecidos (custo/perda).
     */
    public double erroMedioQuadrado(double[][] entrada, double[][] saida){
-      return erroMedioQuadrado.calcular(this.rede, entrada, saida);
+      return emq.calcular(this.rede, entrada, saida);
    }
 
    /**
     * Calcula o erro médio absoluto entre as saídas previstas pela rede neural e os valores reais.
     * @param entrada dados de entrada.
     * @param saida dados de saída contendo os resultados respectivos para as entradas.
-    * @return A precisão da rede neural em forma de probabilidade.
+    * @return valor do erro médio abosoluto da rede em relação ao dados fornecidos (custo/perda).
     */
    public double erroMedioAbsoluto(double[][] entrada, double[][] saida){
-      return erroMedioAbsoluto.calcular(this.rede, entrada, saida);
+      return ema.calcular(this.rede, entrada, saida);
    }
 
    /**

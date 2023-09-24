@@ -60,7 +60,7 @@ class Main{
       //treinar e marcar tempo
       t1 = System.nanoTime();
       System.out.println("Treinando.");
-
+      
       treinoEmPainel(rede, imagem, treinoX, treinoY);
       
       t2 = System.nanoTime();

@@ -14,12 +14,26 @@ import rna.ativacoes.Softmax;
 import rna.ativacoes.Swish;
 import rna.ativacoes.TanH;
 
+/**
+ * Classe dedicada em ler os dados de funções de ativação lidos no arquivo
+ * serializado e convertê-los em instâncias de funções de ativação
+ */
 class DicionarioAtivacoes{
 
+   /**
+    * Tradutor das funções de ativação
+    */
    public DicionarioAtivacoes(){
 
    }
 
+   /**
+    * Converte o texto lido em uma instância de função 
+    * de ativação correspondente.
+    * @param nome nome da função de ativação.
+    * @return instância da função de ativação lida.
+    * @param IllegalArgumentException caso a rede lida não for encontrada.
+    */
    public FuncaoAtivacao obterAtivacao(String nome){
       //essa provavelmente não é a melhor abordagem
       //mas é a mais fácil de implementar

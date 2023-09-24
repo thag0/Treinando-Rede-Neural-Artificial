@@ -3,7 +3,7 @@ package rna.ativacoes;
 import rna.estrutura.Neuronio;
 
 /**
- * Classe genérica para a implementação das funções de ativação.
+ * Classe base para a implementação das funções de ativação.
  * <p>
  *    Novas funções de ativações devem sobrescrever os métodos existentes {@code ativar()} e {@code derivada()}.
  * </p>
@@ -19,7 +19,7 @@ public abstract class FuncaoAtivacao{
     * @param quantidade quantidade de neurônios que serão ativados, em ordem crescente.
     */
    public void ativar(Neuronio[] neuronios, int quantidade){
-      throw new java.lang.UnsupportedOperationException("Método de atualização da função de ativação não foi implementado.");
+      throw new UnsupportedOperationException("Método de atualização da função de ativação não foi implementado.");
    }
 
    /**
@@ -31,6 +31,6 @@ public abstract class FuncaoAtivacao{
     * @param quantidade quantidade de neurônios que serão ativados, em ordem crescente.
     */
    public void derivada(Neuronio[] neuronios, int quantidade){
-      throw new java.lang.UnsupportedOperationException("Método de atualização da derivada da função de ativação não foi implementado.");
+      throw new UnsupportedOperationException("Método de atualização da derivada da função de ativação não foi implementado.");
    }
 }

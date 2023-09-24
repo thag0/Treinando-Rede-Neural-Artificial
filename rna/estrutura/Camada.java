@@ -15,7 +15,6 @@ import rna.ativacoes.Swish;
 import rna.ativacoes.TanH;
 import rna.inicializadores.Inicializador;
 
-
 /**
  * Representa uma camada densa de neurônios dentro de uma Rede Neural.
  * <p>
@@ -232,10 +231,11 @@ public class Camada{
    }
 
    /**
-    * Executa a função de ativação derivada específica da camada
+    * Executa a derivada da função de ativação específica da camada
     * em todos os neurônios dela, excluindo bias.
     * <p>
-    *    O resultado da derivada de cada neurônio estará salvo na propriedade {@code neuronio.derivada}.
+    *    O resultado da derivada de cada neurônio estará salvo na 
+    *    propriedade {@code neuronio.derivada}.
     * </p>
     */
    public void ativacaoDerivada(){
@@ -243,7 +243,7 @@ public class Camada{
    }
 
    /**
-    * Retrona a instância da função de ativação configurada para a camada.
+    * Retorna a instância da função de ativação configurada para a camada.
     * @return função de ativação da camada.
     */
    public FuncaoAtivacao obterAtivacao(){
@@ -330,6 +330,7 @@ public class Camada{
     *    <li>Id da camada dentro da Rede Neural em que foi criada.</li>
     *    <li>Função de ativação.</li>
     *    <li>Quantidade de neurônios.</li>
+    *    <li>Quantidade de conexões.</li>
     *    <li>Bias como neurônio adicional.</li>
     * </ul>
     * @return buffer formatado contendo as informações da camada.
@@ -342,6 +343,7 @@ public class Camada{
 
       buffer += espacamento + "Ativação: " + this.ativacao.getClass().getSimpleName() + "\n";
       buffer += espacamento + "Quantidade neurônios: " + this.neuronios.length + "\n";
+      buffer += espacamento + "Quantidade de conexões: " + this.numConexoes() + "\n";
       buffer += espacamento + "Bias: " + ((this.b == 1) ? "true" : "false") + "\n"; 
 
       buffer += "]\n";

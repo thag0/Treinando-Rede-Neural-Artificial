@@ -8,7 +8,7 @@ public class ErroMedioQuadrado extends Perda{
    public double calcular(RedeNeural rede, double[][] entrada, double[][] saida){  
       double[] dadosEntrada = new double[entrada[0].length];//tamanho das colunas da entrada
       double[] dadosSaida = new double[saida[0].length];//tamanho de colunas da saída
-      double[] saidaRede = new double[rede.obterCamadaSaida().quantidadeNeuroniosSemBias()];
+      double[] saidaRede = new double[rede.obterCamadaSaida().quantidadeNeuronios()];
       
       int amostras = entrada.length;
       double perda = 0.0;
@@ -21,7 +21,8 @@ public class ErroMedioQuadrado extends Perda{
          System.arraycopy(rede.obterSaidas(), 0, saidaRede, 0, saidaRede.length);
 
          for(int j = 0; j < saidaRede.length; j++){
-            perda += Math.pow((dadosSaida[j] - saidaRede[j]), 2);
+            double d = dadosSaida[j] - saidaRede[j];
+            perda += (d * d);
          }
       }
 
