@@ -118,7 +118,7 @@ class TreinoLote{
          Camada camadaAnterior = redec[i-1];
 
          //não precisa e nem faz diferença calcular os gradientes dos bias
-         int nNeuronios = camadaAtual.quantidadeNeuronios();
+         int nNeuronios = camadaAtual.quantidadeNeuroniosTotal();
          nNeuronios -= (camadaAtual.temBias()) ? 1 : 0;
          for(int j = 0; j < nNeuronios; j++){//percorrer neurônios da camada atual
             
@@ -139,7 +139,7 @@ class TreinoLote{
       for(int i = 1; i < redec.length; i++){ 
          
          Camada camadaAtual = redec[i];
-         int nNeuronios = camadaAtual.quantidadeNeuronios();
+         int nNeuronios = camadaAtual.quantidadeNeuroniosTotal();
          nNeuronios -= (camadaAtual.temBias()) ? 1 : 0;
          for(int j = 0; j < nNeuronios; j++){//percorrer neurônios da camada atual
             

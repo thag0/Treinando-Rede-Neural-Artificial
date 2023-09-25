@@ -8,7 +8,7 @@ public class ErroMedioAbsoluto extends Perda{
    public double calcular(RedeNeural rede, double[][] entrada, double[][] saida){
       double[] dadosEntrada = new double[entrada[0].length];
       double[] dadosSaida = new double[saida[0].length];
-      double[] saidaRede = new double[rede.obterCamadaSaida().quantidadeNeuroniosSemBias()];
+      double[] saidaRede = new double[rede.obterCamadaSaida().quantidadeNeuronios()];
 
       int amostras = entrada.length;
       double perda = 0;

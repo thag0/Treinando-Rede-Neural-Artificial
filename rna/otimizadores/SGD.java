@@ -30,7 +30,7 @@ public class SGD extends Otimizador{
    /**
     * Coeficientes de momentum.
     */
-   private double[] m;
+   public double[] m;
 
    /**
     * Inicializa uma nova instância de otimizador <strong> Stochastic Gradient Descent (SGD) </strong> 
@@ -118,7 +118,7 @@ public class SGD extends Otimizador{
       int indice = 0;
       for(int i = 1; i < redec.length; i++){
 
-         int nNeuronios = redec[i].quantidadeNeuroniosSemBias();
+         int nNeuronios = redec[i].quantidadeNeuronios();
          for(int j = 0; j < nNeuronios; j++){
             
             neuronio = redec[i].neuronio(j);

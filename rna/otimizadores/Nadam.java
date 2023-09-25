@@ -152,7 +152,7 @@ public class Nadam extends Otimizador{
       for(int i = 1; i < redec.length; i++){
          
          Camada camada = redec[i];
-         int nNeuronios = camada.quantidadeNeuroniosSemBias();
+         int nNeuronios = camada.quantidadeNeuronios();
          for(int j = 0; j < nNeuronios; j++){
 
             neuronio = camada.neuronio(j);

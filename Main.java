@@ -181,7 +181,7 @@ class Main{
 
             janela.desenhar(rede);
 
-            for(int i = 0; i < rede.obterCamadaSaida().quantidadeNeuronios(); i++){
+            for(int i = 0; i < rede.obterCamadaSaida().quantidadeNeuroniosTotal(); i++){
                System.out.print("[" + rede.obterCamadaSaida().neuronio(i).saida + "]");
             } 
             System.out.println();
@@ -196,10 +196,10 @@ class Main{
 
 
    public static void compararSaidaRede(RedeNeural rede, double[][] dadosEntrada, double[][] dadosSaida, String texto){
-      int nEntrada = rede.obterCamadaEntrada().quantidadeNeuronios();
+      int nEntrada = rede.obterCamadaEntrada().quantidadeNeuroniosTotal();
       nEntrada -= (rede.obterCamadaEntrada().temBias()) ? 1 : 0;
 
-      int nSaida = rede.obterCamadaSaida().quantidadeNeuronios();
+      int nSaida = rede.obterCamadaSaida().quantidadeNeuroniosTotal();
 
       double[] entrada_rede = new double[nEntrada];
       double[] saida_rede = new double[nSaida];

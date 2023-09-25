@@ -134,7 +134,7 @@ public class Serializador{
          for(int i = 0; i < numOcultas; i++){
 
             Camada camada = rede.obterCamadaOculta(i);
-            for(int j = 0; j < camada.quantidadeNeuroniosSemBias(); j++){
+            for(int j = 0; j < camada.quantidadeNeuronios(); j++){
 
                Neuronio neuronio = camada.neuronio(j);
                for(int k = 0; k < neuronio.numConexoes(); k++){
@@ -162,7 +162,7 @@ public class Serializador{
          }
 
          //pesos da saída
-         for(int i = 0; i < rede.obterCamadaSaida().quantidadeNeuronios(); i++){
+         for(int i = 0; i < rede.obterCamadaSaida().quantidadeNeuroniosTotal(); i++){
             Neuronio neuronio = rede.obterCamadaSaida().neuronio(i);
             for(int j = 0; j < neuronio.numConexoes(); j++){
                double peso = neuronio.pesos[j];
@@ -253,7 +253,7 @@ public class Serializador{
          for(int i = 0; i < rede.obterQuantidadeOcultas(); i++){
 
             Camada camada = rede.obterCamadaOculta(i);
-            for(int j = 0; j < camada.quantidadeNeuroniosSemBias(); j++){
+            for(int j = 0; j < camada.quantidadeNeuronios(); j++){
                
                Neuronio neuronio = camada.neuronio(j);
                for(int k = 0; k < neuronio.numConexoes(); k++){
@@ -263,7 +263,7 @@ public class Serializador{
          }
 
          //camada de saída
-         for(int i = 0; i < rede.obterCamadaSaida().quantidadeNeuronios(); i++){
+         for(int i = 0; i < rede.obterCamadaSaida().quantidadeNeuroniosTotal(); i++){
             
             Neuronio neuronio = rede.obterCamadaSaida().neuronio(i);
             for(int j = 0; j < neuronio.numConexoes(); j++){

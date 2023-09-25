@@ -272,19 +272,19 @@ public class Camada{
    }
 
    /**
-    * Retorna o valor da quantidade de neurônios da camada, {@code incluindo bias}.
-    * @return quantidade de neurônios totais presentes na camada.
-    */
-   public int quantidadeNeuronios(){
-      return this.neuronios.length;
-   }
-
-   /**
     * Retorna o valor da quantidade de neurônios da camada, {@code excluindo bias}.
     * @return quantidade de neurônios presentes na camada.
     */
-   public int quantidadeNeuroniosSemBias(){
+   public int quantidadeNeuronios(){
       return this.neuronios.length-b;
+   }
+
+   /**
+    * Retorna o valor da quantidade de neurônios da camada, {@code incluindo bias}.
+    * @return quantidade de neurônios totais presentes na camada.
+    */
+   public int quantidadeNeuroniosTotal(){
+      return this.neuronios.length;
    }
 
    /**

@@ -59,9 +59,9 @@ public class RedeNeural implements Cloneable{
 
    /**
     * Constante auxiliar que ajuda no controle do bias atuando como neurônio 
-    * adicional para cálculos.
+    * adicional nas camadas.
     */
-   private int BIAS = 1;
+   private boolean bias = true;
 
    /**
     * Valor máximo e mínimo na hora de aleatorizar os pesos da rede neural.
@@ -139,7 +139,9 @@ public class RedeNeural implements Cloneable{
       this.arquitetura = new int[1 + quantidadeOcultas + 1];
 
       this.arquitetura[0] = arquitetura[0];
-      for(int i = 0; i < quantidadeOcultas; i++) this.arquitetura[i+1] = arquitetura[i+1];
+      for(int i = 0; i < quantidadeOcultas; i++){
+         this.arquitetura[i+1] = arquitetura[i+1];
+      }
       this.arquitetura[this.arquitetura.length-1] = arquitetura[arquitetura.length-1];
    }
 
@@ -194,7 +196,9 @@ public class RedeNeural implements Cloneable{
     * @throws IllegalArgumentException se o novo nome for inválido.
     */
    public void configurarNome(String nome){
-      if(nome == null) throw new IllegalArgumentException("O novo nome da rede neural não pode ser nulo.");
+      if(nome == null){
+         throw new IllegalArgumentException("O novo nome da rede neural não pode ser nulo.");
+      }
       if(nome.isBlank() || nome.isEmpty()){
          throw new IllegalArgumentException("O novo nome da rede neural não pode estar vazio.");
       }
@@ -216,7 +220,7 @@ public class RedeNeural implements Cloneable{
     */
    public void configurarAlcancePesos(double alcance){
       if(alcance <= 0){
-         throw new IllegalArgumentException("Os novos valores de alcance dos pesos não podem ser menores ou iguais a zero.");
+         throw new IllegalArgumentException("O novo valor de alcance dos pesos deve ser maior que zero.");
       }
       this.alcancePeso = alcance;
    }
@@ -230,7 +234,7 @@ public class RedeNeural implements Cloneable{
     * @param usarBias novo valor para o uso do bias.
     */
    public void configurarBias(boolean usarBias){
-      this.BIAS = (usarBias) ? 1 : 0;
+      this.bias = usarBias;
    }
 
    /**
@@ -484,10 +488,16 @@ public class RedeNeural implements Cloneable{
     *    dados necessários. Após a predição pode-se obter o resultado da rede por meio da função 
     *    {@code obterSaidas()};
     * </p>
-    * Os valores de otimizador e inicializador serão definidos como os padrões {@code SGD} e {@code Aleatorio}.
+    * Os valores de otimizador e inicializador serão definidos como os padrões {@code SGD} e {@code Aleatorio}. 
+    * O valor do otimizador será definido como o padrão caso não tenha sido configurado previamente.
     */
    public void compilar(){
-      this.compilar(new SGD(), new Aleatorio());
+      if(this.otimizadorAtual == null){
+         this.compilar(new SGD(), new Aleatorio());
+      
+      }else{
+         compilar(otimizadorAtual);
+      }
    }
 
    /**
@@ -536,11 +546,8 @@ public class RedeNeural implements Cloneable{
       //adicionando bias como neuronio adicional nas camadas
       //não adicionar na camada de saída
       for(int i = 0; i < this.arquitetura.length-1; i++){
-         this.arquitetura[i] += BIAS;
+         this.arquitetura[i] += (this.bias) ? 1 : 0;
       }
-
-      //passar as informações do bias paras as camadas
-      boolean temBias = (this.BIAS == 1) ? true : false;
 
       //identificar cada camada dentro da rede.
       int idCamada = 0;
@@ -552,7 +559,7 @@ public class RedeNeural implements Cloneable{
       Inicializador ini = inicializador;
       
       //inicializar camada de entrada
-      this.entrada = new Camada(temBias);
+      this.entrada = new Camada(this.bias);
       this.entrada.inicializar(this.arquitetura[0], 0, alcancePeso, ini);
       this.entrada.configurarId(idCamada);
       idCamada++;
@@ -561,7 +568,7 @@ public class RedeNeural implements Cloneable{
       int quantidadeOcultas = this.arquitetura.length-2;
       this.ocultas = new Camada[quantidadeOcultas];
       for(int i = 0; i < this.ocultas.length; i++){
-         Camada novaOculta = new Camada(temBias);
+         Camada novaOculta = new Camada(this.bias);
 
          if(i == 0) novaOculta.inicializar(this.arquitetura[i+1], this.arquitetura[0], alcancePeso, ini);
          else novaOculta.inicializar(this.arquitetura[i+1], this.arquitetura[i], alcancePeso, ini);
@@ -617,18 +624,24 @@ public class RedeNeural implements Cloneable{
     * @param saida conjunto de dados de saída.
     */
    private void consistenciaDados(double[][] entrada, double[][] saida){
-      int nEntrada = this.entrada.quantidadeNeuroniosSemBias();
-      int nSaida = this.obterCamadaSaida().quantidadeNeuronios();
+      int nEntrada = this.entrada.quantidadeNeuronios();
+      int nSaida = this.obterCamadaSaida().quantidadeNeuroniosTotal();
 
       if(entrada.length != saida.length){
-         throw new IllegalArgumentException("A quantidade de linhas de dados e saídas são diferentes.");
+         throw new IllegalArgumentException(
+            "Quantidade de linhas de dados de entrada (" + entrada.length + ") e saída (" + saida.length + ") devem ser iguais."
+         );
       }
       if(nEntrada != entrada[0].length){
-         throw new IllegalArgumentException("Incompatibilidade entre os dados de entrada e os neurônios de entrada da rede.");
+         throw new IllegalArgumentException(
+            "Dimensões dos dados de entrada (" + entrada[0].length + ") e quantidade de neurônios de entrada da rede (" + nEntrada + ") incompatíveis."
+         );
       }
       if(nSaida != saida[0].length){
-         throw new IllegalArgumentException("Incompatibilidade entre os dados de saída e os neurônios de saída da rede.");
-      }      
+         throw new IllegalArgumentException(
+            "Dados de saída (" + saida[0].length + ") e neurônios de saída da rede (" + nEntrada + ") incompatíveis."
+         );
+      }
    }
 
    /**
@@ -645,9 +658,11 @@ public class RedeNeural implements Cloneable{
    public void calcularSaida(double[] entradas){
       this.modeloCompilado();
       
-      int nEntrada = this.entrada.quantidadeNeuroniosSemBias();
+      int nEntrada = this.entrada.quantidadeNeuronios();
       if(entradas.length != nEntrada){
-         throw new IllegalArgumentException("As dimensões dos dados de entrada com os neurônios de entrada da rede não são iguais.");
+         throw new IllegalArgumentException(
+            "Dimensões dos dados de entrada (" + entradas.length + ") e quantidade de neurônios de entrada da rede (" + nEntrada + ") incompatíveis."
+         );
       }
 
       //carregar dados na camada de entrada
@@ -686,29 +701,30 @@ public class RedeNeural implements Cloneable{
       int cols = entradas[0].length;
       for(int i = 1; i < entradas.length; i++){
          if(entradas[i].length != cols){
-            throw new IllegalArgumentException("As dimensões dos dados de entrada são diferentes.");
+            throw new IllegalArgumentException("As dimensões dos dados de entrada possuem tamanhos diferentes.");
          }
       }
 
-      int nEntrada = this.entrada.quantidadeNeuronios() - (this.entrada.temBias() ? 1 : 0);
+      int nEntrada = this.entrada.quantidadeNeuronios();
       if(entradas[0].length != nEntrada){
-         throw new IllegalArgumentException("As dimensões dos dados de entrada com os neurônios de entrada da rede não são iguais.");
+         throw new IllegalArgumentException(
+            "Dimensões dos dados de entrada (" + entradas.length + ") e quantidade de neurônios de entrada da rede (" + nEntrada + ") incompatíveis."
+         );
       }
 
       //dimensões dos dados
       int nAmostras = entradas.length;
-      int nSaidas = this.saida.quantidadeNeuronios();
+      int nSaidas = this.saida.quantidadeNeuroniosTotal();
 
       double[][] resultados = new double[nAmostras][nSaidas];
       double[] entradaRede = new double[entradas[0].length];
       double[] saidaRede = new double[nSaidas];
 
-      for(int i = 0; i < nAmostras; i++){//iterar pelos dados de entrada
+      for(int i = 0; i < nAmostras; i++){
          System.arraycopy(entradas[i], 0, entradaRede, 0, entradas[i].length);
          
          this.calcularSaida(entradaRede);
-         saidaRede = this.obterSaidas();
-
+         System.arraycopy(this.obterSaidas(), 0, saidaRede, 0, saidaRede.length);
          System.arraycopy(saidaRede, 0, resultados[i], 0, saidaRede.length);
       }
 
@@ -833,7 +849,7 @@ public class RedeNeural implements Cloneable{
 
          double valorAnterior = 0;
          for(int i = 0; i < camadasR.length; i++){//percorrer camadas da rede
-            for(int j = 0; j < camadasR[i].quantidadeNeuronios(); j++){//percorrer neuronios da camada
+            for(int j = 0; j < camadasR[i].quantidadeNeuroniosTotal(); j++){//percorrer neuronios da camada
                for(int k = 0; k < camadasR[i].neuronio(j).pesos.length; k++){//percorrer pesos do neuronio
                   valorAnterior = camadasR[i].neuronio(j).pesos[k];
                   camadasR[i].neuronio(j).pesos[k] += eps;
@@ -845,7 +861,7 @@ public class RedeNeural implements Cloneable{
 
          //atualizar pesos
          for(int i = 0; i < camadasR.length; i++){
-            for(int j = 0; j < camadasR[i].quantidadeNeuronios(); j++){
+            for(int j = 0; j < camadasR[i].quantidadeNeuroniosTotal(); j++){
                for(int k = 0; k < camadasR[i].neuronio(j).pesos.length; k++){
                   camadasR[i].neuronio(j).pesos[k] -= taxaAprendizagem * camadasG[i].neuronio(j).pesos[k];
                }
@@ -895,7 +911,9 @@ public class RedeNeural implements Cloneable{
    public Camada obterCamadaOculta(int indice){
       this.modeloCompilado();
       if((indice < 0) || (indice > this.ocultas.length-1)){
-         throw new IllegalArgumentException("O índice fornecido está fora do alcance das camadas disponíveis");
+         throw new IllegalArgumentException(
+            "O índice fornecido (" + indice + ") está é inválido ou fora de alcance."
+         );
       }
    
       return this.ocultas[indice];
@@ -923,7 +941,7 @@ public class RedeNeural implements Cloneable{
    public double[] obterSaidas(){
       this.modeloCompilado();
 
-      double saida[] = new double[this.saida.quantidadeNeuronios()];
+      double saida[] = new double[this.saida.quantidadeNeuroniosTotal()];
       for(int i = 0; i < saida.length; i++){
          saida[i] = this.saida.neuronio(i).saida;
       }
@@ -983,8 +1001,12 @@ public class RedeNeural implements Cloneable{
       return numConexoes;
    }
 
+   /**
+    * Retorna o valor de uso do bias da Rede Neural.
+    * @return valor de uso do bias da Rede Neural.
+    */
    public boolean temBias(){
-      return (this.BIAS == 1) ? true : false;
+      return this.bias;
    }
 
    /**
@@ -1021,8 +1043,7 @@ public class RedeNeural implements Cloneable{
       buffer += this.otimizadorAtual.info();
 
       //bias
-      buffer += "\n" + espacamento + "Bias = ";
-      buffer += (this.BIAS == 1) ? "true" : "false";
+      buffer += "\n" + espacamento + "Bias = " + this.bias;
       buffer += "\n\n";
 
       for(int i = 0; i < this.ocultas.length; i++){
@@ -1053,7 +1074,7 @@ public class RedeNeural implements Cloneable{
          RedeNeural clone = (RedeNeural) super.clone();
 
          //dados importantes
-         clone.BIAS = this.BIAS;
+         clone.bias = this.bias;
          clone.arquitetura = this.arquitetura;
 
          //entrada
@@ -1082,10 +1103,10 @@ public class RedeNeural implements Cloneable{
     */
    private Camada cloneCamada(Camada camada){
       Camada clone = new Camada(camada.temBias());
-      clone.neuronios = new Neuronio[camada.quantidadeNeuronios()];
+      clone.neuronios = new Neuronio[camada.quantidadeNeuroniosTotal()];
       clone.ativacao = camada.ativacao;
 
-      for(int i = 0; i < camada.quantidadeNeuronios(); i++){
+      for(int i = 0; i < camada.quantidadeNeuroniosTotal(); i++){
          clone.neuronios[i] = cloneNeuronio(camada.neuronio(i));
       }
 
@@ -1124,11 +1145,11 @@ public class RedeNeural implements Cloneable{
       for(int i = 0; i < this.ocultas.length; i++){
 
          buffer += espacamento + "Camada oculta " + i + " = [\n";
-         for(int j = 0; j < this.ocultas[i].quantidadeNeuronios()-BIAS; j++){
+         for(int j = 0; j < this.ocultas[i].quantidadeNeuronios(); j++){
             
             buffer += espacamentoDuplo + "n" + j + " = [\n";
             for(int k = 0; k < this.ocultas[i].neuronio(j).pesos.length; k++){
-               if(k == this.ocultas[i].neuronio(j).pesos.length-1 && (this.BIAS == 1)){
+               if(k == this.ocultas[i].neuronio(j).pesos.length-1 && this.bias){
                   buffer += espacamentoTriplo + "pb" + " = " + this.ocultas[i].neuronio(j).pesos[k] + "\n";
                
                }else{
@@ -1144,11 +1165,11 @@ public class RedeNeural implements Cloneable{
 
       //saida
       buffer += espacamento + "Camada saída = [\n";
-      for(int i = 0; i < this.saida.quantidadeNeuronios(); i++){
+      for(int i = 0; i < this.saida.quantidadeNeuroniosTotal(); i++){
 
          buffer += espacamentoDuplo + "n" + i + " = [\n";
          for(int j = 0; j < this.saida.neuronio(i).pesos.length; j++){
-            if(j == this.saida.neuronio(i).pesos.length-1 && (this.BIAS == 1)){
+            if(j == this.saida.neuronio(i).pesos.length-1 && this.bias){
                buffer += espacamentoTriplo + "pb" + " = " + this.saida.neuronio(i).pesos[j] + "\n";
             
             }else buffer += espacamentoTriplo + "p" + j + " = " + this.saida.neuronio(i).pesos[j] + "\n";

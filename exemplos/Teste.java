@@ -5,6 +5,7 @@ import java.util.List;
 
 import rna.estrutura.RedeNeural;
 import rna.inicializadores.Inicializador;
+import rna.otimizadores.SGD;
 import utilitarios.ged.Ged;
 
 @SuppressWarnings("unused")

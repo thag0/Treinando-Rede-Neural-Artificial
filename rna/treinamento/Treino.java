@@ -108,7 +108,7 @@ class Treino{
       //percorrer rede, excluindo camada de entrada
       for(int i = 1; i < redec.length; i++){ 
          
-         int nNeuronios = redec[i].quantidadeNeuroniosSemBias();
+         int nNeuronios = redec[i].quantidadeNeuronios();
          for(int j = 0; j < nNeuronios; j++){
             redec[i].neuronio(j).calcularGradiente();
          }

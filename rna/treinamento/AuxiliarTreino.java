@@ -63,13 +63,13 @@ class AuxiliarTreino{
       
       if(saida.temArgmax()){//classificação binária
          int indiceMaior = indiceMaiorValor(saidas);
-         for(int i = 0; i < saida.quantidadeNeuronios(); i++){
+         for(int i = 0; i < saida.quantidadeNeuroniosTotal(); i++){
             neuronio = saida.neuronio(i);
             neuronio.erro = (i == indiceMaior) ? 1-neuronio.saida : 0-neuronio.saida;
          }
 
       }else{// regressão (e softmax)
-         for(int i = 0; i < saida.quantidadeNeuronios(); i++){
+         for(int i = 0; i < saida.quantidadeNeuroniosTotal(); i++){
             neuronio = saida.neuronio(i);
             neuronio.erro = saidas[i] - neuronio.saida;
          }
@@ -111,12 +111,12 @@ class AuxiliarTreino{
       for(int i = redec.length-2; i >= 1; i--){
          
          camadaAtual = redec[i];
-         numAtual = camadaAtual.quantidadeNeuroniosSemBias();
+         numAtual = camadaAtual.quantidadeNeuronios();
          camadaAtual.ativacaoDerivada();
          for (int j = 0; j < numAtual; j++){
 
             camadaProxima = redec[i+1];
-            numProxima = camadaProxima.quantidadeNeuroniosSemBias(); 
+            numProxima = camadaProxima.quantidadeNeuronios(); 
 
             // percorrer neurônios da camada seguinte
             double somaErros = 0.0;
@@ -210,7 +210,7 @@ class AuxiliarTreino{
       for(int i = 1; i < redec.length; i++){ 
          
          Camada camadaAtual = redec[i];
-         int nNeuronios = camadaAtual.quantidadeNeuroniosSemBias();
+         int nNeuronios = camadaAtual.quantidadeNeuronios();
          for(int j = 0; j < nNeuronios; j++){//percorrer neurônios da camada atual
             
             Neuronio neuronio = camadaAtual.neuronio(j);

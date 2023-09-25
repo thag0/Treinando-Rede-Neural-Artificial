@@ -40,7 +40,7 @@ public class Lion extends Otimizador{
       int indice = 0;
       for(int i = 1; i < redec.length; i++){
          
-         int nNeuronios = redec[i].quantidadeNeuroniosSemBias();
+         int nNeuronios = redec[i].quantidadeNeuronios();
          for(int j = 0; j < nNeuronios; j++){   
             
             neuronio = redec[i].neuronio(j);
