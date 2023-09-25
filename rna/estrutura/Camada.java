@@ -137,20 +137,18 @@ public class Camada implements Cloneable{
     * @param anterior camada anterior que contém os valores de saída dos neurônios.
     */
    public void ativarNeuronios(double[] entrada){
-      int nNeuronios = this.neuronios.length;
-      
       // preencher entradas dos neuronios
       // esse método de cópia é mais eficiente do que
       // criar um array intermediário e usar o system.arraycopy
       // nas entradas dos neurônios
-      for(int i = 0; i < nNeuronios; i++){
+      for(int i = 0; i < this.neuronios.length; i++){
          for(int j = 0; j < this.neuronios[i].tamanhoEntrada(); j++){
             this.neuronios[i].entradas[j] = entrada[j];
          }
          this.neuronios[i].somatorio();
       }
 
-      this.ativacao.ativar(this.neuronios, nNeuronios);
+      this.ativacao.ativar(this.neuronios, this.neuronios.length);
    }
 
    /**
@@ -167,21 +165,18 @@ public class Camada implements Cloneable{
     * @param anterior camada anterior que contém os valores de saída dos neurônios.
     */
    public void ativarNeuronios(Camada anterior){
-      //desconsiderar bias
-      int nNeuronios = this.neuronios.length;
-      
       // preencher entradas dos neuronios
       // esse método de cópia é mais eficiente do que
       // criar um array intermediário e usar o system.arraycopy
       // nas entradas dos neurônios
-      for(int i = 0; i < nNeuronios; i++){
+      for(int i = 0; i < this.neuronios.length; i++){
          for(int j = 0; j < this.neuronios[i].tamanhoEntrada(); j++){
             this.neuronios[i].entradas[j] = anterior.neuronios[j].saida;
          }
          this.neuronios[i].somatorio();
       }
 
-      this.ativacao.ativar(this.neuronios, nNeuronios);
+      this.ativacao.ativar(this.neuronios, this.neuronios.length);
    }
 
    /**
@@ -373,10 +368,14 @@ public class Camada implements Cloneable{
       return buffer;
    }
 
+   /**
+    * Clona a instância da camada, criando um novo objeto com as mesmas características
+    * mas em outro espaço de memória.
+    * @return clone da camada.
+    */
    @Override
    public Camada clone(){
       try{
-         // Camada clone = new Camada(this.temBias());
          Camada clone = (Camada) super.clone();
 
          clone.argmax = this.argmax;

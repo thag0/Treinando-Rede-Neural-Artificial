@@ -91,7 +91,11 @@ public class Neuronio implements Cloneable{
     */
    public double[] gradienteAcumulado;
 
-   public boolean bias = true;
+   /**
+    * Constante auxiliar que ajuda no controle do bias atuando como
+    * entrada e pesos adicionais para o neurônio;
+    */
+   private boolean bias = true;
 
    /**
     * Instancia um neurônio individual da rede.
@@ -109,9 +113,7 @@ public class Neuronio implements Cloneable{
       this.entradas = new double[ligacoes];
       this.gradiente = new double[ligacoes];
       this.gradienteAcumulado = new double[ligacoes];
-   
-      //considerar que pode ter bias aplicado ao modelo
-      //a saída do bias é sempre 1.
+
       this.saida = 0;
       this.erro = 0;
 
@@ -232,10 +234,14 @@ public class Neuronio implements Cloneable{
       return buffer;
    }
 
+   /**
+    * Clona a instância do neurônio, criando um novo objeto com as mesmas características
+    * mas em outro espaço de memória.
+    * @return clone do neurônio.
+    */
    @Override
    public Neuronio clone(){
       try{
-         // Neuronio clone = new Neuronio(this.tamanhoEntrada(), this.bias);
          Neuronio clone = (Neuronio) super.clone();
          clone.bias = this.bias;
 
