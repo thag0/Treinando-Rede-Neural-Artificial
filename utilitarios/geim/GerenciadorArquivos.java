@@ -71,15 +71,12 @@ class GerenciadorArquivos{
    public void exportarImagemEscalaCinza(GerenciadorDadosImagem gdi, BufferedImage imagem, RedeNeural rede, float escala, String caminho){
       if(imagem == null) throw new IllegalArgumentException("A imagem fornecida é nula.");
       if(escala <= 0) throw new IllegalArgumentException("O valor de escala não pode ser menor que 1.");
-      if(rede.obterCamadaSaida().quantidadeNeuroniosTotal() != 1){
+      if(rede.obterTamanhoSaida() != 1){
          throw new IllegalArgumentException("A rede deve trabalhar apenas com um neurônio na camada de saída para a escala de cinza.");
       }
 
-      int nEntrada = rede.obterCamadaEntrada().quantidadeNeuroniosTotal();
-      nEntrada -= (rede.obterCamadaEntrada().temBias()) ? 1 : 0;
-
-      double[] entradaRede = new double[nEntrada];
-      double[] saidaRede = new double[rede.obterCamadaSaida().quantidadeNeuroniosTotal()];
+      double[] entradaRede = new double[rede.obterTamanhoEntrada()];
+      double[] saidaRede = new double[rede.obterTamanhoSaida()];
       int larguraFinal = (int)(imagem.getWidth() * escala);
       int alturaFinal = (int)(imagem.getHeight() * escala);
 
@@ -108,16 +105,12 @@ class GerenciadorArquivos{
    public void exportarImagemRGB(GerenciadorDadosImagem gdi, BufferedImage imagem, RedeNeural rede, float escala, String caminho){
       if(imagem == null) throw new IllegalArgumentException("A imagem fornecida é nula.");
       if(escala <= 0) throw new IllegalArgumentException("O valor de escala não pode ser menor que 1.");
-      if(rede.obterCamadaSaida().quantidadeNeuroniosTotal() != 3){
+      if(rede.obterTamanhoSaida() != 3){
          throw new IllegalArgumentException("A rede deve trabalhar apenas com três neurônios na saída para RGB.");
       }
 
-      //quantidade de neuronios de entrada
-      int nEntrada = rede.obterCamadaEntrada().quantidadeNeuroniosTotal();
-      nEntrada -= (rede.obterCamadaEntrada().temBias()) ? 1 : 0;
-
-      double[] entradaRede = new double[nEntrada];
-      double[] saidaRede = new double[rede.obterCamadaSaida().quantidadeNeuroniosTotal()];
+      double[] entradaRede = new double[rede.obterTamanhoEntrada()];
+      double[] saidaRede = new double[rede.obterTamanhoSaida()];
 
       //estrutura de dados da imagem
       int larguraFinal = (int)(imagem.getWidth() * escala);

@@ -26,6 +26,6 @@ public class ExemploVariosPredicts{
       ged.imprimirMatriz(saida, "Saídas esperadas");
       ged.imprimirMatriz(previsoes, "Saídas previstas");
 
-      System.out.println("Custo = " + rede.avaliador.erroMedioQuadrado(entrada, saida));
+      System.out.println("Perda = " + rede.avaliador.erroMedioQuadrado(entrada, saida));
    }
 }

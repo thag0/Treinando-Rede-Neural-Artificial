@@ -58,7 +58,7 @@ class Treino{
       }
 
       //transformar a rede numa lista de camadas pra facilitar minha vida
-      Camada[] redec = aux.redeParaCamadas(rede);
+      Camada[] redec = rede.obterCamadas();
 
       for(int i = 0; i < epochs; i++){
          //aplicar gradiente estocástico
@@ -105,8 +105,7 @@ class Treino{
     * @param redec Rede Neural em formato de lista de camadas.
     */
    private void calcularGradientes(Camada[] redec){
-      //percorrer rede, excluindo camada de entrada
-      for(int i = 1; i < redec.length; i++){ 
+      for(int i = 0; i < redec.length; i++){ 
          
          int nNeuronios = redec[i].quantidadeNeuronios();
          for(int j = 0; j < nNeuronios; j++){

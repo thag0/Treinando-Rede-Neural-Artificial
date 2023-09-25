@@ -4,7 +4,6 @@ import java.util.Random;
 
 import rna.estrutura.Camada;
 import rna.estrutura.Neuronio;
-import rna.estrutura.RedeNeural;
 
 /**
  * Operadores auxiliares para o treino da rede neural;
@@ -14,25 +13,6 @@ class AuxiliarTreino{
 
    public AuxiliarTreino(){
 
-   }
-
-   /**
-    * Serializa a rede no formato de lista de camadas pra facilitar (a minha vida)
-    * o manuseio e generalização das operações.
-    * @param rede Rede Neural
-    * @return array de camadas da rede neural.
-    */
-   Camada[] redeParaCamadas(RedeNeural rede){
-      int[] arq = rede.obterArquitetura();
-      Camada[] redec = new Camada[arq.length];
-
-      redec[0] = rede.obterCamadaEntrada();
-      for(int i = 0; i < rede.obterQuantidadeOcultas(); i++){
-         redec[i+1] = rede.obterCamadaOculta(i);
-      }
-      redec[arq.length-1] = rede.obterCamadaSaida();
-
-      return redec;
    }
 
    /**
@@ -63,13 +43,13 @@ class AuxiliarTreino{
       
       if(saida.temArgmax()){//classificação binária
          int indiceMaior = indiceMaiorValor(saidas);
-         for(int i = 0; i < saida.quantidadeNeuroniosTotal(); i++){
+         for(int i = 0; i < saida.quantidadeNeuronios(); i++){
             neuronio = saida.neuronio(i);
             neuronio.erro = (i == indiceMaior) ? 1-neuronio.saida : 0-neuronio.saida;
          }
 
       }else{// regressão (e softmax)
-         for(int i = 0; i < saida.quantidadeNeuroniosTotal(); i++){
+         for(int i = 0; i < saida.quantidadeNeuronios(); i++){
             neuronio = saida.neuronio(i);
             neuronio.erro = saidas[i] - neuronio.saida;
          }
@@ -108,12 +88,12 @@ class AuxiliarTreino{
 
       // começar da ultima oculta
       // percorrer camadas ocultas de trás pra frente
-      for(int i = redec.length-2; i >= 1; i--){
+      for(int i = redec.length-2; i >= 0; i--){
          
          camadaAtual = redec[i];
          numAtual = camadaAtual.quantidadeNeuronios();
          camadaAtual.ativacaoDerivada();
-         for (int j = 0; j < numAtual; j++){
+         for(int j = 0; j < numAtual; j++){
 
             camadaProxima = redec[i+1];
             numProxima = camadaProxima.quantidadeNeuronios(); 
@@ -207,7 +187,7 @@ class AuxiliarTreino{
     * @param redec Rede Neural em formato de array de camadas.
     */
    void zerarGradientesAcumulados(Camada[] redec){
-      for(int i = 1; i < redec.length; i++){ 
+      for(int i = 0; i < redec.length; i++){ 
          
          Camada camadaAtual = redec[i];
          int nNeuronios = camadaAtual.quantidadeNeuronios();

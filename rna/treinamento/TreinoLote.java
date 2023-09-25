@@ -53,7 +53,7 @@ class TreinoLote{
     * @param tamLote tamanho do lote.
     */
    public void treino(RedeNeural rede, Otimizador otimizador, double[][] entradas, double[][] saidas, int epochs, int tamLote){
-      Camada[] redec = aux.redeParaCamadas(rede);
+      Camada[] redec = rede.obterCamadas();
 
       boolean embaralhar = true;
       if(otimizador instanceof GD || otimizador instanceof GDM){
@@ -118,8 +118,7 @@ class TreinoLote{
          Camada camadaAnterior = redec[i-1];
 
          //não precisa e nem faz diferença calcular os gradientes dos bias
-         int nNeuronios = camadaAtual.quantidadeNeuroniosTotal();
-         nNeuronios -= (camadaAtual.temBias()) ? 1 : 0;
+         int nNeuronios = camadaAtual.quantidadeNeuronios();
          for(int j = 0; j < nNeuronios; j++){//percorrer neurônios da camada atual
             
             Neuronio neuronio = camadaAtual.neuronio(j);
@@ -139,8 +138,7 @@ class TreinoLote{
       for(int i = 1; i < redec.length; i++){ 
          
          Camada camadaAtual = redec[i];
-         int nNeuronios = camadaAtual.quantidadeNeuroniosTotal();
-         nNeuronios -= (camadaAtual.temBias()) ? 1 : 0;
+         int nNeuronios = camadaAtual.quantidadeNeuronios();
          for(int j = 0; j < nNeuronios; j++){//percorrer neurônios da camada atual
             
             Neuronio neuronio = camadaAtual.neuronio(j);

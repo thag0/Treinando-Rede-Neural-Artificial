@@ -149,7 +149,7 @@ public class Nadam extends Otimizador{
       
       //percorrer rede, com exceção da camada de entrada
       int indice = 0;
-      for(int i = 1; i < redec.length; i++){
+      for(int i = 0; i < redec.length; i++){
          
          Camada camada = redec[i];
          int nNeuronios = camada.quantidadeNeuronios();

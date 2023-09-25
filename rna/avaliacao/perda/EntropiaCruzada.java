@@ -8,7 +8,7 @@ public class EntropiaCruzada extends Perda{
    public double calcular(RedeNeural rede, double[][] entrada, double[][] saida){  
       double[] dadosEntrada = new double[entrada[0].length];
       double[] dadosSaida = new double[saida[0].length];
-      double[] saidaRede = new double[rede.obterCamadaSaida().quantidadeNeuroniosTotal()];
+      double[] saidaRede = new double[rede.obterCamadaSaida().quantidadeNeuronios()];
   
       double perda = 0.0;
       double epsilon = 1e-10;//evitar log 0

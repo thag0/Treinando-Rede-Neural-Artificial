@@ -18,7 +18,7 @@ import rna.inicializadores.Xavier;
  * de seus pesos multiplicados pelas entradas. Métodos de funções de ativação
  * e treino do neurônio se encontram em outros componentes da Rede Neural.
  */
-public class Neuronio{
+public class Neuronio implements Cloneable{
 
    /**
     * Array que representa às saídas dos neurônios da camada anterior.
@@ -91,6 +91,8 @@ public class Neuronio{
     */
    public double[] gradienteAcumulado;
 
+   public boolean bias = true;
+
    /**
     * Instancia um neurônio individual da rede.
     * <p>
@@ -99,16 +101,22 @@ public class Neuronio{
     * @param conexoes quantidade de conexões, deve estar relacionada com a quatidade de 
     * neurônios da camada anterior (incluindo bias, caso tenha).
     */
-   public Neuronio(int conexoes){
-      this.pesos = new double[conexoes];
-      this.entradas = new double[conexoes];
-      this.gradiente = new double[conexoes];
-      this.gradienteAcumulado = new double[conexoes];
+   public Neuronio(int conexoes, boolean bias){
+      this.bias = bias;
+      int ligacoes = conexoes + ((bias) ? 1 : 0);
+
+      this.pesos = new double[ligacoes];
+      this.entradas = new double[ligacoes];
+      this.gradiente = new double[ligacoes];
+      this.gradienteAcumulado = new double[ligacoes];
    
       //considerar que pode ter bias aplicado ao modelo
       //a saída do bias é sempre 1.
-      this.saida = 1;
+      this.saida = 0;
       this.erro = 0;
+
+      //entrada do bias
+      this.entradas[this.entradas.length-1] = 1;
    }
     
    /**
@@ -183,8 +191,7 @@ public class Neuronio{
     * </p>
     */
    public void calcularGradiente(){
-      int numPesos = this.pesos.length;
-      for(int i = 0; i < numPesos; i++){
+      for(int i = 0; i < this.pesos.length; i++){
          this.gradiente[i] = -this.erro * this.entradas[i];
       }
    }
@@ -195,6 +202,14 @@ public class Neuronio{
     */
    public int numConexoes(){
       return this.pesos.length;
+   }
+
+   /**
+    * Indica o tamanho de entrada do neurônio, excluindo o bias.
+    * @return
+    */
+   public int tamanhoEntrada(){
+      return this.entradas.length - ((bias) ? 1 : 0);
    }
 
    /**
@@ -215,5 +230,25 @@ public class Neuronio{
       buffer += "]\n";
 
       return buffer;
-   } 
+   }
+
+   @Override
+   public Neuronio clone(){
+      try{
+         // Neuronio clone = new Neuronio(this.tamanhoEntrada(), this.bias);
+         Neuronio clone = (Neuronio) super.clone();
+         clone.bias = this.bias;
+
+         clone.pesos = new double[this.pesos.length];
+         clone.entradas = new double[this.entradas.length];
+         for(int i = 0; i < this.pesos.length; i++){
+            clone.pesos[i] = this.pesos[i];
+            clone.entradas[i] = this.entradas[i];
+         }
+
+         return clone;
+      }catch(Exception e){
+         throw new RuntimeException(e);
+      }
+   }
 }

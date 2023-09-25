@@ -121,25 +121,19 @@ public class Serializador{
          writer.newLine();
 
          //funções de ativação
-         int numOcultas = rede.obterQuantidadeOcultas();
-         writer.write(rede.obterCamadaOculta(0).obterAtivacao().getClass().getSimpleName());
-         writer.write(" ");
-         for(int i = 1; i < numOcultas; i++){
-            writer.write(rede.obterCamadaOculta(i).obterAtivacao().getClass().getSimpleName() + " ");
+         Camada[] camadas = rede.obterCamadas();
+         for(int i = 0; i < camadas.length; i++){
+            writer.write(camadas[i].obterAtivacao().getClass().getSimpleName());
+            writer.write(" ");
          }
-         writer.write(rede.obterCamadaSaida().obterAtivacao().getClass().getSimpleName());
          writer.newLine();
 
-         //pesos das camadas ocultas
-         for(int i = 0; i < numOcultas; i++){
-
-            Camada camada = rede.obterCamadaOculta(i);
-            for(int j = 0; j < camada.quantidadeNeuronios(); j++){
-
-               Neuronio neuronio = camada.neuronio(j);
-               for(int k = 0; k < neuronio.numConexoes(); k++){
-                  double peso = neuronio.pesos[k];
-
+         //pesos dos neuronios
+         for(int i = 0; i < camadas.length; i++){
+            for(int j = 0; j < camadas[i].quantidadeNeuronios(); j++){
+               for(int k = 0; k < camadas[i].neuronio(j).numConexoes(); k++){
+                  double peso = camadas[i].neuronio(j).pesos[k];
+                  
                   if(tipo.equals(Double.TYPE)){
                      writer.write(Double.toString(peso));
                   
@@ -158,32 +152,6 @@ public class Serializador{
 
                   writer.newLine();
                }
-            }
-         }
-
-         //pesos da saída
-         for(int i = 0; i < rede.obterCamadaSaida().quantidadeNeuroniosTotal(); i++){
-            Neuronio neuronio = rede.obterCamadaSaida().neuronio(i);
-            for(int j = 0; j < neuronio.numConexoes(); j++){
-               double peso = neuronio.pesos[j];
-
-                  if(tipo.equals(Double.TYPE)){
-                     writer.write(Double.toString(peso));
-                  
-                  }else if(tipo.equals(Float.TYPE)){
-                     writer.write(Float.toString((float)peso));
-                  
-                  }else if(tipo.equals(Integer.TYPE)){
-                     writer.write(Float.toString((int)peso));
-                     
-                  }else if(tipo.equals(Short.TYPE)){
-                     writer.write(Float.toString((short)peso));
-
-                  }else if(tipo.equals(Byte.TYPE)){
-                     writer.write(Float.toString((byte)peso));
-                  }
-
-               writer.newLine();
             }
          }
 
@@ -228,46 +196,26 @@ public class Serializador{
 
          //bias
          boolean bias = Boolean.parseBoolean(reader.readLine());
-         for(int i = 0; i < arq.length-1; i++){//desconsiderar saída
-            arq[i] -= (bias) ? 1 : 0;
-         }
 
          //funções de ativação
          String[] ativacoesStr = reader.readLine().split(" ");
-         String[] ativacaoOcultas = new String[ativacoesStr.length-1];
-         System.arraycopy(ativacoesStr, 0, ativacaoOcultas, 0, ativacoesStr.length - 1);
-         String ativacaoSaida = ativacoesStr[ativacaoOcultas.length-1];
 
          //inicialização e configurações da rede
          rede = new RedeNeural(arq);
          rede.compilar();
          rede.configurarBias(bias);
 
-         for(int i = 0; i < rede.obterQuantidadeOcultas(); i++){
-            rede.configurarFuncaoAtivacao(rede.obterCamadaOculta(i), dicionario.obterAtivacao(ativacaoOcultas[i]));
+         for(int i = 0; i < rede.obterQuantidadeCamadas(); i++){
+            rede.configurarFuncaoAtivacao(rede.obterCamada(i), dicionario.obterAtivacao(ativacoesStr[i]));
          }
-         rede.configurarFuncaoAtivacao(rede.obterCamadaSaida(), dicionario.obterAtivacao(ativacaoSaida));
 
-         //preencher pesos lidos
-         //camada de entrada
-         for(int i = 0; i < rede.obterQuantidadeOcultas(); i++){
-
-            Camada camada = rede.obterCamadaOculta(i);
-            for(int j = 0; j < camada.quantidadeNeuronios(); j++){
-               
-               Neuronio neuronio = camada.neuronio(j);
+         for(int i = 0; i < rede.obterQuantidadeCamadas(); i++){
+            Camada camda = rede.obterCamada(i);
+            for(int j = 0; j < camda.quantidadeNeuronios(); j++){
+               Neuronio neuronio = camda.neuronio(j);
                for(int k = 0; k < neuronio.numConexoes(); k++){
                   neuronio.pesos[k] = Double.parseDouble(reader.readLine());
                }
-            }
-         }
-
-         //camada de saída
-         for(int i = 0; i < rede.obterCamadaSaida().quantidadeNeuroniosTotal(); i++){
-            
-            Neuronio neuronio = rede.obterCamadaSaida().neuronio(i);
-            for(int j = 0; j < neuronio.numConexoes(); j++){
-               neuronio.pesos[j] = Double.parseDouble(reader.readLine());
             }
          }
 

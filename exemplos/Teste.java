@@ -3,9 +3,14 @@ package exemplos;
 import java.util.ArrayList;
 import java.util.List;
 
+import render.JanelaRede;
+import rna.estrutura.Camada;
+import rna.estrutura.Neuronio;
 import rna.estrutura.RedeNeural;
+import rna.inicializadores.Aleatorio;
 import rna.inicializadores.Inicializador;
 import rna.otimizadores.SGD;
+import rna.serializacao.Serializador;
 import utilitarios.ged.Ged;
 
 @SuppressWarnings("unused")
@@ -28,15 +33,17 @@ public class Teste{
          {0}
       };
 
-      int[] arq = {2, 2, 1};
+      int[] arq = {2, 2, 2, 1};
       RedeNeural rede = new RedeNeural(arq);
-      rede.compilar();
+      SGD sgd = new SGD();
+      rede.compilar(sgd);
       rede.configurarFuncaoAtivacao(2);
+      
+      // rede.treinar(in, out, 1_000);
+      // System.out.println("c = " + rede.avaliador.erroMedioQuadrado(in, out));
 
-      rede.treinar(in, out, 10_000);
-
-      System.out.println(rede);
-      System.out.println("c = " + rede.avaliador.erroMedioQuadrado(in, out));
+      JanelaRede jr = new JanelaRede();
+      jr.desenhar(rede);
    }
 
    static void limparConsole(){

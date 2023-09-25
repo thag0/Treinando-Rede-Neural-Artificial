@@ -27,7 +27,7 @@ import rna.inicializadores.Inicializador;
  *    Após instanciar a camada é necessário inicializar seus neurônios.
  * </p>
  */
-public class Camada{
+public class Camada implements Cloneable{
 
    /**
     * <p>
@@ -118,7 +118,7 @@ public class Camada{
       this.neuronios = new Neuronio[neuronios];
       
       for(int i = 0; i < this.neuronios.length; i++){
-         this.neuronios[i] = new Neuronio(conexoes);
+         this.neuronios[i] = new Neuronio(conexoes, this.temBias());
          this.neuronios[i].inicializarPesos(inicializador, alcancePeso, this.neuronios.length);
       }
    }
@@ -136,16 +136,46 @@ public class Camada{
     * </p>
     * @param anterior camada anterior que contém os valores de saída dos neurônios.
     */
-   public void ativarNeuronios(Camada anterior){
-      //desconsiderar bias
-      int nNeuronios = this.neuronios.length-b;
+   public void ativarNeuronios(double[] entrada){
+      int nNeuronios = this.neuronios.length;
       
       // preencher entradas dos neuronios
       // esse método de cópia é mais eficiente do que
       // criar um array intermediário e usar o system.arraycopy
       // nas entradas dos neurônios
       for(int i = 0; i < nNeuronios; i++){
-         for(int j = 0; j < this.neuronios[i].entradas.length; j++){
+         for(int j = 0; j < this.neuronios[i].tamanhoEntrada(); j++){
+            this.neuronios[i].entradas[j] = entrada[j];
+         }
+         this.neuronios[i].somatorio();
+      }
+
+      this.ativacao.ativar(this.neuronios, nNeuronios);
+   }
+
+   /**
+    * Realiza a operação do somatório de cada peso do neurônio com sua entrada.
+    * <p>
+    *    As entradas do neurônio correspondem ás saídas dos neurônios da camada anterior.
+    *    Com isso cada neurônio multiplica o {@code peso} da conexão pelo valor da {@code entrada}
+    *    correspondente.
+    * </p>
+    * <p>
+    *    Após o somatório é aplicada a função de ativação em cada neurônio e o resultado
+    *    é salvo na sua {@code saída}.
+    * </p>
+    * @param anterior camada anterior que contém os valores de saída dos neurônios.
+    */
+   public void ativarNeuronios(Camada anterior){
+      //desconsiderar bias
+      int nNeuronios = this.neuronios.length;
+      
+      // preencher entradas dos neuronios
+      // esse método de cópia é mais eficiente do que
+      // criar um array intermediário e usar o system.arraycopy
+      // nas entradas dos neurônios
+      for(int i = 0; i < nNeuronios; i++){
+         for(int j = 0; j < this.neuronios[i].tamanhoEntrada(); j++){
             this.neuronios[i].entradas[j] = anterior.neuronios[j].saida;
          }
          this.neuronios[i].somatorio();
@@ -232,14 +262,14 @@ public class Camada{
 
    /**
     * Executa a derivada da função de ativação específica da camada
-    * em todos os neurônios dela, excluindo bias.
+    * em todos os neurônios dela.
     * <p>
     *    O resultado da derivada de cada neurônio estará salvo na 
     *    propriedade {@code neuronio.derivada}.
     * </p>
     */
    public void ativacaoDerivada(){
-      this.ativacao.derivada(this.neuronios, this.neuronios.length-b);
+      this.ativacao.derivada(this.neuronios, this.neuronios.length);
    }
 
    /**
@@ -276,14 +306,6 @@ public class Camada{
     * @return quantidade de neurônios presentes na camada.
     */
    public int quantidadeNeuronios(){
-      return this.neuronios.length-b;
-   }
-
-   /**
-    * Retorna o valor da quantidade de neurônios da camada, {@code incluindo bias}.
-    * @return quantidade de neurônios totais presentes na camada.
-    */
-   public int quantidadeNeuroniosTotal(){
       return this.neuronios.length;
    }
 
@@ -318,7 +340,7 @@ public class Camada{
     */
    public int numConexoes(){
       int numConexoes = 0;
-      for(int i = 0; i < this.neuronios.length-b; i++){
+      for(int i = 0; i < this.neuronios.length; i++){
          numConexoes += this.neuronios[i].numConexoes();
       }
       return numConexoes;
@@ -349,5 +371,28 @@ public class Camada{
       buffer += "]\n";
 
       return buffer;
+   }
+
+   @Override
+   public Camada clone(){
+      try{
+         // Camada clone = new Camada(this.temBias());
+         Camada clone = (Camada) super.clone();
+
+         clone.argmax = this.argmax;
+         clone.softmax = this.softmax;
+         clone.ativacao = this.ativacao;
+         clone.b = this.b;
+         clone.id = this.id;
+
+         clone.neuronios = new Neuronio[this.neuronios.length];
+         for(int i = 0; i < clone.neuronios.length; i++){
+            clone.neuronios[i] = this.neuronio(i).clone();
+         }
+
+         return clone;
+      }catch(Exception e){
+         throw new RuntimeException(e);
+      }
    }
 }
