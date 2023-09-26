@@ -24,7 +24,7 @@ class Main{
    
    // static final String caminhoArquivo = "/dados/imagens/dog.jpg";
    // static final String caminhoArquivo = "/dados/32x32/bloco.png";
-   static final String caminhoArquivo = "/dados/mnist/3.png";
+   static final String caminhoArquivo = "/dados/mnist/8.png";
    static final String caminhoImagemExportada = "./resultados/imagem-ampliada";
    static final int epocas = 100*1000;
    static final float escalaRender = 9f;
@@ -83,8 +83,6 @@ class Main{
       if(qSaidas == 1)geim.exportarImagemEscalaCinza(imagem, rede, escalaImagemExportada, caminhoImagemExportada);
       else if(qSaidas == 3) geim.exportarImagemRGB(imagem, rede, escalaImagemExportada, caminhoImagemExportada);
       else System.out.println("Não é possível exportar a imagem");
-
-      exportarHistoricoCustos(rede, ged);
    }
 
    public static RedeNeural criarRede(int entradas, int saidas){
@@ -92,10 +90,8 @@ class Main{
       // int[] arq = {qEntradas, 36, 36, 36, qSaidas};//32x32
       int[] arq = {entradas, 13, 13, saidas};//28x28
       RedeNeural rede = new RedeNeural(arq);
-      rede.compilar(new SGD(), new Xavier());
+      rede.compilar(new SGD(0.01, 0.9), new Xavier());
       rede.configurarFuncaoAtivacao(new Sigmoid());
-
-      rede.configurarHistoricoCusto(true);
 
       return rede;
    }
@@ -200,7 +196,7 @@ class Main{
 
 
    public static void compararSaidaRede(RedeNeural rede, double[][] dadosEntrada, double[][] dadosSaida, String texto){
-      int nEntrada = rede.obterCamadaEntrada().quantidadeNeuronios();
+      int nEntrada = rede.obterTamanhoEntrada();
       int nSaida = rede.obterCamadaSaida().quantidadeNeuronios();
 
       double[] entrada_rede = new double[nEntrada];

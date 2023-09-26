@@ -137,7 +137,6 @@ public class Camada implements Cloneable{
     * @param anterior camada anterior que contém os valores de saída dos neurônios.
     */
    public void ativarNeuronios(double[] entrada){
-      // preencher entradas dos neuronios
       // esse método de cópia é mais eficiente do que
       // criar um array intermediário e usar o system.arraycopy
       // nas entradas dos neurônios
@@ -165,7 +164,6 @@ public class Camada implements Cloneable{
     * @param anterior camada anterior que contém os valores de saída dos neurônios.
     */
    public void ativarNeuronios(Camada anterior){
-      // preencher entradas dos neuronios
       // esse método de cópia é mais eficiente do que
       // criar um array intermediário e usar o system.arraycopy
       // nas entradas dos neurônios

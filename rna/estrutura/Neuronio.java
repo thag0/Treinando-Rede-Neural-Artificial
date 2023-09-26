@@ -12,7 +12,8 @@ import rna.inicializadores.Xavier;
  * <p>
  *    Cada neurônio possui um conjunto de pesos para suas conexões com os 
  *    neurônios da camada anterior, além de valores de entrada, saída e 
- *    alguns parâmetros adicionais para facilitar o uso dos otimizadores.
+ *    alguns parâmetros adicionais para facilitar o uso manuseio de parâmetros
+ *    durante o treinamento.
  * </p>
  * O neurônio oferece métodos de inicialização de pesos e cálculo do somatório
  * de seus pesos multiplicados pelas entradas. Métodos de funções de ativação
@@ -102,8 +103,8 @@ public class Neuronio implements Cloneable{
     * <p>
     *    Os valores iniciais de pesos são dados como 0.
     * </p>
-    * @param conexoes quantidade de conexões, deve estar relacionada com a quatidade de 
-    * neurônios da camada anterior (incluindo bias, caso tenha).
+    * @param conexoes quantidade de conexões, deve estar relacionada com a 
+    * quatidade de neurônios da camada anterior.
     */
    public Neuronio(int conexoes, boolean bias){
       this.bias = bias;
@@ -143,7 +144,9 @@ public class Neuronio implements Cloneable{
          inicializador.inicializar(this.pesos, this.pesos.length, tamSaida);
       
       }else{
-         throw new IllegalArgumentException("Inicializador não suportado");
+         throw new IllegalArgumentException(
+            "Inicializador (" + inicializador.getClass().getSimpleName() + ") não suportado"
+         );
       }
    }
 
@@ -154,8 +157,9 @@ public class Neuronio implements Cloneable{
     * <p>
     *    O algoritmo padrão do feedforward se baseia em fazer o somatório dos 
     *    produtos entre a entrada com o peso respectivo e ao final adicionar o bias. 
-    *    Como o neurônio do bias sempre tem saída igual a 1, dá pra generalizar num
-    *    loop só.
+    *    Nesse modelo de arquitetura o bias é um parâmetro adicional nas entradas dos
+    *    neurônios e possui valor de saída sempre igual a 1, então é possível generalizar
+    *    num loop só.
     * </p>
     */
    public void somatorio(){
@@ -223,6 +227,7 @@ public class Neuronio implements Cloneable{
       String espacamento = "    ";
 
       buffer += "Informações " + this.getClass().getSimpleName() + " = [\n";
+      buffer += espacamento + "Bias: " + this.bias + "\n";
 
       buffer += espacamento + "Quantidade de pesos: " + this.numConexoes() + "\n\n";
       for(int i = 0; i < this.pesos.length; i++){

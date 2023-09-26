@@ -29,7 +29,7 @@ public class Sigmoid extends FuncaoAtivacao{
    @Override
    public void derivada(Neuronio[] neuronios, int quantidade){
       for(int i = 0; i < quantidade; i++){
-         double sig = sigmoid(neuronios[i].somatorio);
+         double sig = neuronios[i].saida;//sigmoid já foi calculada
          neuronios[i].derivada = sig * (1 - sig);
       }
    }

@@ -112,10 +112,9 @@ class TreinoLote{
     */
    private void calcularGradientesAcumulados(Camada[] redec){
       //percorrer rede, excluindo camada de entrada
-      for(int i = 1; i < redec.length; i++){ 
+      for(int i = 0; i < redec.length; i++){ 
          
          Camada camadaAtual = redec[i];
-         Camada camadaAnterior = redec[i-1];
 
          //não precisa e nem faz diferença calcular os gradientes dos bias
          int nNeuronios = camadaAtual.quantidadeNeuronios();
@@ -123,7 +122,7 @@ class TreinoLote{
             
             Neuronio neuronio = camadaAtual.neuronio(j);
             for(int k = 0; k < neuronio.pesos.length; k++){//percorrer pesos do neurônio atual
-               neuronio.gradienteAcumulado[k] += neuronio.erro * camadaAnterior.neuronio(k).saida;
+               neuronio.gradienteAcumulado[k] += (-neuronio.erro * neuronio.entradas[k]);
             }
          }
       }
@@ -135,15 +134,15 @@ class TreinoLote{
     * @param tamanhoLote tamanho do lote.
     */
    private void calcularMediaGradientesLote(Camada[] redec, int tamanhoLote){
-      for(int i = 1; i < redec.length; i++){ 
+      for(int i = 0; i < redec.length; i++){ 
          
          Camada camadaAtual = redec[i];
          int nNeuronios = camadaAtual.quantidadeNeuronios();
-         for(int j = 0; j < nNeuronios; j++){//percorrer neurônios da camada atual
+         for(int j = 0; j < nNeuronios; j++){
             
             Neuronio neuronio = camadaAtual.neuronio(j);
-            for(int k = 0; k < neuronio.pesos.length; k++){//percorrer pesos do neurônio atual
-               neuronio.gradiente[k] = neuronio.gradienteAcumulado[k] / tamanhoLote;
+            for(int k = 0; k < neuronio.pesos.length; k++){
+               neuronio.gradiente[k] = neuronio.gradienteAcumulado[k] / (tamanhoLote);
             }
          }
       }

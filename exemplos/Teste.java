@@ -33,14 +33,11 @@ public class Teste{
          {0}
       };
 
-      int[] arq = {2, 2, 2, 1};
+      int[] arq = {2, 2, 1};
       RedeNeural rede = new RedeNeural(arq);
       SGD sgd = new SGD();
       rede.compilar(sgd);
       rede.configurarFuncaoAtivacao(2);
-      
-      // rede.treinar(in, out, 1_000);
-      // System.out.println("c = " + rede.avaliador.erroMedioQuadrado(in, out));
 
       JanelaRede jr = new JanelaRede();
       jr.desenhar(rede);

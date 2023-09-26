@@ -17,17 +17,21 @@ public class TanH extends FuncaoAtivacao{
 
    @Override
    public void ativar(Neuronio[] neuronios, int quantidade){
+      double x, exp, expn;
       for(int i = 0; i < quantidade; i++){
-         neuronios[i].saida = Math.tanh(neuronios[i].somatorio);
+         x = neuronios[i].somatorio;
+         exp = Math.exp(x); 
+         expn = Math.exp(-x); 
+         neuronios[i].saida = (exp - expn)/(exp + expn);
       }
    }
 
    @Override
    public void derivada(Neuronio[] neuronios, int quantidade){
-      double t;
+      double tanh;
       for(int i = 0; i < quantidade; i++){
-         t = Math.tanh(neuronios[i].somatorio);
-         neuronios[i].derivada = 1 - (t * t);
+         tanh = neuronios[i].saida;
+         neuronios[i].derivada = 1 - (tanh * tanh);
       }
    }
 }
