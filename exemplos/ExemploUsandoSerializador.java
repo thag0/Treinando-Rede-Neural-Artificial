@@ -2,8 +2,10 @@ package exemplos;
 
 import rna.estrutura.RedeNeural;
 import rna.serializacao.Serializador;
+import utilitarios.ged.Dados;
 
 public class ExemploUsandoSerializador {
+
    public static void main(String[] args){
       limparConsole();
 
@@ -21,14 +23,14 @@ public class ExemploUsandoSerializador {
          {0}
       };
 
-      // RedeNeural rede = new RedeNeural(2, 2, 1, 1);
-      // rede.compilar();
-      // rede.configurarFuncaoAtivacao(2);
-      // rede.treinar(e, s, 10_000);
-      RedeNeural rede = Serializador.ler("./rede-xor.txt");
+      RedeNeural rede = new RedeNeural(2, 2, 1, 1);
+      rede.compilar();
+      rede.configurarFuncaoAtivacao(2);
+      rede.treinar(e, s, 10_000);
+
       System.out.println(rede);
       System.out.println("p = " + rede.avaliador.erroMedioQuadrado(e, s));
-      Serializador.salvar(rede, "./rede-xor.txt", "float");
+      Serializador.salvar(rede, "./rede-xor.txt", new Dados());
    }
 
    static void limparConsole(){

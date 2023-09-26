@@ -57,9 +57,9 @@ public class ExemploClassificacao{
       System.out.println("Perda = " + perda);
 
       int[][] matrizConfusao = rede.avaliador.matrizConfusao(testeX, testeY);
-      Dados m = new Dados(matrizConfusao);
-      m.editarNome("Matriz confusão");
-      m.imprimir();
+      Dados d = new Dados(matrizConfusao);
+      d.editarNome("Matriz de confusão");
+      d.imprimir();
    }
 
 

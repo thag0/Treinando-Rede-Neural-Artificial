@@ -82,7 +82,7 @@ public class Serializador{
          }
       
       }else{
-         throw new IllegalArgumentException("Tipo não suportado.");
+         throw new IllegalArgumentException("Tipo \"" + tipo.getClass().getSimpleName() + "\" não suportado.");
       }
    }
 

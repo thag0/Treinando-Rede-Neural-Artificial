@@ -164,7 +164,8 @@ public class Neuronio implements Cloneable{
     */
    public void somatorio(){
       this.somatorio = 0;
-      for(int i = 0; i < this.entradas.length; i++){
+      int tam = this.entradas.length;
+      for(int i = 0; i < tam; i++){
          this.somatorio += this.entradas[i] * this.pesos[i];
       }
    }

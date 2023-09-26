@@ -61,7 +61,7 @@ public class Camada implements Cloneable{
     * Função de ativação da camada que atuará no resultado do somatório entre
     * os pesos e entradas com a adição do bias (se houver).
     */
-   FuncaoAtivacao ativacao;
+   private FuncaoAtivacao ativacao;
 
    /**
     * Auxiliar na verficação se a camada está com a função de ativação
@@ -164,17 +164,12 @@ public class Camada implements Cloneable{
     * @param anterior camada anterior que contém os valores de saída dos neurônios.
     */
    public void ativarNeuronios(Camada anterior){
-      // esse método de cópia é mais eficiente do que
-      // criar um array intermediário e usar o system.arraycopy
-      // nas entradas dos neurônios
-      for(int i = 0; i < this.neuronios.length; i++){
-         for(int j = 0; j < this.neuronios[i].tamanhoEntrada(); j++){
-            this.neuronios[i].entradas[j] = anterior.neuronios[j].saida;
-         }
-         this.neuronios[i].somatorio();
+      double[] entrada = new double[anterior.quantidadeNeuronios()];
+      for(int i = 0; i < entrada.length; i++){
+         entrada[i] = anterior.neuronios[i].saida;
       }
 
-      this.ativacao.ativar(this.neuronios, this.neuronios.length);
+      this.ativarNeuronios(entrada);
    }
 
    /**
