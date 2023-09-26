@@ -22,13 +22,13 @@ class Main{
    static Ged ged = new Ged();
    static Geim geim = new Geim();
    
-   // static final String caminhoArquivo = "/dados/imagens/dog.jpg";
+   static final String caminhoArquivo = "/dados/imagens/dog.jpg";
    // static final String caminhoArquivo = "/dados/32x32/bloco.png";
-   static final String caminhoArquivo = "/dados/mnist/8.png";
+   // static final String caminhoArquivo = "/dados/mnist/8.png";
    static final String caminhoImagemExportada = "./resultados/imagem-ampliada";
    static final int epocas = 100*1000;
-   static final float escalaRender = 9f;
-   static final float escalaImagemExportada = 30f;
+   static final float escalaRender = 0.6f;
+   static final float escalaImagemExportada = 3f;
 
    // Sempre lembrar de quando mudar o dataset, também mudar a quantidade de dados de entrada e saída.
    
@@ -40,7 +40,7 @@ class Main{
 
       //lendo os dados de entrada
       int qEntradas = 2;//quantidade de dados de entrada / entrada da rede
-      int qSaidas = 1;//quantidade de dados de saída / saída da rede
+      int qSaidas = 3;//quantidade de dados de saída / saída da rede
       BufferedImage imagem = geim.lerImagem(caminhoArquivo);
       
       //escolher a forma de importação dos dados
@@ -86,19 +86,20 @@ class Main{
    }
 
    public static RedeNeural criarRede(int entradas, int saidas){
-      // int[] arq = {qEntradas, 64, 32, 32, qSaidas};//dog
-      // int[] arq = {qEntradas, 36, 36, 36, qSaidas};//32x32
-      int[] arq = {entradas, 13, 13, saidas};//28x28
+      int[] arq = {entradas, 64, 36, 36, saidas};//dog
+      // int[] arq = {entradas, 36, 36, 36, saidas};//32x32
+      // int[] arq = {entradas, 13, 13, saidas};//28x28
+      
       RedeNeural rede = new RedeNeural(arq);
-      rede.compilar(new SGD(0.01, 0.9), new Xavier());
+      rede.compilar(new SGD(), new Xavier());
       rede.configurarFuncaoAtivacao(new Sigmoid());
 
       return rede;
    }
 
    public static void treinoEmPainel(RedeNeural rede, BufferedImage imagem, double[][] dadosEntrada, double[][] dadosSaida){
-      final int fps = 6000;
-      int epocasPorFrame = 10;
+      final int fps = 60;
+      int epocasPorFrame = 5;
 
       //acelerar o processo de desenho
       //bom em situações de janelas muito grandes
