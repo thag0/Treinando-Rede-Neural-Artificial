@@ -20,17 +20,16 @@ public class Swish extends FuncaoAtivacao{
    }
 
    @Override
-   public void ativar(Neuronio[] neuronios, int quantidade){
-      for(int i = 0; i < quantidade; i++){
+   public void ativar(Neuronio[] neuronios){
+      for(int i = 0; i < neuronios.length; i++){
          neuronios[i].saida = neuronios[i].somatorio * sigmoid(neuronios[i].somatorio);
       }
    }
 
    @Override
-   public void derivada(Neuronio[] neuronios, int quantidade){
-      double sig;
-      for(int i = 0; i < quantidade; i++){
-         sig = sigmoid(neuronios[i].somatorio);
+   public void derivada(Neuronio[] neuronios){
+      for(int i = 0; i < neuronios.length; i++){
+         double sig = sigmoid(neuronios[i].somatorio);
          neuronios[i].derivada = sig + (neuronios[i].somatorio * sig * (1 - sig));
       }
    }

@@ -89,9 +89,9 @@ class Main{
       // int[] arq = {entradas, 64, 36, 36, saidas};//dog
       // int[] arq = {entradas, 36, 36, 36, saidas};//32x32
       int[] arq = {entradas, 13, 13, saidas};//28x28
-      
+
       RedeNeural rede = new RedeNeural(arq);
-      rede.compilar(new SGD(), new Xavier());
+      rede.compilar(new AMSGrad(), new Xavier());
       rede.configurarFuncaoAtivacao(new Sigmoid());
 
       return rede;
@@ -103,7 +103,7 @@ class Main{
 
       //acelerar o processo de desenho
       //bom em situações de janelas muito grandes
-      int numThreads = (int)(Runtime.getRuntime().availableProcessors() * 0.5);
+      int numThreads = (int)(Runtime.getRuntime().availableProcessors() * 0.75);
 
       JanelaTreino jt = new JanelaTreino(imagem.getWidth(), imagem.getHeight(), escalaRender);
       jt.desenharTreino(rede, 0, numThreads);
@@ -134,7 +134,6 @@ class Main{
       jt.dispose();
    }
 
-
 	public static String pegarEntrada(){
 		String entrada;
 
@@ -149,12 +148,10 @@ class Main{
 		return entrada;
 	}
 
-
    public static void desenharRede(RedeNeural rede){
       JanelaRede janela = new JanelaRede();
       janela.desenhar(rede);
    }
-
 
    public static void testarRede(RedeNeural rede, int tamanhoEntrada){
       JanelaRede janela = new JanelaRede();
@@ -195,7 +192,6 @@ class Main{
       }
    }
 
-
    public static void compararSaidaRede(RedeNeural rede, double[][] dadosEntrada, double[][] dadosSaida, String texto){
       int nEntrada = rede.obterTamanhoEntrada();
       int nSaida = rede.obterCamadaSaida().quantidadeNeuronios();
@@ -234,7 +230,6 @@ class Main{
       }
    }
 
-
    public static void exportarHistoricoCustos(RedeNeural rede, Ged ged){
       System.out.println("Exportando histórico de custo");
       ArrayList<Double> custos = rede.obterHistoricoCusto();
@@ -247,7 +242,6 @@ class Main{
       Dados dados = new Dados(dadosErro);
       ged.exportarCsv(dados, "historico-custo");
    }
-
 
    public static void limparConsole(){
       try{
@@ -265,7 +259,6 @@ class Main{
          return;
       }
    }
-
 
    public static String formatarDecimal(double valor, int casas){
       String valorFormatado = "";

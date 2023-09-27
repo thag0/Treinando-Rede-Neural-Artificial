@@ -16,9 +16,9 @@ public class GELU extends FuncaoAtivacao{
    }
 
    @Override
-   public void ativar(Neuronio[] neuronios, int quantidade){
+   public void ativar(Neuronio[] neuronios){
       double x;
-      for(int i = 0; i < quantidade; i++){
+      for(int i = 0; i < neuronios.length; i++){
          x = neuronios[i].somatorio;
          x = 0.5 * x * (1.0 + Math.tanh(Math.sqrt(2.0 / Math.PI) * (x + 0.044715 * Math.pow(x, 3))));
          neuronios[i].saida = x;
@@ -26,9 +26,9 @@ public class GELU extends FuncaoAtivacao{
    }
 
    @Override
-   public void derivada(Neuronio[] neuronios, int quantidade){
+   public void derivada(Neuronio[] neuronios){
       double x, cdf;
-      for(int i = 0; i < quantidade; i++){
+      for(int i = 0; i < neuronios.length; i++){
          x = neuronios[i].somatorio;
          cdf = 0.5 * (1.0 + Math.tanh(Math.sqrt(2.0 / Math.PI) * (x + 0.044715 * Math.pow(x, 3))));
          neuronios[i].derivada = 0.5 * (1.0 + cdf + x * Math.exp(-Math.pow(x, 2) / 2.0) / Math.sqrt(2.0 * Math.PI));

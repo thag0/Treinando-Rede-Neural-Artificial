@@ -16,14 +16,14 @@ public class Softmax extends FuncaoAtivacao{
    }
 
    @Override
-   public void ativar(Neuronio[] neuronios, int quantidade){
+   public void ativar(Neuronio[] neuronios){
       double somaExp = 0;
 
-      for(int i = 0; i < quantidade; i++){
+      for(int i = 0; i < neuronios.length; i++){
          somaExp += Math.exp(neuronios[i].somatorio);
       }
 
-      for(int i = 0; i < quantidade; i++){
+      for(int i = 0; i < neuronios.length; i++){
          neuronios[i].saida = Math.exp(neuronios[i].somatorio) / somaExp;
       }
    }

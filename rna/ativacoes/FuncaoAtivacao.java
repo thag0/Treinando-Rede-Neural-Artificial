@@ -13,24 +13,28 @@ public abstract class FuncaoAtivacao{
    /**
     * Calcula o resultado da ativação de acordo com a função configurada
     * <p>
-    *    O resultado da derivada de cada neurônio deve ser salvo na propriedade {@code neuronio.saida}.
+    *    O resultado da derivada de cada neurônio é salvo na propriedade {@code neuronio.saida}.
     * </p>
     * @param neuronios conjunto de neurônios para ativação.
     * @param quantidade quantidade de neurônios que serão ativados, em ordem crescente.
     */
-   public void ativar(Neuronio[] neuronios, int quantidade){
-      throw new UnsupportedOperationException("Método de atualização da função de ativação não foi implementado.");
+   public void ativar(Neuronio[] neuronios){
+      throw new UnsupportedOperationException(
+         "Método de atualização da função de ativação não foi implementado."
+      );
    }
 
    /**
     * Calcula o resultado da derivada da função de ativação de acordo com a função configurada
     * <p>
-    *    O resultado da derivada de cada neurônio deve ser salvo na propriedade {@code neuronio.derivada}.
+    *    O resultado da derivada de cada neurônio é salvo na propriedade {@code neuronio.derivada}.
     * </p>
     * @param neuronios conjunto de neurônios para ativação.
     * @param quantidade quantidade de neurônios que serão ativados, em ordem crescente.
     */
-   public void derivada(Neuronio[] neuronios, int quantidade){
-      throw new UnsupportedOperationException("Método de atualização da derivada da função de ativação não foi implementado.");
+   public void derivada(Neuronio[] neuronios){
+      throw new UnsupportedOperationException(
+         "Método de atualização da derivada da função de ativação não foi implementado."
+      );
    }
 }

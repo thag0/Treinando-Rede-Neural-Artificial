@@ -2,23 +2,28 @@ package exemplos;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import render.JanelaRede;
+import rna.ativacoes.LeakyReLU;
+import rna.ativacoes.Sigmoid;
 import rna.estrutura.Camada;
 import rna.estrutura.Neuronio;
 import rna.estrutura.RedeNeural;
 import rna.inicializadores.Aleatorio;
 import rna.inicializadores.Inicializador;
+import rna.inicializadores.Xavier;
 import rna.otimizadores.SGD;
 import rna.serializacao.Serializador;
 import utilitarios.ged.Ged;
+import utilitarios.ged.Dados;
 
 @SuppressWarnings("unused")
 public class Teste{
    static Ged ged = new Ged();
 
    public static void main(String[] args){
-      limparConsole();
+      ged.limparConsole();
 
       double[][] in = {
          {0, 0},
@@ -33,30 +38,19 @@ public class Teste{
          {0}
       };
 
-      int[] arq = {2, 2, 1};
+      int[] arq = {in[0].length, 2, out[0].length};
       RedeNeural rede = new RedeNeural(arq);
       SGD sgd = new SGD();
-      rede.compilar(sgd);
-      rede.configurarFuncaoAtivacao(2);
+      rede.compilar(sgd, new Xavier());
+      rede.configurarFuncaoAtivacao(new Sigmoid());
+      System.out.println(rede.info());
 
-      JanelaRede jr = new JanelaRede();
+      rede.treinar(in, out, 5_000);
+
+      var perda = rede.avaliador.erroMedioQuadrado(in, out);
+      System.out.println("perda = " + perda);
+
+      JanelaRede jr = new JanelaRede(600, 400);
       jr.desenhar(rede);
-   }
-
-   static void limparConsole(){
-      try{
-         String nomeSistema = System.getProperty("os.name");
-
-         if(nomeSistema.contains("Windows")){
-         new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
-            return;
-         }else{
-            for (int i = 0; i < 100; i++){
-               System.out.println();
-            }
-         }
-      }catch(Exception e){
-         return;
-      }
    }
 }

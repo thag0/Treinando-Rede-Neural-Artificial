@@ -147,7 +147,7 @@ public class Camada implements Cloneable{
          this.neuronios[i].somatorio();
       }
 
-      this.ativacao.ativar(this.neuronios, this.neuronios.length);
+      this.ativacao.ativar(this.neuronios);
    }
 
    /**
@@ -257,7 +257,7 @@ public class Camada implements Cloneable{
     * </p>
     */
    public void ativacaoDerivada(){
-      this.ativacao.derivada(this.neuronios, this.neuronios.length);
+      this.ativacao.derivada(this.neuronios);
    }
 
    /**

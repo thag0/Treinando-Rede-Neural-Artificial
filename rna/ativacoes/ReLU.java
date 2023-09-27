@@ -16,15 +16,15 @@ public class ReLU extends FuncaoAtivacao{
    }
 
    @Override
-   public void ativar(Neuronio[] neuronios, int quantidade){
-      for(int i = 0; i < quantidade; i++){
+   public void ativar(Neuronio[] neuronios){
+      for(int i = 0; i < neuronios.length; i++){
          neuronios[i].saida = (neuronios[i].somatorio > 0) ? neuronios[i].somatorio : 0;
       }
    }
 
    @Override
-   public void derivada(Neuronio[] neuronios, int quantidade){
-      for(int i = 0; i < quantidade; i++){
+   public void derivada(Neuronio[] neuronios){
+      for(int i = 0; i < neuronios.length; i++){
          neuronios[i].derivada = (neuronios[i].somatorio > 0) ? 1 : 0;
       }
    }

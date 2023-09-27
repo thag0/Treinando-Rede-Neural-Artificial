@@ -20,16 +20,16 @@ public class Sigmoid extends FuncaoAtivacao{
    }
 
    @Override
-   public void ativar(Neuronio[] neuronios, int quantidade){
-      for(int i = 0; i < quantidade; i++){
+   public void ativar(Neuronio[] neuronios){
+      for(int i = 0; i < neuronios.length; i++){
          neuronios[i].saida = sigmoid(neuronios[i].somatorio);
       }
    }
 
    @Override
-   public void derivada(Neuronio[] neuronios, int quantidade){
-      for(int i = 0; i < quantidade; i++){
-         double sig = neuronios[i].saida;//sigmoid já foi calculada
+   public void derivada(Neuronio[] neuronios){
+      for(int i = 0; i < neuronios.length; i++){
+         double sig = neuronios[i].saida;
          neuronios[i].derivada = sig * (1 - sig);
       }
    }

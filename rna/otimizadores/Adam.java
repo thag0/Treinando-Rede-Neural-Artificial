@@ -66,12 +66,12 @@ public class Adam extends Otimizador{
    /**
     * Coeficientes de momentum.
     */
-   private double[] momentum;
+   public double[] momentum;
 
    /**
     * Coeficientes de momentum de segunda ordem.
     */
-   private double[] velocidade;
+   public double[] velocidade;
    
    /**
     * Contador de iterações.

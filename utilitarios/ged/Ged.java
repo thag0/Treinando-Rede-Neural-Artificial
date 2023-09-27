@@ -60,6 +60,28 @@ public class Ged{
       omt = new OperadorMatrizMultithread(Runtime.getRuntime().availableProcessors()/2);
    }
 
+   /**
+    * Função auxiliar destinada ao uso no windows.
+    * <p>
+    *    Limpa o conteúdo do console onde o programa está sendo executado.
+    * </p>
+    */
+   public void limparConsole(){
+      try{
+         String nomeSistema = System.getProperty("os.name");
+
+         if(nomeSistema.contains("Windows")){
+         new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+            return;
+         }else{
+            for (int i = 0; i < 100; i++){
+               System.out.println();
+            }
+         }
+      }catch(Exception e){
+         return;
+      }
+   }
 
    /**
     * Exibe pelo console as informações contidas no conteúdo dos dados.
@@ -68,7 +90,6 @@ public class Ged{
    public void imprimirDados(Dados dados){
       dados.imprimir();
    }
-
 
    /**
     * Imprime o início do conteúdo do conjunto de dados para facilitar a visualização 
@@ -213,7 +234,6 @@ public class Ged{
       return md.dadosSimetricos(dados);
    }
 
-
    /**
     * Adiciona uma coluna com conteúdo {@code vazio} ao final de todas as 
     * linhas do conteúdo dos dados.
@@ -238,7 +258,6 @@ public class Ged{
    public void adicionarColuna(Dados dados){
       md.adicionarColuna(dados);
    }
-
 
    /**
     * Adiciona uma coluna com conteúdo {@code vazio} no índice fornecido. 
@@ -270,7 +289,6 @@ public class Ged{
       md.adicionarColuna(dados, indice);
    }
 
-
    /**
     * Adiciona uma linha com conteúdo {@code vazio} ao final do conteúdo dos dados.
     * <p>
@@ -296,7 +314,6 @@ public class Ged{
    public void adicionarLinha(Dados dados){
       md.adicionarLinha(dados);
    }
-
 
    /**
     * Adiciona uma linha com conteúdo {@code vazio} de acordo com o índice especificado. Todos 
@@ -329,7 +346,6 @@ public class Ged{
       md.adicionarLinha(dados, indice);
    }
 
-
    /**
     * Remove uma linha inteira do conjunto de dados
     * @param dados conjunto de dados.
@@ -341,7 +357,6 @@ public class Ged{
       md.removerLinha(dados, indice);
    }
 
-
    /**
     * Remove todas as colunas dos dados de acordo com o índice fornecido.
     * @param dados conjunto de dados.
@@ -352,7 +367,6 @@ public class Ged{
    public void removerColuna(Dados dados, int indice){
       md.removerColuna(dados, indice);
    }
-
 
    /**
     * Substitui o valor de busca pelo novo valor fornecido, de acordo com a linha e coluna especificadas.
@@ -371,7 +385,6 @@ public class Ged{
       md.editarValor(dados, idLinha, idColuna, valor);
    }
 
-
    /**
     * Substitui todas as linhas dos dados pelo valor fornecido, caso na coluna fornecida tenha o valor buscado.
     * @param dados conjunto de dados.
@@ -387,7 +400,6 @@ public class Ged{
    public void editarValor(Dados dados, int idColuna, String busca, String valor){
       md.editarValor(dados, idColuna, busca, valor);
    }
-
 
    /**
     * Troca os valores das colunas no conteúdo dos dados de acordo com os índices fornecidos.
@@ -423,7 +435,6 @@ public class Ged{
       md.trocarColunas(dados, idColuna1, idColuna2);
    }
 
-
    /**
     * Remove a linha inteira dos dados caso exista algum valor nas colunas que não consiga ser convertido para
     * um valor numérico.
@@ -447,7 +458,6 @@ public class Ged{
    public void removerNaoNumericos(Dados dados){
       md.removerNaoNumericos(dados);
    }
-
 
    /**
     * Categoriza o conteúdo de dados na coluna relativa ao índice fornecido,
@@ -481,7 +491,6 @@ public class Ged{
    public void categorizar(Dados dados, int indice){
       md.categorizar(dados, indice);
    }
-
 
    /**
     * Une os dois conjuntos de dados fornecidos
@@ -523,7 +532,6 @@ public class Ged{
       return md.unir(a, b);
    }
 
-
    /**
     * Une o conteúdo de cada coluna dentro de A e B num
     * novo conjunto de dados.
@@ -558,7 +566,6 @@ public class Ged{
       return md.unirColuna(a, b);
    }
 
-
    /**
     * Remove linhas repetidas dentro do conjunto de dados.
     * <p>
@@ -583,7 +590,6 @@ public class Ged{
    public void removerDuplicadas(Dados dados){
       md.removerDuplicadas(dados);
    }
-
 
    /**
     * Normaliza todos os valores numéricos contidos no conjunto de dados.
@@ -616,7 +622,6 @@ public class Ged{
    public void normalizar(Dados dados){
       md.normalizar(dados);
    }
-
 
    /**
     * Normaliza os valores numéricos contido na coluna fornecida.
@@ -651,7 +656,6 @@ public class Ged{
       dados.normalizar(idCol);
    }
 
-
    /**
     * Captaliza todo valor alfabético contido no conteúdo dos dados.
     * <p>
@@ -675,7 +679,6 @@ public class Ged{
    public void capitalizar(Dados dados){
       md.capitalizar(dados);
    }
-
 
    /**
     * Captaliza todo valor alfabético contido no conteúdo dos dados.
@@ -704,7 +707,6 @@ public class Ged{
    public void capitalizar(Dados dados, int idCol){
       dados.capitalizar(idCol);
    }
-
 
    /**
     * Substitui pelo novo valor todo o conteúdo encontrado na coluna de acordo com a busca.
@@ -735,7 +737,6 @@ public class Ged{
       dados.substituir(idCol, null, null);
    }
 
-
    /**
     * Substitui pelo novo valor todo o conteúdo encontrado dentro do conteúdo dos dados.
     * <p>
@@ -763,7 +764,6 @@ public class Ged{
    public void substituir(Dados dados, String busca, String valor){
       md.substituir(dados, busca, valor);
    }
-
 
    /**
     * Ordena o conteúdo contido nos dados de acordo com a coluna desejada.
@@ -803,7 +803,6 @@ public class Ged{
       dados.ordenar(idCol, crescente);
    }
 
-
    /**
     * Filtra o conteúdo contido nos dados fornecidos de 
     * acordo com o valor de busca.
@@ -837,7 +836,6 @@ public class Ged{
    public Dados filtrar(Dados dados, int idCol, String busca){
       return md.filtrar(dados, idCol, busca);
    }
-
 
    /**
     * <p>
@@ -876,7 +874,6 @@ public class Ged{
       return md.filtrar(dados, idCol, operador, valor);
    }
 
-
    /**
     * Substitui todos os valores ausentes no conteúdos dos dados fornecidos.
     * <p>
@@ -892,7 +889,6 @@ public class Ged{
       md.preencherAusentes(dados, valor);
    }
 
-
    /**
     * Clona o conteúdo dos dados fornecidos em uma nova estrutura e devolve um novo objeto
     * de dados conteúdo o mesmo conteúdo do original.
@@ -902,7 +898,6 @@ public class Ged{
    public Dados clonarDados(Dados dados){
       return md.clonarDados(dados);
    }
-
 
    /**
     * Substitui todos os valores ausentes no conteúdos dos dados fornecidos de 
@@ -921,7 +916,6 @@ public class Ged{
       md.preencherAusentes(dados, idCol, valor);
    }
 
-
    /**
     * Descreve as dimensões do conteúdo dos dados, tanto em questão de quantidade de linhas 
     * quanto quantidade de colunas.
@@ -936,9 +930,7 @@ public class Ged{
       return dados.shape();
    }
 
-
    //GERENCIADOR DE ARQUIVOS ---------------------
-
 
    /**
     * Lê o arquivo .csv de acordo com o caminho especificado.
@@ -955,7 +947,6 @@ public class Ged{
    public Dados lerCsv(String caminho){
       return ga.lerCsv(caminho);
    }
-
 
    /**
     * Lê o arquivo .txt de acordo com o caminho especificado.
@@ -976,7 +967,6 @@ public class Ged{
       return ga.lerTxt(caminho);
    }
 
-
    /**
     * Grava o conteúdo do conjunto de dados em um arquivo .csv.
     * @param dados conjunto de dados.
@@ -985,7 +975,6 @@ public class Ged{
    public void exportarCsv(Dados dados, String caminho){
       ga.exportarCsv(dados, caminho);;
    }
-
 
    // GERENCIADOR TREINO TESTE ---------------------
 
@@ -1036,7 +1025,6 @@ public class Ged{
       return gtt.separarDadosEntrada(dados, colunas);
    }
 
-
    /**
     * <p>
     *    Método para treino da rede neural.
@@ -1071,7 +1059,6 @@ public class Ged{
       return gtt.separarDadosEntrada(dados, colunas);
    }
 
-
    /**
     * <p>
     *    Método para treino da rede neural.
@@ -1105,7 +1092,6 @@ public class Ged{
    public double[][] separarDadosEntrada(double[][] dados, int colunas){
       return gtt.separarDadosEntrada(dados, colunas);
    }
-
 
    /**
     * <p>
@@ -1142,7 +1128,6 @@ public class Ged{
       return gtt.separarDadosSaida(dados, colunas);
    }
 
-
    /**
     * <p>
     *    Método para treino da rede neural.
@@ -1177,7 +1162,6 @@ public class Ged{
    public float[][] separarDadosSaida(float[][] dados, int colunas){
       return gtt.separarDadosSaida(dados, colunas);
    }
-
 
    /**
     * <p>
@@ -1214,7 +1198,6 @@ public class Ged{
       return gtt.separarDadosSaida(dados, colunas);
    }
 
-
    /**
     * Separa o conjunto de dados em dados de treino e dados de teste, de acordo com o tamanho do teste fornecido.
     * 
@@ -1240,7 +1223,6 @@ public class Ged{
    public int[][][] separarTreinoTeste(int[][] dados, float tamanhoTeste){
       return gtt.separarTreinoTeste(dados, tamanhoTeste);
    }
-
 
    /**
     * Separa o conjunto de dados em dados de treino e dados de teste, de acordo com o tamanho do teste fornecido.
@@ -1268,7 +1250,6 @@ public class Ged{
       return gtt.separarTreinoTeste(dados, tamanhoTeste);
    }
 
-
    /**
     * Separa o conjunto de dados em dados de treino e dados de teste, de acordo com o tamanho do teste fornecido.
     * 
@@ -1295,7 +1276,6 @@ public class Ged{
       return gtt.separarTreinoTeste(dados, tamanhoTeste);
    }
 
-
    //CONVERSOR DE DADOS ----------------------
 
    /**
@@ -1308,7 +1288,6 @@ public class Ged{
       return cd.dadosParaInt(dados);
    }
 
-
    /**
     * Converte o conteúdo do conjunto de dados para uma matriz bidimensional 
     * com os valores numéricos.
@@ -1318,7 +1297,6 @@ public class Ged{
    public float[][] dadosParaFloat(Dados dados){
       return cd.dadosParaFloat(dados);
    }
-
 
    /**
     * Converte o conteúdo do conjunto de dados para uma matriz bidimensional 
@@ -1330,7 +1308,6 @@ public class Ged{
       return cd.dadosParaDouble(dados);
    }
 
-
    /**
     * Converte o conjunto de dados para uma matriz bidimensional 
     * com os conteúdo contido nos dados.
@@ -1341,9 +1318,7 @@ public class Ged{
       return cd.dadosParaString(dados);
    }
 
-
    //OPERADOR MATRIZ --------------
-
 
    /**
     * Retorna uma nova matriz que possui o conteúdo das linhas 
@@ -1581,7 +1556,6 @@ public class Ged{
       return om.transporMatriz(matriz);
    }
 
-
    /**
     * Realiza a transposição da matriz fornecida. A transposição consiste em 
     * inverter as linhas e colunas da matriz.
@@ -1603,7 +1577,6 @@ public class Ged{
    public float[][] transporMatriz(float[][] matriz){
       return om.transporMatriz(matriz);
    }
-
 
    /**
     * Realiza a transposição da matriz fornecida. A transposição consiste em 

@@ -12,13 +12,23 @@ public class JanelaRede extends JFrame{
 
    public PainelRede painel;
 
+   public JanelaRede(int largura, int altura){
+      this.painel = new PainelRede(largura, altura);
+      configInicial();
+   }
+
    public JanelaRede(){
+      this.painel = new PainelRede();
+      configInicial();
+   }
+
+   void configInicial(){
       try{
          BufferedImage icone = ImageIO.read(new File("./render/rede-neural.png"));
          setIconImage(icone);
-      }catch(Exception e){}
-
-      this.painel = new PainelRede();
+      }catch(Exception e){
+         
+      }
       
       setTitle("Rede neural");
       add(painel);
