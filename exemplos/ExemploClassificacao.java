@@ -44,8 +44,8 @@ public class ExemploClassificacao{
       int[] arq = {qEntradas, 8, 8, qSaidas};
       RedeNeural rede = new RedeNeural(arq);
       rede.compilar(new SGD(), new Xavier());
-      rede.configurarFuncaoAtivacao(new Sigmoid());
-      rede.configurarFuncaoAtivacao(rede.obterCamadaSaida(), new Softmax());
+      rede.configurarAtivacao(new Sigmoid());
+      rede.configurarAtivacao(rede.obterCamadaSaida(), new Softmax());
 
       System.out.println(rede.info());
       

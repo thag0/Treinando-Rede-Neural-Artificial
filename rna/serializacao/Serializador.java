@@ -206,7 +206,7 @@ public class Serializador{
          rede.configurarBias(bias);
 
          for(int i = 0; i < rede.obterQuantidadeCamadas(); i++){
-            rede.configurarFuncaoAtivacao(rede.obterCamada(i), dicionario.obterAtivacao(ativacoesStr[i]));
+            rede.configurarAtivacao(rede.obterCamada(i), dicionario.obterAtivacao(ativacoesStr[i]));
          }
 
          for(int i = 0; i < rede.obterQuantidadeCamadas(); i++){

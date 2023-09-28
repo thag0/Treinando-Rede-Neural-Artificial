@@ -18,7 +18,7 @@ public class ExemploVariosPredicts{
       int[] arq = {nEntrada, 6, nSaida};
       RedeNeural rede = new RedeNeural(arq);
       rede.compilar();
-      rede.configurarFuncaoAtivacao(2);
+      rede.configurarAtivacao(2);
 
       rede.treinar(entrada, saida, 5000);
       double[][] previsoes = rede.calcularSaida(entrada);

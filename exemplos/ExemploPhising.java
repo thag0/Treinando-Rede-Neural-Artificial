@@ -46,8 +46,8 @@ public class ExemploPhising{
       int[] arq = {colunasDados, 30, 20, colunasClasses};
       RedeNeural rede = new RedeNeural(arq);
       rede.compilar(new SGD(), new Xavier());
-      rede.configurarFuncaoAtivacao(new Sigmoid());
-      rede.configurarFuncaoAtivacao(rede.obterCamadaSaida(), new TanH());
+      rede.configurarAtivacao(new Sigmoid());
+      rede.configurarAtivacao(rede.obterCamadaSaida(), new TanH());
       rede.treinar(treinoX, treinoY, 10_000);
 
       // avaliando os resultados da rede neural

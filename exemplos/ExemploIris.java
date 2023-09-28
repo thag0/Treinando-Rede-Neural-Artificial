@@ -52,8 +52,8 @@ public class ExemploIris{
       int[] arq = {colunasDados, 10, 10, colunasClasses};
       RedeNeural rede = new RedeNeural(arq);
       rede.compilar();
-      rede.configurarFuncaoAtivacao(new Sigmoid());
-      rede.configurarFuncaoAtivacao(rede.obterCamadaSaida(), new TanH());
+      rede.configurarAtivacao(new Sigmoid());
+      rede.configurarAtivacao(rede.obterCamadaSaida(), new TanH());
       rede.treinar(treinoX, treinoY, 10_000);
 
 

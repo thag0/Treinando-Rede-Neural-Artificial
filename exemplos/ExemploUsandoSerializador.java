@@ -25,7 +25,7 @@ public class ExemploUsandoSerializador {
 
       RedeNeural rede = new RedeNeural(2, 2, 1, 1);
       rede.compilar();
-      rede.configurarFuncaoAtivacao(2);
+      rede.configurarAtivacao(2);
       rede.treinar(e, s, 10_000);
 
       System.out.println(rede);

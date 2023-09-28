@@ -47,7 +47,7 @@ public class ExemploTratandoDados{
       RedeNeural rede = new RedeNeural(arq);
       rede.compilar();
       rede.configurarOtimizador(new SGD());
-      rede.configurarFuncaoAtivacao(2);
+      rede.configurarAtivacao(2);
       rede.treinar(treinoEntrada, treinoSaida, 2_000);
 
       //avaliando resultados

@@ -227,8 +227,11 @@ public class RedeNeural implements Cloneable{
     */
    public void configurarAlcancePesos(double alcance){
       if(alcance <= 0){
-         throw new IllegalArgumentException("O novo valor de alcance dos pesos deve ser maior que zero.");
+         throw new IllegalArgumentException(
+            "O novo valor de alcance dos pesos deve ser maior que zero."
+         );
       }
+      
       this.alcancePeso = alcance;
    }
 
@@ -278,7 +281,7 @@ public class RedeNeural implements Cloneable{
     * @param ativacao valor relativo a lista de ativações disponíveis.
     * @throws IllegalArgumentException se o modelo não foi compilado previamente.
     */
-   public void configurarFuncaoAtivacao(Camada camada, int ativacao){
+   public void configurarAtivacao(Camada camada, int ativacao){
       this.modeloCompilado();
       if(camada == null){
          throw new IllegalArgumentException("A camada fornecida é nula.");
@@ -313,7 +316,7 @@ public class RedeNeural implements Cloneable{
     * @param ativacao valor relativo a lista de ativações disponíveis.
     * @throws IllegalArgumentException se o modelo não foi compilado previamente.
     */
-   public void configurarFuncaoAtivacao(int ativacao){
+   public void configurarAtivacao(int ativacao){
       this.modeloCompilado();
       
       for(Camada camada : this.camadas){
@@ -350,7 +353,7 @@ public class RedeNeural implements Cloneable{
     * @throws IllegalArgumentException se a camada for nula.
     * @throws IllegalArgumentException se a função de ativação fornecida for nula.
     */
-   public void configurarFuncaoAtivacao(Camada camada, FuncaoAtivacao ativacao){
+   public void configurarAtivacao(Camada camada, FuncaoAtivacao ativacao){
       this.modeloCompilado();
 
       if(camada == null){
@@ -390,7 +393,7 @@ public class RedeNeural implements Cloneable{
     * @throws IllegalArgumentException se o modelo não foi compilado previamente.
     * @throws IllegalArgumentException se a função de ativação fornecida for nula.
     */
-   public void configurarFuncaoAtivacao(FuncaoAtivacao ativacao){
+   public void configurarAtivacao(FuncaoAtivacao ativacao){
       modeloCompilado();
 
       if(ativacao == null){
@@ -468,8 +471,9 @@ public class RedeNeural implements Cloneable{
     * Define se durante o processo de treinamento, a rede vai salvar dados relacionados a 
     * função de custo/perda de cada época.
     * <p>
-    *    Calcular o custo é uma operação que pode ser computacionalmente cara, então deve ser
-    *    bem avaliado querer ativar ou não esse recurso.
+    *    Calcular o custo é uma operação que pode ser computacionalmente cara dependendo do 
+    *    tamanho da rede e do conjunto de dados, então deve ser bem avaliado querer habilitar 
+    *    ou não esse recurso.
     * </p>
     * <p>
     *    {@code O valor padrão é false}
@@ -560,13 +564,12 @@ public class RedeNeural implements Cloneable{
       if(inicializador == null){
          throw new IllegalArgumentException("O inicializador não pode ser nulo.");
       }
-      Inicializador ini = inicializador;
 
       //inicializar camadas
       this.camadas = new Camada[this.arquitetura.length-1];
       for(int i = 0; i < this.camadas.length; i++){
          this.camadas[i] = new Camada(this.bias);
-         this.camadas[i].inicializar(this.arquitetura[i+1], this.arquitetura[i], alcancePeso, ini);
+         this.camadas[i].inicializar(this.arquitetura[i+1], this.arquitetura[i], alcancePeso, inicializador);
          this.camadas[i].configurarId(i);
       }
 
@@ -621,7 +624,7 @@ public class RedeNeural implements Cloneable{
       }
       if(nEntrada != entrada[0].length){
          throw new IllegalArgumentException(
-            "Dimensões dos dados de entrada (" + entrada[0].length + ") e quantidade de neurônios de entrada da rede (" + nEntrada + ") incompatíveis."
+            "Dimensões dos dados de entrada (" + entrada[0].length + ") e capacidade de entrada da rede (" + nEntrada + ") incompatíveis."
          );
       }
       if(nSaida != saida[0].length){
@@ -641,8 +644,8 @@ public class RedeNeural implements Cloneable{
     * </p>
     * @param entradas dados usados para alimentar a camada de entrada.
     * @throws IllegalArgumentException se o modelo não foi compilado previamente.
-    * @throws IllegalArgumentException se o tamanho dos dados de entrada for diferente do tamanho dos 
-    * neurônios de entrada.
+    * @throws IllegalArgumentException se o tamanho dos dados de entrada for diferente da capacidade
+    * de entrada da rede.
     */
    public void calcularSaida(double[] entradas){
       this.modeloCompilado();
@@ -650,7 +653,7 @@ public class RedeNeural implements Cloneable{
       int nEntrada = this.obterTamanhoEntrada();
       if(entradas.length != nEntrada){
          throw new IllegalArgumentException(
-            "Dimensões dos dados de entrada (" + entradas.length + ") e quantidade de neurônios de entrada da rede (" + nEntrada + ") incompatíveis."
+            "Dimensões dos dados de entrada (" + entradas.length + ") e capacidade de entrada da rede (" + nEntrada + ") incompatíveis."
          );
       }
 
@@ -672,8 +675,8 @@ public class RedeNeural implements Cloneable{
     * @param entradas dados usados para alimentar a camada de entrada.
     * @throws IllegalArgumentException se o modelo não foi compilado previamente.
     * @throws IllegalArgumentException se a quantidade de amostras em cada linha dos dados for diferente.
-    * @throws IllegalArgumentException se o tamanho dos dados de entrada for diferente do tamanho dos 
-    * neurônios de entrada.
+    * @throws IllegalArgumentException se o tamanho dos dados de entrada for diferente da capacidade
+    * de entrada da rede.
     * @return matriz contendo os resultados das predições da rede.
     */
    public double[][] calcularSaida(double[][] entradas){
@@ -682,20 +685,22 @@ public class RedeNeural implements Cloneable{
       int cols = entradas[0].length;
       for(int i = 1; i < entradas.length; i++){
          if(entradas[i].length != cols){
-            throw new IllegalArgumentException("As dimensões dos dados de entrada possuem tamanhos diferentes.");
+            throw new IllegalArgumentException(
+               "As dimensões dos dados de entrada possuem tamanhos diferentes."
+            );
          }
       }
 
       int nEntrada = this.obterTamanhoEntrada();
       if(entradas[0].length != nEntrada){
          throw new IllegalArgumentException(
-            "Dimensões dos dados de entrada (" + entradas.length + ") e quantidade de neurônios de entrada da rede (" + nEntrada + ") incompatíveis."
+            "Dimensões dos dados de entrada (" + entradas.length + ") e capacidade de entrada da rede (" + nEntrada + ") incompatíveis."
          );
       }
 
       //dimensões dos dados
       int nAmostras = entradas.length;
-      int nSaidas = this.obterCamadaSaida().quantidadeNeuronios();
+      int nSaidas = this.obterTamanhoSaida();
 
       double[][] resultados = new double[nAmostras][nSaidas];
       double[] entradaRede = new double[entradas[0].length];
@@ -720,7 +725,7 @@ public class RedeNeural implements Cloneable{
     * </p>
     * @param entradas dados de entrada do treino (features).
     * @param saidas dados de saída correspondente a entrada (class).
-    * @param epochs quantidade de épocas.
+    * @param epochs quantidade de épocas de treinamento.
     * @throws IllegalArgumentException se o modelo não foi compilado previamente.
     * @throws IllegalArgumentException se houver alguma inconsistência dos dados de entrada e saída para a operação.
     * @throws IllegalArgumentException se o valor de épocas for menor que um.
@@ -729,7 +734,11 @@ public class RedeNeural implements Cloneable{
       this.modeloCompilado();
       consistenciaDados(entradas, saidas);
 
-      if(epochs < 1) throw new IllegalArgumentException("O valor de epochs deve ser maior que zero.");
+      if(epochs < 1){
+         throw new IllegalArgumentException(
+            "O valor de epochs (" + epochs + ") não pode ser menor que um"
+         );
+      }
 
       //enviar clones pra não embaralhar os dados originais
       treinador.treino(this, this.otimizadorAtual, entradas.clone(), saidas.clone(), epochs);
@@ -745,7 +754,7 @@ public class RedeNeural implements Cloneable{
     * melhores resultados.
     * @param entradas dados de entrada do treino (features).
     * @param saidas dados de saída correspondente a entrada (class).
-    * @param epochs quantidade de épocas.
+    * @param epochs quantidade de épocas de treinamento.
     * @param tamLote tamanho que o lote vai assumir durante o treino.
     * @throws IllegalArgumentException se o modelo não foi compilado previamente.
     * @throws IllegalArgumentException se houver alguma inconsistência dos dados de entrada e saída para a operação.
@@ -756,10 +765,14 @@ public class RedeNeural implements Cloneable{
       consistenciaDados(entradas, saidas);
 
       if(epochs < 1){
-         throw new IllegalArgumentException("O valor de epochs não pode ser menor que um");
+         throw new IllegalArgumentException(
+            "O valor de epochs (" + epochs + ") não pode ser menor que um"
+         );
       }
       if(tamLote <= 0 || tamLote > entradas.length){
-         throw new IllegalArgumentException("O valor de tamanho do lote é inválido.");
+         throw new IllegalArgumentException(
+            "O valor de tamanho do lote (" + tamLote + ") é inválido."
+         );
       }
 
       //enviar clones pra não embaralhar os dados originais
@@ -782,60 +795,67 @@ public class RedeNeural implements Cloneable{
     * @param entradas matriz com os dados de entrada 
     * @param saidas matriz com os dados de saída
     * @param eps valor de perturbação
-    * @param taxaAprendizagem valor de taxa de aprendizagem do método, contribui para o quanto os pesos
+    * @param tA valor de taxa de aprendizagem do método, contribui para o quanto os pesos
     * serão atualizados. Valores altos podem convergir rápido mas geram instabilidade, valores pequenos
     * atrasam a convergência.
     * @param epochs número de épocas do treinamento
-    * @param custoMinimo valor de custo desejável, o treino será finalizado caso o valor de custo mínimo 
-    * seja atingido. Caso o custo mínimo seja zero, o treino irá continuar até o final das épocas fornecidas
+    * @param perdaMinima valor de perda desejável, o treino será finalizado caso o valor de perda mínima seja
+    * atingido. Caso a perda mínima seja zero, o treino irá continuar até o final das épocas fornecidas.
     * @throws IllegalArgumentException se o modelo não foi compilado previamente.
     * @throws IllegalArgumentException se houver alguma inconsistência dos dados de entrada e saída para a operação.
     * @throws IllegalArgumentException se o valor de perturbação for igual a zero.
     * @throws IllegalArgumentException se o valor de épocas for menor que um.
     * @throws IllegalArgumentException se o valor de custo mínimo for menor que zero.
     */
-   public void diferencaFinita(double[][] entradas, double[][] saidas, double eps, double taxaAprendizagem, int epochs, double custoMinimo){
+   public void diferencaFinita(double[][] entradas, double[][] saidas, double eps, double tA, int epochs, double perdaMinima){
       this.modeloCompilado();
       consistenciaDados(entradas, saidas);
       
       if(eps == 0){
-         throw new IllegalArgumentException("O valor de perturbação não pode ser igual a zero.");
+         throw new IllegalArgumentException(
+            "O valor de perturbação (" + eps + ") não pode ser igual a zero."
+         );
       }
       if(epochs < 1){
-         throw new IllegalArgumentException("O valor de epochs não pode ser menor que um.");
+         throw new IllegalArgumentException(
+            "O valor de epochs (" + epochs + ") não pode ser menor que um."
+         );
       }
-      if(custoMinimo < 0){
-         throw new IllegalArgumentException("O valor de custo mínimo não pode ser negativo.");
+      if(perdaMinima < 0){
+         throw new IllegalArgumentException(
+            "O valor de perda mínima (" + perdaMinima + ") não pode ser negativo."
+         );
       }
       
-      RedeNeural redeG = this.clone();//copia da rede para guardar os valores de "gradiente"
+      //copia da rede para guardar os valores de "gradiente"
+      RedeNeural redeG = this.clone();
       
       //transformar as redes em arrays para facilitar
-      Camada[] camadasR = this.camadas;
-      Camada[] camadasG = redeG.camadas;
+      Camada[] redec = this.camadas;
+      Camada[] gradc = redeG.camadas;
 
       for(int epocas = 0; epocas < epochs; epocas++){
          
          double custo = avaliador.erroMedioQuadrado(entradas, saidas);
-         if(custo < custoMinimo) break;
+         if(custo < perdaMinima) break;
 
          double valorAnterior = 0;
-         for(int i = 0; i < camadasR.length; i++){//percorrer camadas da rede
-            for(int j = 0; j < camadasR[i].quantidadeNeuronios(); j++){//percorrer neuronios da camada
-               for(int k = 0; k < camadasR[i].neuronios[j].pesos.length; k++){//percorrer pesos do neuronio
-                  valorAnterior = camadasR[i].neuronios[j].pesos[k];
-                  camadasR[i].neuronios[j].pesos[k] += eps;
-                  camadasG[i].neuronios[j].pesos[k] = ((avaliador.erroMedioQuadrado(entradas, saidas) - custo)/eps);//"derivada" da função de custo
-                  camadasR[i].neuronios[j].pesos[k] = valorAnterior;
+         for(int i = 0; i < redec.length; i++){
+            for(int j = 0; j < redec[i].quantidadeNeuronios(); j++){
+               for(int k = 0; k < redec[i].neuronios[j].pesos.length; k++){
+                  valorAnterior = redec[i].neuronios[j].pesos[k];
+                  redec[i].neuronios[j].pesos[k] += eps;
+                  gradc[i].neuronios[j].pesos[k] = ((avaliador.erroMedioQuadrado(entradas, saidas) - custo)/eps);//"derivada" da função de perda
+                  redec[i].neuronios[j].pesos[k] = valorAnterior;
                }
             }
          }
 
          //atualizar pesos
-         for(int i = 0; i < camadasR.length; i++){
-            for(int j = 0; j < camadasR[i].quantidadeNeuronios(); j++){
-               for(int k = 0; k < camadasR[i].neuronios[j].pesos.length; k++){
-                  camadasR[i].neuronios[j].pesos[k] -= taxaAprendizagem * camadasG[i].neuronios[j].pesos[k];
+         for(int i = 0; i < redec.length; i++){
+            for(int j = 0; j < redec[i].quantidadeNeuronios(); j++){
+               for(int k = 0; k < redec[i].neuronios[j].pesos.length; k++){
+                  redec[i].neuronios[j].pesos[k] -= tA * gradc[i].neuronios[j].pesos[k];
                }
             }
          }
@@ -852,8 +872,7 @@ public class RedeNeural implements Cloneable{
    }
 
    /**
-    * Retorna a {@code camada } da Rede Neural correspondente 
-    * ao índice fornecido.
+    * Retorna a {@code camada} da Rede Neural correspondente ao índice fornecido.
     * @param id índice da busca.
     * @return camada baseada na busca.
     * @throws IllegalArgumentException se o modelo não foi compilado previamente.
@@ -906,9 +925,9 @@ public class RedeNeural implements Cloneable{
    public double[] obterSaidas(){
       this.modeloCompilado();
 
-      double saida[] = new double[this.obterCamadaSaida().quantidadeNeuronios()];
+      double saida[] = new double[this.obterTamanhoSaida()];
       for(int i = 0; i < saida.length; i++){
-         saida[i] = this.camadas[this.camadas.length-1].neuronios[i].saida;
+         saida[i] = this.obterCamadaSaida().neuronios[i].saida;
       }
 
       return saida;
@@ -947,14 +966,16 @@ public class RedeNeural implements Cloneable{
     */
    public ArrayList<Double> obterHistoricoCusto(){
       if(!this.treinador.calcularHistorico){
-         throw new IllegalArgumentException("Deve ser habilitado o cálculo do histórico de custos para obter os resultados.");
+         throw new IllegalArgumentException(
+            "Deve ser habilitado o cálculo do histórico de custos para obter os resultados."
+         );
       }
       return this.treinador.obterHistorico();
    }
 
    /**
     * Retorna a quantiade de pesos total da rede, incluindo conexões com bias.
-    * @return quantiade de pesos total da rede.
+    * @return quantiade de pesos (ou parâmetros) total da rede.
     */
    public int obterQuantidadePesos(){
       int numPesos = 0;
@@ -1095,18 +1116,16 @@ public class RedeNeural implements Cloneable{
 
       String buffer = "";
       String espacamento = "   ";
-      String espacamentoDuplo = espacamento + espacamento;
-      String espacamentoTriplo = espacamento + espacamento + espacamento;
+      String espacamentoDuplo = espacamento.repeat(2);
+      String espacamentoTriplo = espacamento.repeat(3);
       
       buffer += "\nArquitetura " + nome + " = [\n";
-
       for(int i = 0; i < this.camadas.length; i++){
 
          buffer += espacamento + "Camada " + i + " = [\n";
          for(int j = 0; j < this.camadas[i].quantidadeNeuronios(); j++){
 
             buffer += espacamentoDuplo + "n" + j + " = [\n";
-
             for(int k = 0; k < this.camadas[i].neuronio(j).pesos.length; k++){
                if(k == this.camadas[i].neuronio(j).pesos.length-1 && this.bias){
                   buffer += espacamentoTriplo + "pb" + " = " + this.camadas[i].neuronio(j).pesos[k] + "\n";
@@ -1114,13 +1133,12 @@ public class RedeNeural implements Cloneable{
                   buffer += espacamentoTriplo + "p" + k + " = " + this.camadas[i].neuronio(j).pesos[k] + "\n";
                }
             }
-
             buffer += espacamentoDuplo + "]\n";
 
          }
          buffer += espacamento + "]\n\n";
+      
       }
-
       buffer += "]\n";
 
       return buffer;
