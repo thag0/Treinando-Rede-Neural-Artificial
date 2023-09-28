@@ -820,10 +820,11 @@ public class RedeNeural implements Cloneable{
 
       //dimensões dos dados
       int nAmostras = entradas.length;
+      int nEntradas = this.obterTamanhoEntrada();
       int nSaidas = this.obterTamanhoSaida();
 
       double[][] resultados = new double[nAmostras][nSaidas];
-      double[] entradaRede = new double[entradas[0].length];
+      double[] entradaRede = new double[nEntradas];
       double[] saidaRede = new double[nSaidas];
 
       for(int i = 0; i < nAmostras; i++){
@@ -861,8 +862,14 @@ public class RedeNeural implements Cloneable{
       }
 
       //enviar clones pra não embaralhar os dados originais
-      //TODO configurar perda
-      treinador.treino(this, this.perdaAtual, this.otimizadorAtual, entradas.clone(), saidas.clone(), epochs);
+      treinador.treino(
+         this,
+         this.perdaAtual,
+         this.otimizadorAtual,
+         entradas.clone(),
+         saidas.clone(),
+         epochs
+      );
    }
 
    /**
@@ -956,7 +963,7 @@ public class RedeNeural implements Cloneable{
          );
       }
       
-      //copia da rede para guardar os valores de "gradiente"
+      //copia da rede para guardar os valores de "gradientes"
       RedeNeural redeG = this.clone();
       
       //transformar as redes em arrays para facilitar
@@ -990,6 +997,14 @@ public class RedeNeural implements Cloneable{
          }
       }
 
+   }
+
+   /**
+    * Retorna a função de perda configurada da Rede Neural.
+    * @return função de perda atual da rede.
+    */
+   public Perda obterPerda(){
+      return this.perdaAtual;
    }
 
    /**

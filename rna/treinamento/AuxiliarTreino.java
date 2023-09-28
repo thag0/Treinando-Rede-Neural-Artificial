@@ -43,7 +43,7 @@ class AuxiliarTreino{
       Camada saida = redec[redec.length-1];
 
       for(int i = 0; i < saida.quantidadeNeuronios(); i++){
-         saida.neuronio(i).erro = perda.derivada(saida.neuronio(i).saida, real[i]);
+         saida.neuronio(i).erro = perda.calcularErro(saida.neuronio(i).saida, real[i]);
       }
    }
 

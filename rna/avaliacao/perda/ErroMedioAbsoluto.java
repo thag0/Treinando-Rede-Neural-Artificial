@@ -31,7 +31,7 @@ public class ErroMedioAbsoluto extends Perda{
    }
 
    @Override
-   public double derivada(double previsto, double real){
-      return (real - previsto);
+   public double calcularErro(double previsto, double real){
+      return real - previsto;
    }
 }

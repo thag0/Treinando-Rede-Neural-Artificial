@@ -54,30 +54,15 @@ public class Camada implements Cloneable{
    private int id;
 
    /**
+    * Capacidade de entrada de dados da camada.
+    */
+   private int tamanhoEntrada;
+
+   /**
     * Função de ativação da camada que atuará no resultado do somatório entre
     * os pesos e entradas com a adição do bias (se houver).
     */
    private FuncaoAtivacao ativacao;
-
-   /**
-    * Auxiliar na verficação se a camada está com a função de ativação
-    * Argmax configuarda.
-    * <p>
-    *    É importante ajustar corretamente esse indicador pois ele é 
-    *    usado durante o treinamento da Rede Neural.
-    * </p>
-    */
-   private boolean argmax = false;
-
-   /**
-    * Auxiliar na verficação se a camada está com a função de ativação
-    * Softmax configuarda.
-    * <p>
-    *    É importante ajustar corretamente esse indicador pois ele é 
-    *    usado durante o treinamento da Rede Neural.
-    * </p>
-    */ 
-   private boolean softmax = false;
 
    /**
     * Inicializa uma camada individual para a Rede Neural.
@@ -102,19 +87,25 @@ public class Camada implements Cloneable{
    }
 
    /**
-    * Instancia os todos neurônios da camada correspondente, configurando suas entradas e 
-    * pesos.
-    * @param neuronios quantidade de neurônios que a camada deve possuir, incluindo bias.
-    * @param conexoes quantidade de pesos de cada neurônio, deve corresponder a quantidade 
-    * de neurônios da camada anterior.
+    * Instancia os todos neurônios da camada, inicializando seus atributos e pesos de 
+    * acordo com o inicializador fornecido.
+    * @param neuronios quantidade de neurônios desejados para a camada.
+    * @param entrada capacidade de dados de entrada da camada, deve corresponder a quantidade
+    * de neurônios da camada anterior, ou no caso da camada de entrada, deve corresponder a 
+    * quantidade de dados de entrada.
     * @param alcancePeso valor de alcance da aleatorização dos pesos.
-    * @param inicializador inicializador customizado para os pesos iniciais da rede.
+    * @param inicializador inicializador para a geração dos pesos dos neurônios da camada.
     */
-   public void inicializar(int neuronios, int conexoes, double alcancePeso, Inicializador inicializador){
+   public void inicializar(int neuronios, int entrada, double alcancePeso, Inicializador inicializador){
+      if(inicializador == null){
+         throw new IllegalArgumentException("O inicializador não pode ser nulo.");
+      }
+
       this.neuronios = new Neuronio[neuronios];
+      this.tamanhoEntrada = entrada;
       
       for(int i = 0; i < this.neuronios.length; i++){
-         this.neuronios[i] = new Neuronio(conexoes, this.bias);
+         this.neuronios[i] = new Neuronio(entrada, this.bias);
          this.neuronios[i].inicializarPesos(inicializador, alcancePeso, this.neuronios.length);
       }
    }
@@ -202,17 +193,10 @@ public class Camada implements Cloneable{
          case 7 : this.ativacao = new GELU(); break;
          case 8 : this.ativacao = new Linear(); break;
          case 9 : this.ativacao = new Seno(); break;
-         case 10: 
-            this.ativacao = new Argmax(); 
-            this.argmax = true; 
-            this.softmax = false; 
-            break;
-         case 11: 
-            this.ativacao = new Softmax(); 
-            this.softmax = true;
-            this.argmax = false;
-            break;
+         case 10: this.ativacao = new Argmax(); break;
+         case 11: this.ativacao = new Softmax(); break;
          case 12: this.ativacao = new SoftPlus(); break;
+
          default: throw new IllegalArgumentException(
             "Valor fornecido ("  + ativacao + ") para a função de ativação está fora de alcance."
          );
@@ -220,7 +204,8 @@ public class Camada implements Cloneable{
    }
 
    /**
-    * Configura a função de ativação da camada através de uma instância de {@code FuncaoAtivacao}.
+    * Configura a função de ativação da camada através de uma instância de 
+    * {@code FuncaoAtivacao} que será usada para ativar seus neurônios.
     * <p>
     *    Configurando a ativação da camada usando uma instância de função 
     *    de ativação aumenta a liberdade de personalização dos hiperparâmetros
@@ -231,16 +216,9 @@ public class Camada implements Cloneable{
     */
    public void configurarAtivacao(FuncaoAtivacao ativacao){
       if(ativacao == null){
-         throw new IllegalArgumentException("A nova função de ativação não pode ser nula.");
-      }
-
-      if(ativacao instanceof Softmax){
-         this.softmax = true;
-         this.argmax = false;
-      
-      }else if(ativacao instanceof Argmax){
-         this.argmax = true;
-         this.softmax = false;
+         throw new IllegalArgumentException(
+            "A nova função de ativação não pode ser nula."
+         );
       }
 
       this.ativacao = ativacao;
@@ -298,6 +276,14 @@ public class Camada implements Cloneable{
    }
 
    /**
+    * Retorna a capacidade de entrada da camada.
+    * @return tamanho de entrada da camada.
+    */
+   public int tamanhoEntrada(){
+      return this.tamanhoEntrada;
+   }
+
+   /**
     * Verifica se a camada atual possui o bias configurado para seus neurônios.
     * @return true caso possua bias configurado, false caso contrário.
     */
@@ -306,25 +292,9 @@ public class Camada implements Cloneable{
    }
 
    /**
-    * Auxiliar na verificação da função de ativação argmax para a camada.
-    * @return caso a camada possua a função de ativação argmax configurada.
-    */
-   public boolean temArgmax(){
-      return this.argmax;
-   }
-
-   /**
-    * Auxiliar na verificação da função de ativação softmax para a camada.
-    * @return caso a camada possua a função de ativação softmax configurada.
-    */
-   public boolean temSoftmax(){
-      return this.softmax;
-   }
-
-   /**
-    * Retorda a quantidade de conexões totais da camada, em outras palavras, retorna
-    * o somatório do número de conexões de cada neurônio (incluindo os valores de entradas
-    * e pesos dos bias, caso configurados).
+    * Retorda a quantidade de conexões totais da camada, em outras palavras, 
+    * retorna o somatório do número de conexões de cada neurônio (incluindo os 
+    * valores de entradas e pesos dos bias, caso configurados).
     * @return a quantidade de conexões totais.
     */
    public int numConexoes(){
@@ -363,8 +333,8 @@ public class Camada implements Cloneable{
    }
 
    /**
-    * Clona a instância da camada, criando um novo objeto com as mesmas características
-    * mas em outro espaço de memória.
+    * Clona a instância da camada, criando um novo objeto com as 
+    * mesmas características mas em outro espaço de memória.
     * @return clone da camada.
     */
    @Override
@@ -372,8 +342,6 @@ public class Camada implements Cloneable{
       try{
          Camada clone = (Camada) super.clone();
 
-         clone.argmax = this.argmax;
-         clone.softmax = this.softmax;
          clone.ativacao = this.ativacao;
          clone.bias = this.bias;
          clone.id = this.id;

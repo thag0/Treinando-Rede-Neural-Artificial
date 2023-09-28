@@ -83,10 +83,7 @@ class Treino{
 
          //feedback de avanço da rede
          if(calcularHistorico){
-            if(rede.obterCamadaSaida().temSoftmax()){
-               historico.add(rede.avaliador.entropiaCruzada(entradas, saidas));
-            
-            }else historico.add(rede.avaliador.erroMedioQuadrado(entradas, saidas));
+            historico.add(perda.calcular(rede, entradas, saidas));
          }
       }
    }
