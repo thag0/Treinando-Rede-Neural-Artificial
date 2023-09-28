@@ -89,6 +89,41 @@ public class Geim{
       gdi.configurarCor(estruturaImagem, x, y, r, g, b);
    }
 
+   /**
+    * Captura o valor de cor vermelha de cada pixel da imagem.
+    * @param imagem imagem com os valore de cores.
+    * @return matriz com o valor de cor vermelha de cada pixel.
+    */
+   public int[][] obterVermelho(BufferedImage imagem){
+      return gdi.obterVermelho(imagem);
+   }
+
+   /**
+    * Captura o valor de cor verde de cada pixel da imagem.
+    * @param imagem imagem com os valore de cores.
+    * @return matriz com o valor de cor verde de cada pixel.
+    */
+   public int[][] obterVerde(BufferedImage imagem){
+      return gdi.obterVerde(imagem);
+   }
+
+   /**
+    * Captura o valor de cor azul de cada pixel da imagem.
+    * @param imagem imagem com os valore de cores.
+    * @return matriz com o valor de cor azul de cada pixel.
+    */
+   public int[][] obterAzul(BufferedImage imagem){
+      return gdi.obterAzul(imagem);
+   }
+
+   /**
+    * Captura o valor de escala de cinza de cada pixel da imagem.
+    * @param imagem imagem com os valore de cores.
+    * @return matriz com o valor de escala de cinza de cada pixel.
+    */
+   public int[][] obterCinza(BufferedImage imagem){
+      return gdi.obterCinza(imagem);
+   }
 
    /**
     * Exibe via terminal os valores de intensidade de cor vermelha, verde e azul de cada elemento da estrutura da imagem.

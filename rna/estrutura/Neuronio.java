@@ -119,7 +119,9 @@ public class Neuronio implements Cloneable{
       this.erro = 0;
 
       //entrada do bias
-      this.entradas[this.entradas.length-1] = 1;
+      if(bias){
+         this.entradas[this.entradas.length-1] = 1;
+      }
    }
     
    /**
@@ -212,8 +214,8 @@ public class Neuronio implements Cloneable{
    }
 
    /**
-    * Indica o tamanho de entrada do neurônio, excluindo o bias.
-    * @return
+    * Indica o tamanho de entrada do neurônio.
+    * @return capacidade de entrada do neurônio.
     */
    public int tamanhoEntrada(){
       return this.entradas.length - ((bias) ? 1 : 0);

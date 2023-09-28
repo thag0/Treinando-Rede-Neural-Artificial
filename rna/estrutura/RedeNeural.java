@@ -240,6 +240,9 @@ public class RedeNeural implements Cloneable{
     *    mais complexas, melhorando a capacidade de modelagem.
     * </p>
     * <p>
+    *    O bias deve ser configurado antes da compilação para ser aplicado.
+    * </p>
+    * <p>
     *    {@code O valor padrão para uso do bias é true}
     * </p>
     * @param usarBias novo valor para o uso do bias.

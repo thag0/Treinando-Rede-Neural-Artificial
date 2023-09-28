@@ -15,6 +15,48 @@ class OperadorMatriz{
 
    }
 
+   public int[] vetorizar(int[][] matriz){
+      int[] arr = new int[matriz.length * matriz[0].length];
+   
+      int cont = 0;
+      for(int i = 0; i < matriz.length; i++){
+         for(int j = 0; j < matriz[i].length; j++){
+            arr[cont] = matriz[i][j];
+            cont++;
+         }
+      }
+
+      return arr;
+   }
+
+   public float[] vetorizar(float[][] matriz){
+      float[] arr = new float[matriz.length * matriz[0].length];
+   
+      int cont = 0;
+      for(int i = 0; i < matriz.length; i++){
+         for(int j = 0; j < matriz[i].length; j++){
+            arr[cont] = matriz[i][j];
+            cont++;
+         }
+      }
+
+      return arr;
+   }
+
+   public double[] vetorizar(double[][] matriz){
+      double[] arr = new double[matriz.length * matriz[0].length];
+   
+      int cont = 0;
+      for(int i = 0; i < matriz.length; i++){
+         for(int j = 0; j < matriz[i].length; j++){
+            arr[cont] = matriz[i][j];
+            cont++;
+         }
+      }
+
+      return arr;
+   }
+
    //sublinhas
    
    public int[][] obterSubLinhas(int[][] dados, int inicio, int fim){

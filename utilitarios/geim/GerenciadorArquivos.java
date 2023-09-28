@@ -26,11 +26,9 @@ class GerenciadorArquivos{
       try{
          imagem = ImageIO.read(getClass().getResourceAsStream(caminho));
       }catch(Exception e){ 
-         e.printStackTrace();
+         throw new IllegalArgumentException("Erro ao ler a imagem \"" + caminho + "\"");
       }
       
-      if(imagem == null) throw new IllegalArgumentException("Erro ao ler a imagem \"" + caminho + "\"");
-
       return imagem;
    }
 

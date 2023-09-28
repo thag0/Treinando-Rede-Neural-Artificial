@@ -70,6 +70,70 @@ class GerenciadorDadosImagem{
    }
 
 
+   public int[][] obterVermelho(BufferedImage imagem){
+      int largura = imagem.getWidth();
+      int altura = imagem.getHeight();
+
+      int[][] vermelho = new int[altura][largura];
+      for(int y = 0; y < altura; y++){
+         for(int x = 0; x < largura; x++){
+            vermelho[y][x] = getR(imagem, x, y);
+         }
+      }
+
+      return vermelho;
+   }
+
+
+   public int[][] obterVerde(BufferedImage imagem){
+      int largura = imagem.getWidth();
+      int altura = imagem.getHeight();
+
+      int[][] verde = new int[altura][largura];
+      for(int y = 0; y < altura; y++){
+         for(int x = 0; x < largura; x++){
+            verde[y][x] = getG(imagem, x, y);
+         }
+      }
+
+      return verde;
+   }
+
+
+   public int[][] obterAzul(BufferedImage imagem){
+      int largura = imagem.getWidth();
+      int altura = imagem.getHeight();
+
+      int[][] azul = new int[altura][largura];
+      for(int y = 0; y < altura; y++){
+         for(int x = 0; x < largura; x++){
+            azul[y][x] = getB(imagem, x, y);
+         }
+      }
+
+      return azul;
+   }
+
+
+   public int[][] obterCinza(BufferedImage imagem){
+      int largura = imagem.getWidth();
+      int altura = imagem.getHeight();
+
+      int[][] cinza = new int[altura][largura];
+      for(int y = 0; y < altura; y++){
+         for(int x = 0; x < largura; x++){
+            int r = getR(imagem, x, y);
+            int g = getG(imagem, x, y);
+            int b = getB(imagem, x, y);
+            int c = (r + g + b) / 3;
+            cinza[y][x] = c;
+         }
+      }
+
+      return cinza;
+   }
+
+
    public int getR(BufferedImage imagem, int x, int y){
       int rgb = imagem.getRGB(x, y);
       int r = (rgb >> 16) & 0xFF;

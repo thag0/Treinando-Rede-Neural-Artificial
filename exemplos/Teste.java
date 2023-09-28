@@ -1,5 +1,6 @@
 package exemplos;
 
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -16,41 +17,33 @@ import rna.inicializadores.Xavier;
 import rna.otimizadores.SGD;
 import rna.serializacao.Serializador;
 import utilitarios.ged.Ged;
+import utilitarios.geim.Geim;
 import utilitarios.ged.Dados;
 
 @SuppressWarnings("unused")
 public class Teste{
    static Ged ged = new Ged();
+   static Geim geim = new Geim();
 
    public static void main(String[] args){
       ged.limparConsole();
 
-      double[][] in = {
-         {0, 0},
-         {0, 1},
-         {1, 0},
-         {1, 1}
-      };
-      double[][] out = {
-         {0},
-         {1},
-         {1},
-         {0}
-      };
+      BufferedImage imagem = geim.lerImagem("/dados/mnist/5.png");
+      int[][] cinza = geim.obterVermelho(imagem);
 
-      int[] arq = {in[0].length, 2, out[0].length};
-      RedeNeural rede = new RedeNeural(arq);
-      SGD sgd = new SGD();
-      rede.compilar(sgd, new Xavier());
-      rede.configurarFuncaoAtivacao(new Sigmoid());
-      System.out.println(rede.info());
+      // ged.imprimirMatriz(v, "vermelho");
+      imprimirAscii(cinza);
+   }
 
-      rede.treinar(in, out, 5_000);
-
-      var perda = rede.avaliador.erroMedioQuadrado(in, out);
-      System.out.println("perda = " + perda);
-
-      JanelaRede jr = new JanelaRede(600, 400);
-      jr.desenhar(rede);
+   static void imprimirAscii(int[][] dados){
+      for(int y = 0; y < dados.length; y++){
+         for(int x = 0; x < dados[y].length; x++){
+            if(dados[y][x] == 0) System.out.print("    ");
+            else if(dados[y][x] < 10) System.out.print("00" + dados[y][x] + " ");
+            else if(dados[y][x] < 100) System.out.print("0" + dados[y][x] + " ");
+            else System.out.print(dados[y][x] + " ");
+         }
+         System.out.println();
+      }
    }
 }

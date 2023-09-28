@@ -1321,6 +1321,72 @@ public class Ged{
    //OPERADOR MATRIZ --------------
 
    /**
+    * Tranforma todo o conteúdo da matriz fornecida numa forma contínua
+    * de dados.
+    * <p>
+    *    Exemplo:
+    * </p>
+    * <pre>
+    * m = [
+    *    1, 2, 3 
+    *    4, 5, 6 
+    *    7, 8, 9 
+    * ]
+    *
+    * v = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    * </pre>
+    * @param matriz matriz com os dados desejados.
+    * @return arrays contendo os dados serializados da matriz.
+    */
+   public int[] vetorizar(int[][] matriz){
+      return om.vetorizar(matriz);
+   }
+
+   /**
+    * Tranforma todo o conteúdo da matriz fornecida numa forma contínua
+    * de dados.
+    * <p>
+    *    Exemplo:
+    * </p>
+    * <pre>
+    * m = [
+    *    1, 2, 3 
+    *    4, 5, 6 
+    *    7, 8, 9 
+    * ]
+    *
+    * v = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    * </pre>
+    * @param matriz matriz com os dados desejados.
+    * @return arrays contendo os dados serializados da matriz.
+    */
+   public float[] vetorizar(float[][] matriz){
+      return om.vetorizar(matriz);
+   }
+
+   /**
+    * Tranforma todo o conteúdo da matriz fornecida numa forma contínua
+    * de dados.
+    * <p>
+    *    Exemplo:
+    * </p>
+    * <pre>
+    * m = [
+    *    1, 2, 3 
+    *    4, 5, 6 
+    *    7, 8, 9 
+    * ]
+    *
+    * v = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    * </pre>
+    * @param matriz matriz com os dados desejados.
+    * @return arrays contendo os dados serializados da matriz.
+    */
+   public double[] vetorizar(double[][] matriz){
+      return om.vetorizar(matriz);
+   }
+
+   /**
     * Retorna uma nova matriz que possui o conteúdo das linhas 
     * de acordo com os índices fornecidos.
     * <p>

@@ -15,14 +15,15 @@ public class TanH extends FuncaoAtivacao{
 
    }
 
+   private double tanh(double x){
+      //abordagem que se mostrou mais rápida
+      return 2 / (1 + Math.exp(-2*x)) -1;
+   }
+
    @Override
    public void ativar(Neuronio[] neuronios){
-      double x, exp, expn;
       for(int i = 0; i < neuronios.length; i++){
-         x = neuronios[i].somatorio;
-         exp = Math.exp(x); 
-         expn = Math.exp(-x); 
-         neuronios[i].saida = (exp - expn)/(exp + expn);
+         neuronios[i].saida = tanh(neuronios[i].somatorio);
       }
    }
 
