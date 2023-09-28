@@ -28,6 +28,11 @@ public class ErroMedioQuadrado extends Perda{
 
       perda /= entrada.length;
 
-      return perda;      
+      return perda;
+   }
+
+   @Override
+   public double derivada(double previsto, double real){
+      return 2*(real - previsto);
    }
 }

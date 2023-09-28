@@ -2,6 +2,7 @@ package rna.treinamento;
 
 import java.util.Random;
 
+import rna.avaliacao.perda.Perda;
 import rna.estrutura.Camada;
 import rna.estrutura.Neuronio;
 
@@ -35,24 +36,14 @@ class AuxiliarTreino{
     *    </p>
     * </p>
     * @param redec Rede Neural em formato de array de camadas.
-    * @param saidas array com as saídas esperadas.
+    * @param perda função de perda da rede usada para calcular os erros.
+    * @param real array com as saídas esperadas.
     */
-   void calcularErroSaida(Camada[] redec, double[] saidas){
+   void calcularErroSaida(Camada[] redec, Perda perda, double[] real){
       Camada saida = redec[redec.length-1];
-      Neuronio neuronio;
-      
-      if(saida.temArgmax()){//classificação binária
-         int indiceMaior = indiceMaiorValor(saidas);
-         for(int i = 0; i < saida.quantidadeNeuronios(); i++){
-            neuronio = saida.neuronio(i);
-            neuronio.erro = (i == indiceMaior) ? 1-neuronio.saida : 0-neuronio.saida;
-         }
 
-      }else{// regressão (e softmax)
-         for(int i = 0; i < saida.quantidadeNeuronios(); i++){
-            neuronio = saida.neuronio(i);
-            neuronio.erro = saidas[i] - neuronio.saida;
-         }
+      for(int i = 0; i < saida.quantidadeNeuronios(); i++){
+         saida.neuronio(i).erro = perda.derivada(saida.neuronio(i).saida, real[i]);
       }
    }
 

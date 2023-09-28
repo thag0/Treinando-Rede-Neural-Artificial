@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 import rna.ativacoes.FuncaoAtivacao;
 import rna.avaliacao.Avaliador;
+import rna.avaliacao.perda.ErroMedioQuadrado;
+import rna.avaliacao.perda.Perda;
 import rna.inicializadores.Aleatorio;
 import rna.inicializadores.Inicializador;
 import rna.otimizadores.Otimizador;
@@ -77,6 +79,11 @@ public class RedeNeural implements Cloneable{
    private boolean compilado = false;
 
    /**
+    * Função de perda usada durante o processo de treinamento.
+    */
+   private Perda perdaAtual;
+
+   /**
     * Otimizador que será utilizado durante o processo de aprendizagem da
     * da Rede Neural.
     */
@@ -137,10 +144,9 @@ public class RedeNeural implements Cloneable{
       }
       if(arquitetura.length < 2){
          throw new IllegalArgumentException(
-            "A arquitetura da rede não pode conter menos de dois elementos (entrada e saída)"
+            "A arquitetura fornecida deve conter no mínimo dois elementos (entrada e saída), tamanho recebido = " + arquitetura.length
          );
-      } 
-      
+      }
       for(int i = 0; i < arquitetura.length; i++){
          if(arquitetura[i] < 1){
             throw new IllegalArgumentException(
@@ -406,6 +412,19 @@ public class RedeNeural implements Cloneable{
    }
 
    /**
+    * Configura a função de perda que será utilizada durante o processo
+    * de treinamento da Rede Neural.
+    * @param perda nova função de perda.
+    */
+   public void configurarPerda(Perda perda){
+      if(perda == null){
+         throw new IllegalArgumentException("A função de perda não pode ser nula.");
+      }
+
+      this.perdaAtual = perda;
+   }
+
+   /**
     * Configura o novo otimizdor da Rede Neural com base numa nova instância de otimizador.
     * <p>
     *    Configurando o otimizador passando diretamente uma nova instância permite configurar
@@ -500,15 +519,22 @@ public class RedeNeural implements Cloneable{
     *    dados necessários. Após a predição pode-se obter o resultado da rede por meio da função 
     *    {@code obterSaidas()};
     * </p>
-    * Os valores de otimizador e inicializador serão definidos como os padrões {@code SGD} e {@code Aleatorio}. 
-    * O valor do otimizador será definido como o padrão caso não tenha sido configurado previamente.
+    * Os valores de função de perda, otimizador e inicializador serão definidos como os padrões 
+    * {@code ErroMedioQuadrado (MSE)}, {@code SGD} e {@code Aleatorio}. 
+    * <p>
+    *    Valores de perda e otimizador configurados previamente são mantidos.
+    * </p>
     */
    public void compilar(){
-      if(this.otimizadorAtual == null){
-         this.compilar(new SGD(), new Aleatorio());
-      
+      //usando valores de configuração prévia, se forem criados.
+      if(this.perdaAtual == null && this.otimizadorAtual == null){
+         this.compilar(new ErroMedioQuadrado(), new SGD(), new Aleatorio());
+         
+      }else if(this.perdaAtual == null){
+         this.compilar(new ErroMedioQuadrado(), this.otimizadorAtual, new Aleatorio());
+         
       }else{
-         compilar(this.otimizadorAtual);
+         this.compilar(this.perdaAtual, this.otimizadorAtual, new Aleatorio());
       }
    }
 
@@ -528,15 +554,62 @@ public class RedeNeural implements Cloneable{
     *    dados necessários. Após a predição pode-se obter o resultado da rede por meio da função 
     *    {@code obterSaidas()};
     * </p>
-    * O valor do inicializador será definido como o padrão {@code Aleatorio}.
+    * O valor do otimizador será definido como {@code SGD} o valor do inicializador 
+    * será definido como o padrão {@code Aleatorio}.
+    * <p>
+    *    Valor de otimizador configurado previamente é mantido.
+    * </p>
+    * @param perda função de perda da Rede Neural usada durante o treinamento.
+    * @throws IllegalArgumentException se a função de perda for nula.
+    */
+   public void compilar(Perda perda){
+      if(perda == null){
+         throw new IllegalArgumentException("A função de perda não pode ser nula.");
+      }
+
+      if(this.otimizadorAtual == null){
+         this.compilar(perda, new SGD(), new Aleatorio());
+
+      }else{
+         this.compilar(perda, this.otimizadorAtual, new Aleatorio());
+      }
+   }
+
+   /**
+    * Compila o modelo de Rede Neural inicializando as camadas, neurônios e pesos respectivos, 
+    * baseado nos valores fornecidos.
+    * <p>
+    *    Caso nenhuma configuração inicial seja feita, a rede será inicializada com os argumentos padrão. 
+    * </p>
+    * Após a compilação o modelo está pronto para ser usado, mas deverá ser treinado.
+    * <p>
+    *    Para treinar o modelo deve-se fazer uso da função função {@code treinar()} informando os 
+    *    dados necessários para a rede.
+    * </p>
+    * <p>
+    *    Para usar as predições da rede basta usar a função {@code calcularSaida()} informando os
+    *    dados necessários. Após a predição pode-se obter o resultado da rede por meio da função 
+    *    {@code obterSaidas()};
+    * </p>
+    * A função de perda será definida como {@code ErroMedioQuadrado (MSE)} O valor do inicializador 
+    * será definido como o padrão {@code Aleatorio}.
+    * <p>
+    *    Valor de função de perda configurada previamente é mantido.
+    * </p>
     * @param otimizador otimizador que será usado durante o treino da Rede Neural.
-    * @throws IllegalArgumentException se o otimizador fornecido for nulo.
+    * @throws IllegalArgumentException se o otimizador for nulo.
     */
    public void compilar(Otimizador otimizador){
       if(otimizador == null){
          throw new IllegalArgumentException("O otimizador fornecido não pode ser nulo.");
       }
-      this.compilar(otimizador, new Aleatorio());
+
+      if(this.perdaAtual == null){
+         this.compilar(new ErroMedioQuadrado(), otimizador, new Aleatorio());
+
+      }else{
+         this.compilar(this.perdaAtual, otimizador, new Aleatorio());
+      }
    }
 
    /**
@@ -554,12 +627,53 @@ public class RedeNeural implements Cloneable{
     *    Para usar as predições da rede basta usar a função {@code calcularSaida()} informando os
     *    dados necessários. Após a predição pode-se obter o resultado da rede por meio da função 
     *    {@code obterSaidas()};
+    * </p>
+    * A função de perda usada será a {@code ErroMedioQuadrado (MSE)}.
+    * <p>
+    *    Valor de função de perda configurada previamente é mantido.
     * </p>
     * @param otimizador otimizador que será usando para o treino da Rede Neural.
     * @param inicializador inicializador de pesos dos neurônios da Rede Neural.
     * @throws IllegalArgumentException se o otimizador ou inicializador forem nulos.
     */
    public void compilar(Otimizador otimizador, Inicializador inicializador){
+      if(otimizador == null){
+         throw new IllegalArgumentException("O otimizador fornecido não pode ser nulo.");
+      }
+      if(inicializador == null){
+         throw new IllegalArgumentException("O inicializador fornecido não pode ser nulo.");
+      }
+
+      if(this.perdaAtual == null){
+         this.compilar(new ErroMedioQuadrado(), otimizador, inicializador);
+
+      }else{
+         this.compilar(this.perdaAtual, otimizador, inicializador);
+      }   
+   }
+
+   /**
+    * Compila o modelo de Rede Neural inicializando as camadas, neurônios e pesos respectivos, 
+    * baseado nos valores fornecidos.
+    * <p>
+    *    Caso nenhuma configuração inicial seja feita, a rede será inicializada com os argumentos padrão. 
+    * </p>
+    * Após a compilação o modelo está pronto para ser usado, mas deverá ser treinado.
+    * <p>
+    *    Para treinar o modelo deve-se fazer uso da função função {@code treinar()} informando os 
+    *    dados necessários para a rede.
+    * </p>
+    * <p>
+    *    Para usar as predições da rede basta usar a função {@code calcularSaida()} informando os
+    *    dados necessários. Após a predição pode-se obter o resultado da rede por meio da função 
+    *    {@code obterSaidas()};
+    * </p>
+    * @param perda função de perda da Rede Neural usada durante o treinamento.
+    * @param otimizador otimizador que será usando para o treino da Rede Neural.
+    * @param inicializador inicializador de pesos dos neurônios da Rede Neural.
+    * @throws IllegalArgumentException se a perda, otimizador ou inicializador forem nulos.
+    */
+   public void compilar(Perda perda, Otimizador otimizador, Inicializador inicializador){
       //inicializador de pesos
       if(inicializador == null){
          throw new IllegalArgumentException("O inicializador não pode ser nulo.");
@@ -572,6 +686,12 @@ public class RedeNeural implements Cloneable{
          this.camadas[i].inicializar(this.arquitetura[i+1], this.arquitetura[i], alcancePeso, inicializador);
          this.camadas[i].configurarId(i);
       }
+
+      //inicializar função de perda
+      if(perda == null){
+         throw new IllegalArgumentException("A função de perda não pode ser nula.");
+      }
+      this.perdaAtual = perda;
 
       //inicializar otimizador
       if(otimizador == null){
@@ -741,7 +861,8 @@ public class RedeNeural implements Cloneable{
       }
 
       //enviar clones pra não embaralhar os dados originais
-      treinador.treino(this, this.otimizadorAtual, entradas.clone(), saidas.clone(), epochs);
+      //TODO configurar perda
+      treinador.treino(this, this.perdaAtual, this.otimizadorAtual, entradas.clone(), saidas.clone(), epochs);
    }
 
    /**
@@ -776,7 +897,15 @@ public class RedeNeural implements Cloneable{
       }
 
       //enviar clones pra não embaralhar os dados originais
-      treinador.treino(this, this.otimizadorAtual, entradas.clone(), saidas.clone(), epochs, tamLote);
+      treinador.treino(
+         this,
+         this.perdaAtual,
+         this.otimizadorAtual,
+         entradas.clone(),
+         saidas.clone(),
+         epochs,
+         tamLote
+      );
    }
    
    /**
@@ -1057,6 +1186,9 @@ public class RedeNeural implements Cloneable{
       String buffer = "";
       String espacamento = "    ";
       System.out.println("\nInformações " + this.nome + " = [");
+
+      //perda
+      buffer += espacamento + "Perda: " + this.perdaAtual.getClass().getSimpleName() + "\n\n";
 
       //otimizador
       buffer += espacamento + "Otimizador: " + this.otimizadorAtual.getClass().getSimpleName() + "\n";

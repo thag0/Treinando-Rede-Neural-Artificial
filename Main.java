@@ -11,6 +11,7 @@ import render.JanelaTreino;
 
 import rna.inicializadores.*;
 import rna.ativacoes.*;
+import rna.avaliacao.perda.*;
 import rna.otimizadores.*;
 import rna.estrutura.RedeNeural;
 import utilitarios.ged.Dados;
@@ -24,9 +25,9 @@ class Main{
    
    // static final String caminhoArquivo = "/dados/imagens/dog.jpg";
    // static final String caminhoArquivo = "/dados/32x32/bloco.png";
-   static final String caminhoArquivo = "/dados/mnist/5.png";
+   static final String caminhoArquivo = "/dados/mnist/8.png";
    static final String caminhoImagemExportada = "./resultados/imagem-ampliada";
-   static final int epocas = 10*1000;
+   static final int epocas = 100*1000;
    static final float escalaRender = 8f;
    static final float escalaImagemExportada = 30f;
 
@@ -90,10 +91,13 @@ class Main{
       // int[] arq = {entradas, 36, 36, 36, saidas};//32x32
       int[] arq = {entradas, 13, 13, saidas};//28x28
 
+      Perda perda = new ErroMedioQuadrado();
+      Otimizador otm = new SGD(0.0001, 0.999, true);
+      Inicializador ini = new Xavier();
+
       RedeNeural rede = new RedeNeural(arq);
-      rede.compilar(new SGD(0.0001, 0.99, true), new Xavier());
-      rede.configurarAtivacao(new TanH());
-      rede.configurarAtivacao(rede.obterCamadaSaida(), new Sigmoid());
+      rede.compilar(perda, otm, ini);
+      rede.configurarAtivacao(new Sigmoid());
 
       return rede;
    }

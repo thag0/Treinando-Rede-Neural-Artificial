@@ -12,8 +12,8 @@ import rna.inicializadores.Xavier;
  * <p>
  *    Cada neurônio possui um conjunto de pesos para suas conexões com os 
  *    neurônios da camada anterior, além de valores de entrada, saída e 
- *    alguns parâmetros adicionais para facilitar o uso manuseio de parâmetros
- *    durante o treinamento.
+ *    alguns parâmetros adicionais para facilitar o manuseio de durante 
+ *    o treinamento.
  * </p>
  * O neurônio oferece métodos de inicialização de pesos e cálculo do somatório
  * de seus pesos multiplicados pelas entradas. Métodos de funções de ativação
@@ -94,17 +94,18 @@ public class Neuronio implements Cloneable{
 
    /**
     * Constante auxiliar que ajuda no controle do bias atuando como
-    * entrada e pesos adicionais para o neurônio;
+    * entrada e pesos adicionais para o neurônio.
     */
    private boolean bias = true;
 
    /**
     * Instancia um neurônio individual da rede.
     * <p>
-    *    Os valores iniciais de pesos são dados como 0.
+    *    Os valores iniciais de são dados como 0.
     * </p>
     * @param conexoes quantidade de conexões, deve estar relacionada com a 
     * quatidade de neurônios da camada anterior.
+    * @param bias aplicar víes ao neurônio.
     */
    public Neuronio(int conexoes, boolean bias){
       this.bias = bias;
@@ -161,7 +162,7 @@ public class Neuronio implements Cloneable{
     *    produtos entre a entrada com o peso respectivo e ao final adicionar o bias. 
     *    Nesse modelo de arquitetura o bias é um parâmetro adicional nas entradas dos
     *    neurônios e possui valor de saída sempre igual a 1, então é possível generalizar
-    *    num loop só.
+    *    num único loop.
     * </p>
     */
    public void somatorio(){
@@ -218,7 +219,7 @@ public class Neuronio implements Cloneable{
     * @return capacidade de entrada do neurônio.
     */
    public int tamanhoEntrada(){
-      return this.entradas.length - ((bias) ? 1 : 0);
+      return this.entradas.length - ((this.bias) ? 1 : 0);
    }
 
    /**
@@ -243,8 +244,8 @@ public class Neuronio implements Cloneable{
    }
 
    /**
-    * Clona a instância do neurônio, criando um novo objeto com as mesmas características
-    * mas em outro espaço de memória.
+    * Clona a instância do neurônio, criando um novo objeto com as 
+    * mesmas características mas em outro espaço de memória.
     * @return clone do neurônio.
     */
    @Override
@@ -253,8 +254,9 @@ public class Neuronio implements Cloneable{
          Neuronio clone = (Neuronio) super.clone();
          clone.bias = this.bias;
 
-         clone.pesos = new double[this.pesos.length];
+         //considerar a entrada do bias
          clone.entradas = new double[this.entradas.length];
+         clone.pesos = new double[this.pesos.length];
          for(int i = 0; i < this.pesos.length; i++){
             clone.pesos[i] = this.pesos[i];
             clone.entradas[i] = this.entradas[i];

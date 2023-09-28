@@ -37,4 +37,11 @@ public class EntropiaCruzada extends Perda{
 
       return perda;
    }
+
+   @Override
+   public double derivada(double previsto, double real){
+      //essa aqui não é a derivada que encontrei
+      //mas é uma adaptação pra arquitetura de rede que fiz.
+      return (real - previsto);
+   }
 }

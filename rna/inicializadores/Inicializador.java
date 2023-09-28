@@ -15,7 +15,7 @@ public class Inicializador{
     * @param seed nova seed de início.
     */
    public void configurarSeed(long seed){
-      random = new Random(seed);
+      random.setSeed(seed);
    }
 
    /**

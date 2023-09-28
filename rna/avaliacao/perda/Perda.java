@@ -18,6 +18,14 @@ public abstract class Perda{
     * @return valor de perda de acordo com a função configurada.
     */
    public double calcular(RedeNeural rede, double[][] entrada, double[][] saida){
-      throw new UnsupportedOperationException("É necessário implementar a função de perda.");
+      throw new UnsupportedOperationException(
+         "É necessário implementar a função de perda."
+      );
+   }
+
+   public double derivada(double previsto, double real){
+      throw new UnsupportedOperationException(
+         "É necessário implementar a derivada da função de perda."
+      );
    }
 }

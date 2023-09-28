@@ -2,6 +2,7 @@ package rna.treinamento;
 
 import java.util.ArrayList;
 
+import rna.avaliacao.perda.Perda;
 import rna.estrutura.Camada;
 import rna.estrutura.Neuronio;
 import rna.estrutura.RedeNeural;
@@ -45,6 +46,7 @@ class TreinoLote{
     * Treina a rede neural calculando os erros dos neuronios, seus gradientes para cada peso e 
     * passando essas informações para o otimizador configurado ajustar os pesos.
     * @param rede instância da rede.
+    * @param perda função de perda (ou custo) usada para calcular os erros da rede.
     * @param otimizador otimizador configurado da rede.
     * @param entradas dados de entrada para o treino.
     * @param saidas dados de saída correspondente as entradas para o treino.
@@ -52,7 +54,7 @@ class TreinoLote{
     * @param embaralhar embaralhar dados de treino para cada época.
     * @param tamLote tamanho do lote.
     */
-   public void treino(RedeNeural rede, Otimizador otimizador, double[][] entradas, double[][] saidas, int epochs, int tamLote){
+   public void treino(RedeNeural rede, Perda perda, Otimizador otimizador, double[][] entradas, double[][] saidas, int epochs, int tamLote){
       Camada[] redec = rede.obterCamadas();
 
       boolean embaralhar = true;
@@ -75,7 +77,7 @@ class TreinoLote{
                double[] saida = saidaLote[k];
 
                rede.calcularSaida(entrada);
-               backpropagationLote(redec, saida);
+               backpropagationLote(redec, perda, saida);
             }
 
             //normalizar gradientes para enviar pro otimizador
@@ -98,8 +100,8 @@ class TreinoLote{
     * @param taxaAprendizagem valor de taxa de aprendizagem da rede neural.
     * @param saidas array com as saídas esperadas das amostras.
     */
-   private void backpropagationLote(Camada[] redec, double[] saidas){
-      aux.calcularErroSaida(redec, saidas);
+   private void backpropagationLote(Camada[] redec, Perda perda, double[] saidas){
+      aux.calcularErroSaida(redec, perda, saidas);
       aux.calcularErroOcultas(redec);
       calcularGradientesAcumulados(redec);
    }

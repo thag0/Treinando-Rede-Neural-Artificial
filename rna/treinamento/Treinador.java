@@ -2,6 +2,7 @@ package rna.treinamento;
 
 import java.util.ArrayList;
 
+import rna.avaliacao.perda.Perda;
 import rna.estrutura.RedeNeural;
 import rna.otimizadores.Otimizador;
 
@@ -54,8 +55,8 @@ public class Treinador{
     * @param epochs quantidade de épocas de treinamento.
     * @param embaralhar embaralhar dados de treino para cada época.
     */
-   public void treino(RedeNeural rede, Otimizador otimizador, double[][] entradas, double[][] saidas, int epochs){
-      treino.treino(rede, otimizador, entradas, saidas, epochs);
+   public void treino(RedeNeural rede, Perda perda, Otimizador otimizador, double[][] entradas, double[][] saidas, int epochs){
+      treino.treino(rede, perda, otimizador, entradas, saidas, epochs);
    }
 
    /**
@@ -69,8 +70,8 @@ public class Treinador{
     * @param embaralhar embaralhar dados de treino para cada época.
     * @param tamLote tamanho do lote.
     */
-   public void treino(RedeNeural rede, Otimizador otimizador, double[][] entradas, double[][] saidas, int epochs, int tamLote){
-      treinoLote.treino(rede, otimizador, entradas, saidas, epochs, tamLote);
+   public void treino(RedeNeural rede, Perda perda, Otimizador otimizador, double[][] entradas, double[][] saidas, int epochs, int tamLote){
+      treinoLote.treino(rede, perda, otimizador, entradas, saidas, epochs, tamLote);
    }
 
    /**

@@ -13,16 +13,16 @@ import rna.ativacoes.SoftPlus;
 import rna.ativacoes.Softmax;
 import rna.ativacoes.Swish;
 import rna.ativacoes.TanH;
+
 import rna.inicializadores.Inicializador;
 
 /**
- * Representa uma camada densa de neurônios dentro de uma Rede Neural.
+ * Representa uma camada densa de neurônios dentro da Rede Neural.
  * <p>
  *    Cada camada possui um conjunto de neurônios e uma função de ativação que 
  *    pode ser configurada.
  * </p>
- * O bias da camada atua apenas nos neurônios da camada seguinte, ele funciona
- * como um neurônio adicional presente na camda {@code x} e atua na camada {@code x+1}.
+ *    O bias configurado será aplicado em cada neurônio individualmente.
  * <p>
  *    Após instanciar a camada é necessário inicializar seus neurônios.
  * </p>
@@ -38,14 +38,10 @@ public class Camada implements Cloneable{
    Neuronio[] neuronios;
 
    /**
-    * Auxiliar na contagem do neurônio adicional como bias
-    * para verificação da quantidade de neurônios reais.
-    * <p>
-    *    Seu valor padrão é 1, indicando que há um bias atuando
-    *    como neurônio adicional.
-    * </p>
+    * Auxiliar na verificação de bias aplicado aos
+    * neurônios da camada.
     */
-   private int b = 1;
+   private boolean bias = true;
 
    /**
     * Identificador da camada dentro da Rede Neural.
@@ -92,7 +88,7 @@ public class Camada implements Cloneable{
     * adicionado um neurônio adicional que a saída é sempre 1.
     */
    public Camada(boolean temBias){
-      this.b = (temBias) ? 1 : 0;
+      this.bias = temBias;
       this.ativacao = new ReLU();
    }
 
@@ -118,7 +114,7 @@ public class Camada implements Cloneable{
       this.neuronios = new Neuronio[neuronios];
       
       for(int i = 0; i < this.neuronios.length; i++){
-         this.neuronios[i] = new Neuronio(conexoes, this.temBias());
+         this.neuronios[i] = new Neuronio(conexoes, this.bias);
          this.neuronios[i].inicializarPesos(inicializador, alcancePeso, this.neuronios.length);
       }
    }
@@ -217,7 +213,9 @@ public class Camada implements Cloneable{
             this.argmax = false;
             break;
          case 12: this.ativacao = new SoftPlus(); break;
-         default: throw new IllegalArgumentException("Valor fornecido para a função de ativação está fora de alcance.");
+         default: throw new IllegalArgumentException(
+            "Valor fornecido ("  + ativacao + ") para a função de ativação está fora de alcance."
+         );
       }
    }
 
@@ -276,21 +274,23 @@ public class Camada implements Cloneable{
     */
    public Neuronio neuronio(int id){
       if(id < 0 || id >= this.neuronios.length){
-         throw new IllegalArgumentException("Índice fornecido para busca do neurônio é inválido");
+         throw new IllegalArgumentException(
+            "Índice fornecido para busca do neurônio (" + id + ") é inválido"
+         );
       }
       return this.neuronios[id];
    }
 
    /**
     * Retorna todo o conjunto de neurônios da camada.
-    * @return todos os neurônios presentes na camada, incluindo bias.
+    * @return todos os neurônios presentes na camada.
     */
    public Neuronio[] neuronios(){
       return this.neuronios;
    }
 
    /**
-    * Retorna o valor da quantidade de neurônios da camada, {@code excluindo bias}.
+    * Retorna o valor da quantidade de neurônios da camada.
     * @return quantidade de neurônios presentes na camada.
     */
    public int quantidadeNeuronios(){
@@ -298,11 +298,11 @@ public class Camada implements Cloneable{
    }
 
    /**
-    * Verifica se a camada atual possui o bias configurado como neurônio adicional.
-    * @return true caso possua um neurônio adicional como bias, false caso contrário.
+    * Verifica se a camada atual possui o bias configurado para seus neurônios.
+    * @return true caso possua bias configurado, false caso contrário.
     */
    public boolean temBias(){
-      return (this.b == 1);
+      return this.bias;
    }
 
    /**
@@ -323,7 +323,8 @@ public class Camada implements Cloneable{
 
    /**
     * Retorda a quantidade de conexões totais da camada, em outras palavras, retorna
-    * o somatório do número de conexões de cada neurônio.
+    * o somatório do número de conexões de cada neurônio (incluindo os valores de entradas
+    * e pesos dos bias, caso configurados).
     * @return a quantidade de conexões totais.
     */
    public int numConexoes(){
@@ -341,7 +342,7 @@ public class Camada implements Cloneable{
     *    <li>Função de ativação.</li>
     *    <li>Quantidade de neurônios.</li>
     *    <li>Quantidade de conexões.</li>
-    *    <li>Bias como neurônio adicional.</li>
+    *    <li>Bias configurado para seus neurônios.</li>
     * </ul>
     * @return buffer formatado contendo as informações da camada.
     */
@@ -354,7 +355,7 @@ public class Camada implements Cloneable{
       buffer += espacamento + "Ativação: " + this.ativacao.getClass().getSimpleName() + "\n";
       buffer += espacamento + "Quantidade neurônios: " + this.neuronios.length + "\n";
       buffer += espacamento + "Quantidade de conexões: " + this.numConexoes() + "\n";
-      buffer += espacamento + "Bias: " + ((this.b == 1) ? "true" : "false") + "\n"; 
+      buffer += espacamento + "Bias: " + this.bias + "\n"; 
 
       buffer += "]\n";
 
@@ -374,7 +375,7 @@ public class Camada implements Cloneable{
          clone.argmax = this.argmax;
          clone.softmax = this.softmax;
          clone.ativacao = this.ativacao;
-         clone.b = this.b;
+         clone.bias = this.bias;
          clone.id = this.id;
 
          clone.neuronios = new Neuronio[this.neuronios.length];
