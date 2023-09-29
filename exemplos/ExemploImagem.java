@@ -24,8 +24,8 @@ public class ExemploImagem{
       int nSaida = 1;// valor de escala de cinza/brilho do pixel
 
       //preparando dados para treinar a rede
-      double[][] dadosEntrada = ged.separarDadosEntrada(dados, nEntrada);
-      double[][] dadosSaida = ged.separarDadosSaida(dados, nSaida);
+      double[][] dadosEntrada = (double[][]) ged.separarDadosEntrada(dados, nEntrada);
+      double[][] dadosSaida = (double[][]) ged.separarDadosSaida(dados, nSaida);
 
       //criando rede neural para lidar com a imagem
       //nesse exemplo queremos que ela tenha overfitting

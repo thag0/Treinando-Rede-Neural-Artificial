@@ -10,8 +10,8 @@ import utilitarios.ged.Ged;
 public class ExemploPhising{
 
    public static void main(String[] args){
-      limparConsole();
       Ged ged = new Ged();
+      ged.limparConsole();
 
       //manusear dados
       //tratamento específico para os dados de phishing
@@ -27,7 +27,7 @@ public class ExemploPhising{
       //separar em treino e teste para evitar overfitting
       double[][] dados = ged.dadosParaDouble(phishing);
       ged.embaralharDados(dados);
-      double[][][] treinoTeste = ged.separarTreinoTeste(dados, 0.3f);
+      double[][][] treinoTeste = (double[][][]) ged.separarTreinoTeste(dados, 0.3f);
       double[][] treino = treinoTeste[0];
       double[][] teste = treinoTeste[1];
 
@@ -35,10 +35,10 @@ public class ExemploPhising{
       int colunasDados = 9;// quantidade de características dos dados (feature)
       int colunasClasses = 1;// quantidade de classificações dos dados (class)
 
-      treinoX = ged.separarDadosEntrada(treino, colunasDados);
-      treinoY = ged.separarDadosSaida(treino, colunasClasses);
-      testeX = ged.separarDadosEntrada(teste, colunasDados);
-      testeY = ged.separarDadosSaida(teste, colunasClasses);
+      treinoX = (double[][]) ged.separarDadosEntrada(treino, colunasDados);
+      treinoY = (double[][]) ged.separarDadosSaida(treino, colunasClasses);
+      testeX = (double[][]) ged.separarDadosEntrada(teste, colunasDados);
+      testeY = (double[][]) ged.separarDadosSaida(teste, colunasClasses);
 
       //criando, configurando e treinando a rede neural.
       //os valores de configuração não devem ser tomados como regra e 
@@ -54,23 +54,5 @@ public class ExemploPhising{
       double perda = rede.avaliador.erroMedioQuadrado(testeX, testeY);
       System.out.println(rede.info());
       System.out.println("Perda: " + perda);
-   }
-
-
-   public static void limparConsole(){
-      try{
-         String nomeSistema = System.getProperty("os.name");
-
-         if(nomeSistema.contains("Windows")){
-         new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
-            return;
-         }else{
-            for (int i = 0; i < 100; i++){
-               System.out.println();
-            }
-         }
-      }catch(Exception e){
-         return;
-      }
    }
 }

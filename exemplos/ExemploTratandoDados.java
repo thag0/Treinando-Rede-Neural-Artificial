@@ -9,8 +9,8 @@ import utilitarios.ged.Ged;
 
 public class ExemploTratandoDados{
    public static void main(String[] args){
-      limparConsole();
       Ged ged = new Ged();
+      ged.limparConsole();
 
       Dados breastCancer = ged.lerCsv("./dados/datasets-maiores/breast-cancer-wisconsin.csv");
       breastCancer.editarNome("Breast Cancer");
@@ -36,44 +36,26 @@ public class ExemploTratandoDados{
       int qEntradas = 9;
       int qSaidas = 1;
       ged.embaralharDados(dados);
-      double[][][] treinoTeste = ged.separarTreinoTeste(dados, 0.25f);
+      double[][][] treinoTeste = (double[][][]) ged.separarTreinoTeste(dados, 0.25f);
       double[][] treino = treinoTeste[0];
       double[][] teste = treinoTeste[1];
-      double[][] treinoEntrada = ged.separarDadosEntrada(treino, qEntradas);
-      double[][] treinoSaida = ged.separarDadosSaida(treino, qSaidas);
-      double[][] testeEntrada = ged.separarDadosEntrada(teste, qEntradas);
-      double[][] testeSaida = ged.separarDadosSaida(teste, qSaidas);
+      double[][] treinoX = (double[][]) ged.separarDadosEntrada(treino, qEntradas);
+      double[][] treinoY = (double[][]) ged.separarDadosSaida(treino, qSaidas);
+      double[][] testeX = (double[][]) ged.separarDadosEntrada(teste, qEntradas);
+      double[][] testeY = (double[][]) ged.separarDadosSaida(teste, qSaidas);
 
       //construindo a rede neural
       int[] arq = {qEntradas, 9, 9, qSaidas};
       RedeNeural rede = new RedeNeural(arq);
       rede.compilar(new SGD(), new Xavier());
       rede.configurarAtivacao(new Sigmoid());
-      rede.treinar(treinoEntrada, treinoSaida, 2_000);
+      rede.treinar(treinoX, treinoY, 3_000);
 
       //avaliando resultados
       System.out.println(rede.info());
-      System.out.println("Perda = " + rede.avaliador.erroMedioQuadrado(testeEntrada, testeSaida));
-      var precisao = 1 - rede.avaliador.erroMedioAbsoluto(testeEntrada, testeSaida);
+      System.out.println("Perda = " + rede.avaliador.erroMedioQuadrado(testeX, testeY));
+      var precisao = 1 - rede.avaliador.erroMedioAbsoluto(testeX, testeY);
       System.out.println("Precisão = " + (precisao * 100) + "%");
 
-   }
-
-
-   static void limparConsole(){
-      try{
-         String nomeSistema = System.getProperty("os.name");
-
-         if(nomeSistema.contains("Windows")){
-         new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
-            return;
-         }else{
-            for (int i = 0; i < 100; i++){
-               System.out.println();
-            }
-         }
-      }catch(Exception e){
-         return;
-      }
    }
 }

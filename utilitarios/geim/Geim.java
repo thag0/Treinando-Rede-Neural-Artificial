@@ -3,8 +3,6 @@ package utilitarios.geim;
 import java.awt.image.BufferedImage;
 
 import rna.estrutura.RedeNeural;
-import utilitarios.ged.Dados;
-
 
 /**
  * <p>
@@ -154,15 +152,17 @@ public class Geim{
    }
 
    /**
-    * Transforma a imagem num conjunto de dados disposto na seguinte estrutura:
+    * Captura os dados das posições dos pixeis e seus valores de cor rgb,
+    * de acordo com o seguinte formato:
     * <pre>
     *    linha = [x][y][r][g][b]
     * </pre>
-    * @param imagem
-    * @return
+    * Cada linha representará a informação de um pixel individual.
+    * @param imagem imagem desejada
+    * @return estrutura de dados baseada na imagem.
     */
-   public Dados imagemParaDados(BufferedImage imagem){
-      return gdi.imagemParaDados(imagem);
+   public int[][] obterDadosImagem(BufferedImage imagem){
+      return gdi.obterDadosImagem(imagem);
    }
 
    /**
@@ -187,7 +187,6 @@ public class Geim{
    public double[][] imagemParaDadosTreinoEscalaCinza(BufferedImage imagem){
       return gdi.imagemParaDadosTreinoEscalaCinza(imagem);
    }
-
 
    /**
     * Converte a imagem em uma matriz de dados para treino contendo seu valor de cor RGB.
@@ -215,7 +214,6 @@ public class Geim{
       return gdi.imagemParaDadosTreinoRGB(imagem);
    }
 
-
    /**
     * Salva a imagem em escala de cinza a partir de uma rede neural treianda em um arquivo .png no caminho especificado.
     *
@@ -230,7 +228,6 @@ public class Geim{
    public void exportarImagemEscalaCinza(BufferedImage imagem, RedeNeural rede, float escala, String caminho){
       ga.exportarImagemEscalaCinza(gdi, imagem, rede, escala, caminho);
    }
-
 
    /**
     * Salva a imagem com padrão de cor rgb a partir de uma rede neural treianda em um arquivo .png no caminho especificado.

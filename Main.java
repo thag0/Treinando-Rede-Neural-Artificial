@@ -51,8 +51,8 @@ class Main{
       else return;
 
       //separar para o treino
-      double[][] treinoX = ged.separarDadosEntrada(dados, nEntrada);
-      double[][] treinoY = ged.separarDadosSaida(dados, nSaida);
+      double[][] treinoX = (double[][]) ged.separarDadosEntrada(dados, nEntrada);
+      double[][] treinoY = (double[][]) ged.separarDadosSaida(dados, nSaida);
       System.out.println("Tamanho dos dados [" + dados.length + ", " + dados[0].length + "]");
 
       RedeNeural rede = criarRede(nEntrada, nSaida);
@@ -87,24 +87,25 @@ class Main{
    }
 
    public static RedeNeural criarRede(int entradas, int saidas){
-      // int[] arq = {entradas, 64, 36, 36, saidas};//dog
-      // int[] arq = {entradas, 36, 36, 36, saidas};//32x32
+      // int[] arq = {entradas, 64, 42, 42, saidas};//dog
+      // int[] arq = {entradas, 42, 42, 42, saidas};//32x32
       int[] arq = {entradas, 13, 13, saidas};//28x28
 
       Perda perda = new ErroMedioQuadrado();
-      Otimizador otm = new SGD(0.0001, 0.999, true);
+      Otimizador otm = new SGD(0.0001, 0.99, true);
       Inicializador ini = new Xavier();
 
       RedeNeural rede = new RedeNeural(arq);
       rede.compilar(perda, otm, ini);
-      rede.configurarAtivacao(new Sigmoid());
+      rede.configurarAtivacao(new TanH());
+      rede.configurarAtivacao(rede.obterCamadaSaida(), new Sigmoid());
 
       return rede;
    }
 
    public static void treinoEmPainel(RedeNeural rede, BufferedImage imagem, double[][] dadosEntrada, double[][] dadosSaida){
-      final int fps = 6000;
-      int epocasPorFrame = 20;
+      final int fps = 60;
+      int epocasPorFrame = 5;
 
       //acelerar o processo de desenho
       //bom em situações de janelas muito grandes

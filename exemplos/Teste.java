@@ -28,11 +28,16 @@ public class Teste{
    public static void main(String[] args){
       ged.limparConsole();
 
-      BufferedImage imagem = geim.lerImagem("/dados/mnist/5.png");
-      int[][] cinza = geim.obterVermelho(imagem);
+      double[][] a = {
+         {1, 2},
+         {3, 4}
+      };
+      double[][] b = {
+         {5, 6},
+         {7, 8}
+      };
 
-      // ged.imprimirMatriz(v, "vermelho");
-      imprimirAscii(cinza);
+      double[][] r = new double[2][2];
    }
 
    static void imprimirAscii(int[][] dados){

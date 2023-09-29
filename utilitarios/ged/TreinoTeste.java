@@ -15,6 +15,8 @@ class TreinoTeste{
 
    }
 
+   //embaralhar
+
    public void embaralharDados(Object dados){
       if(dados instanceof int[][]){
          int[][] d = (int[][]) dados;
@@ -81,7 +83,29 @@ class TreinoTeste{
       }
    }
 
-   public int[][] separarDadosEntrada(int[][] dados, int colunas){
+   //separar entrada
+
+   public Object separarDadosEntrada(Object dados, int colunas){
+      if(dados instanceof int[][]){
+         int[][] m = (int[][]) dados;
+         return separarDadosEntrada(m, colunas);
+      
+      }else if(dados instanceof float[][]){
+         float[][] m = (float[][]) dados;
+         return separarDadosEntrada(m, colunas);
+      
+      }else if(dados instanceof double[][]){
+         double[][] m = (double[][]) dados;
+         return separarDadosEntrada(m, colunas);
+      
+      }else{
+         throw new IllegalArgumentException(
+            "Tipo de dado (" + dados.getClass().getSimpleName() +") não suportado."
+         );
+      }  
+   }
+
+   private int[][] separarDadosEntrada(int[][] dados, int colunas){
       if (colunas > dados[0].length) {
          throw new IllegalArgumentException("O número de colunas fornecido é maior do que o número de colunas disponíveis nos dados.");
       }
@@ -97,7 +121,7 @@ class TreinoTeste{
       return dadosEntrada;
    }
 
-   public float[][] separarDadosEntrada(float[][] dados, int colunas){
+   private float[][] separarDadosEntrada(float[][] dados, int colunas){
       if (colunas > dados[0].length) {
          throw new IllegalArgumentException("O número de colunas fornecido é maior do que o número de colunas disponíveis nos dados.");
       }
@@ -113,7 +137,7 @@ class TreinoTeste{
       return dadosEntrada;
    }
 
-   public double[][] separarDadosEntrada(double[][] dados, int colunas){
+   private double[][] separarDadosEntrada(double[][] dados, int colunas){
       if (colunas > dados[0].length) {
          throw new IllegalArgumentException("O número de colunas fornecido é maior do que o número de colunas disponíveis nos dados.");
       }
@@ -129,7 +153,29 @@ class TreinoTeste{
       return dadosEntrada;
    }
 
-   public int[][] separarDadosSaida(int[][] dados, int colunas){
+   //separar saida
+
+   public Object separarDadosSaida(Object dados, int colunas){
+      if(dados instanceof int[][]){
+         int[][] m = (int[][]) dados;
+         return separarDadosSaida(m, colunas);
+      
+      }else if(dados instanceof float[][]){
+         float[][] m = (float[][]) dados;
+         return separarDadosSaida(m, colunas);
+      
+      }else if(dados instanceof double[][]){
+         double[][] m = (double[][]) dados;
+         return separarDadosSaida(m, colunas);
+      
+      }else{
+         throw new IllegalArgumentException(
+            "Tipo de dado (" + dados.getClass().getSimpleName() +") não suportado."
+         );
+      }  
+   }
+
+   private int[][] separarDadosSaida(int[][] dados, int colunas){
       if(colunas > dados[0].length){
          throw new IllegalArgumentException("O número de colunas fornecido é maior do que o número de colunas disponíveis nos dados.");
       }
@@ -147,7 +193,7 @@ class TreinoTeste{
       return dadosSaida;
    }
 
-   public float[][] separarDadosSaida(float[][] dados, int colunas){
+   private float[][] separarDadosSaida(float[][] dados, int colunas){
       if(colunas > dados[0].length){
          throw new IllegalArgumentException("O número de colunas fornecido é maior do que o número de colunas disponíveis nos dados.");
       }
@@ -165,7 +211,7 @@ class TreinoTeste{
       return dadosSaida;
    }
 
-   public double[][] separarDadosSaida(double[][] dados, int colunas){
+   private double[][] separarDadosSaida(double[][] dados, int colunas){
       if(colunas > dados[0].length){
          throw new IllegalArgumentException("O número de colunas fornecido é maior do que o número de colunas disponíveis nos dados.");
       }
@@ -183,7 +229,29 @@ class TreinoTeste{
       return dadosSaida;
    }
 
-   public int[][][] separarTreinoTeste(int[][] dados, float tamanhoTeste){
+   //separar treino teste
+
+   public Object separarTreinoTeste(Object dados, float tamanhoTeste){
+      if(dados instanceof int[][]){
+         int[][] m = (int[][]) dados;
+         return separarTreinoTesteI(m, tamanhoTeste);
+      
+      }else if(dados instanceof float[][]){
+         float[][] m = (float[][]) dados;
+         return separarTreinoTesteF(m, tamanhoTeste);
+      
+      }else if(dados instanceof double[][]){
+         double[][] m = (double[][]) dados;
+         return separarTreinoTesteD(m, tamanhoTeste);
+      
+      }else{
+         throw new IllegalArgumentException(
+            "Tipo de dado (" + dados.getClass().getSimpleName() +") não suportado."
+         );
+      }  
+   }
+
+   private int[][][] separarTreinoTesteI(int[][] dados, float tamanhoTeste){
       if(dados == null) throw new IllegalArgumentException("O conjunto de dados é nulo.");
       if(tamanhoTeste < 0 || tamanhoTeste > 1){
          throw new IllegalArgumentException("O tamanho dos dados de teste deve ser maior que zero e menor que um.");
@@ -203,7 +271,7 @@ class TreinoTeste{
       return new int[][][]{treino, teste};
    }
 
-   public float[][][] separarTreinoTeste(float[][] dados, float tamanhoTeste){
+   private float[][][] separarTreinoTesteF(float[][] dados, float tamanhoTeste){
       if(dados == null) throw new IllegalArgumentException("O conjunto de dados é nulo.");
       if(tamanhoTeste < 0 || tamanhoTeste > 1){
          throw new IllegalArgumentException("O tamanho dos dados de teste deve ser maior que zero e menor que um.");
@@ -223,7 +291,7 @@ class TreinoTeste{
       return new float[][][]{treino, teste};
    }
 
-   public double[][][] separarTreinoTeste(double[][] dados, float tamanhoTeste){
+   private double[][][] separarTreinoTesteD(double[][] dados, float tamanhoTeste){
       if(dados == null) throw new IllegalArgumentException("O conjunto de dados é nulo.");
       if(tamanhoTeste < 0 || tamanhoTeste > 1){
          throw new IllegalArgumentException("O tamanho dos dados de teste deve ser maior que zero e menor que um.");

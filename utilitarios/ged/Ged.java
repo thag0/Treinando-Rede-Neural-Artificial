@@ -1007,7 +1007,7 @@ public class Ged{
     *    7, 8, 9    
     * ]
     *
-    * int colunas = 2;
+    * entrada = (int[][]) separarDadosEntrdada(dados, 2);
     *
     * entrada = [
     *    1, 2
@@ -1015,81 +1015,14 @@ public class Ged{
     *    7, 8 
     * ]
     * </pre>
+    * Dados suportados: {@code int[][]}, {@code float[][]}, {@code double[][]}.
     * @param dados conjunto de dados completo.
     * @param colunas quantidade de colunas que serão preservadas, começando pela primeira até o valor fornecido.
     * @return nova matriz de dados apenas com as colunas desejadas.
     * @throws IllegalArgumentException Se o número de colunas for maior que o número de colunas disponíveis nos dados.
     * @throws IllegalArgumentException Se o número de colunas for menor que um.
     */
-   public int[][] separarDadosEntrada(int[][] dados, int colunas){
-      return gtt.separarDadosEntrada(dados, colunas);
-   }
-
-   /**
-    * <p>
-    *    Método para treino da rede neural.
-    * </p>
-    * Separa os dados que serão usados como entrada de acordo com os valores fornecidos.
-    * <p>
-    *    A lógica de separação dos dados de entrada envolve iniciar a coleta das colunas em ordem crescente,
-    *    exemplo: 
-    * </p>
-    * <pre>
-    * dados = [
-    *    1, 2, 3
-    *    4, 5, 6
-    *    7, 8, 9    
-    * ]
-    *
-    * int colunas = 2;
-    *
-    * entrada = [
-    *    1, 2
-    *    4, 5
-    *    7, 8 
-    * ]
-    * </pre>
-    * @param dados conjunto de dados completo.
-    * @param colunas quantidade de colunas que serão preservadas, começando pela primeira até o valor fornecido.
-    * @return nova matriz de dados apenas com as colunas desejadas.
-    * @throws IllegalArgumentException Se o número de colunas for maior que o número de colunas disponíveis nos dados.
-    * @throws IllegalArgumentException Se o número de colunas for menor que um.
-    */
-   public float[][] separarDadosEntrada(float[][] dados, int colunas){
-      return gtt.separarDadosEntrada(dados, colunas);
-   }
-
-   /**
-    * <p>
-    *    Método para treino da rede neural.
-    * </p>
-    * Separa os dados que serão usados como entrada de acordo com os valores fornecidos.
-    * <p>
-    *    A lógica de separação dos dados de entrada envolve iniciar a coleta das colunas em ordem crescente,
-    *    exemplo: 
-    * </p>
-    * <pre>
-    * dados = [
-    *    1, 2, 3
-    *    4, 5, 6
-    *    7, 8, 9    
-    * ]
-    *
-    * int colunas = 2;
-    *
-    * entrada = [
-    *    1, 2
-    *    4, 5
-    *    7, 8 
-    * ]
-    * </pre>
-    * @param dados conjunto de dados completo.
-    * @param colunas quantidade de colunas que serão preservadas, começando pela primeira até o valor fornecido.
-    * @return nova matriz de dados apenas com as colunas desejadas.
-    * @throws IllegalArgumentException Se o número de colunas for maior que o número de colunas disponíveis nos dados.
-    * @throws IllegalArgumentException Se o número de colunas for menor que um.
-    */
-   public double[][] separarDadosEntrada(double[][] dados, int colunas){
+   public Object separarDadosEntrada(Object dados, int colunas){
       return gtt.separarDadosEntrada(dados, colunas);
    }
 
@@ -1110,7 +1043,7 @@ public class Ged{
     *    7, 8, 9
     * ]
     *
-    * int colunas = 2;
+    * entrada = (int[][]) separarDadosSaida(dados, 2);
     *
     * saida = [
     *    2, 3
@@ -1118,83 +1051,14 @@ public class Ged{
     *    8, 9
     * ]
     * </pre>
+    * Dados suportados: {@code int[][]}, {@code float[][]}, {@code double[][]}.
     * @param dados O conjunto de dados com as informações completas.
     * @param colunas O número de colunas de dados de saída que serão extraídas.
     * @return novo conjunto de dados com apenas as colunas de dados de saída.
     * @throws IllegalArgumentException Se o número de colunas for maior que o número de colunas disponíveis nos dados.
     * @throws IllegalArgumentException Se o número de colunas for menor que um.
     */
-   public int[][] separarDadosSaida(int[][] dados, int colunas){
-      return gtt.separarDadosSaida(dados, colunas);
-   }
-
-   /**
-    * <p>
-    *    Método para treino da rede neural.
-    * </p>
-    * Extrai os dados de saída do conjunto de dados e devolve um novo conjunto de dados contendo apenas as 
-    * colunas de dados de saída especificadas.
-    * <p>
-    *    A lógica de separação dos dados de saída envolve iniciar a coleta das colunas em ordem decrescente,
-    *    exemplo: 
-    * </p>
-    * <pre>
-    * dados = [
-    *    1, 2, 3
-    *    4, 5, 6
-    *    7, 8, 9
-    * ]
-    *
-    * int colunas = 2;
-    *
-    * saida = [
-    *    2, 3
-    *    5, 6
-    *    8, 9
-    * ]
-    * </pre>
-    * @param dados O conjunto de dados com as informações completas.
-    * @param colunas O número de colunas de dados de saída que serão extraídas.
-    * @return novo conjunto de dados com apenas as colunas de dados de saída.
-    * @throws IllegalArgumentException Se o número de colunas for maior que o número de colunas disponíveis nos dados.
-    * @throws IllegalArgumentException Se o número de colunas for menor que um.
-    */
-   public float[][] separarDadosSaida(float[][] dados, int colunas){
-      return gtt.separarDadosSaida(dados, colunas);
-   }
-
-   /**
-    * <p>
-    *    Método para treino da rede neural.
-    * </p>
-    * Extrai os dados de saída do conjunto de dados e devolve um novo conjunto de dados contendo apenas as 
-    * colunas de dados de saída especificadas.
-    * <p>
-    *    A lógica de separação dos dados de saída envolve iniciar a coleta das colunas em ordem decrescente,
-    *    exemplo: 
-    * </p>
-    * <pre>
-    * dados = [
-    *    1, 2, 3
-    *    4, 5, 6
-    *    7, 8, 9
-    * ]
-    *
-    * int colunas = 2;
-    *
-    * saida = [
-    *    2, 3
-    *    5, 6
-    *    8, 9
-    * ]
-    * </pre>
-    * @param dados O conjunto de dados com as informações completas.
-    * @param colunas O número de colunas de dados de saída que serão extraídas.
-    * @return novo conjunto de dados com apenas as colunas de dados de saída.
-    * @throws IllegalArgumentException Se o número de colunas for maior que o número de colunas disponíveis nos dados.
-    * @throws IllegalArgumentException Se o número de colunas for menor que um.
-    */
-   public double[][] separarDadosSaida(double[][] dados, int colunas){
+   public Object separarDadosSaida(Object dados, int colunas){
       return gtt.separarDadosSaida(dados, colunas);
    }
 
@@ -1210,69 +1074,18 @@ public class Ged{
     *    Exemplo de uso:
     * </p>
     * <pre>{@code 
-    * int[][][] treinoTeste = separarTreinoTeste(dados, 0.25f);
-    * int[][] treino = treinoTeste[0];
-    * int[][] teste = treinoTeste[1];}
+    *int[][][] treinoTeste = (int[][][]) separarTreinoTeste(dados, 0.25f);
+    *int[][] treino = treinoTeste[0];
+    *int[][] teste = treinoTeste[1];}
     * </pre>
+    * Dados suportados: {@code int[][]}, {@code float[][]}, {@code double[][]}.
     * @param dados O conjunto de dados completo.
     * @param tamanhoTeste O tamanho relativo do conjunto de teste (entre 0 e 1).
     * @return Um array de duas matrizes contendo os dados de treino e teste, respectivamente.
     * @throws IllegalArgumentException caso o conjunto de dados for nulo.
     * @throws IllegalArgumentException caso o tamanho de teste estiver fora do intervalo (0, 1).
     */
-   public int[][][] separarTreinoTeste(int[][] dados, float tamanhoTeste){
-      return gtt.separarTreinoTeste(dados, tamanhoTeste);
-   }
-
-   /**
-    * Separa o conjunto de dados em dados de treino e dados de teste, de acordo com o tamanho do teste fornecido.
-    * 
-    * <p>
-    *    A função recebe um conjunto de dados completo e separa ele em duas matrizes, uma para treino e outra para teste.
-    *    A quantidade de dados para o conjunto de teste é determinada pelo parâmetro tamanhoTeste.
-    * </p>
-    * 
-    * <p>
-    *    Exemplo de uso:
-    * </p>
-    * <pre>{@code 
-    * float[][][] treinoTeste = separarTreinoTeste(dados, 0.25f);
-    * float[][] treino = treinoTeste[0];
-    * float[][] teste = treinoTeste[1];}
-    * </pre>
-    * @param dados O conjunto de dados completo.
-    * @param tamanhoTeste O tamanho relativo do conjunto de teste (entre 0 e 1).
-    * @return Um array de duas matrizes contendo os dados de treino e teste, respectivamente.
-    * @throws IllegalArgumentException caso o conjunto de dados for nulo.
-    * @throws IllegalArgumentException caso o tamanho de teste estiver fora do intervalo (0, 1).
-    */
-   public float[][][] separarTreinoTeste(float[][] dados, float tamanhoTeste){
-      return gtt.separarTreinoTeste(dados, tamanhoTeste);
-   }
-
-   /**
-    * Separa o conjunto de dados em dados de treino e dados de teste, de acordo com o tamanho do teste fornecido.
-    * 
-    * <p>
-    *    A função recebe um conjunto de dados completo e separa ele em duas matrizes, uma para treino e outra para teste.
-    *    A quantidade de dados para o conjunto de teste é determinada pelo parâmetro tamanhoTeste.
-    * </p>
-    * 
-    * <p>
-    *    Exemplo de uso:
-    * </p>
-    * <pre>{@code 
-    * double[][][] treinoTeste = separarTreinoTeste(dados, 0.25f);
-    * double[][] treino = treinoTeste[0];
-    * double[][] teste = treinoTeste[1];}
-    * </pre>
-    * @param dados O conjunto de dados completo.
-    * @param tamanhoTeste O tamanho relativo do conjunto de teste (entre 0 e 1).
-    * @return Um array de duas matrizes contendo os dados de treino e teste, respectivamente.
-    * @throws IllegalArgumentException caso o conjunto de dados for nulo.
-    * @throws IllegalArgumentException caso o tamanho de teste estiver fora do intervalo (0, 1).
-    */
-   public double[][][] separarTreinoTeste(double[][] dados, float tamanhoTeste){
+   public Object separarTreinoTeste(Object dados, float tamanhoTeste){
       return gtt.separarTreinoTeste(dados, tamanhoTeste);
    }
 
@@ -1333,56 +1146,15 @@ public class Ged{
     *    7, 8, 9 
     * ]
     *
-    * v = [1, 2, 3, 4, 5, 6, 7, 8, 9]
-    * </pre>
-    * @param matriz matriz com os dados desejados.
-    * @return arrays contendo os dados serializados da matriz.
-    */
-   public int[] vetorizar(int[][] matriz){
-      return om.vetorizar(matriz);
-   }
-
-   /**
-    * Tranforma todo o conteúdo da matriz fornecida numa forma contínua
-    * de dados.
-    * <p>
-    *    Exemplo:
-    * </p>
-    * <pre>
-    * m = [
-    *    1, 2, 3 
-    *    4, 5, 6 
-    *    7, 8, 9 
-    * ]
+    * v = (int[][]) vetorizar(m);
     *
     * v = [1, 2, 3, 4, 5, 6, 7, 8, 9]
     * </pre>
+    * Dados suportados: {@code int[][]}, {@code float[][]}, {@code double[][]}.
     * @param matriz matriz com os dados desejados.
     * @return arrays contendo os dados serializados da matriz.
     */
-   public float[] vetorizar(float[][] matriz){
-      return om.vetorizar(matriz);
-   }
-
-   /**
-    * Tranforma todo o conteúdo da matriz fornecida numa forma contínua
-    * de dados.
-    * <p>
-    *    Exemplo:
-    * </p>
-    * <pre>
-    * m = [
-    *    1, 2, 3 
-    *    4, 5, 6 
-    *    7, 8, 9 
-    * ]
-    *
-    * v = [1, 2, 3, 4, 5, 6, 7, 8, 9]
-    * </pre>
-    * @param matriz matriz com os dados desejados.
-    * @return arrays contendo os dados serializados da matriz.
-    */
-   public double[] vetorizar(double[][] matriz){
+   public Object matVetorizar(Object matriz){
       return om.vetorizar(matriz);
    }
 
@@ -1399,12 +1171,13 @@ public class Ged{
     *    7, 8, 9
     * ]
     *
-    * subLinhas = obterSubLinhas(dados, 0, 2);
+    * subLinhas = (int[][]) obterSubLinhas(dados, 0, 2);
     *
     * subLinhas = [
     *    1, 2, 3
     *    4, 5, 6
     * ]
+    * Dados suportados: {@code int[][]}, {@code float[][]}, {@code double[][]}.
     * </pre>
     * @param dados matriz contendo os dados completos.
     * @param inicio índice inicial do corte (inclusivo).
@@ -1412,67 +1185,7 @@ public class Ged{
     * @return submatriz contendo o conteúdo da matriz original, com os dados selecionados.
     * @throws IllegalArgumentException se os índices fornecidos forem inválidos.
     */
-   public int[][] obterSubLinhas(int[][] dados, int inicio, int fim){
-      return om.obterSubLinhas(dados, inicio, fim);
-   }
-
-   /**
-    * Retorna uma nova matriz que possui o conteúdo das linhas 
-    * de acordo com os índices fornecidos.
-    * <p>
-    *    Exemplo:
-    * </p>
-    * <pre>
-    * dados = [
-    *    1, 2, 3
-    *    4, 5, 6
-    *    7, 8, 9
-    * ]
-    *
-    * subLinhas = obterSubLinhas(dados, 0, 2);
-    *
-    * subLinhas = [
-    *    1, 2, 3
-    *    4, 5, 6
-    * ]
-    * </pre>
-    * @param dados matriz contendo os dados completos.
-    * @param inicio índice inicial do corte (inclusivo).
-    * @param fim índice final do corte (exclusivo).
-    * @return submatriz contendo o conteúdo da matriz original, com os dados selecionados.
-    * @throws IllegalArgumentException se os índices fornecidos forem inválidos.
-    */
-   public float[][] obterSubLinhas(float[][] dados, int inicio, int fim){
-      return om.obterSubLinhas(dados, inicio, fim);
-   }
-
-   /**
-    * Retorna uma nova matriz que possui o conteúdo das linhas 
-    * de acordo com os índices fornecidos.
-    * <p>
-    *    Exemplo:
-    * </p>
-    * <pre>
-    * dados = [
-    *    1, 2, 3
-    *    4, 5, 6
-    *    7, 8, 9
-    * ]
-    *
-    * subLinhas = obterSubLinhas(dados, 0, 2);
-    *
-    * subLinhas = [
-    *    1, 2, 3
-    *    4, 5, 6
-    * ]
-    * </pre>
-    * @param dados matriz contendo os dados completos.
-    * @param inicio índice inicial do corte (inclusivo).
-    * @param fim índice final do corte (exclusivo).
-    * @return submatriz contendo o conteúdo da matriz original, com os dados selecionados.
-    * @throws IllegalArgumentException se os índices fornecidos forem inválidos.
-    */
-   public double[][] obterSubLinhas(double[][] dados, int inicio, int fim){
+   public Object matSublinhas(Object dados, int inicio, int fim){
       return om.obterSubLinhas(dados, inicio, fim);
    }
 
@@ -1489,7 +1202,7 @@ public class Ged{
     *    7, 8, 9
     * ]
     *
-    * subColunas = obterColunas(dados, 0, 2);
+    * subColunas = (int[][]) obterColunas(dados, 0, 2);
     *
     * subColunas = [
     *    1, 2
@@ -1497,75 +1210,14 @@ public class Ged{
     *    7, 8
     * ]
     * </pre>
+    * Dados suportados: {@code int[][]}, {@code float[][]}, {@code double[][]}.
     * @param dados matriz contendo os dados completos.
     * @param inicio índice inicial do corte (inclusivo).
     * @param fim índice final do corte (exclusivo).
     * @return submatriz contendo o conteúdo da matriz original, com os dados filtrados de acordo
     *    com as colunas indicadas.
     */
-   public int[][] obterSubColunas(int[][] dados, int inicio, int fim){
-      return om.obterSubColunas(dados, inicio, fim);
-   }
-
-   /**
-    * Retorna uma nova matriz que possui o conteúdo das colunas 
-    * de acordo com os índices fornecidos.
-    * <p>
-    *    Exemplo:
-    * </p>
-    * <pre>
-    * dados = [
-    *    1, 2, 3
-    *    4, 5, 6
-    *    7, 8, 9
-    * ]
-    *
-    * subColunas = obterColunas(dados, 0, 2);
-    *
-    * subColunas = [
-    *    1, 2
-    *    4, 5
-    *    7, 8
-    * ]
-    * </pre>
-    * @param dados matriz contendo os dados completos.
-    * @param inicio índice inicial do corte (inclusivo).
-    * @param fim índice final do corte (exclusivo).
-    * @return submatriz contendo o conteúdo da matriz original, com os dados filtrados de acordo
-    *    com as colunas indicadas.
-    */
-   public float[][] obterSubColunas(float[][] dados, int inicio, int fim){
-      return om.obterSubColunas(dados, inicio, fim);
-   }
-
-   /**
-    * Retorna uma nova matriz que possui o conteúdo das colunas 
-    * de acordo com os índices fornecidos.
-    * <p>
-    *    Exemplo:
-    * </p>
-    * <pre>
-    * dados = [
-    *    1, 2, 3
-    *    4, 5, 6
-    *    7, 8, 9
-    * ]
-    *
-    * subColunas = obterColunas(dados, 0, 2);
-    *
-    * subColunas = [
-    *    1, 2
-    *    4, 5
-    *    7, 8
-    * ]
-    * </pre>
-    * @param dados matriz contendo os dados completos.
-    * @param inicio índice inicial do corte (inclusivo).
-    * @param fim índice final do corte (exclusivo).
-    * @return submatriz contendo o conteúdo da matriz original, com os dados filtrados de acordo
-    *    com as colunas indicadas.
-    */
-   public double[][] obterSubColunas(double[][] dados, int inicio, int fim){
+   public Object matSubcolunas(Object dados, int inicio, int fim){
       return om.obterSubColunas(dados, inicio, fim);
    }
 
@@ -1579,7 +1231,7 @@ public class Ged{
     * @param matriz matriz com os dados.
     * @param valor valor de preenchimento.
     */
-   public void preencherMatriz(Object matriz, Number valor){
+   public void matPreencher(Object matriz, Number valor){
       om.preencherMatriz(matriz, valor);
    }
 
@@ -1596,7 +1248,7 @@ public class Ged{
     * Dados suportados: {@code int[][]}, {@code float[][]}, {@code double[][]}.
     * @param matriz matriz base.
     */
-   public void matrizIdentidade(Object matriz){
+   public void matIdentidade(Object matriz){
       om.matrizIdentidade(matriz);
    }
 
@@ -1618,51 +1270,7 @@ public class Ged{
     * @param matriz matriz original para transposição
     * @return matriz transposta.
     */
-   public int[][] transporMatriz(int[][] matriz){
-      return om.transporMatriz(matriz);
-   }
-
-   /**
-    * Realiza a transposição da matriz fornecida. A transposição consiste em 
-    * inverter as linhas e colunas da matriz.
-    * <p>Exemplo:<pre>
-    * m = [
-    *  1, 2, 3
-    *  4, 5, 6
-    *  7, 8, 9
-    * ]
-    * t = [
-    *  1, 4, 7
-    *  2, 5, 8
-    *  3, 6, 9
-    * ]
-    * </pre></p>
-    * @param matriz matriz original para transposição
-    * @return matriz transposta.
-    */
-   public float[][] transporMatriz(float[][] matriz){
-      return om.transporMatriz(matriz);
-   }
-
-   /**
-    * Realiza a transposição da matriz fornecida. A transposição consiste em 
-    * inverter as linhas e colunas da matriz.
-    * <p>Exemplo:<pre>
-    * m = [
-    *  1, 2, 3
-    *  4, 5, 6
-    *  7, 8, 9
-    * ]
-    * t = [
-    *  1, 4, 7
-    *  2, 5, 8
-    *  3, 6, 9
-    * ]
-    * </pre></p>
-    * @param matriz matriz original para transposição
-    * @return matriz transposta.
-    */
-   public double[][] transporMatriz(double[][] matriz){
+   public Object matTranspor(Object matriz){
       return om.transporMatriz(matriz);
    }
 
@@ -1689,7 +1297,7 @@ public class Ged{
     * @param r matriz que conterá o resultado.
     * @throws IllegalArgumentException se as dimensões de A, B e R forem incompatíveis.
     */
-   public void somarMatrizes(Object a, Object b, Object r){
+   public void matSomar(Object a, Object b, Object r){
       om.somarMatrizes(a, b, r);
    }
 
@@ -1716,7 +1324,7 @@ public class Ged{
     * @param r matriz que conterá o resultado.
     * @throws IllegalArgumentException se as dimensões de A, B e R forem incompatíveis.
     */
-   public void subtrairMatrizes(Object a, Object b, Object r){
+   public void matSubtrair(Object a, Object b, Object r){
       om.subtrairMatrizes(a, b, r);
    }
 
@@ -1742,7 +1350,7 @@ public class Ged{
     * @param r matriz que conterá o resultado.
     * @throws IllegalArgumentException se as dimensões de A, B e R forem incompatíveis.
     */
-   public void multiplicarMatrizes(Object a, Object[][] b, Object r){
+   public void matMultiplicar(Object a, Object b, Object r){
       om.multiplicarMatrizes(a, b, r);
    }
 
@@ -1769,7 +1377,7 @@ public class Ged{
     * @param matriz matriz contendo os dados.
     * @param escalar escalar para a ultiplicação.
     */
-   public void multilpicarEscalar(Object matriz, Number escalar){
+   public void matMultiplicarEscalar(Object matriz, Number escalar){
       om.multilpicarEscalar(matriz, escalar);
    }
 
@@ -1796,7 +1404,7 @@ public class Ged{
     * @param r matriz que conterá o resultado.
     * @throws IllegalArgumentException se as dimensões de A, B e R forem incompatíveis.
     */
-   public void produtoHadamard(Object a, Object b, Object r){
+   public void matHadamard(Object a, Object b, Object r){
       om.hadamard(a, b, r);
    }
 }

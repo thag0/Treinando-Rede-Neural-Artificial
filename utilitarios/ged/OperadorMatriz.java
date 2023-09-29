@@ -15,7 +15,27 @@ class OperadorMatriz{
 
    }
 
-   public int[] vetorizar(int[][] matriz){
+   public Object vetorizar(Object matriz){
+      if(matriz instanceof int[][]){
+         int[][] m = (int[][]) matriz;
+         return vetorizar(m);         
+      
+      }else if(matriz instanceof float[][]){
+         float[][] m = (float[][]) matriz;
+         return vetorizar(m);
+
+      }else if(matriz instanceof double[][]){
+         double[][] m = (double[][]) matriz;
+         return vetorizar(m);
+
+      }else{
+         throw new IllegalArgumentException(
+            "Tipo de dado (" + matriz.getClass().getSimpleName() +") não suportado."
+         );
+      }
+   }
+
+   private int[] vetorizar(int[][] matriz){
       int[] arr = new int[matriz.length * matriz[0].length];
    
       int cont = 0;
@@ -29,7 +49,7 @@ class OperadorMatriz{
       return arr;
    }
 
-   public float[] vetorizar(float[][] matriz){
+   private float[] vetorizar(float[][] matriz){
       float[] arr = new float[matriz.length * matriz[0].length];
    
       int cont = 0;
@@ -43,7 +63,7 @@ class OperadorMatriz{
       return arr;
    }
 
-   public double[] vetorizar(double[][] matriz){
+   private double[] vetorizar(double[][] matriz){
       double[] arr = new double[matriz.length * matriz[0].length];
    
       int cont = 0;
@@ -58,8 +78,28 @@ class OperadorMatriz{
    }
 
    //sublinhas
+
+   public Object obterSubLinhas(Object matriz, int inicio, int fim){
+      if(matriz instanceof int[][]){
+         int[][] m = (int[][]) matriz;
+         return obterSubLinhas(m, inicio, fim);    
+      
+      }else if(matriz instanceof float[][]){
+         float[][] m = (float[][]) matriz;
+         return obterSubLinhas(m, inicio, fim);   
+
+      }else if(matriz instanceof double[][]){
+         double[][] m = (double[][]) matriz;
+         return obterSubLinhas(m, inicio, fim);   
+
+      }else{
+         throw new IllegalArgumentException(
+            "Tipo de dado (" + matriz.getClass().getSimpleName() +") não suportado."
+         );
+      }   
+   }
    
-   public int[][] obterSubLinhas(int[][] dados, int inicio, int fim){
+   private int[][] obterSubLinhas(int[][] dados, int inicio, int fim){
       if(inicio < 0 || fim > dados.length || inicio >= fim){
          throw new IllegalArgumentException("Índices de início ou fim inválidos.");
       }
@@ -75,7 +115,7 @@ class OperadorMatriz{
       return subMatriz;
    }
 
-   public float[][] obterSubLinhas(float[][] dados, int inicio, int fim){
+   private float[][] obterSubLinhas(float[][] dados, int inicio, int fim){
       if(inicio < 0 || fim > dados.length || inicio >= fim){
          throw new IllegalArgumentException("Índices de início ou fim inválidos.");
       }
@@ -91,7 +131,7 @@ class OperadorMatriz{
       return subMatriz;
    }
 
-   public double[][] obterSubLinhas(double[][] dados, int inicio, int fim){
+   private double[][] obterSubLinhas(double[][] dados, int inicio, int fim){
       if(inicio < 0 || fim > dados.length || inicio >= fim){
          throw new IllegalArgumentException("Índices de início ou fim inválidos.");
       }
@@ -109,7 +149,27 @@ class OperadorMatriz{
 
    //subcolunas
 
-   public int[][] obterSubColunas(int[][] matriz, int inicio, int fim){
+   public Object obterSubColunas(Object matriz, int inicio, int fim){
+      if(matriz instanceof int[][]){
+         int[][] m = (int[][]) matriz;
+         return obterSubColunas(m, inicio, fim);    
+      
+      }else if(matriz instanceof float[][]){
+         float[][] m = (float[][]) matriz;
+         return obterSubColunas(m, inicio, fim);   
+
+      }else if(matriz instanceof double[][]){
+         double[][] m = (double[][]) matriz;
+         return obterSubColunas(m, inicio, fim);   
+
+      }else{
+         throw new IllegalArgumentException(
+            "Tipo de dado (" + matriz.getClass().getSimpleName() +") não suportado."
+         );
+      }   
+   }
+
+   private int[][] obterSubColunas(int[][] matriz, int inicio, int fim){
       if(inicio < 0 || fim > matriz[0].length || inicio >= fim){
          throw new IllegalArgumentException("Índices de início ou fim inválidos para colunas.");
       }
@@ -127,7 +187,7 @@ class OperadorMatriz{
       return subColunas;
    }
 
-   public float[][] obterSubColunas(float[][] matriz, int inicio, int fim){
+   private float[][] obterSubColunas(float[][] matriz, int inicio, int fim){
       if(inicio < 0 || fim > matriz[0].length || inicio >= fim){
          throw new IllegalArgumentException("Índices de início ou fim inválidos para colunas.");
       }
@@ -145,7 +205,7 @@ class OperadorMatriz{
       return subColunas;
    }
 
-   public double[][] obterSubColunas(double[][] matriz, int inicio, int fim){
+   private double[][] obterSubColunas(double[][] matriz, int inicio, int fim){
       if(inicio < 0 || fim > matriz[0].length || inicio >= fim){
          throw new IllegalArgumentException("Índices de início ou fim inválidos para colunas.");
       }
@@ -269,9 +329,29 @@ class OperadorMatriz{
       }       
    }
 
-   //transposição (não consegui generalizar por causa do retorno)
+   //transposição 
+
+   public Object transporMatriz(Object matriz){
+      if(matriz instanceof int[][]){
+         int[][] m = (int[][]) matriz;
+         return transporMatriz(m);
+
+      }else if(matriz instanceof float[][]){
+         float[][] m = (float[][]) matriz;
+         return transporMatriz(m);
+
+      }else if(matriz instanceof double[][]){
+         double[][] m = (double[][]) matriz;
+         return transporMatriz(m);
+
+      }else{
+         throw new IllegalArgumentException(
+            "Tipo de dado (" + matriz.getClass().getSimpleName() +") não suportado."
+         );
+      }
+   }
    
-   public int[][] transporMatriz(int[][] matriz){
+   private int[][] transporMatriz(int[][] matriz){
       int linhas = matriz.length;
       int colunas = matriz[0].length;
       int[][] transposta = new int[colunas][linhas];
@@ -285,8 +365,7 @@ class OperadorMatriz{
       return transposta;
    }
 
-   
-   public float[][] transporMatriz(float[][] matriz){
+   private float[][] transporMatriz(float[][] matriz){
       int linhas = matriz.length;
       int colunas = matriz[0].length;
       float[][] transposta = new float[colunas][linhas];
@@ -300,8 +379,7 @@ class OperadorMatriz{
       return transposta;
    }
 
-   
-   public double[][] transporMatriz(double[][] matriz){
+   private double[][] transporMatriz(double[][] matriz){
       int linhas = matriz.length;
       int colunas = matriz[0].length;
       double[][] transposta = new double[colunas][linhas];

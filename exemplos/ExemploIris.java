@@ -31,7 +31,7 @@ public class ExemploIris{
       // separar em treino e teste para evitar overfitting
       double[][] dados = ged.dadosParaDouble(iris);
       ged.embaralharDados(dados);
-      double[][][] treinoTeste = ged.separarTreinoTeste(dados, 0.2f);
+      double[][][] treinoTeste = (double[][][]) ged.separarTreinoTeste(dados, 0.2f);
       double[][] treino = treinoTeste[0];
       double[][] teste = treinoTeste[1];
       ged.embaralharDados(treino);
@@ -41,10 +41,10 @@ public class ExemploIris{
       int colunasDados = 4;// quantidade de características dos dados (feature)
       int colunasClasses = 1;// quantidade de classificações dos dados (class)
 
-      treinoX = ged.separarDadosEntrada(treino, colunasDados);
-      treinoY = ged.separarDadosSaida(treino, colunasClasses);
-      testeX = ged.separarDadosEntrada(teste, colunasDados);
-      testeY = ged.separarDadosSaida(teste, colunasClasses);
+      treinoX = (double[][]) ged.separarDadosEntrada(treino, colunasDados);
+      treinoY = (double[][]) ged.separarDadosSaida(treino, colunasClasses);
+      testeX = (double[][]) ged.separarDadosEntrada(teste, colunasDados);
+      testeY = (double[][]) ged.separarDadosSaida(teste, colunasClasses);
 
 
       // criando, configurando e treinando a rede neural.

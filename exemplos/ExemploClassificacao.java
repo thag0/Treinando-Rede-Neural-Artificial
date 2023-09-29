@@ -29,17 +29,17 @@ public class ExemploClassificacao{
       //separando dados de treino e teste
       double[][] dados = ged.dadosParaDouble(iris);
       ged.embaralharDados(dados);
-      double[][][] treinoTeste = ged.separarTreinoTeste(dados, 0.25f);
+      double[][][] treinoTeste = (double[][][]) ged.separarTreinoTeste(dados, 0.25f);
       double[][] treino = treinoTeste[0];
       double[][] teste = treinoTeste[1];
       int qEntradas = 4;// dados de entrada (features)
       int qSaidas = 3;// classificações (class)
 
-      double[][] treinoX = ged.separarDadosEntrada(treino, qEntradas);
-      double[][] treinoY = ged.separarDadosSaida(treino, qSaidas);
+      double[][] treinoX = (double[][]) ged.separarDadosEntrada(treino, qEntradas);
+      double[][] treinoY = (double[][]) ged.separarDadosSaida(treino, qSaidas);
 
-      double[][] testeX = ged.separarDadosEntrada(teste, qEntradas);
-      double[][] testeY = ged.separarDadosSaida(teste, qSaidas);
+      double[][] testeX = (double[][]) ged.separarDadosEntrada(teste, qEntradas);
+      double[][] testeY = (double[][]) ged.separarDadosSaida(teste, qSaidas);
 
       //criando e configurando a rede neural
       int[] arq = {qEntradas, 8, 8, qSaidas};
