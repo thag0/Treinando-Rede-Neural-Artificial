@@ -181,7 +181,6 @@ public class Adam extends Otimizador{
 
       double alfa = taxaAprendizagem * Math.sqrt(1 - forcaB2) / (1 - forcaB1);
       
-      //percorrer rede, com exceção da camada de entrada
       int indice = 0;
       for(int i = 0; i < redec.length; i++){
          

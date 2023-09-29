@@ -35,8 +35,7 @@ public class Lion extends Otimizador{
    public void atualizar(Camada[] redec){
       double g;
       Neuronio neuronio;
-      
-      //percorrer rede, com exceção da camada de entrada
+
       int indice = 0;
       for(int i = 0; i < redec.length; i++){
          

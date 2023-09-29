@@ -18,14 +18,15 @@ import rna.treinamento.Treinador;
 //novos otimizadores;
 //Mais opções de métricas e funções de perda;
 //Poder configurar funções de ativação antes de compilar o modelo;
+//Poder flexibilizar o tipo da camada para usar numa rede convolucional
 
 /**
- * Modelo de Rede Neural Multilayer Perceptron criado do zero. Possui um conjunto de camadas 
+ * Modelo de Rede Neural {@code Multilayer Perceptron} criado do zero. Possui um conjunto de camadas 
  * densas em que cada uma delas por sua vez possui um conjunto de neurônios artificiais.
  * <p>
- *    O modelo pode ser usado tanto para problemas de regressão e classificação, contando com algoritmos 
- *    de treino e otimizadores variados para ajudar na convergência e desempenho da rede para problemas
- *    diversos.
+ *    O modelo pode ser usado tanto para problemas de {@code regressão e classificação}, contando com 
+ *    algoritmos de treino e otimizadores variados para ajudar na convergência e desempenho da rede para 
+ *    problemas diversos.
  * </p>
  * <p>
  *    Possui opções de configuração para funções de ativações de camadas individuais, valor de alcance 
@@ -33,7 +34,7 @@ import rna.treinamento.Treinador;
  *    serão usados durante o treino. 
  * </p>
  * <p>
- *    Após configurar as propriedades da rede, o modelo precisará ser compilado para efetivamente 
+ *    Após configurar as propriedades da rede, o modelo precisará ser {@code compilado} para efetivamente 
  *    poder ser utilizado.
  * </p>
  * <p>
@@ -46,28 +47,30 @@ import rna.treinamento.Treinador;
 public class RedeNeural implements Cloneable{
 
    /**
+    * Região crítica
     * <p>
-    *    Região crítica
+    *    Conjunto de camadas da Rede Neural.
     * </p>
-    * Conjunto de camadas da Rede Neural.
     */
    private Camada[] camadas;
 
    /**
     * Array contendo a arquitetura de cada camada dentro da Rede Neural.
-    * Cada elemento da arquitetura representa a quantidade de neurônios 
-    * presente na camada correspondente.
+    * <p>
+    *    Cada elemento da arquitetura representa a quantidade de neurônios 
+    *    presente na camada correspondente.
+    * </p>
     */
    private int[] arquitetura;
 
    /**
-    * Constante auxiliar que ajuda no controle do bias atuando como neurônio 
-    * adicional nas camadas.
+    * Constante auxiliar que ajuda no controle do bias dentro da rede.
     */
    private boolean bias = true;
 
    /**
-    * Valor máximo e mínimo na hora de aleatorizar os pesos da rede neural.
+    * Valor máximo e mínimo na hora de aleatorizar os pesos da rede neural, para
+    * alguns inicializadores.
     */
    private double alcancePeso = 1.0;
 
@@ -101,9 +104,9 @@ public class RedeNeural implements Cloneable{
    private Treinador treinador = new Treinador();
 
    /**
-    * Objeto responsável pelo retorno de desempenho da Rede Neural.
+    * Responsável pelo retorno de desempenho da Rede Neural.
     * Contém implementações de métodos tanto para cálculo de perdas
-    * quanto para cálculo de métricas.
+    * quanto de métricas.
     * <p>
     *    Cada instância de rede neural possui seu próprio avaliador.
     * </p>
@@ -234,7 +237,7 @@ public class RedeNeural implements Cloneable{
    public void configurarAlcancePesos(double alcance){
       if(alcance <= 0){
          throw new IllegalArgumentException(
-            "O novo valor de alcance dos pesos deve ser maior que zero."
+            "O novo valor de alcance dos pesos (" + alcance + ") deve ser maior que zero."
          );
       }
       
@@ -682,8 +685,8 @@ public class RedeNeural implements Cloneable{
       //inicializar camadas
       this.camadas = new Camada[this.arquitetura.length-1];
       for(int i = 0; i < this.camadas.length; i++){
-         this.camadas[i] = new Camada(this.bias);
-         this.camadas[i].inicializar(this.arquitetura[i+1], this.arquitetura[i], alcancePeso, inicializador);
+         this.camadas[i] = new Camada(this.arquitetura[i+1], this.bias);
+         this.camadas[i].inicializar(this.arquitetura[i], alcancePeso, inicializador);
          this.camadas[i].configurarId(i);
       }
 
@@ -698,7 +701,7 @@ public class RedeNeural implements Cloneable{
          throw new IllegalArgumentException("O otimizador não pode ser nulo.");
       }
       this.otimizadorAtual = otimizador;
-      this.otimizadorAtual.inicializar(this.obterQuantidadePesos());
+      this.otimizadorAtual.inicializar(this.obterQuantidadeParametros());
 
       this.compilado = true;//modelo pode ser usado
    }
@@ -739,17 +742,20 @@ public class RedeNeural implements Cloneable{
 
       if(entrada.length != saida.length){
          throw new IllegalArgumentException(
-            "Quantidade de linhas de dados de entrada (" + entrada.length + ") e saída (" + saida.length + ") devem ser iguais."
+            "Quantidade de linhas de dados de entrada (" + entrada.length +
+            ") e saída (" + saida.length + ") devem ser iguais."
          );
       }
       if(nEntrada != entrada[0].length){
          throw new IllegalArgumentException(
-            "Dimensões dos dados de entrada (" + entrada[0].length + ") e capacidade de entrada da rede (" + nEntrada + ") incompatíveis."
+            "Dimensões dos dados de entrada (" + entrada[0].length +
+            ") e capacidade de entrada da rede (" + nEntrada + ") incompatíveis."
          );
       }
       if(nSaida != saida[0].length){
          throw new IllegalArgumentException(
-            "Dados de saída (" + saida[0].length + ") e neurônios de saída da rede (" + nEntrada + ") incompatíveis."
+            "Dados de saída (" + saida[0].length +
+            ") e neurônios de saída da rede (" + nEntrada + ") incompatíveis."
          );
       }
    }
@@ -773,7 +779,8 @@ public class RedeNeural implements Cloneable{
       int nEntrada = this.obterTamanhoEntrada();
       if(entradas.length != nEntrada){
          throw new IllegalArgumentException(
-            "Dimensões dos dados de entrada (" + entradas.length + ") e capacidade de entrada da rede (" + nEntrada + ") incompatíveis."
+            "Dimensões dos dados de entrada (" + entradas.length +
+            ") e capacidade de entrada da rede (" + nEntrada + ") incompatíveis."
          );
       }
 
@@ -814,7 +821,8 @@ public class RedeNeural implements Cloneable{
       int nEntrada = this.obterTamanhoEntrada();
       if(entradas[0].length != nEntrada){
          throw new IllegalArgumentException(
-            "Dimensões dos dados de entrada (" + entradas.length + ") e capacidade de entrada da rede (" + nEntrada + ") incompatíveis."
+            "Dimensões dos dados de entrada (" + entradas.length +
+            ") e capacidade de entrada da rede (" + nEntrada + ") incompatíveis."
          );
       }
 
@@ -981,7 +989,7 @@ public class RedeNeural implements Cloneable{
                for(int k = 0; k < redec[i].neuronios[j].pesos.length; k++){
                   valorAnterior = redec[i].neuronios[j].pesos[k];
                   redec[i].neuronios[j].pesos[k] += eps;
-                  gradc[i].neuronios[j].pesos[k] = ((avaliador.erroMedioQuadrado(entradas, saidas) - custo)/eps);//"derivada" da função de perda
+                  gradc[i].neuronios[j].pesos[k] = ((avaliador.erroMedioQuadrado(entradas, saidas) - custo)/eps);
                   redec[i].neuronios[j].pesos[k] = valorAnterior;
                }
             }
@@ -1037,7 +1045,7 @@ public class RedeNeural implements Cloneable{
 
    /**
     * Retorna a {@code camada de saída} da Rede Neural.
-    * @return camada de saída.
+    * @return camada de saída, ou ultima camada densa.
     * @throws IllegalArgumentException se o modelo não foi compilado previamente.
     */
    public Camada obterCamadaSaida(){
@@ -1078,12 +1086,18 @@ public class RedeNeural implements Cloneable{
    }
 
    /**
-    * Cria um array que representa a estrutura da Rede Neural. Nele cada elemento 
-    * indica uma camada da rede e cada valor contido nesse elementos indica a 
+    * Retorna o array que representa a estrutura da Rede Neural. Nele cada elemento 
+    * indica uma camada da rede e cada valor contido nesse elemento indica a 
     * quantidade de neurônios daquela camada correspondente.
     * <p>
-    *    Os valores podem sofrer alteração caso a rede possua o bias adicionado 
-    *    na hora da compilação, incluindo um neurônio a mais em cada elementos do array.
+    *    Nessa estrutura de rede, a camada de entrada não é considerada uma camada,
+    *    o que significa dizer também que ela não é uma instância de camada dentro
+    *    da Rede Neural.
+    * </p>
+    * <p>
+    *    A "camada de entrada" representa o tamanho de entrada da primeira camda densa
+    *    da rede, ou seja, ela é apenas um parâmetro pro tamanho de entrada da primeira
+    *    camada oculta. 
     * </p>
     * @return array com a arquitetura da rede.
     * @throws IllegalArgumentException se o modelo não foi compilado previamente.
@@ -1118,10 +1132,14 @@ public class RedeNeural implements Cloneable{
    }
 
    /**
-    * Retorna a quantiade de pesos total da rede, incluindo conexões com bias.
-    * @return quantiade de pesos (ou parâmetros) total da rede.
+    * Retorna a quantidade total de parâmetros da rede.
+    * <p>
+    *    isso inclui todos os pesos de todos os neurônios presentes 
+    *    (incluindo o peso adicional do bias).
+    * </p>
+    * @return quantiade de parâmetros total da rede.
     */
-   public int obterQuantidadePesos(){
+   public int obterQuantidadeParametros(){
       int numPesos = 0;
       for(Camada camada : this.camadas){
          numPesos += camada.numConexoes();

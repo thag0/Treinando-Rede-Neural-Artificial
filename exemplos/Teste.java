@@ -27,20 +27,13 @@ public class Teste{
 
    public static void main(String[] args){
       ged.limparConsole();
+      BufferedImage imagem = geim.lerImagem("/dados/mnist/4.png");
 
-      double[][] a = {
-         {1, 2},
-         {3, 4}
-      };
-      double[][] b = {
-         {5, 6},
-         {7, 8}
-      };
-
-      double[][] r = new double[2][2];
+      int[][] dadosImagem = geim.obterCinza(imagem);
+      imprimirImagem(dadosImagem);
    }
 
-   static void imprimirAscii(int[][] dados){
+   static void imprimirImagem(int[][] dados){
       for(int y = 0; y < dados.length; y++){
          for(int x = 0; x < dados[y].length; x++){
             if(dados[y][x] == 0) System.out.print("    ");

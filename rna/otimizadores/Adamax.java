@@ -133,7 +133,6 @@ public class Adamax extends Otimizador{
       interacoes++;
       double forcaB1 = Math.pow(beta1, interacoes);
 
-      //percorrer a rede, com exceção da camada de entrada
       int indice = 0;
       for(int i = 0; i < redec.length; i++){
 

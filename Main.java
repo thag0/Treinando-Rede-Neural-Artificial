@@ -25,10 +25,12 @@ class Main{
    
    // static final String caminhoArquivo = "/dados/imagens/dog.jpg";
    // static final String caminhoArquivo = "/dados/32x32/bloco.png";
+   // static final String caminhoArquivo = "/dados/32x32/mary.png";
    static final String caminhoArquivo = "/dados/mnist/8.png";
+
    static final String caminhoImagemExportada = "./resultados/imagem-ampliada";
-   static final int epocas = 100*1000;
-   static final float escalaRender = 8f;
+   static final int epocas = 10*1000;
+   static final float escalaRender = 8.5f;
    static final float escalaImagemExportada = 30f;
 
    // Sempre lembrar de quando mudar o dataset, também mudar a quantidade de dados de entrada e saída.
@@ -92,20 +94,20 @@ class Main{
       int[] arq = {entradas, 13, 13, saidas};//28x28
 
       Perda perda = new ErroMedioQuadrado();
-      Otimizador otm = new SGD(0.0001, 0.99, true);
+      // Otimizador otm = new SGD(0.001, 0.9, true);
+      Otimizador otm = new SGD();
       Inicializador ini = new Xavier();
 
       RedeNeural rede = new RedeNeural(arq);
       rede.compilar(perda, otm, ini);
-      rede.configurarAtivacao(new TanH());
-      rede.configurarAtivacao(rede.obterCamadaSaida(), new Sigmoid());
+      rede.configurarAtivacao(new Sigmoid());
 
       return rede;
    }
 
    public static void treinoEmPainel(RedeNeural rede, BufferedImage imagem, double[][] dadosEntrada, double[][] dadosSaida){
-      final int fps = 60;
-      int epocasPorFrame = 5;
+      final int fps = 6000;
+      int epocasPorFrame = 20;
 
       //acelerar o processo de desenho
       //bom em situações de janelas muito grandes

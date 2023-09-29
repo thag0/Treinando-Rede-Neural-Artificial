@@ -94,7 +94,6 @@ public class AdaGrad extends Otimizador{
       double g;
       Neuronio neuronio;
 
-      //percorrer rede, com exceção da camada de entrada
       int indice = 0;
       for(int i = 0; i < redec.length; i++){
          Camada camada = redec[i];

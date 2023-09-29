@@ -161,7 +161,6 @@ public class AMSGrad extends Otimizador{
 		double forcaB1 = (1 - Math.pow(beta1, interacoes));
 		double forcaB2 = (1 - Math.pow(beta2, interacoes));
 
-		//percorrer rede, com exceção da camada de entrada
 		int indice = 0;
 		for(int i = 0; i < redec.length; i++){
 

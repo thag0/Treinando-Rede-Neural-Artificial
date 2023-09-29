@@ -113,8 +113,7 @@ public class SGD extends Otimizador{
    @Override
    public void atualizar(Camada[] redec){
       Neuronio neuronio;
-      
-      //percorrer rede, com exceção da camada de entrada
+
       int indice = 0;
       for(int i = 0; i < redec.length; i++){
 

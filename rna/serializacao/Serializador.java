@@ -131,7 +131,7 @@ public class Serializador{
          //pesos dos neuronios
          for(int i = 0; i < camadas.length; i++){
             for(int j = 0; j < camadas[i].quantidadeNeuronios(); j++){
-               for(int k = 0; k < camadas[i].neuronio(j).numConexoes(); k++){
+               for(int k = 0; k < camadas[i].neuronio(j).numPesos(); k++){
                   double peso = camadas[i].neuronio(j).pesos[k];
                   
                   if(tipo.equals(Double.TYPE)){
@@ -213,7 +213,7 @@ public class Serializador{
             Camada camda = rede.obterCamada(i);
             for(int j = 0; j < camda.quantidadeNeuronios(); j++){
                Neuronio neuronio = camda.neuronio(j);
-               for(int k = 0; k < neuronio.numConexoes(); k++){
+               for(int k = 0; k < neuronio.numPesos(); k++){
                   neuronio.pesos[k] = Double.parseDouble(reader.readLine());
                }
             }

@@ -127,18 +127,18 @@ public class Neuronio implements Cloneable{
     
    /**
     * Inicialza os pesos do neurônio baseado no otimizador fornecido.
-     * @param inicializador inicializador usado na geração dos valores iniciais de pesos.
-     * @param alcanceInicial alcance inicial de aleatorização para alguns inicializadores.
-     * @param tamSaida tamanho da saída da camada em que o neurônio está inserido.
-     * @throws IllegalArgumentException se o inicializdor for nulo ou não suportado.
+    * @param inicializador inicializador usado na geração dos valores iniciais de pesos.
+    * @param alcance alcance inicial de aleatorização para alguns inicializadores.
+    * @param tamSaida tamanho da saída da camada em que o neurônio está inserido.
+    * @throws IllegalArgumentException se o inicializdor for nulo ou não suportado.
     */
-   public void inicializarPesos(Inicializador inicializador, double alcanceInicial, int tamSaida){
+   public void inicializarPesos(Inicializador inicializador, double alcance, int tamSaida){
       if(inicializador == null){
          throw new IllegalArgumentException("O inicializador não pode ser nulo.");
       }
 
       if(inicializador instanceof Aleatorio || inicializador instanceof AleatorioPositivo){
-         inicializador.inicializar(this.pesos, alcanceInicial);
+         inicializador.inicializar(this.pesos, alcance);
       
       }else if(inicializador instanceof He || inicializador instanceof LeCun){
          inicializador.inicializar(this.pesos, this.pesos.length);
@@ -164,11 +164,26 @@ public class Neuronio implements Cloneable{
     *    neurônios e possui valor de saída sempre igual a 1, então é possível generalizar
     *    num único loop.
     * </p>
+    * @param entrada array com os dados de entrada para alimentar o neurônio.
+    * @throws IllegalArgumentException se o tamanho dos dados de entrada for diferente
+    * da capacidade de entrada do neurônio.
     */
-   public void somatorio(){
+   public void somatorio(double[] entrada){
+      if(this.tamanhoEntrada() != entrada.length){
+         throw new IllegalArgumentException(
+            "Tamanho dos dados de entrada (" + entrada.length +
+            ") diferente da capacidade de entrada (" + this.tamanhoEntrada() +
+            ") do neurônio"
+         );
+      }
+
+      //esse método de cópia ta sendo mais eficiente
+      //do que usar o arraycopy
       this.somatorio = 0;
-      int tam = this.entradas.length;
-      for(int i = 0; i < tam; i++){
+      for(int i = 0; i < this.tamanhoEntrada(); i++){
+         this.entradas[i] = entrada[i];
+      }
+      for(int i = 0; i < this.entradas.length; i++){
          this.somatorio += this.entradas[i] * this.pesos[i];
       }
    }
@@ -210,7 +225,7 @@ public class Neuronio implements Cloneable{
     * Retorna a quantidade de conexões presentes (incluindo a do bias).
     * @return quantidade de conexões presentes totais.
     */
-   public int numConexoes(){
+   public int numPesos(){
       return this.pesos.length;
    }
 
@@ -233,9 +248,14 @@ public class Neuronio implements Cloneable{
       buffer += "Informações " + this.getClass().getSimpleName() + " = [\n";
       buffer += espacamento + "Bias: " + this.bias + "\n";
 
-      buffer += espacamento + "Quantidade de pesos: " + this.numConexoes() + "\n\n";
+      buffer += espacamento + "Quantidade de pesos: " + this.numPesos() + "\n\n";
       for(int i = 0; i < this.pesos.length; i++){
-         buffer += espacamento + "p" + i + ": " + this.pesos[i] + "\n";
+         if(this.bias && i == this.pesos.length-1){
+            buffer += espacamento + "pb: " + this.pesos[i] + "\n";
+
+         }else{
+            buffer += espacamento + "p" + i + ": " + this.pesos[i] + "\n";
+         }
       }
 
       buffer += "]\n";

@@ -62,7 +62,6 @@ public class GD extends Otimizador{
    public void atualizar(Camada[] redec){
       Neuronio neuronio;
 
-      //percorrer rede, com exceção da camada de entrada
       for(int i = 0; i < redec.length; i++){
          
          Camada camada = redec[i];

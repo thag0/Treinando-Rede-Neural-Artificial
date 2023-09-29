@@ -34,7 +34,7 @@ public class RMSProp extends Otimizador{
    /**
     * Acumuladores
     */
-   private double[] ac;
+   private double[] acumulador;
 
    /**
     * Inicializa uma nova instância de otimizador <strong> RMSProp </strong> 
@@ -70,10 +70,10 @@ public class RMSProp extends Otimizador{
 
    @Override
    public void inicializar(int parametros){
-      this.ac = new double[parametros];
+      this.acumulador = new double[parametros];
 
-      for(int i = 0; i < this.ac.length; i++){
-         this.ac[i] = 0.1;
+      for(int i = 0; i < this.acumulador.length; i++){
+         this.acumulador[i] = 0.1;
       }
    }
 
@@ -105,8 +105,7 @@ public class RMSProp extends Otimizador{
    public void atualizar(Camada[] redec){
       double g;
       Neuronio neuronio;
-      
-      //percorrer rede, com exceção da camada de entrada
+
       int indice = 0;
       for(int i = 0; i < redec.length; i++){
 
@@ -117,8 +116,8 @@ public class RMSProp extends Otimizador{
             for(int k = 0; k < neuronio.pesos.length; k++){
                g = neuronio.gradiente[k];
                
-               ac[indice] = (rho * ac[indice]) + (1 - rho) * (g*g);
-               neuronio.pesos[k] -= (taxaAprendizagem * g) / (Math.sqrt(ac[indice] + epsilon));
+               acumulador[indice] = (rho * acumulador[indice]) + (1 - rho) * (g*g);
+               neuronio.pesos[k] -= (taxaAprendizagem * g) / (Math.sqrt(acumulador[indice] + epsilon));
 
                indice++;
             }

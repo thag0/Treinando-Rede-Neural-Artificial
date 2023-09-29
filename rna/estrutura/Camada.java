@@ -69,10 +69,12 @@ public class Camada implements Cloneable{
     * <p>
     *    Após instanciar a camada é preciso inicializar os neurônios dela.
     * </p>
+    * @param neuronios quantidade de neurônios desejados para a camada.
     * @param temBias define se a camada possui um neurônio de bias. Se true, será 
     * adicionado um neurônio adicional que a saída é sempre 1.
     */
-   public Camada(boolean temBias){
+   public Camada(int neuronios, boolean temBias){
+      this.neuronios = new Neuronio[neuronios];
       this.bias = temBias;
       this.ativacao = new ReLU();
    }
@@ -89,21 +91,19 @@ public class Camada implements Cloneable{
    /**
     * Instancia os todos neurônios da camada, inicializando seus atributos e pesos de 
     * acordo com o inicializador fornecido.
-    * @param neuronios quantidade de neurônios desejados para a camada.
     * @param entrada capacidade de dados de entrada da camada, deve corresponder a quantidade
     * de neurônios da camada anterior, ou no caso da camada de entrada, deve corresponder a 
     * quantidade de dados de entrada.
     * @param alcancePeso valor de alcance da aleatorização dos pesos.
     * @param inicializador inicializador para a geração dos pesos dos neurônios da camada.
+    * @throws IllegalArgumentException se o inicializador for nulo.
     */
-   public void inicializar(int neuronios, int entrada, double alcancePeso, Inicializador inicializador){
+   public void inicializar(int entrada, double alcancePeso, Inicializador inicializador){
       if(inicializador == null){
          throw new IllegalArgumentException("O inicializador não pode ser nulo.");
       }
 
-      this.neuronios = new Neuronio[neuronios];
       this.tamanhoEntrada = entrada;
-      
       for(int i = 0; i < this.neuronios.length; i++){
          this.neuronios[i] = new Neuronio(entrada, this.bias);
          this.neuronios[i].inicializarPesos(inicializador, alcancePeso, this.neuronios.length);
@@ -124,14 +124,8 @@ public class Camada implements Cloneable{
     * @param anterior camada anterior que contém os valores de saída dos neurônios.
     */
    public void ativarNeuronios(double[] entrada){
-      // esse método de cópia é mais eficiente do que
-      // criar um array intermediário e usar o system.arraycopy
-      // nas entradas dos neurônios
       for(int i = 0; i < this.neuronios.length; i++){
-         for(int j = 0; j < this.neuronios[i].tamanhoEntrada(); j++){
-            this.neuronios[i].entradas[j] = entrada[j];
-         }
-         this.neuronios[i].somatorio();
+         this.neuronios[i].somatorio(entrada);
       }
 
       this.ativacao.ativar(this.neuronios);
@@ -300,7 +294,7 @@ public class Camada implements Cloneable{
    public int numConexoes(){
       int numConexoes = 0;
       for(int i = 0; i < this.neuronios.length; i++){
-         numConexoes += this.neuronios[i].numConexoes();
+         numConexoes += this.neuronios[i].numPesos();
       }
       return numConexoes;
    }
