@@ -1146,7 +1146,7 @@ public class Ged{
     *    7, 8, 9 
     * ]
     *
-    * v = (int[][]) vetorizar(m);
+    * v = (int[]) vetorizar(m);
     *
     * v = [1, 2, 3, 4, 5, 6, 7, 8, 9]
     * </pre>

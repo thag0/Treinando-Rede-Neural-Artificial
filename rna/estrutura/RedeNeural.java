@@ -755,7 +755,7 @@ public class RedeNeural implements Cloneable{
       if(nSaida != saida[0].length){
          throw new IllegalArgumentException(
             "Dados de saída (" + saida[0].length +
-            ") e neurônios de saída da rede (" + nEntrada + ") incompatíveis."
+            ") e neurônios de saída da rede (" + nSaida + ") incompatíveis."
          );
       }
    }
@@ -869,13 +869,12 @@ public class RedeNeural implements Cloneable{
          );
       }
 
-      //enviar clones pra não embaralhar os dados originais
       treinador.treino(
          this,
          this.perdaAtual,
          this.otimizadorAtual,
-         entradas.clone(),
-         saidas.clone(),
+         entradas,
+         saidas,
          epochs
       );
    }
@@ -911,13 +910,12 @@ public class RedeNeural implements Cloneable{
          );
       }
 
-      //enviar clones pra não embaralhar os dados originais
       treinador.treino(
          this,
          this.perdaAtual,
          this.otimizadorAtual,
-         entradas.clone(),
-         saidas.clone(),
+         entradas,
+         saidas,
          epochs,
          tamLote
       );

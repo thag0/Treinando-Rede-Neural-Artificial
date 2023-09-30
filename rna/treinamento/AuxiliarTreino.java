@@ -102,6 +102,22 @@ class AuxiliarTreino{
    }
 
    /**
+    * Copia elemento a elemento dos dados para evitar clones com mesmas referências
+    * e embaralhar os dados de treino usados.
+    * @param dados conjunto de dados base.
+    * @return novo conjunto de dados com os mesmo valores contidos no original.
+    */
+   double[][] clonarElementos(double[][] dados){
+      double[][] clone = new double[dados.length][dados[0].length];
+
+      for(int i = 0; i < dados.length; i++){
+         System.arraycopy(dados[i], 0, clone[i], 0, dados[i].length);
+      }
+
+      return clone;
+   }
+
+   /**
     * Embaralha os dados da matriz usando o algoritmo Fisher-Yates.
     * @param entradas matriz com os dados de entrada.
     * @param saidas matriz com os dados de saída.

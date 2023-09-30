@@ -1,47 +1,22 @@
 package exemplos;
 
-import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-
-import render.JanelaRede;
-import rna.ativacoes.LeakyReLU;
-import rna.ativacoes.Sigmoid;
-import rna.estrutura.Camada;
-import rna.estrutura.Neuronio;
-import rna.estrutura.RedeNeural;
-import rna.inicializadores.Aleatorio;
-import rna.inicializadores.Inicializador;
-import rna.inicializadores.Xavier;
-import rna.otimizadores.SGD;
-import rna.serializacao.Serializador;
-import utilitarios.ged.Ged;
-import utilitarios.geim.Geim;
 import utilitarios.ged.Dados;
+import utilitarios.ged.Ged;
 
-@SuppressWarnings("unused")
-public class Teste{
-   static Ged ged = new Ged();
-   static Geim geim = new Geim();
+class Teste{
+   public static void main(String[] args) {
+      Ged ged = new Ged();
 
-   public static void main(String[] args){
-      ged.limparConsole();
-      BufferedImage imagem = geim.lerImagem("/dados/mnist/4.png");
+      double[][] a = {
+         {0},
+         {1},
+         {2},
+         {3},
+      };
 
-      int[][] dadosImagem = geim.obterCinza(imagem);
-      imprimirImagem(dadosImagem);
-   }
+      Dados dados = new Dados(a);
 
-   static void imprimirImagem(int[][] dados){
-      for(int y = 0; y < dados.length; y++){
-         for(int x = 0; x < dados[y].length; x++){
-            if(dados[y][x] == 0) System.out.print("    ");
-            else if(dados[y][x] < 10) System.out.print("00" + dados[y][x] + " ");
-            else if(dados[y][x] < 100) System.out.print("0" + dados[y][x] + " ");
-            else System.out.print(dados[y][x] + " ");
-         }
-         System.out.println();
-      }
+      ged.categorizar(dados, 0);
+      ged.imprimirDados(dados);
    }
 }

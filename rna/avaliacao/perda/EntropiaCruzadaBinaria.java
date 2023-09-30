@@ -38,4 +38,9 @@ public class EntropiaCruzadaBinaria extends Perda{
 
       return perda;
    }
+
+   @Override
+   public double calcularErro(double previsto, double real){
+      return -((real * Math.log(previsto)) + ((1 - real) * Math.log(1 - previsto)));
+   }
 }

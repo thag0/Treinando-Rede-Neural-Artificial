@@ -55,6 +55,10 @@ class TreinoLote{
     * @param tamLote tamanho do lote.
     */
    public void treino(RedeNeural rede, Perda perda, Otimizador otimizador, double[][] entradas, double[][] saidas, int epochs, int tamLote){
+      //usar clones pra não embaralhar os dados originais
+      double[][] cloneEntradas = aux.clonarElementos(entradas);
+      double[][] cloneSaidas = aux.clonarElementos(saidas);
+      
       Camada[] redec = rede.obterCamadas();
 
       boolean embaralhar = true;
@@ -63,12 +67,12 @@ class TreinoLote{
       }
 
       for(int i = 0; i < epochs; i++){
-         if(embaralhar) aux.embaralharDados(entradas, saidas);
+         if(embaralhar) aux.embaralharDados(cloneEntradas, cloneSaidas);
 
          for(int j = 0; j < entradas.length; j += tamLote){
             int fimIndice = Math.min(j + tamLote, entradas.length);
-            double[][] entradaLote = aux.obterSubMatriz(entradas, j, fimIndice);
-            double[][] saidaLote = aux.obterSubMatriz(saidas, j, fimIndice);
+            double[][] entradaLote = aux.obterSubMatriz(cloneEntradas, j, fimIndice);
+            double[][] saidaLote = aux.obterSubMatriz(cloneSaidas, j, fimIndice);
 
             //reiniciar gradiente do lote
             aux.zerarGradientesAcumulados(redec);
@@ -87,7 +91,7 @@ class TreinoLote{
 
          //feedback de avanço da rede
          if(calcularHistorico){
-            historico.add(perda.calcular(rede, entradas, saidas));
+            historico.add(perda.calcular(rede, cloneEntradas, cloneSaidas));
          }
       }
    }
