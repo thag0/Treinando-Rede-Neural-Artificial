@@ -23,9 +23,9 @@ public abstract class Perda{
       );
    }
 
-   public double calcularErro(double previsto, double real){
+   public double[] calcularErro(double[] previsto, double[] real){
       throw new UnsupportedOperationException(
-         "É necessário implementar a derivada da função de perda."
+         "É necessário implementar a o calculo de erro."
       );
    }
 }

@@ -51,10 +51,6 @@ class Treino{
     * @param embaralhar embaralhar dados de treino para cada época.
     */
    public void treino(RedeNeural rede, Perda perda, Otimizador otimizador, double[][] entradas, double[][] saidas, int epochs){
-      //usar clones pra não embaralhar os dados originais
-      double[][] cloneEntradas = aux.clonarElementos(entradas);
-      double[][] cloneSaidas = aux.clonarElementos(saidas);
-
       double[] entrada = new double[entradas[0].length];// quantidade de colunas da entrada
       double[] saida = new double[saidas[0].length];// quantidade de colunas da saída
 
@@ -69,13 +65,13 @@ class Treino{
       for(int i = 0; i < epochs; i++){
          //aplicar gradiente estocástico
          //alterando a organização dos dados em cada época
-         if(embaralhar) aux.embaralharDados(cloneEntradas, cloneSaidas);
+         if(embaralhar) aux.embaralharDados(entradas, saidas);
 
          //percorrer amostras
          for(int j = 0; j < entradas.length; j++){
             //preencher dados de entrada e saída
-            System.arraycopy(cloneEntradas[j], 0, entrada, 0, entrada.length);
-            System.arraycopy(cloneSaidas[j], 0, saida, 0, saida.length);
+            System.arraycopy(entradas[j], 0, entrada, 0, entrada.length);
+            System.arraycopy(saidas[j], 0, saida, 0, saida.length);
 
             //calcular desempenho da rede,
             //erros e gradientes
@@ -87,7 +83,7 @@ class Treino{
 
          //feedback de avanço da rede
          if(calcularHistorico){
-            historico.add(perda.calcular(rede, cloneEntradas, cloneSaidas));
+            historico.add(perda.calcular(rede, entradas, saidas));
          }
       }
    }

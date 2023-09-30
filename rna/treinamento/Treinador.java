@@ -56,7 +56,14 @@ public class Treinador{
     * @param embaralhar embaralhar dados de treino para cada época.
     */
    public void treino(RedeNeural rede, Perda perda, Otimizador otimizador, double[][] entradas, double[][] saidas, int epochs){
-      treino.treino(rede, perda, otimizador, entradas, saidas, epochs);
+      treino.treino(
+         rede, 
+         perda, 
+         otimizador, 
+         clonarElementos(entradas), 
+         clonarElementos(saidas), 
+         epochs
+      );
    }
 
    /**
@@ -71,7 +78,31 @@ public class Treinador{
     * @param tamLote tamanho do lote.
     */
    public void treino(RedeNeural rede, Perda perda, Otimizador otimizador, double[][] entradas, double[][] saidas, int epochs, int tamLote){
-      treinoLote.treino(rede, perda, otimizador, entradas, saidas, epochs, tamLote);
+      treinoLote.treino(
+         rede, 
+         perda, 
+         otimizador, 
+         clonarElementos(entradas), 
+         clonarElementos(saidas), 
+         epochs, 
+         tamLote
+      );
+   }
+
+   /**
+    * Copia elemento a elemento dos dados para evitar clones com mesmas referências
+    * e embaralhar os dados de treino usados.
+    * @param dados conjunto de dados base.
+    * @return novo conjunto de dados com os mesmo valores contidos no original.
+    */
+   private double[][] clonarElementos(double[][] dados){
+      double[][] clone = new double[dados.length][dados[0].length];
+
+      for(int i = 0; i < dados.length; i++){
+         System.arraycopy(dados[i], 0, clone[i], 0, dados[i].length);
+      }
+
+      return clone;
    }
 
    /**

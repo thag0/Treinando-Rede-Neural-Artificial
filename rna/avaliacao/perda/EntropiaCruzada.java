@@ -39,8 +39,14 @@ public class EntropiaCruzada extends Perda{
    }
 
    @Override
-   public double calcularErro(double previsto, double real){
-      //é uma adaptação pra arquitetura de rede que fiz.
-      return (real - previsto);
+   public double[] calcularErro(double[] previsto, double[] real){
+      //adaptação pra minha arquitetura por enquanto
+      //não econtrei ainda uma boa resposta de como calcular isso
+
+      double[] erros = new double[previsto.length];
+      for(int i = 0; i < previsto.length; i++){
+         erros[i] = real[i] - previsto[i];
+      }
+      return erros;
    }
 }

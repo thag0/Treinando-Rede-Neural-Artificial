@@ -40,7 +40,13 @@ public class EntropiaCruzadaBinaria extends Perda{
    }
 
    @Override
-   public double calcularErro(double previsto, double real){
-      return -((real * Math.log(previsto)) + ((1 - real) * Math.log(1 - previsto)));
+   public double[] calcularErro(double[] previsto, double[] real){
+      //também não econtrei ainda uma boa resposta de como calcular isso
+
+      double[] erros = new double[previsto.length];
+      for(int i = 0; i < previsto.length; i++){
+         erros[i] = real[i] - previsto[i];
+      }
+      return erros;
    }
 }

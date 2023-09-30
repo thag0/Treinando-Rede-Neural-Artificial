@@ -32,7 +32,11 @@ public class ErroMedioQuadrado extends Perda{
    }
 
    @Override
-   public double calcularErro(double previsto, double real){
-      return 2*(real - previsto);
+   public double[] calcularErro(double[] previsto, double[] real){
+      double[] erros = new double[previsto.length];
+      for(int i = 0; i < previsto.length; i++){
+         erros[i] = 2*(real[i] - previsto[i]);
+      }
+      return erros;
    }
 }

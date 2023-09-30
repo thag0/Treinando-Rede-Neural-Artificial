@@ -45,11 +45,11 @@ public class ExemploTratandoDados{
       double[][] testeY = (double[][]) ged.separarDadosSaida(teste, qSaidas);
 
       //construindo a rede neural
-      int[] arq = {qEntradas, 9, 9, qSaidas};
+      int[] arq = {qEntradas, 10, 10, qSaidas};
       RedeNeural rede = new RedeNeural(arq);
       rede.compilar(new SGD(), new Xavier());
       rede.configurarAtivacao(new Sigmoid());
-      rede.treinar(treinoX, treinoY, 3_000);
+      rede.treinar(treinoX, treinoY, 5_000);
 
       //avaliando resultados
       System.out.println(rede.info());

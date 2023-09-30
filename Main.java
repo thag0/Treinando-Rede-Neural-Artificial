@@ -123,7 +123,7 @@ class Main{
       
       int i = 0;
       while(i < epocas && jt.isVisible()){
-         rede.treinar(dadosEntrada, dadosSaida, epocasPorFrame);
+         rede.treinar(dadosEntrada, dadosSaida, epocasPorFrame, 8);
          jt.desenharTreino(rede, i, numThreads);
 
          try{

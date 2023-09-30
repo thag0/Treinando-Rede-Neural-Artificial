@@ -42,10 +42,10 @@ public class ExemploClassificacao{
       double[][] testeY = (double[][]) ged.separarDadosSaida(teste, qSaidas);
 
       //criando e configurando a rede neural
-      int[] arq = {qEntradas, 9, 9, qSaidas};
+      int[] arq = {qEntradas, 8, 8, qSaidas};
       RedeNeural rede = new RedeNeural(arq);
-      rede.compilar(new EntropiaCruzada(), new SGD(), new Xavier());
-      rede.configurarAtivacao(new Sigmoid());
+      rede.compilar(new EntropiaCruzada(), new SGD(0.0001, 0.9), new Xavier());
+      rede.configurarAtivacao(new LeakyReLU());
       rede.configurarAtivacao(rede.obterCamadaSaida(), new Softmax());
 
       System.out.println(rede.info());

@@ -54,11 +54,7 @@ class TreinoLote{
     * @param embaralhar embaralhar dados de treino para cada época.
     * @param tamLote tamanho do lote.
     */
-   public void treino(RedeNeural rede, Perda perda, Otimizador otimizador, double[][] entradas, double[][] saidas, int epochs, int tamLote){
-      //usar clones pra não embaralhar os dados originais
-      double[][] cloneEntradas = aux.clonarElementos(entradas);
-      double[][] cloneSaidas = aux.clonarElementos(saidas);
-      
+   public void treino(RedeNeural rede, Perda perda, Otimizador otimizador, double[][] entradas, double[][] saidas, int epochs, int tamLote){      
       Camada[] redec = rede.obterCamadas();
 
       boolean embaralhar = true;
@@ -67,12 +63,12 @@ class TreinoLote{
       }
 
       for(int i = 0; i < epochs; i++){
-         if(embaralhar) aux.embaralharDados(cloneEntradas, cloneSaidas);
+         if(embaralhar) aux.embaralharDados(entradas, saidas);
 
          for(int j = 0; j < entradas.length; j += tamLote){
             int fimIndice = Math.min(j + tamLote, entradas.length);
-            double[][] entradaLote = aux.obterSubMatriz(cloneEntradas, j, fimIndice);
-            double[][] saidaLote = aux.obterSubMatriz(cloneSaidas, j, fimIndice);
+            double[][] entradaLote = aux.obterSubMatriz(entradas, j, fimIndice);
+            double[][] saidaLote = aux.obterSubMatriz(saidas, j, fimIndice);
 
             //reiniciar gradiente do lote
             aux.zerarGradientesAcumulados(redec);
@@ -91,7 +87,7 @@ class TreinoLote{
 
          //feedback de avanço da rede
          if(calcularHistorico){
-            historico.add(perda.calcular(rede, cloneEntradas, cloneSaidas));
+            historico.add(perda.calcular(rede, entradas, saidas));
          }
       }
    }
@@ -136,9 +132,9 @@ class TreinoLote{
    /**
     * Método exlusivo para separar a forma de calcular a média dos gradientes do lote.
     * @param redec Rede Neural em formato de lista de camadas.
-    * @param tamanhoLote tamanho do lote.
+    * @param tamLote tamanho do lote.
     */
-   private void calcularMediaGradientesLote(Camada[] redec, int tamanhoLote){
+   private void calcularMediaGradientesLote(Camada[] redec, int tamLote){
       for(int i = 0; i < redec.length; i++){ 
          
          Camada camadaAtual = redec[i];
@@ -147,7 +143,7 @@ class TreinoLote{
             
             Neuronio neuronio = camadaAtual.neuronio(j);
             for(int k = 0; k < neuronio.pesos.length; k++){
-               neuronio.gradiente[k] = neuronio.gradienteAcumulado[k] / (tamanhoLote);
+               neuronio.gradiente[k] = neuronio.gradienteAcumulado[k] / tamLote;
             }
          }
       }

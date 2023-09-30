@@ -47,11 +47,11 @@ public class ExemploPhising{
       //criando, configurando e treinando a rede neural.
       //os valores de configuração não devem ser tomados como regra e 
       //devem se adaptar ao problema e os dados apresentados.
-      int[] arq = {colunasDados, 12, 12, 12, colunasClasses};
+      int[] arq = {colunasDados, 12, 12, colunasClasses};
       RedeNeural rede = new RedeNeural(arq);
-      rede.compilar(new SGD(0.0001, 0.99, true), new Xavier());
+      rede.compilar(new SGD(0.0001, 0.95, true), new Xavier());
       rede.configurarAtivacao(new Sigmoid());
-      rede.treinar(treinoX, treinoY, 15_000);
+      rede.treinar(treinoX, treinoY, 10_000);
 
       // avaliando os resultados da rede neural
       double perda = rede.avaliador.erroMedioQuadrado(testeX, testeY);

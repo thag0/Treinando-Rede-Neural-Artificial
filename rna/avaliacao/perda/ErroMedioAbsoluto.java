@@ -31,7 +31,11 @@ public class ErroMedioAbsoluto extends Perda{
    }
 
    @Override
-   public double calcularErro(double previsto, double real){
-      return real - previsto;
+   public double[] calcularErro(double[] previsto, double[] real){
+      double[] erros = new double[previsto.length];
+      for(int i = 0; i < previsto.length; i++){
+         erros[i] = real[i] - previsto[i];
+      }
+      return erros;
    }
 }

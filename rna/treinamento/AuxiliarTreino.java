@@ -42,8 +42,15 @@ class AuxiliarTreino{
    void calcularErroSaida(Camada[] redec, Perda perda, double[] real){
       Camada saida = redec[redec.length-1];
 
+      double[] previsto = new double[saida.quantidadeNeuronios()];
+      for(int i = 0; i < previsto.length; i++){
+         previsto[i] = saida.neuronio(i).saida;
+      }
+
+      double[] erros = perda.calcularErro(previsto, real);
+
       for(int i = 0; i < saida.quantidadeNeuronios(); i++){
-         saida.neuronio(i).erro = perda.calcularErro(saida.neuronio(i).saida, real[i]);
+         saida.neuronio(i).erro = erros[i];
       }
    }
 
@@ -99,22 +106,6 @@ class AuxiliarTreino{
             neuronio.erro = somaErros * neuronio.derivada;
          }
       }
-   }
-
-   /**
-    * Copia elemento a elemento dos dados para evitar clones com mesmas referências
-    * e embaralhar os dados de treino usados.
-    * @param dados conjunto de dados base.
-    * @return novo conjunto de dados com os mesmo valores contidos no original.
-    */
-   double[][] clonarElementos(double[][] dados){
-      double[][] clone = new double[dados.length][dados[0].length];
-
-      for(int i = 0; i < dados.length; i++){
-         System.arraycopy(dados[i], 0, clone[i], 0, dados[i].length);
-      }
-
-      return clone;
    }
 
    /**
@@ -198,7 +189,7 @@ class AuxiliarTreino{
          
          Camada camadaAtual = redec[i];
          int nNeuronios = camadaAtual.quantidadeNeuronios();
-         for(int j = 0; j < nNeuronios; j++){//percorrer neurônios da camada atual
+         for(int j = 0; j < nNeuronios; j++){
             
             Neuronio neuronio = camadaAtual.neuronio(j);
             for(int k = 0; k < neuronio.gradienteAcumulado.length; k++){

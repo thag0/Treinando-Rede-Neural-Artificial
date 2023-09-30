@@ -7,18 +7,12 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import render.JanelaRede;
-import rna.ativacoes.LeakyReLU;
-import rna.ativacoes.Sigmoid;
-import rna.ativacoes.Softmax;
-import rna.ativacoes.TanH;
+import rna.ativacoes.*;
 import rna.avaliacao.perda.EntropiaCruzada;
 import rna.estrutura.Camada;
 import rna.estrutura.Neuronio;
 import rna.estrutura.RedeNeural;
-import rna.inicializadores.Aleatorio;
-import rna.inicializadores.Inicializador;
-import rna.inicializadores.LeCun;
-import rna.inicializadores.Xavier;
+import rna.inicializadores.*;
 import rna.otimizadores.SGD;
 import rna.serializacao.Serializador;
 import utilitarios.ged.Ged;
@@ -84,7 +78,7 @@ public class TestandoMnist{
          rede.calcularSaida(entrada[i]);
          double[] saidaRede = rede.obterSaidas();
          
-         System.out.println("Real = " + indiceMaior(saida[i]) + " Previsto = " + indiceMaior(saidaRede));
+         System.out.println("Real - Previsto -> " + indiceMaior(saida[i]) + " - " + indiceMaior(saidaRede));
       }
    }
 
