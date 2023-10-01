@@ -34,22 +34,18 @@ public class Lion extends Otimizador{
    @Override
    public void atualizar(Camada[] redec){
       double g;
-      Neuronio neuronio;
-
-      int indice = 0;
+		int id = 0;//indice de busca na lista de coeficientes
       for(int i = 0; i < redec.length; i++){
-         
-         int nNeuronios = redec[i].quantidadeNeuronios();
-         for(int j = 0; j < nNeuronios; j++){   
+         for(int j = 0; j < redec[i].quantidadeNeuronios(); j++){   
             
-            neuronio = redec[i].neuronio(j);
+            Neuronio neuronio = redec[i].neuronio(j);
             for(int k = 0; k < neuronio.pesos.length; k++){
                g = neuronio.gradiente[k];
                
-               neuronio.pesos[k] -= taxaAprendizagem * Math.signum((momentum[indice] * beta1) + (g * (1 - beta1)));
-               momentum[indice] = (momentum[indice] * beta2) + (g * (1 - beta2));
+               neuronio.pesos[k] -= taxaAprendizagem * Math.signum((momentum[id] * beta1) + (g * (1 - beta1)));
+               momentum[id] = (momentum[id] * beta2) + (g * (1 - beta2));
 
-               indice++;
+               id++;
             }
          }
       }

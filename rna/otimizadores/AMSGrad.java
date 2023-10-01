@@ -154,35 +154,31 @@ public class AMSGrad extends Otimizador{
     */
 	@Override
 	public void atualizar(Camada[] redec){
-		double mChapeu, vChapeu, g;
-		Neuronio neuronio;
-		
 		interacoes++;
+		
+		double mChapeu, vChapeu, g;
 		double forcaB1 = (1 - Math.pow(beta1, interacoes));
 		double forcaB2 = (1 - Math.pow(beta2, interacoes));
 
-		int indice = 0;
+		int id = 0;//indice de busca na lista de coeficientes
 		for(int i = 0; i < redec.length; i++){
+			for(int j = 0; j < redec[i].quantidadeNeuronios(); j++){
 
-			Camada camada = redec[i];
-			int nNeuronios = camada.quantidadeNeuronios();
-			for(int j = 0; j < nNeuronios; j++){
-
-				neuronio = camada.neuronio(j);
+				Neuronio neuronio = redec[i].neuronio(j);
 				for(int k = 0; k < neuronio.pesos.length; k++){
 					g = neuronio.gradiente[k];
 					
-					momentum[indice] =   (beta1 * momentum[indice])   + ((1 - beta1) * g);
-					velocidade[indice] = (beta2 * velocidade[indice]) + ((1 - beta2) * g * g);
+					momentum[id] =   (beta1 * momentum[id])   + ((1 - beta1) * g);
+					velocidade[id] = (beta2 * velocidade[id]) + ((1 - beta2) * g * g);
 
-					vCorrigido[indice] = Math.max(vCorrigido[indice], velocidade[indice]);
+					vCorrigido[id] = Math.max(vCorrigido[id], velocidade[id]);
 
-					mChapeu = momentum[indice] / forcaB1;
-					vChapeu = vCorrigido[indice] / forcaB2;
+					mChapeu = momentum[id] / forcaB1;
+					vChapeu = vCorrigido[id] / forcaB2;
 
 					neuronio.pesos[k] -= (taxaAprendizagem * mChapeu) / (Math.sqrt(vChapeu) + epsilon);
 
-					indice++;
+					id++;
 				}
 
 			}

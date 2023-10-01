@@ -29,7 +29,7 @@ class Main{
    static final String caminhoArquivo = "/dados/mnist/8.png";
 
    static final String caminhoImagemExportada = "./resultados/imagem-ampliada";
-   static final int epocas = 10*1000;
+   static final int epocas = 15*1000;
    static final float escalaRender = 8.5f;
    static final float escalaImagemExportada = 30f;
 
@@ -95,7 +95,7 @@ class Main{
 
       Perda perda = new ErroMedioQuadrado();
       // Otimizador otm = new SGD(0.001, 0.9, true);
-      Otimizador otm = new SGD();
+      Otimizador otm = new RMSProp();
       Inicializador ini = new Xavier();
 
       RedeNeural rede = new RedeNeural(arq);
@@ -111,7 +111,7 @@ class Main{
 
       //acelerar o processo de desenho
       //bom em situações de janelas muito grandes
-      int numThreads = (int)(Runtime.getRuntime().availableProcessors() * 0.5);
+      int numThreads = (int)(Runtime.getRuntime().availableProcessors() * 0.75);
 
       JanelaTreino jt = new JanelaTreino(imagem.getWidth(), imagem.getHeight(), escalaRender);
       jt.desenharTreino(rede, 0, numThreads);
@@ -123,7 +123,7 @@ class Main{
       
       int i = 0;
       while(i < epocas && jt.isVisible()){
-         rede.treinar(dadosEntrada, dadosSaida, epocasPorFrame, 8);
+         rede.treinar(dadosEntrada, dadosSaida, epocasPorFrame);
          jt.desenharTreino(rede, i, numThreads);
 
          try{

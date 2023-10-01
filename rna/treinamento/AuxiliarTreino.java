@@ -35,20 +35,17 @@ class AuxiliarTreino{
     *       {@code p} - saída prevista pelo neurônio.
     *    </p>
     * </p>
-    * @param redec Rede Neural em formato de array de camadas.
+    * @param saida camada de saída da Rede Reural.
     * @param perda função de perda da rede usada para calcular os erros.
     * @param real array com as saídas esperadas.
     */
-   void calcularErroSaida(Camada[] redec, Perda perda, double[] real){
-      Camada saida = redec[redec.length-1];
-
+   void calcularErroSaida(Camada saida, Perda perda, double[] real){
       double[] previsto = new double[saida.quantidadeNeuronios()];
       for(int i = 0; i < previsto.length; i++){
          previsto[i] = saida.neuronio(i).saida;
       }
 
       double[] erros = perda.calcularErro(previsto, real);
-
       for(int i = 0; i < saida.quantidadeNeuronios(); i++){
          saida.neuronio(i).erro = erros[i];
       }

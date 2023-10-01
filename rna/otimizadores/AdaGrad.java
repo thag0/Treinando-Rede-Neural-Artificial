@@ -92,23 +92,18 @@ public class AdaGrad extends Otimizador{
    @Override
    public void atualizar(Camada[] redec){  
       double g;
-      Neuronio neuronio;
-
-      int indice = 0;
+      int id = 0;//indice de busca na lista de coeficientes
       for(int i = 0; i < redec.length; i++){
-         Camada camada = redec[i];
+         for(int j = 0; j < redec[i].quantidadeNeuronios(); j++){
   
-         int nNeuronios = camada.quantidadeNeuronios();
-         for(int j = 0; j < nNeuronios; j++){
-  
-            neuronio = camada.neuronio(j);
+            Neuronio neuronio = redec[i].neuronio(j);
             for(int k = 0; k < neuronio.pesos.length; k++){
                g = neuronio.gradiente[k];
 
-               acumulador[indice] += (g * g);
-               neuronio.pesos[k] -= (taxaAprendizagem * g) / (Math.sqrt(acumulador[indice] + epsilon));
+               acumulador[id] += (g * g);
+               neuronio.pesos[k] -= (taxaAprendizagem * g) / (Math.sqrt(acumulador[id] + epsilon));
 
-               indice++;
+               id++;
             }
          }
       }

@@ -13,8 +13,8 @@ import utilitarios.ged.Ged;
 public class ExemploClassificacao{
    
    public static void main(String[] args){
-      limparConsole();
       Ged ged = new Ged();
+      ged.limparConsole();
 
       //carregando dados e tratando
       //removendo linha com nomes das categorias
@@ -62,25 +62,6 @@ public class ExemploClassificacao{
       d.editarNome("Matriz de confusão");
       d.imprimir();
    }
-
-
-   public static void limparConsole(){
-      try{
-         String nomeSistema = System.getProperty("os.name");
-
-         if(nomeSistema.contains("Windows")){
-         new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
-            return;
-         }else{
-            for (int i = 0; i < 100; i++){
-               System.out.println();
-            }
-         }
-      }catch(Exception e){
-         return;
-      }
-   }
-
 
    public static void compararSaidaRede(RedeNeural rede, double[][] dadosEntrada, double[][] dadosSaida, String texto){
       int nEntrada = rede.obterTamanhoEntrada();

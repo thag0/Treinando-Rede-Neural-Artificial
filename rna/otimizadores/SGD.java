@@ -112,25 +112,21 @@ public class SGD extends Otimizador{
     */
    @Override
    public void atualizar(Camada[] redec){
-      Neuronio neuronio;
-
-      int indice = 0;
+      int id = 0;//indice de busca na lista de coeficientes
       for(int i = 0; i < redec.length; i++){
-
-         int nNeuronios = redec[i].quantidadeNeuronios();
-         for(int j = 0; j < nNeuronios; j++){
+         for(int j = 0; j < redec[i].quantidadeNeuronios(); j++){
             
-            neuronio = redec[i].neuronio(j);
+            Neuronio neuronio = redec[i].neuronio(j);
             for(int k = 0; k < neuronio.pesos.length; k++){
-               m[indice] = (momentum * m[indice]) + (neuronio.gradiente[k] * taxaAprendizagem);
+               m[id] = (momentum * m[id]) + (neuronio.gradiente[k] * taxaAprendizagem);
 
                if(nesterov){
-                  neuronio.pesos[k] -= (neuronio.gradiente[k] * taxaAprendizagem) + (momentum * m[indice]);
+                  neuronio.pesos[k] -= (neuronio.gradiente[k] * taxaAprendizagem) + (momentum * m[id]);
                }else{
-                  neuronio.pesos[k] -= m[indice];
+                  neuronio.pesos[k] -= m[id];
                }
 
-               indice++;
+               id++;
             }      
          }
       }

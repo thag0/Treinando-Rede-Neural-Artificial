@@ -35,6 +35,24 @@ public abstract class Otimizador{
 	 * <p>
 	 *      A atualização de pesos é feita uma única vez em todos os parâmetros da rede.
 	 * </p>
+	 * Exemplo de uso:
+	 * <pre>
+	 *	public void atualizar(Camada[] redec){
+	 *		
+	 * 	int id = 0;//indice na lista de coeficientes, caso o otimizador precise
+	 *		for(int i = 0; i < redec.length; i++){
+	 *			for(int j = 0; j < redec[i].quantidadeNeuronios(); j++){
+	 *				
+	 *				Neuronio neuronio = redec[i].neuronio(j);
+	 *				for(int k = 0; k < neuronio.pesos.length; k++){
+	 *					// implementação do otimizador
+	 *
+	 *					id++;
+	 *				}      
+	 *			}
+	 *		}
+	 *	}
+	 * </pre>
 	 * @param redec Rede Neural em formato de lista de camadas.
 	 */
 	public void atualizar(Camada[] redec){

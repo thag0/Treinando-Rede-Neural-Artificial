@@ -172,31 +172,27 @@ public class Adam extends Otimizador{
     */
    @Override
    public void atualizar(Camada[] redec){
-      double g;
-      Neuronio neuronio;
-      
       interacoes++;
+      double g;
       double forcaB1 = Math.pow(beta1, interacoes);
       double forcaB2 = Math.pow(beta2, interacoes);
 
       double alfa = taxaAprendizagem * Math.sqrt(1 - forcaB2) / (1 - forcaB1);
       
-      int indice = 0;
+      int id = 0;//indice de busca na lista de coeficientes
       for(int i = 0; i < redec.length; i++){
-         
-         int nNeuronios = redec[i].quantidadeNeuronios();
-         for(int j = 0; j < nNeuronios; j++){   
+         for(int j = 0; j < redec[i].quantidadeNeuronios(); j++){   
             
-            neuronio = redec[i].neuronio(j);
+            Neuronio neuronio = redec[i].neuronio(j);
             for(int k = 0; k < neuronio.pesos.length; k++){
                g = neuronio.gradiente[k];
                
-               momentum[indice]   += (1 - beta1) * (g - momentum[indice]);
-               velocidade[indice] += (1 - beta2) * ((g*g) - velocidade[indice]); 
+               momentum[id]   += (1 - beta1) * (g - momentum[id]);
+               velocidade[id] += (1 - beta2) * ((g*g) - velocidade[id]); 
 
-               neuronio.pesos[k] -= (alfa * momentum[indice]) / (Math.sqrt(velocidade[indice]) + epsilon);
+               neuronio.pesos[k] -= (alfa * momentum[id]) / (Math.sqrt(velocidade[id]) + epsilon);
             
-               indice++;
+               id++;
             }
          }
       }

@@ -63,16 +63,16 @@ public class Dados{
     * </p>
     * <ul>
     *    <li>
-    *       int[][];
+    *       {@code int[]. int[][]};
     *    </li>
     *    <li>
-    *       float[][];
+    *       {@code float[], float[][]};
     *    </li>
     *    <li>
-    *       double[][];
+    *       {@code double[], double[][]};
     *    </li>
     *    <li>
-    *       String[][];
+    *       {@code String[], String[][]};
     *    </li>
     * </ul>
     * @param conteudo matriz contendo o conteúdo de dados.
@@ -95,8 +95,34 @@ public class Dados{
          String[][] c = (String[][]) conteudo;
          this.atribuir(c);
       
+         //arrays
+      }else if(conteudo instanceof int[]){
+         int[] c = (int[]) conteudo;
+         int[][] cont = new int[1][];
+         cont[0] = c;
+         this.atribuir(cont);
+      
+      }else if(conteudo instanceof float[]){
+         float[] c = (float[]) conteudo;
+         float[][] cont = new float[1][];
+         cont[0] = c;
+         this.atribuir(cont);
+      
+      }else if(conteudo instanceof double[]){
+         double[] c = (double[]) conteudo;
+         double[][] cont = new double[1][];
+         cont[0] = c;
+         this.atribuir(cont);
+
+      }else if(conteudo instanceof String[]){
+         String[] c = (String[]) conteudo;
+         String[][] cont = new String[1][];
+         cont[0] = c;
+         this.atribuir(cont);
+
       }else{
-         throw new IllegalArgumentException("Tipo de dado não suportado.");
+         throw new IllegalArgumentException("Tipo de dado (" + conteudo.getClass().getSimpleName() +
+         ") não suportado.");
       }
    }
 
