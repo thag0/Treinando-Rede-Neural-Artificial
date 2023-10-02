@@ -125,11 +125,21 @@ public class RedeNeural implements Cloneable{
     *    camada correspondente.
     * </p> 
     * <p>
-    *    A camada de entrada deverá ser especificada pelo indice 0, a camada de saída será representada 
-    *    pelo último valor do array e as camadas ocultas serão representadas pelos valores intermediários.
+    *   Nenhum dos elementos de arquitetura deve ser menor do que 1.
     * </p>
     * <p>
-    *   Os valores de todos os parâmetros pedidos <strong>NÃO devem</strong> ser menores que 1.
+    *    Exemplo de uso:
+    * </p>
+    * <pre>
+    * int[] arq = {
+    *    1, //tamanho de entrada da rede
+    *    2, //neurônios da primeira camada
+    *    3  //neurônios da segunda camada
+    * };
+    * </pre>
+    * <p>
+    *    É obrigatório que a arquitetura tenha no mínimo dois elementos, um para a entrada e outro
+    *    para a saída da Rede Neural.
     * </p>
     * <p>
     *    Após instanciar o modelo, é necessário compilar por meio da função {@code compilar()};

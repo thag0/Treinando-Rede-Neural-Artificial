@@ -19,7 +19,9 @@ abstract class Metrica{
     * @return valor de avaliação de acordo com a métrica configurada
     */
    public double calcular(RedeNeural rede, double[][] entrada, double[][] saida){
-      throw new java.lang.UnsupportedOperationException("É necessário implementar a métrica de avaliação da rede.");
+      throw new UnsupportedOperationException(
+         "É necessário implementar a métrica de avaliação da rede."
+      );
    }
 
 
@@ -31,7 +33,9 @@ abstract class Metrica{
     * @return valor de avaliação de acordo com a métrica configurada
     */
    public int[][] calcularMatriz(RedeNeural rede, double[][] entrada, double[][] saida){
-      throw new java.lang.UnsupportedOperationException("É necessário implementar a métrica de avaliação da rede.");
+      throw new UnsupportedOperationException(
+         "É necessário implementar a métrica de avaliação da rede."
+      );
    }
 
 
@@ -56,4 +60,39 @@ abstract class Metrica{
   
       return indiceMaiorValor;
    }
+
+   /**
+   /**
+    * <p>
+    *    Auxiliar.
+    * </p>
+    * Calcula a matriz de confusão.
+    * @param rede
+    * @param entradas
+    * @param saidas
+    * @return
+    */
+   protected int[][] matrizConfusao(RedeNeural rede, double[][] entradas, double[][] saidas){
+      int nClasses = saidas[0].length;
+      int[][] matriz = new int[nClasses][nClasses];
+
+      double[] entrada = new double[entradas[0].length];
+      double[] saida = new double[saidas[0].length];
+      double[] saidaRede = new double[rede.obterCamadaSaida().quantidadeNeuronios()];
+
+      for(int i = 0; i < entradas.length; i++){
+         System.arraycopy(entradas[i], 0, entrada, 0, entradas[i].length);
+         System.arraycopy(saidas[i], 0, saida, 0, saidas[i].length);
+
+         rede.calcularSaida(entrada);
+         saidaRede = rede.obterSaidas();
+
+         int real = this.indiceMaiorValor(saida);
+         int previsto = this.indiceMaiorValor(saidaRede);
+
+         matriz[real][previsto]++;
+      }
+
+      return matriz;
+   } 
 }

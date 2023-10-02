@@ -19,13 +19,13 @@ public abstract class Perda{
     */
    public double calcular(RedeNeural rede, double[][] entrada, double[][] saida){
       throw new UnsupportedOperationException(
-         "É necessário implementar a função de perda."
+         "É necessário implementar o cálculo de perda."
       );
    }
 
    public double[] calcularErro(double[] previsto, double[] real){
       throw new UnsupportedOperationException(
-         "É necessário implementar a o calculo de erro."
+         "É necessário implementar o cálculo de erro."
       );
    }
 }
