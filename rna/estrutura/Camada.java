@@ -132,28 +132,6 @@ public class Camada implements Cloneable{
    }
 
    /**
-    * Realiza a operação do somatório de cada peso do neurônio com sua entrada.
-    * <p>
-    *    As entradas do neurônio correspondem ás saídas dos neurônios da camada anterior.
-    *    Com isso cada neurônio multiplica o {@code peso} da conexão pelo valor da {@code entrada}
-    *    correspondente.
-    * </p>
-    * <p>
-    *    Após o somatório é aplicada a função de ativação em cada neurônio e o resultado
-    *    é salvo na sua {@code saída}.
-    * </p>
-    * @param anterior camada anterior que contém os valores de saída dos neurônios.
-    */
-   public void ativarNeuronios(double[] entrada){
-      this.verificarInicializacao();
-
-      for(int i = 0; i < this.neuronios.length; i++){
-         this.neuronios[i].calcularSaida(entrada);
-      }
-      this.ativacao.ativar(this.neuronios);
-   }
-
-   /**
     * Configura a função de ativação da camada.
     * <p>
     *    Ativações disponíveis:
@@ -216,6 +194,28 @@ public class Camada implements Cloneable{
       }
 
       this.ativacao = ativacao;
+   }
+
+   /**
+    * Realiza a operação do somatório de cada peso do neurônio com sua entrada.
+    * <p>
+    *    As entradas do neurônio correspondem ás saídas dos neurônios da camada anterior.
+    *    Com isso cada neurônio multiplica o {@code peso} da conexão pelo valor da {@code entrada}
+    *    correspondente.
+    * </p>
+    * <p>
+    *    Após o somatório é aplicada a função de ativação em cada neurônio e o resultado
+    *    é salvo na sua {@code saída}.
+    * </p>
+    * @param entrada dados de entrada que serão processados pelos neurônios.
+    */
+   public void ativarNeuronios(double[] entrada){
+      this.verificarInicializacao();
+
+      for(int i = 0; i < this.neuronios.length; i++){
+         this.neuronios[i].calcularSaida(entrada);
+      }
+      this.ativacao.ativar(this.neuronios);
    }
 
    /**

@@ -9,7 +9,11 @@ import rna.estrutura.Neuronio;
 public class Softmax extends FuncaoAtivacao{
 
    /**
-    * Instancia uma nova função de ativação Softmax.
+    * Instancia a função de ativação Softmax.
+    * <p>
+    * A função Softmax  transforma os valores de entrada em probabilidades normalizadas, 
+    * permitindo que o neurônio com a maior saída tenha uma probabilidade mais alta.
+    * </p>
     */
    public Softmax(){
 

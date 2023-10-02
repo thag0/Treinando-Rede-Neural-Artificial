@@ -10,6 +10,12 @@ public class Argmax extends FuncaoAtivacao{
 
    /**
     * Intancia uma nova função de ativação Softmax.
+    * <p>
+    *    A função argmax encontra o maior valor de saída dentre os neurônios
+    *    da camada e converte ele para 1, as demais saídas dos neurônios serão
+    *    convertidas para zero, fazendo a camada classificar uma única saída com
+    *    base no maior valor.
+    * </p>
     */
    public Argmax(){
 

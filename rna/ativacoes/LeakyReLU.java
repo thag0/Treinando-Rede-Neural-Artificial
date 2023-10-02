@@ -18,8 +18,12 @@ public class LeakyReLU extends FuncaoAtivacao{
    private double alfa;
 
    /**
-    * Instancia a função de ativação LeakyReLU com 
-    * seu valor de alfa configurável.
+    * Instancia a função de ativação LeakyReLU com seu valor de alfa configurável.
+    * <p>
+    *    A ativação LeakyReLU funciona semelhante a função ReLU, retornando o próprio 
+    *    valor recebido caso ele seja maior que um, mas caso contrário ela retorna um 
+    *    pequeno valor alfa que será multiplicado pela saída.
+    * </p>
     * @param alfa novo valor alfa.
     */
    public LeakyReLU(double alfa){
@@ -27,8 +31,12 @@ public class LeakyReLU extends FuncaoAtivacao{
    }
 
    /**
-    * Instancia a função de ativação LeakyReLU com 
-    * seu valor de alfa padrão.
+    * Instancia a função de ativação LeakyReLU com o valor de alfa padrão.
+    * <p>
+    *    A ativação LeakyReLU funciona semelhante a função ReLU, retornando o próprio 
+    *    valor recebido caso ele seja maior que um, mas caso contrário ela retorna um 
+    *    pequeno valor alfa que será multiplicado pela saída.
+    * </p>
     * <p>
     *    O valor padrão para o alfa é {@code 0.01}.
     * </p>

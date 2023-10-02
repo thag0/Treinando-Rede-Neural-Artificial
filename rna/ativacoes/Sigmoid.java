@@ -9,7 +9,12 @@ import rna.estrutura.Neuronio;
 public class Sigmoid extends FuncaoAtivacao{
 
    /**
-    * Instancia a função de ativação Sigmoid.
+    * Instancia a função de ativação Sigmóide.
+    * <p>
+    *    A função Sigmóide é uma função de ativação que transforma os valores de 
+    *    entrada em um intervalo entre 0 e 1, transformando os valores de saída 
+    *    num formato de "S" em relação a origem no eixo x.
+    * </p>
     */
    public Sigmoid(){
 
@@ -29,8 +34,7 @@ public class Sigmoid extends FuncaoAtivacao{
    @Override
    public void derivada(Neuronio[] neuronios){
       for(int i = 0; i < neuronios.length; i++){
-         double sig = neuronios[i].saida;
-         neuronios[i].derivada = sig * (1 - sig);
+         neuronios[i].derivada = neuronios[i].saida * (1 - neuronios[i].saida);
       }
    }
 }

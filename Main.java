@@ -28,7 +28,7 @@ class Main{
    static final String caminhoArquivo = "/dados/mnist/8.png";
 
    static final String caminhoImagemExportada = "./resultados/imagem-ampliada";
-   static final int epocas = 100*1000;
+   static final int epocas = 10*1000;
    static final float escalaRender = 8f;
    static final float escalaImagemExportada = 30f;
 
