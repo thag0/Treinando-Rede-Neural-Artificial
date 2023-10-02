@@ -151,6 +151,10 @@ public class Neuronio implements Cloneable{
             "Inicializador (" + inicializador.getClass().getSimpleName() + ") não suportado"
          );
       }
+
+      if(this.bias){
+         this.pesos[this.pesos.length-1] = 0.1;
+      }
    }
 
    /**

@@ -190,8 +190,17 @@ public class Serializador{
          //arquitetura
          String[] arqStr = reader.readLine().split(" ");
          int[] arq = new int[arqStr.length];
-         for(int i = 0; i < arqStr.length; i++){
-            arq[i] = Integer.parseInt(arqStr[i]);
+
+         try{
+            for(int i = 0; i < arqStr.length; i++){
+               arq[i] = Integer.parseInt(arqStr[i]);
+            }
+         }catch(Exception e){
+            System.out.println("Ocorreu um erro ao tentar ler os valores de arquitetura");
+            System.out.println("Verifique se estão corretamente formatados");
+            System.out.println("Cada elemento de arquitetura deve ser separado por espaços");
+            System.out.println("Ex: \"2 3 4\"");
+            System.exit(0);
          }
 
          //bias
@@ -209,14 +218,22 @@ public class Serializador{
             rede.configurarAtivacao(rede.obterCamada(i), dicionario.obterAtivacao(ativacoesStr[i]));
          }
 
-         for(int i = 0; i < rede.obterQuantidadeCamadas(); i++){
-            Camada camda = rede.obterCamada(i);
-            for(int j = 0; j < camda.quantidadeNeuronios(); j++){
-               Neuronio neuronio = camda.neuronio(j);
-               for(int k = 0; k < neuronio.numPesos(); k++){
-                  neuronio.pesos[k] = Double.parseDouble(reader.readLine());
+         int cont = 1;
+         try{
+            for(int i = 0; i < rede.obterQuantidadeCamadas(); i++){
+               Camada camda = rede.obterCamada(i);
+               for(int j = 0; j < camda.quantidadeNeuronios(); j++){
+                  Neuronio neuronio = camda.neuronio(j);
+                  for(int k = 0; k < neuronio.numPesos(); k++){
+                     neuronio.pesos[k] = Double.parseDouble(reader.readLine());
+                     cont++;
+                  }
                }
             }
+         }catch(Exception e){
+            System.out.println("Ocorreu um erro ao ler o peso " + cont);
+            e.printStackTrace();
+            System.exit(0);
          }
 
       }catch(Exception e){

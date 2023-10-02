@@ -242,7 +242,8 @@ public class RedeNeural implements Cloneable{
    public void configurarAlcancePesos(double alcance){
       if(alcance <= 0){
          throw new IllegalArgumentException(
-            "O novo valor de alcance dos pesos (" + alcance + ") deve ser maior que zero."
+            "O novo valor de alcance dos pesos (" + alcance + 
+            ") deve ser maior que zero."
          );
       }
       
@@ -785,7 +786,8 @@ public class RedeNeural implements Cloneable{
       if(entradas.length != tamEntrada){
          throw new IllegalArgumentException(
             "Dimensões dos dados de entrada (" + entradas.length +
-            ") e capacidade de entrada da rede (" + tamEntrada + ") incompatíveis."
+            ") e capacidade de entrada da rede (" + tamEntrada + 
+            ") incompatíveis."
          );
       }
 
@@ -976,8 +978,7 @@ public class RedeNeural implements Cloneable{
       
       //copia da rede para guardar os valores de "gradientes"
       RedeNeural redeG = this.clone();
-      
-      //transformar as redes em arrays para facilitar
+
       Camada[] redec = this.camadas;
       Camada[] gradc = redeG.camadas;
 

@@ -2,7 +2,6 @@ package exemplos;
 
 import rna.estrutura.RedeNeural;
 import rna.serializacao.Serializador;
-import utilitarios.ged.Dados;
 
 public class ExemploUsandoSerializador {
 
@@ -30,7 +29,7 @@ public class ExemploUsandoSerializador {
 
       System.out.println(rede);
       System.out.println("p = " + rede.avaliador.erroMedioQuadrado(e, s));
-      Serializador.salvar(rede, "./rede-xor.txt", new Dados());
+      Serializador.salvar(rede, "./rede-xor.txt", "double");
    }
 
    static void limparConsole(){

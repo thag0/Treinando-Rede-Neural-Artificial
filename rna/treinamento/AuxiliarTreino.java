@@ -79,24 +79,20 @@ class AuxiliarTreino{
    void calcularErroOcultas(Camada[] redec){
       Camada camadaAtual, camadaProxima;
       Neuronio neuronio, neuronioProxima;
-      int numAtual, numProxima;
 
       // começar da ultima oculta
       // percorrer camadas ocultas de trás pra frente
       for(int i = redec.length-2; i >= 0; i--){
          
          camadaAtual = redec[i];
-         numAtual = camadaAtual.quantidadeNeuronios();
          camadaAtual.ativacaoDerivada();
-         for(int j = 0; j < numAtual; j++){
+         for(int j = 0; j < camadaAtual.quantidadeNeuronios(); j++){
 
             camadaProxima = redec[i+1];
-            numProxima = camadaProxima.quantidadeNeuronios(); 
-
             // percorrer neurônios da camada seguinte
             double somaErros = 0.0;
             neuronio = camadaAtual.neuronio(j);
-            for(int k = 0; k < numProxima; k++){
+            for(int k = 0; k < camadaProxima.quantidadeNeuronios(); k++){
                neuronioProxima = camadaProxima.neuronio(k);
                somaErros += neuronioProxima.pesos[j] * neuronioProxima.erro;
             }
@@ -183,12 +179,9 @@ class AuxiliarTreino{
     */
    void zerarGradientesAcumulados(Camada[] redec){
       for(int i = 0; i < redec.length; i++){ 
-         
-         Camada camadaAtual = redec[i];
-         int nNeuronios = camadaAtual.quantidadeNeuronios();
-         for(int j = 0; j < nNeuronios; j++){
+         for(int j = 0; j < redec[i].quantidadeNeuronios(); j++){
             
-            Neuronio neuronio = camadaAtual.neuronio(j);
+            Neuronio neuronio = redec[i].neuronio(j);
             for(int k = 0; k < neuronio.gradientesAcumulados.length; k++){
                neuronio.gradientesAcumulados[k] = 0;
             }

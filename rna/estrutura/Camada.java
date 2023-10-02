@@ -71,10 +71,11 @@ public class Camada implements Cloneable{
    private boolean inicializada = false;
 
    /**
-    * Inicializa uma camada individual para a Rede Neural.
+    * Inicializa uma camada densa individual para a Rede Neural.
     * <p>
     *    Após instanciar a camada é preciso inicializar os neurônios dela.
     * </p>
+    * Depois de inicializada, a camada pode ser usada por completo.
     * @param neuronios quantidade de neurônios desejados para a camada.
     * @param temBias define se a camada possui um neurônio de bias. Se true, será 
     * adicionado um neurônio adicional que a saída é sempre 1.
@@ -332,6 +333,8 @@ public class Camada implements Cloneable{
     *    <li>Quantidade de conexões.</li>
     *    <li>Bias configurado para seus neurônios.</li>
     * </ul>
+    * Algumas informações não estarão disponíveis caso a camada não esteja
+    * inicializada.
     * @return buffer formatado contendo as informações da camada.
     */
    public String info(){

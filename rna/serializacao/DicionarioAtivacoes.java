@@ -53,7 +53,7 @@ class DicionarioAtivacoes{
          case "swish": return new Swish();
          case "tanh": return new TanH();
 
-         default: throw new IllegalArgumentException("Função de ativação não encontada.");
+         default: throw new IllegalArgumentException("Função de ativação \""+ nome +"\" não encontada.");
       }
    }
 }

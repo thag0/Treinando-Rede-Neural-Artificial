@@ -13,6 +13,5 @@ class Teste{
       ged.limparConsole();
 
       RedeNeural rna = new RedeNeural(new int[]{0, 2, 2});
-      
    }
 }
