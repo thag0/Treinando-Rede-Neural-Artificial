@@ -84,13 +84,13 @@ public class Neuronio implements Cloneable{
     *    en - vetor de entradas do neurônio. 
     * </p>
     */
-   public double[] gradiente;
+   public double[] gradientes;
 
    /**
     * Auxiliar usado durante o treinamento em lotes. Soma
     * os gradientes acumulados.
     */
-   public double[] gradienteAcumulado;
+   public double[] gradientesAcumulados;
 
    /**
     * Constante auxiliar que ajuda no controle do bias atuando como
@@ -113,8 +113,8 @@ public class Neuronio implements Cloneable{
 
       this.pesos = new double[ligacoes];
       this.entradas = new double[ligacoes];
-      this.gradiente = new double[ligacoes];
-      this.gradienteAcumulado = new double[ligacoes];
+      this.gradientes = new double[ligacoes];
+      this.gradientesAcumulados = new double[ligacoes];
 
       this.saida = 0;
       this.erro = 0;
@@ -168,17 +168,16 @@ public class Neuronio implements Cloneable{
     * @throws IllegalArgumentException se o tamanho dos dados de entrada for diferente
     * da capacidade de entrada do neurônio.
     */
-   public void somatorio(double[] entrada){
+   public void calcularSaida(double[] entrada){
       if(this.tamanhoEntrada() != entrada.length){
          throw new IllegalArgumentException(
-            "Tamanho dos dados de entrada (" + entrada.length +
-            ") diferente da capacidade de entrada (" + this.tamanhoEntrada() +
-            ") do neurônio"
+            "Incompatibilidade de tamanho entre os dados de entrada (" + entrada.length +
+            ") e a entrada do neurônio (" + this.tamanhoEntrada() + ")."
          );
       }
 
       //esse método de cópia ta sendo mais eficiente
-      //do que usar o arraycopy
+      //do que usar o system.arraycopy
       this.somatorio = 0;
       for(int i = 0; i < this.tamanhoEntrada(); i++){
          this.entradas[i] = entrada[i];
@@ -217,7 +216,7 @@ public class Neuronio implements Cloneable{
     */
    public void calcularGradiente(){
       for(int i = 0; i < this.pesos.length; i++){
-         this.gradiente[i] = -this.erro * this.entradas[i];
+         this.gradientes[i] = -this.erro * this.entradas[i];
       }
    }
 

@@ -166,7 +166,7 @@ public class AMSGrad extends Otimizador{
 
 				Neuronio neuronio = redec[i].neuronio(j);
 				for(int k = 0; k < neuronio.pesos.length; k++){
-					g = neuronio.gradiente[k];
+					g = neuronio.gradientes[k];
 					
 					momentum[id] =   (beta1 * momentum[id])   + ((1 - beta1) * g);
 					velocidade[id] = (beta2 * velocidade[id]) + ((1 - beta2) * g * g);

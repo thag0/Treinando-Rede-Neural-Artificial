@@ -89,7 +89,7 @@ public class GDM extends Otimizador{
             
             Neuronio neuronio = redec[i].neuronio(j);
             for(int k = 0; k < neuronio.pesos.length; k++){
-               momentum[k] = (neuronio.gradiente[k] * taxaAprendizagem) + (taxaMomentum * momentum[k]);
+               momentum[k] = (neuronio.gradientes[k] * taxaAprendizagem) + (taxaMomentum * momentum[k]);
                neuronio.pesos[k] -= momentum[k];
             }
          }

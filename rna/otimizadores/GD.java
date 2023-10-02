@@ -65,7 +65,7 @@ public class GD extends Otimizador{
             
             Neuronio neuronio = redec[i].neuronio(j);
             for(int k = 0; k < neuronio.pesos.length; k++){
-               neuronio.pesos[k] -= neuronio.gradiente[k] * taxaAprendizagem;
+               neuronio.pesos[k] -= neuronio.gradientes[k] * taxaAprendizagem;
             }
          }
       } 

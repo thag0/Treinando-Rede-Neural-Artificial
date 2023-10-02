@@ -1,22 +1,18 @@
 package exemplos;
 
-import utilitarios.ged.Dados;
+import rna.estrutura.Camada;
+import rna.estrutura.Neuronio;
+import rna.estrutura.RedeNeural;
+import rna.inicializadores.Xavier;
 import utilitarios.ged.Ged;
 
+@SuppressWarnings("unused")
 class Teste{
-   public static void main(String[] args) {
+   public static void main(String[] args){
       Ged ged = new Ged();
+      ged.limparConsole();
 
-      double[][] a = {
-         {0},
-         {1},
-         {2},
-         {3},
-      };
-
-      Dados dados = new Dados(a);
-
-      ged.categorizar(dados, 0);
-      ged.imprimirDados(dados);
+      RedeNeural rna = new RedeNeural(new int[]{0, 2, 2});
+      
    }
 }

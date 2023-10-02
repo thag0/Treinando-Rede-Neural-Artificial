@@ -189,8 +189,8 @@ class AuxiliarTreino{
          for(int j = 0; j < nNeuronios; j++){
             
             Neuronio neuronio = camadaAtual.neuronio(j);
-            for(int k = 0; k < neuronio.gradienteAcumulado.length; k++){
-               neuronio.gradienteAcumulado[k] = 0;
+            for(int k = 0; k < neuronio.gradientesAcumulados.length; k++){
+               neuronio.gradientesAcumulados[k] = 0;
             }
          }
       }

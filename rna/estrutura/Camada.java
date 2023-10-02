@@ -41,7 +41,7 @@ public class Camada implements Cloneable{
     * Auxiliar na verificação de bias aplicado aos
     * neurônios da camada.
     */
-   private boolean bias = true;
+   private boolean bias;
 
    /**
     * Identificador da camada dentro da Rede Neural.
@@ -63,6 +63,12 @@ public class Camada implements Cloneable{
     * os pesos e entradas com a adição do bias (se houver).
     */
    private FuncaoAtivacao ativacao;
+
+   /**
+    * Auxiliar no controle de inicialização da camada, para evitar problemas de 
+    * uso indevido com recursos não alocados.
+    */
+   private boolean inicializada = false;
 
    /**
     * Inicializa uma camada individual para a Rede Neural.
@@ -108,6 +114,20 @@ public class Camada implements Cloneable{
          this.neuronios[i] = new Neuronio(entrada, this.bias);
          this.neuronios[i].inicializarPesos(inicializador, alcancePeso, this.neuronios.length);
       }
+
+      this.inicializada = true;//camada pode ser usada
+   }
+
+   /**
+    * Verificador de inicialização da camada para evitar problemas.
+    * @throws IllegalArgumentException caso a camada não esteja inicializada.
+    */
+   private void verificarInicializacao(){
+      if(!this.inicializada){
+         throw new IllegalArgumentException(
+            "A camada (" + this.id + ") não foi inicializada."
+         );
+      }
    }
 
    /**
@@ -124,33 +144,12 @@ public class Camada implements Cloneable{
     * @param anterior camada anterior que contém os valores de saída dos neurônios.
     */
    public void ativarNeuronios(double[] entrada){
+      this.verificarInicializacao();
+
       for(int i = 0; i < this.neuronios.length; i++){
-         this.neuronios[i].somatorio(entrada);
+         this.neuronios[i].calcularSaida(entrada);
       }
-
       this.ativacao.ativar(this.neuronios);
-   }
-
-   /**
-    * Realiza a operação do somatório de cada peso do neurônio com sua entrada.
-    * <p>
-    *    As entradas do neurônio correspondem ás saídas dos neurônios da camada anterior.
-    *    Com isso cada neurônio multiplica o {@code peso} da conexão pelo valor da {@code entrada}
-    *    correspondente.
-    * </p>
-    * <p>
-    *    Após o somatório é aplicada a função de ativação em cada neurônio e o resultado
-    *    é salvo na sua {@code saída}.
-    * </p>
-    * @param anterior camada anterior que contém os valores de saída dos neurônios.
-    */
-   public void ativarNeuronios(Camada anterior){
-      double[] entrada = new double[anterior.quantidadeNeuronios()];
-      for(int i = 0; i < entrada.length; i++){
-         entrada[i] = anterior.neuronios[i].saida;
-      }
-
-      this.ativarNeuronios(entrada);
    }
 
    /**
@@ -227,6 +226,7 @@ public class Camada implements Cloneable{
     * </p>
     */
    public void ativacaoDerivada(){
+      this.verificarInicializacao();
       this.ativacao.derivada(this.neuronios);
    }
 
@@ -245,11 +245,14 @@ public class Camada implements Cloneable{
     * @throws IllegalArgumentException se o índice for inválido.
     */
    public Neuronio neuronio(int id){
+      this.verificarInicializacao();
+
       if(id < 0 || id >= this.neuronios.length){
          throw new IllegalArgumentException(
             "Índice fornecido para busca do neurônio (" + id + ") é inválido"
          );
       }
+
       return this.neuronios[id];
    }
 
@@ -258,6 +261,7 @@ public class Camada implements Cloneable{
     * @return todos os neurônios presentes na camada.
     */
    public Neuronio[] neuronios(){
+      this.verificarInicializacao();
       return this.neuronios;
    }
 
@@ -266,6 +270,7 @@ public class Camada implements Cloneable{
     * @return quantidade de neurônios presentes na camada.
     */
    public int quantidadeNeuronios(){
+      this.verificarInicializacao();
       return this.neuronios.length;
    }
 
@@ -274,6 +279,7 @@ public class Camada implements Cloneable{
     * @return tamanho de entrada da camada.
     */
    public int tamanhoEntrada(){
+      this.verificarInicializacao();
       return this.tamanhoEntrada;
    }
 
@@ -282,6 +288,7 @@ public class Camada implements Cloneable{
     * @return true caso possua bias configurado, false caso contrário.
     */
    public boolean temBias(){
+      this.verificarInicializacao();
       return this.bias;
    }
 
@@ -292,6 +299,7 @@ public class Camada implements Cloneable{
     * @return a quantidade de conexões totais.
     */
    public int numConexoes(){
+      this.verificarInicializacao();
       int numConexoes = 0;
       for(int i = 0; i < this.neuronios.length; i++){
          numConexoes += this.neuronios[i].numPesos();
@@ -300,9 +308,25 @@ public class Camada implements Cloneable{
    }
 
    /**
+    * Retorna um array contendo a saída de cada neurônio presente
+    * na camada, em ordem crescente.
+    * @return saídas dos neurônios da camada.
+    */
+   public double[] obterSaida(){
+      this.verificarInicializacao();
+      double[] saida = new double[this.neuronios.length];
+      for(int i = 0; i < saida.length; i++){
+         saida[i] = this.neuronios[i].saida;
+      }
+
+      return saida;
+   }
+
+   /**
     * Indica algumas informações sobre a camada, como:
     * <ul>
     *    <li>Id da camada dentro da Rede Neural em que foi criada.</li>
+    *    <li>Status de inicialização.</li>
     *    <li>Função de ativação.</li>
     *    <li>Quantidade de neurônios.</li>
     *    <li>Quantidade de conexões.</li>
@@ -316,10 +340,20 @@ public class Camada implements Cloneable{
       
       buffer += "Informações " + this.getClass().getSimpleName() + " " + this.id + " = [\n";
 
+      buffer += espacamento + "Inicializado: " + this.inicializada + "\n";
       buffer += espacamento + "Ativação: " + this.ativacao.getClass().getSimpleName() + "\n";
       buffer += espacamento + "Quantidade neurônios: " + this.neuronios.length + "\n";
-      buffer += espacamento + "Quantidade de conexões: " + this.numConexoes() + "\n";
-      buffer += espacamento + "Bias: " + this.bias + "\n"; 
+      
+      if(this.inicializada){
+         buffer += espacamento + "Quantidade de conexões: " + this.numConexoes() + "\n";
+         buffer += espacamento + "Bias: " + this.bias + "\n";
+         buffer += espacamento + "Tamanho Entrada: " + this.tamanhoEntrada + "\n";
+         
+      }else{
+         buffer += espacamento + "Quantidade de conexões: necessário inicializar\n";
+         buffer += espacamento + "Bias: necessário inicializar\n";
+         buffer += espacamento + "Tamanho Entrada: necessário inicializar\n";
+      }
 
       buffer += "]\n";
 
@@ -333,11 +367,14 @@ public class Camada implements Cloneable{
     */
    @Override
    public Camada clone(){
+      verificarInicializacao();
+
       try{
          Camada clone = (Camada) super.clone();
 
          clone.ativacao = this.ativacao;
          clone.bias = this.bias;
+         clone.inicializada = this.inicializada;
          clone.id = this.id;
 
          clone.neuronios = new Neuronio[this.neuronios.length];

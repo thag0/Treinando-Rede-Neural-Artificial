@@ -10,8 +10,6 @@ import rna.otimizadores.GD;
 import rna.otimizadores.GDM;
 import rna.otimizadores.Otimizador;
 
-//TODO verificar se está funcionando após as modificações do calculo do gradiente
-
 /**
  * Classe dedicada para lidar com o treinamento em lotes da rede neural.
  * <p>
@@ -112,18 +110,13 @@ class TreinoLote{
     * @param taxaAprendizagem valor de taxa de aprendizagem da rede neural.
     */
    private void calcularGradientesAcumulados(Camada[] redec){
-      //percorrer rede, excluindo camada de entrada
       for(int i = 0; i < redec.length; i++){ 
-         
-         Camada camadaAtual = redec[i];
-
-         //não precisa e nem faz diferença calcular os gradientes dos bias
-         int nNeuronios = camadaAtual.quantidadeNeuronios();
-         for(int j = 0; j < nNeuronios; j++){//percorrer neurônios da camada atual
+         for(int j = 0; j < redec[i].quantidadeNeuronios(); j++){
             
-            Neuronio neuronio = camadaAtual.neuronio(j);
-            for(int k = 0; k < neuronio.pesos.length; k++){//percorrer pesos do neurônio atual
-               neuronio.gradienteAcumulado[k] += (-neuronio.erro * neuronio.entradas[k]);
+            Neuronio neuronio = redec[i].neuronio(j);
+            neuronio.calcularGradiente();
+            for(int k = 0; k < neuronio.gradientes.length; k++){
+               neuronio.gradientesAcumulados[k] += neuronio.gradientes[k];
             }
          }
       }
@@ -135,15 +128,12 @@ class TreinoLote{
     * @param tamLote tamanho do lote.
     */
    private void calcularMediaGradientesLote(Camada[] redec, int tamLote){
-      for(int i = 0; i < redec.length; i++){ 
-         
-         Camada camadaAtual = redec[i];
-         int nNeuronios = camadaAtual.quantidadeNeuronios();
-         for(int j = 0; j < nNeuronios; j++){
-            
-            Neuronio neuronio = camadaAtual.neuronio(j);
-            for(int k = 0; k < neuronio.pesos.length; k++){
-               neuronio.gradiente[k] = neuronio.gradienteAcumulado[k] / tamLote;
+      for(int i = 0; i < redec.length; i++){
+         for(int j = 0; j < redec[i].quantidadeNeuronios(); j++){
+
+            Neuronio neuronio = redec[i].neuronio(j);
+            for(int k = 0; k < neuronio.gradientes.length; k++){
+               neuronio.gradientes[k] = neuronio.gradientesAcumulados[k] / tamLote;
             }
          }
       }

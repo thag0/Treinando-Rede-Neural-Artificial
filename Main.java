@@ -29,14 +29,14 @@ class Main{
    static final String caminhoArquivo = "/dados/mnist/8.png";
 
    static final String caminhoImagemExportada = "./resultados/imagem-ampliada";
-   static final int epocas = 15*1000;
+   static final int epocas = 10*1000;
    static final float escalaRender = 8.5f;
    static final float escalaImagemExportada = 30f;
 
    // Sempre lembrar de quando mudar o dataset, também mudar a quantidade de dados de entrada e saída.
    
    public static void main(String[] args){
-      limparConsole();
+      ged.limparConsole();
 
       long t1, t2;
       long horas, minutos, segundos;
@@ -95,7 +95,7 @@ class Main{
 
       Perda perda = new ErroMedioQuadrado();
       // Otimizador otm = new SGD(0.001, 0.9, true);
-      Otimizador otm = new RMSProp();
+      Otimizador otm = new SGD();
       Inicializador ini = new Xavier();
 
       RedeNeural rede = new RedeNeural(arq);
@@ -161,45 +161,6 @@ class Main{
       janela.desenhar(rede);
    }
 
-   public static void testarRede(RedeNeural rede, int tamanhoEntrada){
-      JanelaRede janela = new JanelaRede();
-      janela.painel.configurarRede(rede);
-      janela.desenhar(rede);
-
-      String entrada = "";
-      while(true){
-         System.out.print("\nFazer uma predição ? [s/n]: ");
-         entrada = pegarEntrada();
-
-         if(entrada.equalsIgnoreCase("s") || entrada.equalsIgnoreCase("sim")){
-            double[] testeRede = new double[tamanhoEntrada];
-
-            for(int i = 0; i < testeRede.length; i++){
-               System.out.print("Entrada " + i + ": ");
-               entrada = pegarEntrada();
-               testeRede[i] = Double.parseDouble(entrada);
-            }
-
-            System.out.print("Predição da rede para ");
-            for(int i = 0; i < testeRede.length; i++) System.out.print("[" + testeRede[i] + "]");
-            System.out.print(" -> ");
-            rede.calcularSaida(testeRede);
-
-            janela.desenhar(rede);
-
-            for(int i = 0; i < rede.obterCamadaSaida().quantidadeNeuronios(); i++){
-               System.out.print("[" + rede.obterCamadaSaida().neuronio(i).saida + "]");
-            } 
-            System.out.println();
-         
-         }else{
-            janela.dispose();
-            break;
-         }
-
-      }
-   }
-
    public static void compararSaidaRede(RedeNeural rede, double[][] dadosEntrada, double[][] dadosSaida, String texto){
       int nEntrada = rede.obterTamanhoEntrada();
       int nSaida = rede.obterCamadaSaida().quantidadeNeuronios();
@@ -249,23 +210,6 @@ class Main{
 
       Dados dados = new Dados(dadosErro);
       ged.exportarCsv(dados, "historico-custo");
-   }
-
-   public static void limparConsole(){
-      try{
-         String nomeSistema = System.getProperty("os.name");
-
-         if(nomeSistema.contains("Windows")){
-         new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
-            return;
-         }else{
-            for (int i = 0; i < 100; i++){
-               System.out.println();
-            }
-         }
-      }catch(Exception e){
-         return;
-      }
    }
 
    public static String formatarDecimal(double valor, int casas){

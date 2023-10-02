@@ -34,7 +34,7 @@ public class Adadelta extends Otimizador {
 
             Neuronio neuronio = redec[i].neuronio(j);
             for(int k = 0; k < neuronio.pesos.length; k++){
-               g = neuronio.gradiente[k];
+               g = neuronio.gradientes[k];
 
                acGradQuadrado[id] = (rho * acGradQuadrado[id]) + ((1 - rho) * (g*g));
 

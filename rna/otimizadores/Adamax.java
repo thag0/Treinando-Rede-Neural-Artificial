@@ -137,7 +137,7 @@ public class Adamax extends Otimizador{
 
             Neuronio neuronio = redec[i].neuronio(j);
             for(int k = 0; k < neuronio.pesos.length; k++){
-               double g = neuronio.gradiente[k];
+               double g = neuronio.gradientes[k];
 
                momentum[id] += (g - momentum[id]) * (1 - beta1);
                velocidade[id] = Math.max(beta2 * velocidade[id], Math.abs(g));

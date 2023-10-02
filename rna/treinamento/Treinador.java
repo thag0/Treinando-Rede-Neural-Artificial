@@ -49,6 +49,7 @@ public class Treinador{
     * Treina a rede neural calculando os erros dos neuronios, seus gradientes para cada peso e 
     * passando essas informações para o otimizador configurado ajustar os pesos.
     * @param rede rede neural que será treinada.
+    * @param perda função de perda usada durante o treinamento.
     * @param otimizador otimizador configurado da rede.
     * @param entradas dados de entrada para o treino.
     * @param saidas dados de saída correspondente as entradas para o treino.
@@ -70,6 +71,7 @@ public class Treinador{
     * Treina a rede neural calculando os erros dos neuronios, seus gradientes para cada peso e 
     * passando essas informações para o otimizador configurado ajustar os pesos.
     * @param rede rede neural que será treinada.
+    * @param perda função de perda usada durante o treinamento.
     * @param otimizador otimizador configurado da rede.
     * @param entradas dados de entrada para o treino.
     * @param saidas dados de saída correspondente as entradas para o treino.
