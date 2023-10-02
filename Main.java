@@ -134,7 +134,7 @@ class Main{
 
          }catch(Exception e){ }
 
-         i += 1*epocasPorFrame;
+         i += epocasPorFrame;
       }
 
       jt.dispose();

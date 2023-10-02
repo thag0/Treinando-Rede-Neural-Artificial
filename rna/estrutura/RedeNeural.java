@@ -38,6 +38,11 @@ import rna.treinamento.Treinador;
  *    poder ser utilizado.
  * </p>
  * <p>
+ *    As predições do modelo são feitas usando o método de {@code calcularSaida()} onde é especificada
+ *    uma única amostra de dados ou uma seqûencia de amostras onde é retornado o resultado de predição
+ *    da rede.
+ * </p>
+ * <p>
  *    Opções de avaliação e desempenho do modelo podem ser acessadas através do {@code avaliador} da
  *    Rede Neural, que contém implementação de funções de perda e métricas para o modelo.
  * </p>
@@ -490,6 +495,9 @@ public class RedeNeural implements Cloneable{
     *    <li>
     *       <strong> Lion </strong>: Esse é particularmente novo e não conheço muito bem. 
     *    </li>
+    *    <li>
+    *       <strong> Adadelta </strong>: Também é novo pra mim e ainda to testando melhor. 
+    *    </li>
     * </ol>
     * <p>
     *    {@code O otimizador padrão é o SGD}
@@ -693,9 +701,14 @@ public class RedeNeural implements Cloneable{
     * @throws IllegalArgumentException se a perda, otimizador ou inicializador forem nulos.
     */
    public void compilar(Perda perda, Otimizador otimizador, Inicializador inicializador){
-      //inicializador de pesos
       if(inicializador == null){
          throw new IllegalArgumentException("O inicializador não pode ser nulo.");
+      }
+      if(perda == null){
+         throw new IllegalArgumentException("A função de perda não pode ser nula.");
+      }
+      if(otimizador == null){
+         throw new IllegalArgumentException("O otimizador não pode ser nulo.");
       }
 
       //inicializar camadas
@@ -706,16 +719,8 @@ public class RedeNeural implements Cloneable{
          this.camadas[i].configurarId(i);
       }
 
-      //inicializar função de perda
-      if(perda == null){
-         throw new IllegalArgumentException("A função de perda não pode ser nula.");
-      }
       this.perdaAtual = perda;
 
-      //inicializar otimizador
-      if(otimizador == null){
-         throw new IllegalArgumentException("O otimizador não pode ser nulo.");
-      }
       this.otimizadorAtual = otimizador;
       this.otimizadorAtual.inicializar(this.obterQuantidadeParametros());
 
@@ -839,7 +844,8 @@ public class RedeNeural implements Cloneable{
       if(entradas[0].length != nEntrada){
          throw new IllegalArgumentException(
             "Dimensões dos dados de entrada (" + entradas.length +
-            ") e capacidade de entrada da rede (" + nEntrada + ") incompatíveis."
+            ") e capacidade de entrada da rede (" + nEntrada + 
+            ") incompatíveis."
          );
       }
 
@@ -899,8 +905,13 @@ public class RedeNeural implements Cloneable{
    /**
     * Treina a rede de acordo com as configurações predefinidas.
     * <p>
-    *    O modo de treinamento em lote ainda ta em teste e costuma demorar pra convergir
-    *    se forem usados os mesmos parâmetros do treino convencional.
+    *    O modo de treinamento em lote costuma ser mais lento para convergir
+    *    e não é recomendável utilizar as mesma configurações da rede que foram
+    *    usadas pelo método sequencial convencional.
+    * </p>
+    * <p>
+    *    Em compensação ele tende a ser mais estável e possui menos ruídos durante
+    *    o treinamento.
     * </p>
     * Certifique-se de configurar adequadamente o modelo para obter os 
     * melhores resultados.
