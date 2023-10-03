@@ -93,12 +93,13 @@ class Main{
       int[] arq = {entradas, 13, 13, saidas};//28x28
 
       Perda perda = new ErroMedioQuadrado();
-      Otimizador otm = new SGD(0.0001, 0.999);
+      Otimizador otm = new SGD(0.0001, 0.99);
       Inicializador ini = new Xavier();
 
       RedeNeural rede = new RedeNeural(arq);
       rede.compilar(perda, otm, ini);
-      rede.configurarAtivacao(new Sigmoid());
+      rede.configurarAtivacao(new TanH());
+      rede.configurarAtivacao(rede.obterCamadaSaida(), new Sigmoid());
 
       return rede;
    }

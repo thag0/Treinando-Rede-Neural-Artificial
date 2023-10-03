@@ -413,8 +413,8 @@ public class Ged{
     *    7, 8, 9    
     * ]
     *
-    * int idColuna1 = 0;
-    * int idColuna2 = 2;
+    * int col1 = 0;
+    * int col2 = 2;
     *
     * dados = [
     *    3, 2, 1
@@ -423,16 +423,16 @@ public class Ged{
     * ]
     * </pre>
     * @param dados conjunto de dados.
-    * @param idColuna1 índice da primeira coluna que será trocada.
-    * @param idColuna2 índice da segunda coluna que será trocada.
+    * @param col1 índice da primeira coluna que será trocada.
+    * @param col2 índice da segunda coluna que será trocada.
     * @throws IllegalArgumentException se o conteúdo dos dados estiver nulo.
     * @throws IllegalArgumentException se o conteúdo dos dados não for simétrico.
     * @throws IllegalArgumentException se a o conteúdo dos dados não tiver pelo menos duas colunas.
     * @throws IllegalArgumentException se os índices fornecidos estiverem fora de alcance do tamanho das colunas.
     * @throws IllegalArgumentException se as colunas fornecidas forem iguais.
     */
-   public void trocarColunas(Dados dados, int idColuna1, int idColuna2){
-      md.trocarColunas(dados, idColuna1, idColuna2);
+   public void trocarColunas(Dados dados, int col1, int col2){
+      md.trocarColunas(dados, col2, col2);
    }
 
    /**
@@ -663,12 +663,12 @@ public class Ged{
     * </p>
     * <pre>
     * a = [
-    *    UM, doIS
+    *    UM,   doIS
     *    trÊs, QuAtRo 
     * ]
     *
     * capitalizado = [
-    *    Um, Dois
+    *    Um,   Dois
     *    Três, Quatro 
     * ]
     * </pre>
@@ -687,14 +687,14 @@ public class Ged{
     * </p>
     * <pre>
     * a = [
-    *    UM, doIS
+    *    UM,   doIS
     *    trÊs, QuAtRo 
     * ]
     *
     * capitalizar(dados, 0);
     *
     * capitalizado = [
-    *    Um, doIS
+    *    Um,   doIS
     *    Três, QuAtRo 
     * ]
     * </pre>
@@ -1177,8 +1177,8 @@ public class Ged{
     *    1, 2, 3
     *    4, 5, 6
     * ]
-    * Dados suportados: {@code int[][]}, {@code float[][]}, {@code double[][]}.
     * </pre>
+    * Dados suportados: {@code int[][]}, {@code float[][]}, {@code double[][]}.
     * @param dados matriz contendo os dados completos.
     * @param inicio índice inicial do corte (inclusivo).
     * @param fim índice final do corte (exclusivo).

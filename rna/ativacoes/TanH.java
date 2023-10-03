@@ -29,10 +29,9 @@ public class TanH extends FuncaoAtivacao{
 
    @Override
    public void derivada(Neuronio[] neuronios){
-      double tanh;
+      //aproveitando o valor pre calculado
       for(int i = 0; i < neuronios.length; i++){
-         tanh = neuronios[i].saida;
-         neuronios[i].derivada = 1 - (tanh * tanh);
+         neuronios[i].derivada = 1 - (neuronios[i].saida * neuronios[i].saida);
       }
    }
 }

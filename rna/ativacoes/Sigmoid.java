@@ -33,6 +33,7 @@ public class Sigmoid extends FuncaoAtivacao{
 
    @Override
    public void derivada(Neuronio[] neuronios){
+      //aproveitando o valor pre calculado
       for(int i = 0; i < neuronios.length; i++){
          neuronios[i].derivada = neuronios[i].saida * (1 - neuronios[i].saida);
       }

@@ -321,7 +321,10 @@ class ManipuladorDados{
       int[] shapeB = b.shape();
 
       if(shapeA[0] != shapeB[0]){
-         throw new IllegalArgumentException("A quantidade de linhas de A deve ser igual a quantidade de linhas de B");
+         throw new IllegalArgumentException(
+            "A quantidade de linhas de A (" + shapeA[0] + 
+            ") deve ser igual a quantidade de linhas de B (" + shapeB[0] +")"
+         );
       }
 
       int qLinhas = shapeA[0];
