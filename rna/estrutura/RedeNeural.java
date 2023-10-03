@@ -82,8 +82,13 @@ public class RedeNeural implements Cloneable{
     * Valor máximo e mínimo na hora de aleatorizar os pesos da rede neural, para
     * alguns inicializadores.
     */
-   private double alcancePeso = 1.0;
+   private double alcancePeso = 0.5;
 
+   /**
+    * Ponto inicial para os geradores aleatórios
+    */
+   private long seedInicial = 0;
+    
    /**
     * Auxiliar no controle da compilação da Rede Neural, ajuda a evitar uso 
     * indevido caso a rede não tenha suas variáveis e dependências inicializadas 
@@ -249,7 +254,7 @@ public class RedeNeural implements Cloneable{
     *    É necessário informar o alcance <strong>antes</strong> de compilar a rede.
     * </p>
     * <p>
-    *    {@code O valor padrão de alcance é 1}
+    *    {@code O valor padrão de alcance é 0.5}
     * </p>
     * @param alcance novo valor máximo e mínimo.
     * @throws IllegalArgumentException se o novo valor for menor ou igual a zero.
@@ -282,6 +287,23 @@ public class RedeNeural implements Cloneable{
     */
    public void configurarBias(boolean usarBias){
       this.bias = usarBias;
+   }
+
+   /**
+    * Configura a nova seed inicial para os geradores de números
+    * aleatórios utilizados durante o processo de inicialização de pesos
+    * e treinamento da Rede Neural.
+    * <p>
+    *    Configurações personalizadas de seed premitem fazer testes com diferentes
+    *    parâmetros da Rede Neural, buscando encontrar um melhor ajuste para o modelo.
+    * </p>
+    * <p>
+    *    A configuração de seed deve ser feita antes da compilação do modelo.
+    * </p>
+    * @param seed nova seed.
+    */
+   public void configurarSeed(long seed){
+      this.seedInicial = seed;
    }
 
    /**
@@ -594,6 +616,7 @@ public class RedeNeural implements Cloneable{
          throw new IllegalArgumentException("A função de perda não pode ser nula.");
       }
 
+      //usando valores de configuração prévia, se forem criados.
       if(this.otimizadorAtual == null){
          this.compilar(perda, new SGD(), new Aleatorio());
 
@@ -631,6 +654,7 @@ public class RedeNeural implements Cloneable{
          throw new IllegalArgumentException("O otimizador fornecido não pode ser nulo.");
       }
 
+      //usando valores de configuração prévia, se forem criados.
       if(this.perdaAtual == null){
          this.compilar(new ErroMedioQuadrado(), otimizador, new Aleatorio());
 
@@ -671,6 +695,7 @@ public class RedeNeural implements Cloneable{
          throw new IllegalArgumentException("O inicializador fornecido não pode ser nulo.");
       }
 
+      //usando valores de configuração prévia, se forem criados.
       if(this.perdaAtual == null){
          this.compilar(new ErroMedioQuadrado(), otimizador, inicializador);
 
@@ -711,11 +736,16 @@ public class RedeNeural implements Cloneable{
          throw new IllegalArgumentException("O otimizador não pode ser nulo.");
       }
 
+      if(this.seedInicial != 0){
+         inicializador.configurarSeed(seedInicial);
+         this.treinador.configurarSeed(seedInicial);
+      }
+
       //inicializar camadas
       this.camadas = new Camada[this.arquitetura.length-1];
       for(int i = 0; i < this.camadas.length; i++){
          this.camadas[i] = new Camada(this.arquitetura[i+1], this.bias);
-         this.camadas[i].inicializar(this.arquitetura[i], alcancePeso, inicializador);
+         this.camadas[i].inicializar(this.arquitetura[i], this.alcancePeso, inicializador);
          this.camadas[i].configurarId(i);
       }
 
@@ -764,19 +794,22 @@ public class RedeNeural implements Cloneable{
       if(entrada.length != saida.length){
          throw new IllegalArgumentException(
             "Quantidade de linhas de dados de entrada (" + entrada.length +
-            ") e saída (" + saida.length + ") devem ser iguais."
+            ") e saída (" + saida.length + 
+            ") devem ser iguais."
          );
       }
       if(tamEntrada != entrada[0].length){
          throw new IllegalArgumentException(
             "Dimensões dos dados de entrada (" + entrada[0].length +
-            ") e capacidade de entrada da rede (" + tamEntrada + ") incompatíveis."
+            ") e capacidade de entrada da rede (" + tamEntrada + 
+            ") incompatíveis."
          );
       }
       if(tamSaida != saida[0].length){
          throw new IllegalArgumentException(
             "Dados de saída (" + saida[0].length +
-            ") e neurônios de saída da rede (" + tamSaida + ") incompatíveis."
+            ") e neurônios de saída da rede (" + tamSaida + 
+            ") incompatíveis."
          );
       }
    }

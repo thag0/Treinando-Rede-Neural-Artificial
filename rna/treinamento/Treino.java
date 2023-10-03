@@ -1,6 +1,7 @@
 package rna.treinamento;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import rna.avaliacao.perda.Perda;
 import rna.estrutura.Camada;
@@ -21,6 +22,8 @@ class Treino{
    ArrayList<Double> historico;
    AuxiliarTreino aux = new AuxiliarTreino();
 
+   Random random = new Random();
+
    /**
     * Objeto de treino sequencial da rede.
     * @param historicoCusto lista de custos da rede durante cada época de treino.
@@ -28,6 +31,15 @@ class Treino{
    public Treino(ArrayList<Double> historicoCusto, boolean calcularHistorico){
       this.historico = historicoCusto;
       this.calcularHistorico = calcularHistorico;
+   }
+
+   /**
+    * Configura a seed inicial do gerador de números aleatórios.
+    * @param seed nova seed.
+    */
+   public void configurarSeed(long seed){
+      this.random.setSeed(seed);
+      this.aux.configurarSeed(seed);
    }
 
    /**

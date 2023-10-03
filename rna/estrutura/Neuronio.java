@@ -121,7 +121,7 @@ public class Neuronio implements Cloneable{
 
       //entrada do bias
       if(bias){
-         this.entradas[this.entradas.length-1] = 1;
+         this.entradas[this.entradas.length-1] = 0.5;
       }
    }
     
@@ -152,8 +152,9 @@ public class Neuronio implements Cloneable{
          );
       }
 
+      //tentar usar um valor pequeno pra ter menos influência no começo
       if(this.bias){
-         this.pesos[this.pesos.length-1] = 0.1;
+         this.pesos[this.pesos.length-1] = 0.5;
       }
    }
 

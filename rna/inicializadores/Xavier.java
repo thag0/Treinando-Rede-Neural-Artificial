@@ -11,10 +11,10 @@ public class Xavier extends Inicializador{
     */
    @Override
    public void inicializar(double[] array, int entradas, int saidas){
-      double desvioPadrao = Math.sqrt(2.0 / (entradas + saidas));
+      double alcance = Math.sqrt(2.0 / (entradas + saidas));
 
       for(int i = 0; i < array.length; i++){
-         array[i] = super.random.nextGaussian() * desvioPadrao;
+         array[i] = super.random.nextDouble(-alcance, alcance);
       }
    }
 

@@ -10,10 +10,10 @@ public class LeCun extends Inicializador{
     */
    @Override
    public void inicializar(double[] array, int entradas){
-      double desvioPadrao = Math.sqrt(1.0 / entradas);
+      double alcance = Math.sqrt(1.0 / entradas);
 
       for(int i = 0; i < array.length; i++){
-         array[i] = super.random.nextGaussian() * desvioPadrao;
+         array[i] = super.random.nextGaussian() * alcance;
       }
    }
 

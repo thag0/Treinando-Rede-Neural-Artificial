@@ -73,8 +73,6 @@ class GerenciadorArquivos{
          throw new IllegalArgumentException("A rede deve trabalhar apenas com um neurônio na camada de saída para a escala de cinza.");
       }
 
-      double[] entradaRede = new double[rede.obterTamanhoEntrada()];
-      double[] saidaRede = new double[rede.obterTamanhoSaida()];
       int larguraFinal = (int)(imagem.getWidth() * escala);
       int alturaFinal = (int)(imagem.getHeight() * escala);
 
@@ -83,17 +81,56 @@ class GerenciadorArquivos{
       int alturaImagem = imagemAmpliada.length;
       int larguraImagem = imagemAmpliada[0].length;
 
-      for(int y = 0; y < alturaImagem; y++){
-         for(int x = 0; x < larguraImagem; x++){
+      //gerenciar multithread
+      int numThreads = Runtime.getRuntime().availableProcessors();
+      if(numThreads > 1){
+         //só pra não sobrecarregar o processador
+         numThreads = (int)(numThreads / 2);
+      }
 
-            entradaRede[0] = (double)x / (larguraImagem-1);
-            entradaRede[1] = (double)y / (alturaImagem-1);
+      Thread[] threads = new Thread[numThreads];
+      RedeNeural[] redes = new RedeNeural[numThreads];
+      for(int i = 0; i < numThreads; i++){
+         redes[i] = rede.clone();
+      }
 
-            rede.calcularSaida(entradaRede);
+      int alturaPorThead = alturaImagem / numThreads;
 
-            saidaRede[0] = rede.obterCamadaSaida().neuronio(0).saida * 255;
-           gdi.configurarCor(imagemAmpliada, x, y, (int)saidaRede[0], (int)saidaRede[0], (int)saidaRede[0]);
+      for(int i = 0; i < numThreads; i++){
+         final int id = i;
+         final int inicio = i * alturaPorThead;
+         final int fim = inicio + alturaPorThead;
+         
+         threads[i] = new Thread(() -> {
+            for(int y = inicio; y < fim; y++){
+               for(int x = 0; x < larguraImagem; x++){
+                  double[] entrada = new double[2];
+                  double[] saida = new double[1];
+
+                  entrada[0] = (double)x / (larguraImagem-1);
+                  entrada[1] = (double)y / (alturaImagem-1);
+               
+                  redes[id].calcularSaida(entrada);
+               
+                  saida[0] = redes[id].obterCamadaSaida().neuronio(0).saida * 255;
+
+                  synchronized(imagemAmpliada){
+                     gdi.configurarCor(imagemAmpliada, x, y, (int)saida[0], (int)saida[0], (int)saida[0]);
+                  }
+               }
+            }
+         });
+
+         threads[i].start();
+      }
+
+      try{
+         for(Thread thread : threads){
+            thread.join();
          }
+      }catch(Exception e){
+         System.out.println("Ocorreu um erro ao tentar salvar a imagem.");
+         e.printStackTrace();
       }
 
       this.exportarImagemPng(imagemAmpliada, caminho);
@@ -107,9 +144,6 @@ class GerenciadorArquivos{
          throw new IllegalArgumentException("A rede deve trabalhar apenas com três neurônios na saída para RGB.");
       }
 
-      double[] entradaRede = new double[rede.obterTamanhoEntrada()];
-      double[] saidaRede = new double[rede.obterTamanhoSaida()];
-
       //estrutura de dados da imagem
       int larguraFinal = (int)(imagem.getWidth() * escala);
       int alturaFinal = (int)(imagem.getHeight() * escala);
@@ -118,22 +152,58 @@ class GerenciadorArquivos{
       int alturaImagem = imagemAmpliada.length;
       int larguraImagem = imagemAmpliada[0].length;
 
-      for(int y = 0; y < alturaImagem; y++){
-         for(int x = 0; x < larguraImagem; x++){
-            imagemAmpliada[y][x] = new Pixel();
+      //gerenciar multithread
+      int numThreads = Runtime.getRuntime().availableProcessors();
+      if(numThreads > 1){
+         //só pra não sobrecarregar o processador
+         numThreads = (int)(numThreads / 2);
+      }
 
-            //posição do pixel
-            entradaRede[0] = (double)x / (larguraImagem-1);
-            entradaRede[1] = (double)y / (alturaImagem-1);
+      Thread[] threads = new Thread[numThreads];
+      RedeNeural[] redes = new RedeNeural[numThreads];
+      for(int i = 0; i < numThreads; i++){
+         redes[i] = rede.clone();
+      }
 
-            rede.calcularSaida(entradaRede);
+      int alturaPorThead = alturaImagem / numThreads;
 
-            //cor do pixel em rgb
-            saidaRede[0] = rede.obterCamadaSaida().neuronio(0).saida * 255;
-            saidaRede[1] = rede.obterCamadaSaida().neuronio(1).saida * 255;
-            saidaRede[2] = rede.obterCamadaSaida().neuronio(2).saida * 255;
-            gdi.configurarCor(imagemAmpliada, x, y, (int)saidaRede[0], (int)saidaRede[1], (int)saidaRede[2]);
+      for(int i = 0; i < numThreads; i++){
+         final int id = i;
+         final int inicio = i * alturaPorThead;
+         final int fim = inicio + alturaPorThead;
+         
+         threads[i] = new Thread(() -> {
+            for(int y = inicio; y < fim; y++){
+               for(int x = 0; x < larguraImagem; x++){
+                  double[] entrada = new double[2];
+                  double[] saida = new double[3];
+
+                  entrada[0] = (double)x / (larguraImagem-1);
+                  entrada[1] = (double)y / (alturaImagem-1);
+               
+                  redes[id].calcularSaida(entrada);
+               
+                  saida[0] = redes[id].obterCamadaSaida().neuronio(0).saida * 255;
+                  saida[1] = redes[id].obterCamadaSaida().neuronio(1).saida * 255;
+                  saida[2] = redes[id].obterCamadaSaida().neuronio(2).saida * 255;
+
+                  synchronized(imagemAmpliada){
+                     gdi.configurarCor(imagemAmpliada, x, y, (int)saida[0], (int)saida[1], (int)saida[2]);
+                  }
+               }
+            }
+         });
+
+         threads[i].start();
+      }
+
+      try{
+         for(Thread thread : threads){
+            thread.join();
          }
+      }catch(Exception e){
+         System.out.println("Ocorreu um erro ao tentar salvar a imagem.");
+         e.printStackTrace();
       }
 
       this.exportarImagemPng(imagemAmpliada, caminho);

@@ -29,7 +29,7 @@ class Main{
 
    static final String caminhoImagemExportada = "./resultados/imagem-ampliada";
    static final int epocas = 10*1000;
-   static final float escalaRender = 8f;
+   static final float escalaRender = 7.5f;
    static final float escalaImagemExportada = 30f;
 
    // Sempre lembrar de quando mudar o dataset, também mudar a quantidade de dados de entrada e saída.
@@ -88,7 +88,7 @@ class Main{
    }
 
    public static RedeNeural criarRede(int entradas, int saidas){
-      // int[] arq = {entradas, 82, 46, 46, saidas};//dog
+      // int[] arq = {entradas, 96, 48, 48, saidas};//dog
       // int[] arq = {entradas, 42, 42, 42, saidas};//32x32
       int[] arq = {entradas, 13, 13, saidas};//28x28
 
@@ -105,7 +105,7 @@ class Main{
    }
 
    public static void treinoEmPainel(RedeNeural rede, BufferedImage imagem, double[][] dadosEntrada, double[][] dadosSaida){
-      final int fps = 60;
+      final int fps = 600;
       int epocasPorFrame = 20;
 
       //acelerar o processo de desenho

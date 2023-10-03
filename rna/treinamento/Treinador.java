@@ -35,6 +35,15 @@ public class Treinador{
    }
 
    /**
+    * Configura a seed inicial do gerador de números aleatórios.
+    * @param seed nova seed.
+    */
+   public void configurarSeed(long seed){
+      this.treino.configurarSeed(seed);
+      this.treinoLote.configurarSeed(seed);
+   }
+
+   /**
     * Configura o cálculo do custo da rede neural durante o processo de treinamento.
     * A mesma configuração se aplica ao treino em lote.
     * @param calcularHistorico calcular ou não o histórico de custo.

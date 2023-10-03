@@ -17,6 +17,14 @@ class AuxiliarTreino{
    }
 
    /**
+    * Configura a seed inicial do gerador de números aleatórios.
+    * @param seed nova seed.
+    */
+    public void configurarSeed(long seed){
+      this.random.setSeed(seed);
+   }
+
+   /**
     * Método exclusivo para separar a forma de calcular os erros da camada de saída.
     * Dando suporte não apenas para problemas de regressão.
     * <p>

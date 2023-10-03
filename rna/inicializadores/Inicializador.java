@@ -8,7 +8,7 @@ import java.util.Random;
  */
 public class Inicializador{
 
-   Random random = new Random();
+   protected Random random = new Random();
 
    /**
     * Configura o início do gerador aleatório.
@@ -24,7 +24,9 @@ public class Inicializador{
     * @param alcance valor de alcance da aleatorização
     */
    public void inicializar(double[] array, double alcance){
-      throw new UnsupportedOperationException("Método de inicialização não implementado.");
+      throw new UnsupportedOperationException(
+         "Método de inicialização (array, alcance) não implementado."
+      );
    }
 
    /**
@@ -33,7 +35,9 @@ public class Inicializador{
     * @param alcance valor de alcance da aleatorização
     */
    public void inicializar(double[] array, int entradas){
-      throw new UnsupportedOperationException("Método de inicialização não implementado.");
+      throw new UnsupportedOperationException(
+         "Método de inicialização (array, entradas) não implementado."
+      );
    }
 
    /**
@@ -44,6 +48,8 @@ public class Inicializador{
     * @param saidas quantidade de saídas da camada em que o neurônio está.
     */
    public void inicializar(double[] array, int entradas, int saidas){
-      throw new UnsupportedOperationException("Método de inicialização não implementado.");
+      throw new UnsupportedOperationException(
+         "Método de inicialização (array, entradas, saidas) não implementado."
+      );
    }
 }
