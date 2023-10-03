@@ -10,7 +10,12 @@ public class AleatorioPositivo extends Inicializador{
    @Override
    public void inicializar(double[] array, double alcance){
       for(int i = 0; i < array.length; i++){
-         array[i] = random.nextDouble(0, alcance);
+         array[i] = super.random.nextDouble(0, alcance);
       }
+   }
+
+   @Override
+   public void configurarSeed(long seed){
+      super.configurarSeed(seed);
    }
 }

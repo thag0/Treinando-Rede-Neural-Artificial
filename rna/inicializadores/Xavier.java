@@ -14,7 +14,12 @@ public class Xavier extends Inicializador{
       double desvioPadrao = Math.sqrt(2.0 / (entradas + saidas));
 
       for(int i = 0; i < array.length; i++){
-         array[i] = random.nextGaussian() * desvioPadrao;
+         array[i] = super.random.nextGaussian() * desvioPadrao;
       }
+   }
+
+   @Override
+   public void configurarSeed(long seed){
+      super.configurarSeed(seed);
    }
 }

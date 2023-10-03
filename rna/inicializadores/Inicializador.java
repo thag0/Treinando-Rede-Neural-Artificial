@@ -15,11 +15,11 @@ public class Inicializador{
     * @param seed nova seed de início.
     */
    public void configurarSeed(long seed){
-      random.setSeed(seed);
+      this.random.setSeed(seed);
    }
 
    /**
-    * Inicializa os valores do array de acordo com o inicialziador configurado.
+    * Inicializa os valores do array de acordo com o inicializador configurado.
     * @param array array de pesos do neurônio.
     * @param alcance valor de alcance da aleatorização
     */
@@ -28,7 +28,7 @@ public class Inicializador{
    }
 
    /**
-    * Inicializa os valores do array de acordo com o inicialziador configurado.
+    * Inicializa os valores do array de acordo com o inicializador configurado.
     * @param array array de pesos do neurônio.
     * @param alcance valor de alcance da aleatorização
     */
@@ -37,7 +37,7 @@ public class Inicializador{
    }
 
    /**
-    * Inicializa os valores do array de acordo com o inicialziador configurado.
+    * Inicializa os valores do array de acordo com o inicializador configurado.
     * @param array array de pesos do neurônio.
     * @param entradas quantidade de entradas do neurônio (ou também quantidade de 
     * saídas da camda anterior).
