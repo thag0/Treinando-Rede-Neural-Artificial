@@ -5,6 +5,7 @@ import java.util.Random;
 
 import rna.avaliacao.perda.Perda;
 import rna.estrutura.Camada;
+import rna.estrutura.Neuronio;
 import rna.estrutura.RedeNeural;
 import rna.otimizadores.GDM;
 import rna.otimizadores.GD;
@@ -118,7 +119,11 @@ class Treino{
    private void calcularGradientes(Camada[] redec){
       for(int i = 0; i < redec.length; i++){    
          for(int j = 0; j < redec[i].quantidadeNeuronios(); j++){
-            redec[i].neuronio(j).calcularGradiente();
+
+            Neuronio neuronio = redec[i].neuronio(j);
+            for(int k = 0; k < neuronio.pesos.length; k++){
+               neuronio.gradientes[k] = -neuronio.erro * neuronio.entradas[k];
+            }
          }
       }
    }

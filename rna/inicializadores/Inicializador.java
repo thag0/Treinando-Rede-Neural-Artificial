@@ -8,6 +8,10 @@ import java.util.Random;
  */
 public class Inicializador{
 
+   /**
+    * Gerador de números pseudo aleatórios compartilhado
+    * para as classes filhas.
+    */
    protected Random random = new Random();
 
    /**

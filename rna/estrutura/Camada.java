@@ -77,12 +77,12 @@ public class Camada implements Cloneable{
     * </p>
     * Depois de inicializada, a camada pode ser usada por completo.
     * @param neuronios quantidade de neurônios desejados para a camada.
-    * @param temBias define se a camada possui um neurônio de bias. Se true, será 
-    * adicionado um neurônio adicional que a saída é sempre 1.
+    * @param usarBias define se os neurônios da camada terão um víes aplicado,
+    * onde será criada uma entrada e um peso adicional ao neurônio.
     */
-   public Camada(int neuronios, boolean temBias){
+   public Camada(int neuronios, boolean usarBias){
       this.neuronios = new Neuronio[neuronios];
-      this.bias = temBias;
+      this.bias = usarBias;
       this.ativacao = new ReLU();
    }
 

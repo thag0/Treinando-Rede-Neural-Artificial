@@ -142,8 +142,8 @@ class TreinoLote{
          for(int j = 0; j < redec[i].quantidadeNeuronios(); j++){
             
             Neuronio neuronio = redec[i].neuronio(j);
-            neuronio.calcularGradiente();
-            for(int k = 0; k < neuronio.gradientes.length; k++){
+            for(int k = 0; k < neuronio.pesos.length; k++){
+               neuronio.gradientes[k] = -neuronio.erro * neuronio.entradas[k];
                neuronio.gradientesAcumulados[k] += neuronio.gradientes[k];
             }
          }

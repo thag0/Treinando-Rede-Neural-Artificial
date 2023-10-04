@@ -193,39 +193,6 @@ public class Neuronio implements Cloneable{
    }
 
    /**
-    * Calcula o gradiente de cada peso do neurônio usando a expressão:
-    * <pre>
-    *    g[i] = -e * en[i]
-    * </pre>
-    * onde:
-    * <p>
-    *    g - vetor de gradientes do neurônio.
-    * </p>
-    * <p>
-    *    e - erro do neurônio. 
-    * </p>
-    * <p>
-    *    en - vetor de entradas do neurônio. 
-    * </p>
-    * <strong>Observação</strong>: em alguns lugares o erro se calcula como 
-    * {@code y-p} (onde {@code y} é o dado real e {@code p} é o dado previsto), 
-    * mas também encontrei outros lugares onde o erro é calculado como {@code p-y},
-    * para padronizar decidi que o erro é calculado como {@code y-p} e multiplicar o valor
-    * do gradiente por -1, assim faz mais sentido o termo "gradiente descendente" onde é 
-    * usado o oposto do gradiente para minimizar a perda da rede.
-    * <p>
-    *    Além de que essa abordagem de {@code p-y} não estava funcionando para calcular
-    *    o erro dos neurônio quando a camada de saída de rede usava a função argmax então
-    *    acabei sendo um pouco forçado em deixar dessa forma.
-    * </p>
-    */
-   public void calcularGradiente(){
-      for(int i = 0; i < this.pesos.length; i++){
-         this.gradientes[i] = -this.erro * this.entradas[i];
-      }
-   }
-
-   /**
     * Retorna a quantidade de conexões presentes (incluindo a do bias).
     * @return quantidade de conexões presentes totais.
     */

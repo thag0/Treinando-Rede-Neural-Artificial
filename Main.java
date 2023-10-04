@@ -13,6 +13,7 @@ import rna.inicializadores.*;
 import rna.ativacoes.*;
 import rna.avaliacao.perda.*;
 import rna.otimizadores.*;
+import rna.serializacao.Serializador;
 import rna.estrutura.RedeNeural;
 import utilitarios.ged.Dados;
 import utilitarios.ged.Ged;
@@ -27,8 +28,9 @@ class Main{
    // static final String caminhoArquivo = "/dados/32x32/bloco.png";
    static final String caminhoArquivo = "/dados/mnist/8.png";
 
+   //20s
    static final String caminhoImagemExportada = "./resultados/imagem-ampliada";
-   static final int epocas = 10*1000;
+   static final int epocas = 15*1000;
    static final float escalaRender = 7.5f;
    static final float escalaImagemExportada = 30f;
 
@@ -85,6 +87,8 @@ class Main{
       if(nSaida == 1)geim.exportarImagemEscalaCinza(imagem, rede, escalaImagemExportada, caminhoImagemExportada);
       else if(nSaida == 3) geim.exportarImagemRGB(imagem, rede, escalaImagemExportada, caminhoImagemExportada);
       else System.out.println("Não é possível exportar a imagem");
+
+      Serializador.salvar(rede, "./rede-8.txt", "double");
    }
 
    public static RedeNeural criarRede(int entradas, int saidas){

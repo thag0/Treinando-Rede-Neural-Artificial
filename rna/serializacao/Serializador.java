@@ -211,8 +211,8 @@ public class Serializador{
 
          //inicialização e configurações da rede
          rede = new RedeNeural(arq);
-         rede.compilar();
          rede.configurarBias(bias);
+         rede.compilar();
 
          for(int i = 0; i < rede.obterQuantidadeCamadas(); i++){
             rede.configurarAtivacao(rede.obterCamada(i), dicionario.obterAtivacao(ativacoesStr[i]));
