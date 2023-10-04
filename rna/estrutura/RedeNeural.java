@@ -1135,7 +1135,7 @@ public class RedeNeural implements Cloneable{
    public double[] obterSaidas(){
       this.verificarCompilacao();
 
-      return this.camadas[this.camadas.length-1].obterSaida();
+      return this.obterCamadaSaida().obterSaida();
    }
 
    /**
@@ -1178,7 +1178,7 @@ public class RedeNeural implements Cloneable{
    public ArrayList<Double> obterHistoricoCusto(){
       if(!this.treinador.calcularHistorico){
          throw new IllegalArgumentException(
-            "Deve ser habilitado o cálculo do histórico de custos para obter os resultados."
+            "O histórico de custo da rede deve ser habilitado."
          );
       }
       return this.treinador.obterHistorico();
@@ -1316,6 +1316,9 @@ public class RedeNeural implements Cloneable{
          //dados importantes
          clone.bias = this.bias;
          clone.arquitetura = this.arquitetura;
+         clone.compilado = this.compilado;
+
+         clone.nome = "Clone de " + this.nome;
 
          clone.camadas = new Camada[this.camadas.length];
          for(int i = 0; i < this.camadas.length; i++){

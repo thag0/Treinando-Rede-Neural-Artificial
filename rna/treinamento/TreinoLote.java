@@ -81,7 +81,7 @@ class TreinoLote{
             double[][] saidaLote = aux.obterSubMatriz(saidas, j, fimIndice);
 
             //reiniciar gradiente do lote
-            aux.zerarGradientesAcumulados(redec);
+            zerarGradientesAcumulados(redec);
             for(int k = 0; k < entradaLote.length; k++){
                double[] entrada = entradaLote[k];
                double[] saida = saidaLote[k];
@@ -113,6 +113,22 @@ class TreinoLote{
       aux.calcularErroSaida(redec[redec.length-1], perda, saidas);
       aux.calcularErroOcultas(redec);
       calcularGradientesAcumulados(redec);
+   }
+
+   /**
+    * Zera todos os gradientes dos neurônios para o cálculo do gradiente em lote.
+    * @param redec Rede Neural em formato de array de camadas.
+    */
+   void zerarGradientesAcumulados(Camada[] redec){
+      for(int i = 0; i < redec.length; i++){ 
+         for(int j = 0; j < redec[i].quantidadeNeuronios(); j++){
+            
+            Neuronio neuronio = redec[i].neuronio(j);
+            for(int k = 0; k < neuronio.gradientesAcumulados.length; k++){
+               neuronio.gradientesAcumulados[k] = 0;
+            }
+         }
+      }
    }
 
    /**

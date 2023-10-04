@@ -85,9 +85,7 @@ class Treino{
             System.arraycopy(entradas[j], 0, entrada, 0, entrada.length);
             System.arraycopy(saidas[j], 0, saida, 0, saida.length);
 
-            //calcular desempenho da rede,
-            //erros e gradientes
-            //e atualizar os pesos
+            //calcular desempenho, erros e gradientes, atualizar os pesos
             rede.calcularSaida(entrada);
             backpropagation(redec, perda, saida);
             otimizador.atualizar(redec);

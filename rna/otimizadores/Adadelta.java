@@ -3,7 +3,7 @@ package rna.otimizadores;
 import rna.estrutura.Camada;
 import rna.estrutura.Neuronio;
 
-public class Adadelta extends Otimizador {
+public class Adadelta extends Otimizador{
 
    private double rho;
    private double epsilon;
@@ -50,7 +50,7 @@ public class Adadelta extends Otimizador {
    }
 
    @Override
-   public String info() {
+   public String info(){
       String buffer = "";
 
       String espacamento = "    ";

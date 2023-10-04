@@ -180,20 +180,4 @@ class AuxiliarTreino{
 
       return indiceMaiorValor;
    }
-
-   /**
-    * Zera todos os gradientes dos neurônios para o cálculo do gradiente em lote.
-    * @param redec Rede Neural em formato de array de camadas.
-    */
-   void zerarGradientesAcumulados(Camada[] redec){
-      for(int i = 0; i < redec.length; i++){ 
-         for(int j = 0; j < redec[i].quantidadeNeuronios(); j++){
-            
-            Neuronio neuronio = redec[i].neuronio(j);
-            for(int k = 0; k < neuronio.gradientesAcumulados.length; k++){
-               neuronio.gradientesAcumulados[k] = 0;
-            }
-         }
-      }
-   }
 }
