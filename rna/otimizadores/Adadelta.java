@@ -29,12 +29,10 @@ public class Adadelta extends Otimizador{
    public void atualizar(Camada[] redec){
       double g;
       int id = 0;//indice de busca na lista de coeficientes
-      for(int i = 0; i < redec.length; i++){
-         for(int j = 0; j < redec[i].quantidadeNeuronios(); j++){
-
-            Neuronio neuronio = redec[i].neuronio(j);
-            for(int k = 0; k < neuronio.pesos.length; k++){
-               g = neuronio.gradientes[k];
+      for(Camada camada : redec){
+         for(Neuronio neuronio : camada.neuronios()){
+            for(int i = 0; i < neuronio.pesos.length; i++){
+               g = neuronio.gradientes[i];
 
                acGradQuadrado[id] = (rho * acGradQuadrado[id]) + ((1 - rho) * (g*g));
 
@@ -42,7 +40,7 @@ public class Adadelta extends Otimizador{
                
                acAttQuadrado[id] = (rho * acAttQuadrado[id]) + ((1 - rho) * (delta*delta));
                
-               neuronio.pesos[k] -= delta;
+               neuronio.pesos[i] -= delta;
                id++;
             }
          }

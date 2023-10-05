@@ -84,13 +84,11 @@ public class GDM extends Otimizador{
     */
     @Override
    public void atualizar(Camada[] redec){
-      for(int i = 0; i < redec.length; i++){
-         for(int j = 0; j < redec[i].quantidadeNeuronios(); j++){
-            
-            Neuronio neuronio = redec[i].neuronio(j);
-            for(int k = 0; k < neuronio.pesos.length; k++){
-               momentum[k] = (neuronio.gradientes[k] * taxaAprendizagem) + (taxaMomentum * momentum[k]);
-               neuronio.pesos[k] -= momentum[k];
+      for(Camada camada : redec){
+         for(Neuronio neuronio : camada.neuronios()){   
+            for(int i = 0; i < neuronio.pesos.length; i++){
+               momentum[i] = (neuronio.gradientes[i] * taxaAprendizagem) + (taxaMomentum * momentum[i]);
+               neuronio.pesos[i] -= momentum[i];
             }
          }
       } 

@@ -132,17 +132,15 @@ public class Adamax extends Otimizador{
       double forcaB1 = Math.pow(beta1, interacoes);
       
       int id = 0;//indice de busca na lista de coeficientes
-      for(int i = 0; i < redec.length; i++){
-         for(int j = 0; j < redec[i].quantidadeNeuronios(); j++){
-
-            Neuronio neuronio = redec[i].neuronio(j);
-            for(int k = 0; k < neuronio.pesos.length; k++){
-               double g = neuronio.gradientes[k];
+      for(Camada camada : redec){
+         for(Neuronio neuronio : camada.neuronios()){   
+            for(int i = 0; i < neuronio.pesos.length; i++){
+               double g = neuronio.gradientes[i];
 
                momentum[id] += (g - momentum[id]) * (1 - beta1);
                velocidade[id] = Math.max(beta2 * velocidade[id], Math.abs(g));
 
-               neuronio.pesos[k] -= taxaAprendizagem * momentum[id] / ((1 - forcaB1) * (velocidade[id] + epsilon));
+               neuronio.pesos[i] -= taxaAprendizagem * momentum[id] / ((1 - forcaB1) * (velocidade[id] + epsilon));
 
                id++;
             }

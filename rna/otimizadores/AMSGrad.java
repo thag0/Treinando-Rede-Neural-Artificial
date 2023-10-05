@@ -161,12 +161,10 @@ public class AMSGrad extends Otimizador{
 		double forcaB2 = (1 - Math.pow(beta2, interacoes));
 
 		int id = 0;//indice de busca na lista de coeficientes
-		for(int i = 0; i < redec.length; i++){
-			for(int j = 0; j < redec[i].quantidadeNeuronios(); j++){
-
-				Neuronio neuronio = redec[i].neuronio(j);
-				for(int k = 0; k < neuronio.pesos.length; k++){
-					g = neuronio.gradientes[k];
+		for(Camada camada : redec){
+			for(Neuronio neuronio : camada.neuronios()){
+				for(int i = 0; i < neuronio.pesos.length; i++){
+					g = neuronio.gradientes[i];
 					
 					momentum[id] =   (beta1 * momentum[id])   + ((1 - beta1) * g);
 					velocidade[id] = (beta2 * velocidade[id]) + ((1 - beta2) * g * g);
@@ -176,11 +174,10 @@ public class AMSGrad extends Otimizador{
 					mChapeu = momentum[id] / forcaB1;
 					vChapeu = vCorrigido[id] / forcaB2;
 
-					neuronio.pesos[k] -= (taxaAprendizagem * mChapeu) / (Math.sqrt(vChapeu) + epsilon);
+					neuronio.pesos[i] -= (taxaAprendizagem * mChapeu) / (Math.sqrt(vChapeu) + epsilon);
 
 					id++;
-				}
-
+				}			
 			}
 		}
   	}

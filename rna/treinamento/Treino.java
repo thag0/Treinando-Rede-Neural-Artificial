@@ -83,8 +83,15 @@ class Treino{
          //percorrer amostras
          for(int j = 0; j < entradas.length; j++){
             //preencher dados de entrada e saída
-            System.arraycopy(entradas[j], 0, entrada, 0, entrada.length);
-            System.arraycopy(saidas[j], 0, saida, 0, saida.length);
+            // System.arraycopy(entradas[j], 0, entrada, 0, entrada.length);
+            //System.arraycopy(saidas[j], 0, saida, 0, saida.length);
+            
+            for(int k = 0; k < entrada.length; k++){
+               entrada[k] = entradas[j][k];
+            }    
+            for(int k = 0; k < saida.length; k++){
+               saida[k] = saidas[j][k];
+            }
 
             //calcular desempenho, erros e gradientes, atualizar os pesos
             rede.calcularSaida(entrada);
@@ -108,21 +115,11 @@ class Treino{
    private void backpropagation(Camada[] redec, Perda perda, double[] saidas){
       aux.calcularErroSaida(redec[redec.length-1], perda, saidas);
       aux.calcularErroOcultas(redec);
-      calcularGradientes(redec);
-   }
 
-   /**
-    * Método exclusivo para separar o cálculo dos gradientes das conexões de cada
-    * neurônio dentro da rede.
-    * @param redec Rede Neural em formato de lista de camadas.
-    */
-   private void calcularGradientes(Camada[] redec){
-      for(int i = 0; i < redec.length; i++){    
-         for(int j = 0; j < redec[i].quantidadeNeuronios(); j++){
-
-            Neuronio neuronio = redec[i].neuronio(j);
-            for(int k = 0; k < neuronio.pesos.length; k++){
-               neuronio.gradientes[k] = -neuronio.erro * neuronio.entradas[k];
+      for(Camada camada : redec){
+         for(Neuronio neuronio : camada.neuronios()){
+            for(int i = 0; i < neuronio.pesos.length; i++){
+               neuronio.gradientes[i] = -neuronio.erro * neuronio.entradas[i];
             }
          }
       }
