@@ -10,7 +10,7 @@ import rna.estrutura.Neuronio;
  *    melhores resultados.
  * </p>
  */
-public class ELU extends FuncaoAtivacao{
+public class ELU extends Ativacao{
    
    /**
     * Valor alfa da função ELU.

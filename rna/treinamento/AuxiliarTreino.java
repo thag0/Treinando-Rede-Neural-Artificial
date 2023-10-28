@@ -180,4 +180,21 @@ class AuxiliarTreino{
 
       return indiceMaiorValor;
    }
+
+   /**
+    * TODO
+    * @param historico
+    * @param valor
+    */
+   double[] adicionarPerda(double[] historico, double valor){
+      double[] novoHist = historico;
+      historico = new double[historico.length + 1];
+      
+      for(int i = 0; i < novoHist.length; i++){
+         historico[i] = novoHist[i];
+      }
+      historico[historico.length-1] = valor;
+
+      return historico;
+   }
 }

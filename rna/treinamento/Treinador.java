@@ -1,7 +1,5 @@
 package rna.treinamento;
 
-import java.util.ArrayList;
-
 import rna.avaliacao.perda.Perda;
 import rna.estrutura.RedeNeural;
 import rna.otimizadores.Otimizador;
@@ -11,11 +9,6 @@ import rna.otimizadores.Otimizador;
  * lote da Rede Neural.
  */
 public class Treinador{
-
-   /**
-    * Dados de custo da rede neural durante cada época de treinamento.
-    */
-   ArrayList<Double> historico;
 
    /**
     * Auxiliar na verificação do cálculo do histórico de custos.
@@ -29,9 +22,8 @@ public class Treinador{
     * Responsável por organizar os tipos de treino da rede neural.
     */
    public Treinador(){
-      this.historico = new ArrayList<Double>();
-      treino = new Treino(historico, calcularHistorico);
-      treinoLote = new TreinoLote(historico, calcularHistorico);
+      treino =     new Treino(calcularHistorico);
+      treinoLote = new TreinoLote(calcularHistorico);
    }
 
    /**
@@ -74,6 +66,9 @@ public class Treinador{
          clonarElementos(saidas), 
          epochs
       );
+
+      treino.ultimoUsado = true;
+      treinoLote.ultimoUsado = false;
    }
 
    /**
@@ -98,6 +93,9 @@ public class Treinador{
          epochs, 
          tamLote
       );
+
+      treinoLote.ultimoUsado = true;
+      treino.ultimoUsado = false;
    }
 
    /**
@@ -110,7 +108,10 @@ public class Treinador{
       double[][] clone = new double[dados.length][dados[0].length];
 
       for(int i = 0; i < dados.length; i++){
-         System.arraycopy(dados[i], 0, clone[i], 0, dados[i].length);
+         // System.arraycopy(dados[i], 0, clone[i], 0, dados[i].length);
+         for(int j = 0; j < dados[i].length; j++){
+            clone[i][j] = dados[i][j];
+         }
       }
 
       return clone;
@@ -121,8 +122,8 @@ public class Treinador{
     * a cada época de treinamento.
     * @return lista com os custo por época durante a fase de treinamento.
     */
-   public ArrayList<Double> obterHistorico(){
-      return this.historico;
+   public double[] obterHistorico(){
+      return (treino.ultimoUsado) ? treino.historico : treinoLote.historico;
    }
    
 }

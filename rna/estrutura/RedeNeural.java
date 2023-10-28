@@ -1,8 +1,6 @@
 package rna.estrutura;
 
-import java.util.ArrayList;
-
-import rna.ativacoes.FuncaoAtivacao;
+import rna.ativacoes.Ativacao;
 import rna.avaliacao.Avaliador;
 import rna.avaliacao.perda.ErroMedioQuadrado;
 import rna.avaliacao.perda.Perda;
@@ -29,7 +27,7 @@ import rna.treinamento.Treinador;
  *    problemas diversos.
  * </p>
  * <p>
- *    Possui opções de configuração para funções de ativações de camadas individuais, valor de alcance 
+ *    Possui opções de configuração para funções de ativação de camadas individuais, valor de alcance 
  *    máximo e mínimo na aleatorização dos pesos iniciais, inicializadores de pesos e otimizadores que 
  *    serão usados durante o treino. 
  * </p>
@@ -85,7 +83,11 @@ public class RedeNeural implements Cloneable{
    private double alcancePeso = 0.5;
 
    /**
-    * Ponto inicial para os geradores aleatórios
+    * Ponto inicial para os geradores aleatórios.
+    * <p>
+    *    0 não é considerado uma seed e ela só é configurada quando esse valor é
+    *    alterado.
+    * </p>
     */
    private long seedInicial = 0;
     
@@ -99,13 +101,13 @@ public class RedeNeural implements Cloneable{
    /**
     * Função de perda usada durante o processo de treinamento.
     */
-   private Perda perdaAtual;
+   private Perda perda;
 
    /**
     * Otimizador que será utilizado durante o processo de aprendizagem da
     * da Rede Neural.
     */
-   private Otimizador otimizadorAtual;
+   private Otimizador otimizador;
 
    /**
     * Nome específico da instância da Rede Neural.
@@ -290,11 +292,10 @@ public class RedeNeural implements Cloneable{
    }
 
    /**
-    * Configura a nova seed inicial para os geradores de números
-    * aleatórios utilizados durante o processo de inicialização de pesos
-    * e treinamento da Rede Neural.
+    * Configura a nova seed inicial para os geradores de números aleatórios utilizados 
+    * durante o processo de inicialização de pesos e treinamento da Rede Neural.
     * <p>
-    *    Configurações personalizadas de seed premitem fazer testes com diferentes
+    *    Configurações personalizadas de seed permitem fazer testes com diferentes
     *    parâmetros da Rede Neural, buscando encontrar um melhor ajuste para o modelo.
     * </p>
     * <p>
@@ -307,60 +308,27 @@ public class RedeNeural implements Cloneable{
    }
 
    /**
-    * Configura a função de ativação da camada correspondente. É preciso
-    * compilar o modelo previamente para poder configurar suas funções de ativação.
-    * <p>
-    *    Segue a lista das funções disponíveis:
-    * </p>
-    * <ul>
-    *    <li> 1 - ReLU. </li>
-    *    <li> 2 - Sigmoid. </li>
-    *    <li> 3 - Tangente Hiperbólica. </li>
-    *    <li> 4 - Leaky ReLU. </li>
-    *    <li> 5 - ELU .</li>
-    *    <li> 6 - Swish. </li>
-    *    <li> 7 - GELU. </li>
-    *    <li> 8 - Linear. </li>
-    *    <li> 9 - Seno. </li>
-    *    <li> 10 - Argmax. </li>
-    *    <li> 11 - Softmax. </li>
-    *    <li> 12 - Softplus. </li>
-    * </ul>
-    * <p>
-    *    {@code A função de ativação padrão é a ReLU para todas as camadas}
-    * </p>
-    * @param camada camada que será configurada.
-    * @param ativacao valor relativo a lista de ativações disponíveis.
-    * @throws IllegalArgumentException se o modelo não foi compilado previamente.
-    */
-   public void configurarAtivacao(Camada camada, int ativacao){
-      this.verificarCompilacao();
-      if(camada == null){
-         throw new IllegalArgumentException("A camada fornecida é nula.");
-      } 
-      
-      camada.configurarAtivacao(ativacao);
-   }
-
-   /**
     * Configura a função de ativação de todas as camadas da rede. É preciso
     * compilar o modelo previamente para poder configurar suas funções de ativação.
     * <p>
-    *    Segue a lista das funções disponíveis:
+    *    Letras maiúsculas e minúsculas não serão diferenciadas.
+    * </p>
+    * <p>
+    *    Segue a lista das funções de ativação disponíveis:
     * </p>
     * <ul>
-    *    <li> 1 - ReLU. </li>
-    *    <li> 2 - Sigmoid. </li>
-    *    <li> 3 - Tangente Hiperbólica. </li>
-    *    <li> 4 - Leaky ReLU. </li>
-    *    <li> 5 - ELU .</li>
-    *    <li> 6 - Swish. </li>
-    *    <li> 7 - GELU. </li>
-    *    <li> 8 - Linear. </li>
-    *    <li> 9 - Seno. </li>
-    *    <li> 10 - Argmax. </li>
-    *    <li> 11 - Softmax. </li>
-    *    <li> 12 - Softplus. </li>
+    *    <li> ReLU. </li>
+    *    <li> Sigmoid. </li>
+    *    <li> Tangente Hiperbólica. </li>
+    *    <li> Leaky ReLU. </li>
+    *    <li> ELU .</li>
+    *    <li> Swish. </li>
+    *    <li> GELU. </li>
+    *    <li> Linear. </li>
+    *    <li> Seno. </li>
+    *    <li> Argmax. </li>
+    *    <li> Softmax. </li>
+    *    <li> Softplus. </li>
     * </ul>
     * <p>
     *    {@code A função de ativação padrão é a ReLU para todas as camadas}
@@ -368,7 +336,7 @@ public class RedeNeural implements Cloneable{
     * @param ativacao valor relativo a lista de ativações disponíveis.
     * @throws IllegalArgumentException se o modelo não foi compilado previamente.
     */
-   public void configurarAtivacao(int ativacao){
+   public void configurarAtivacao(String ativacao){
       this.verificarCompilacao();
       
       for(Camada camada : this.camadas){
@@ -380,7 +348,53 @@ public class RedeNeural implements Cloneable{
     * Configura a função de ativação de todas as camadas da rede. É preciso
     * compilar o modelo previamente para poder configurar suas funções de ativação.
     * <p>
-    *    Segue a lista das funções disponíveis:
+    *    Letras maiúsculas e minúsculas não serão diferenciadas.
+    * </p>
+    * <p>
+    *    Segue a lista das funções de ativação disponíveis:
+    * </p>
+    * <ul>
+    *    <li> ReLU. </li>
+    *    <li> Sigmoid. </li>
+    *    <li> Tangente Hiperbólica. </li>
+    *    <li> Leaky ReLU. </li>
+    *    <li> ELU .</li>
+    *    <li> Swish. </li>
+    *    <li> GELU. </li>
+    *    <li> Linear. </li>
+    *    <li> Seno. </li>
+    *    <li> Argmax. </li>
+    *    <li> Softmax. </li>
+    *    <li> Softplus. </li>
+    * </ul>
+    * <p>
+    *    {@code A função de ativação padrão é a ReLU para todas as camadas}
+    * </p>
+    * @param ativacao valor relativo a lista de ativações disponíveis.
+    * @param id índice da camada desejada.
+    * @throws IllegalArgumentException se o modelo não foi compilado previamente.
+    */
+   public void configurarAtivacao(String ativacao, int id){
+      this.verificarCompilacao();
+
+      if(id < 0 || id >= this.camadas.length){
+         throw new IllegalArgumentException(
+            "O índice fornecido (" + id + 
+            ") é inválido ou fora de alcance."
+         );
+      }
+
+      this.camadas[id].configurarAtivacao(ativacao);
+   }
+
+   /**
+    * Configura a função de ativação da camada correspondente. É preciso
+    * compilar o modelo previamente para poder configurar suas funções de ativação.
+    * <p>
+    *    Letras maiúsculas e minúsculas não serão diferenciadas.
+    * </p>
+    * <p>
+    *    Segue a lista das funções de ativação disponíveis:
     * </p>
     * <ul>
     *    <li> ReLU. </li>
@@ -400,12 +414,31 @@ public class RedeNeural implements Cloneable{
     *    {@code A função de ativação padrão é a ReLU para todas as camadas}
     * </p>
     * @param camada camada que será configurada.
+    * @param ativacao valor relativo a lista de ativações disponíveis.
+    * @throws IllegalArgumentException se o modelo não foi compilado previamente.
+    */
+   public void configurarAtivacao(Camada camada, String ativacao){
+      this.verificarCompilacao();
+      if(camada == null){
+         throw new IllegalArgumentException("A camada fornecida é nula.");
+      } 
+      
+      camada.configurarAtivacao(ativacao);
+   }
+
+   /**
+    * Configura a função de ativação de todas as camadas da rede. É preciso
+    * compilar o modelo previamente para poder configurar suas funções de ativação.
+    * <p>
+    *    {@code A função de ativação padrão é a ReLU para todas as camadas}
+    * </p>
+    * @param camada camada que será configurada.
     * @param ativacao nova função de ativação.
     * @throws IllegalArgumentException se o modelo não foi compilado previamente.
     * @throws IllegalArgumentException se a camada for nula.
     * @throws IllegalArgumentException se a função de ativação fornecida for nula.
     */
-   public void configurarAtivacao(Camada camada, FuncaoAtivacao ativacao){
+   public void configurarAtivacao(Camada camada, Ativacao ativacao){
       this.verificarCompilacao();
 
       if(camada == null){
@@ -422,30 +455,13 @@ public class RedeNeural implements Cloneable{
     * Configura a função de ativação de todas as camadas da rede. É preciso
     * compilar o modelo previamente para poder configurar suas funções de ativação.
     * <p>
-    *    Segue a lista das funções disponíveis:
-    * </p>
-    * <ul>
-    *    <li> ReLU. </li>
-    *    <li> Sigmoid. </li>
-    *    <li> Tangente Hiperbólica. </li>
-    *    <li> Leaky ReLU. </li>
-    *    <li> ELU .</li>
-    *    <li> Swish. </li>
-    *    <li> GELU. </li>
-    *    <li> Linear. </li>
-    *    <li> Seno. </li>
-    *    <li> Argmax. </li>
-    *    <li> Softmax. </li>
-    *    <li> Softplus. </li>
-    * </ul>
-    * <p>
     *    {@code A função de ativação padrão é a ReLU para todas as camadas}
     * </p>
     * @param ativacao nova função de ativação.
     * @throws IllegalArgumentException se o modelo não foi compilado previamente.
     * @throws IllegalArgumentException se a função de ativação fornecida for nula.
     */
-   public void configurarAtivacao(FuncaoAtivacao ativacao){
+   public void configurarAtivacao(Ativacao ativacao){
       verificarCompilacao();
 
       if(ativacao == null){
@@ -467,11 +483,11 @@ public class RedeNeural implements Cloneable{
          throw new IllegalArgumentException("A função de perda não pode ser nula.");
       }
 
-      this.perdaAtual = perda;
+      this.perda = perda;
    }
 
    /**
-    * Configura o novo otimizdor da Rede Neural com base numa nova instância de otimizador.
+    * Configura o novo otimizador da Rede Neural com base numa nova instância de otimizador.
     * <p>
     *    Configurando o otimizador passando diretamente uma nova instância permite configurar
     *    os hiperparâmetros do otimizador fora dos valores padrão, o que pode ajudar a
@@ -532,7 +548,7 @@ public class RedeNeural implements Cloneable{
          throw new IllegalArgumentException("O novo otimizador não pode ser nulo.");
       }
 
-      this.otimizadorAtual = otimizador;
+      this.otimizador = otimizador;
    }
 
    /**
@@ -576,14 +592,14 @@ public class RedeNeural implements Cloneable{
     */
    public void compilar(){
       //usando valores de configuração prévia, se forem criados.
-      if(this.perdaAtual == null && this.otimizadorAtual == null){
+      if(this.perda == null && this.otimizador == null){
          this.compilar(new ErroMedioQuadrado(), new SGD(), new Aleatorio());
          
-      }else if(this.perdaAtual == null){
-         this.compilar(new ErroMedioQuadrado(), this.otimizadorAtual, new Aleatorio());
+      }else if(this.perda == null){
+         this.compilar(new ErroMedioQuadrado(), this.otimizador, new Aleatorio());
          
       }else{
-         this.compilar(this.perdaAtual, this.otimizadorAtual, new Aleatorio());
+         this.compilar(this.perda, this.otimizador, new Aleatorio());
       }
    }
 
@@ -617,11 +633,11 @@ public class RedeNeural implements Cloneable{
       }
 
       //usando valores de configuração prévia, se forem criados.
-      if(this.otimizadorAtual == null){
+      if(this.otimizador == null){
          this.compilar(perda, new SGD(), new Aleatorio());
 
       }else{
-         this.compilar(perda, this.otimizadorAtual, new Aleatorio());
+         this.compilar(perda, this.otimizador, new Aleatorio());
       }
    }
 
@@ -655,11 +671,11 @@ public class RedeNeural implements Cloneable{
       }
 
       //usando valores de configuração prévia, se forem criados.
-      if(this.perdaAtual == null){
+      if(this.perda == null){
          this.compilar(new ErroMedioQuadrado(), otimizador, new Aleatorio());
 
       }else{
-         this.compilar(this.perdaAtual, otimizador, new Aleatorio());
+         this.compilar(this.perda, otimizador, new Aleatorio());
       }
    }
 
@@ -696,11 +712,11 @@ public class RedeNeural implements Cloneable{
       }
 
       //usando valores de configuração prévia, se forem criados.
-      if(this.perdaAtual == null){
+      if(this.perda == null){
          this.compilar(new ErroMedioQuadrado(), otimizador, inicializador);
 
       }else{
-         this.compilar(this.perdaAtual, otimizador, inicializador);
+         this.compilar(this.perda, otimizador, inicializador);
       }   
    }
 
@@ -749,10 +765,10 @@ public class RedeNeural implements Cloneable{
          this.camadas[i].configurarId(i);
       }
 
-      this.perdaAtual = perda;
+      this.perda = perda;
 
-      this.otimizadorAtual = otimizador;
-      this.otimizadorAtual.inicializar(this.obterQuantidadeParametros());
+      this.otimizador = otimizador;
+      this.otimizador.inicializar(this.obterQuantidadeParametros());
 
       this.compilado = true;//modelo pode ser usado
    }
@@ -822,27 +838,27 @@ public class RedeNeural implements Cloneable{
     *    com os pesos. No final é aplicado a função de ativação da camada no neurônio e o resultado 
     *    fica armazenado na saída dele.
     * </p>
-    * @param entradas dados usados para alimentar a camada de entrada.
+    * @param entrada dados usados para alimentar a camada de entrada.
     * @throws IllegalArgumentException se o modelo não foi compilado previamente.
     * @throws IllegalArgumentException se o tamanho dos dados de entrada for diferente da capacidade
     * de entrada da rede.
     */
-   public void calcularSaida(double[] entradas){
+   public void calcularSaida(double[] entrada){
       this.verificarCompilacao();
       
       int tamEntrada = this.obterTamanhoEntrada();
-      if(entradas.length != tamEntrada){
+      if(entrada.length != tamEntrada){
          throw new IllegalArgumentException(
-            "Dimensões dos dados de entrada (" + entradas.length +
+            "Dimensões dos dados de entrada (" + entrada.length +
             ") e capacidade de entrada da rede (" + tamEntrada + 
             ") incompatíveis."
          );
       }
 
-      this.camadas[0].ativarNeuronios(entradas);
-      //ativar neurônios das camadas seguintes
+      //feedforward
+      this.camadas[0].calcularSaida(entrada);
       for(int i = 1; i < this.camadas.length; i++){
-         this.camadas[i].ativarNeuronios(this.camadas[i-1].obterSaida());
+         this.camadas[i].calcularSaida(this.camadas[i-1].obterSaida());
       }
    }
 
@@ -886,14 +902,12 @@ public class RedeNeural implements Cloneable{
       int nAmostras = entradas.length;
       int tamEntrada = this.obterTamanhoEntrada();
       int tamSaida = this.obterTamanhoSaida();
-
       double[][] resultados = new double[nAmostras][tamSaida];
       double[] entradaRede = new double[tamEntrada];
       double[] saidaRede = new double[tamSaida];
 
       for(int i = 0; i < nAmostras; i++){
          System.arraycopy(entradas[i], 0, entradaRede, 0, entradas[i].length);
-
          this.calcularSaida(entradaRede);
          System.arraycopy(this.obterSaidas(), 0, saidaRede, 0, saidaRede.length);
          System.arraycopy(saidaRede, 0, resultados[i], 0, saidaRede.length);
@@ -927,8 +941,8 @@ public class RedeNeural implements Cloneable{
 
       treinador.treino(
          this,
-         this.perdaAtual,
-         this.otimizadorAtual,
+         this.perda,
+         this.otimizador,
          entradas,
          saidas,
          epochs
@@ -973,8 +987,8 @@ public class RedeNeural implements Cloneable{
 
       treinador.treino(
          this,
-         this.perdaAtual,
-         this.otimizadorAtual,
+         this.perda,
+         this.otimizador,
          entradas,
          saidas,
          epochs,
@@ -1070,7 +1084,7 @@ public class RedeNeural implements Cloneable{
     * @return função de perda atual da rede.
     */
    public Perda obterPerda(){
-      return this.perdaAtual;
+      return this.perda;
    }
 
    /**
@@ -1078,7 +1092,7 @@ public class RedeNeural implements Cloneable{
     * @return otimizador atual da rede.
     */
    public Otimizador obterOtimizador(){
-      return this.otimizadorAtual;
+      return this.otimizador;
    }
 
    /**
@@ -1094,7 +1108,8 @@ public class RedeNeural implements Cloneable{
 
       if((id < 0) || (id >= this.camadas.length)){
          throw new IllegalArgumentException(
-            "O índice fornecido (" + id + ") está é inválido ou fora de alcance."
+            "O índice fornecido (" + id + 
+            ") está é inválido ou fora de alcance."
          );
       }
    
@@ -1108,7 +1123,6 @@ public class RedeNeural implements Cloneable{
     */
    public Camada obterCamadaSaida(){
       this.verificarCompilacao();
-
       return this.camadas[this.camadas.length-1];
    }
 
@@ -1119,13 +1133,11 @@ public class RedeNeural implements Cloneable{
     */
    public Camada[] obterCamadas(){
       this.verificarCompilacao();
-
       return this.camadas;
    }
 
    /**
-    * Copia os dados da saída de cada neurônio da camada de saída da Rede Neural para 
-    * um array. 
+    * Retorna os dados de saída da última camada da Rede Neural. 
     * <p>
     *    A ordem de cópia é crescente, do primeiro neurônio da saída ao último.
     * </p>
@@ -1134,7 +1146,6 @@ public class RedeNeural implements Cloneable{
     */
    public double[] obterSaidas(){
       this.verificarCompilacao();
-
       return this.obterCamadaSaida().obterSaida();
    }
 
@@ -1148,7 +1159,7 @@ public class RedeNeural implements Cloneable{
     *    da Rede Neural.
     * </p>
     * <p>
-    *    A "camada de entrada" representa o tamanho de entrada da primeira camda densa
+    *    A "camada de entrada" representa o tamanho de entrada da primeira camada densa
     *    da rede, ou seja, ela é apenas um parâmetro pro tamanho de entrada da primeira
     *    camada oculta. 
     * </p>
@@ -1171,11 +1182,16 @@ public class RedeNeural implements Cloneable{
    /**
     * Disponibiliza o histórico da função de custo da rede neural durante cada época
     * de treinamento.
+    * <p>
+    *    O histórico será o do ultimo processo de treinamento usado, seja ele sequencial ou em
+    *    lotes. Sendo assim, por exemplo, caso o treino seja em sua maioria feito pelo modo sequencial
+    *    mas logo depois é usado o treino em lotes, o histórico retornado será o do treinamento em lote.
+    * </p>
     * @return lista contendo o histórico de custos durante o treinamento da rede.
     * @throws IllegalArgumentException se não foi habilitado previamente o cálculo do 
     * histórico de custos.
     */
-   public ArrayList<Double> obterHistoricoCusto(){
+   public double[] obterHistoricoCusto(){
       if(!this.treinador.calcularHistorico){
          throw new IllegalArgumentException(
             "O histórico de custo da rede deve ser habilitado."
@@ -1195,7 +1211,7 @@ public class RedeNeural implements Cloneable{
    public int obterQuantidadeParametros(){
       int numPesos = 0;
       for(Camada camada : this.camadas){
-         numPesos += camada.numConexoes();
+         numPesos += camada.numParametros();
       }
       return numPesos;
    }
@@ -1274,11 +1290,11 @@ public class RedeNeural implements Cloneable{
       System.out.println("\nInformações " + this.nome + " = [");
 
       //perda
-      buffer += espacamento + "Perda: " + this.perdaAtual.getClass().getSimpleName() + "\n\n";
+      buffer += espacamento + "Perda: " + this.perda.getClass().getSimpleName() + "\n\n";
 
       //otimizador
-      buffer += espacamento + "Otimizador: " + this.otimizadorAtual.getClass().getSimpleName() + "\n";
-      buffer += this.otimizadorAtual.info();
+      buffer += espacamento + "Otimizador: " + this.otimizador.getClass().getSimpleName() + "\n";
+      buffer += this.otimizador.info();
 
       //bias
       buffer += "\n" + espacamento + "Bias = " + this.bias;

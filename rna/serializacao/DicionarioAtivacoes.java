@@ -2,7 +2,7 @@ package rna.serializacao;
 
 import rna.ativacoes.Argmax;
 import rna.ativacoes.ELU;
-import rna.ativacoes.FuncaoAtivacao;
+import rna.ativacoes.Ativacao;
 import rna.ativacoes.GELU;
 import rna.ativacoes.LeakyReLU;
 import rna.ativacoes.Linear;
@@ -15,10 +15,10 @@ import rna.ativacoes.Swish;
 import rna.ativacoes.TanH;
 
 /**
- * Classe dedicada em ler os dados de funções de ativação lidos no arquivo
- * serializado e convertê-los em instâncias de funções de ativação
+ * Classe dedicada traduzir os valores de funções de ativação recebidos
+ * e convertê-los em instância de ativações para uso dentro da Rede Neural.
  */
-class DicionarioAtivacoes{
+public class DicionarioAtivacoes{
 
    /**
     * Tradutor das funções de ativação
@@ -32,12 +32,11 @@ class DicionarioAtivacoes{
     * de ativação correspondente.
     * @param nome nome da função de ativação.
     * @return instância da função de ativação lida.
-    * @param IllegalArgumentException caso a rede lida não for encontrada.
+    * @param IllegalArgumentException caso a ativação não for encontrada.
     */
-   public FuncaoAtivacao obterAtivacao(String nome){
+   public Ativacao obterAtivacao(String nome){
       //essa provavelmente não é a melhor abordagem
       //mas é a mais fácil de implementar
-      
       nome = nome.toLowerCase();
       switch(nome){
          case "argmax": return new Argmax();
@@ -53,7 +52,9 @@ class DicionarioAtivacoes{
          case "swish": return new Swish();
          case "tanh": return new TanH();
 
-         default: throw new IllegalArgumentException("Função de ativação \""+ nome +"\" não encontada.");
+         default: throw new IllegalArgumentException(
+            "Função de ativação \"" + nome + "\" não encontada."
+         );
       }
    }
 }

@@ -1,6 +1,5 @@
 package rna.treinamento;
 
-import java.util.ArrayList;
 import java.util.Random;
 
 import rna.avaliacao.perda.Perda;
@@ -20,17 +19,18 @@ import rna.otimizadores.Otimizador;
  */
 class TreinoLote{
    public boolean calcularHistorico = false;
-   ArrayList<Double> historico;
+   double[] historico;
    AuxiliarTreino aux = new AuxiliarTreino();
 
    Random random = new Random();
+   boolean ultimoUsado = false;
 
    /**
     * Implementação do treino em lote.
-    * @param historicoCusto
+    * @param historico
     */
-   public TreinoLote(ArrayList<Double> historicoCusto, boolean calcularHistorico){
-      this.historico = historicoCusto;
+   public TreinoLote(boolean calcularHistorico){
+      this.historico = new double[0];
       this.calcularHistorico = calcularHistorico;
    }
 
@@ -97,7 +97,7 @@ class TreinoLote{
 
          //feedback de avanço da rede
          if(calcularHistorico){
-            historico.add(perda.calcular(rede, entradas, saidas));
+            historico = aux.adicionarPerda(historico, perda.calcular(rede, entradas, saidas));
          }
       }
    }

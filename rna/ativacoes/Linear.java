@@ -6,7 +6,7 @@ import rna.estrutura.Neuronio;
  * Implementação da função de ativação Linear para uso dentro 
  * da {@code Rede Neural}.
  */
-public class Linear extends FuncaoAtivacao{
+public class Linear extends Ativacao{
 
    /**
     * Instancia a função de ativação Linear.

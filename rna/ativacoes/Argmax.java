@@ -6,7 +6,7 @@ import rna.estrutura.Neuronio;
  * Implementação da função de ativação Argmax para uso 
  * dentro da {@code Rede Neural}.
  */
-public class Argmax extends FuncaoAtivacao{
+public class Argmax extends Ativacao{
 
    /**
     * Intancia uma nova função de ativação Softmax.

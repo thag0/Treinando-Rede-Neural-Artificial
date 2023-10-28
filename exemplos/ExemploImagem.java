@@ -32,7 +32,7 @@ public class ExemploImagem{
       int[] arq = {nEntrada, 12, 12, nSaida};
       RedeNeural rede = new RedeNeural(arq);
       rede.compilar(new SGD(), new Xavier());
-      rede.configurarAtivacao(2);
+      rede.configurarAtivacao("sigmoid");
       rede.treinar(dadosEntrada, dadosSaida, 5_000);
 
       //avaliando resultados

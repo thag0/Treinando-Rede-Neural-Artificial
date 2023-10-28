@@ -6,7 +6,7 @@ import rna.estrutura.Neuronio;
  * Implementação da função de ativação Swish para uso 
  * dentro da {@code Rede Neural}.
  */
-public class Swish extends FuncaoAtivacao{
+public class Swish extends Ativacao{
 
    /**
     * Instancia a função de ativação Swish.

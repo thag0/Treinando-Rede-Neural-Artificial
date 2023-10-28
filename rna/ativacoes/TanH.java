@@ -6,7 +6,7 @@ import rna.estrutura.Neuronio;
  * Implementação da função de ativação Tangente Hiperbólica 
  * para uso dentro da {@code Rede Neural}.
  */
-public class TanH extends FuncaoAtivacao{
+public class TanH extends Ativacao{
 
    /**
     * Instancia a função de ativação Tangente Hiperbólica.

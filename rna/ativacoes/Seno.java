@@ -6,7 +6,7 @@ import rna.estrutura.Neuronio;
  * Implementação da função de ativação Seno para uso dentro 
  * da {@code Rede Neural}.
  */
-public class Seno extends FuncaoAtivacao{
+public class Seno extends Ativacao{
 
    /**
     * Instancia a função de ativação Seno.

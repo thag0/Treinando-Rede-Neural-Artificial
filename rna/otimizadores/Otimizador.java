@@ -38,13 +38,11 @@ public abstract class Otimizador{
 	 * Exemplo de uso:
 	 * <pre>
 	 *	public void atualizar(Camada[] redec){
-	 *		
-	 * 	int id = 0;//indice na lista de coeficientes, caso o otimizador precise
-	 *		for(int i = 0; i < redec.length; i++){
-	 *			for(int j = 0; j < redec[i].quantidadeNeuronios(); j++){
-	 *				
-	 *				Neuronio neuronio = redec[i].neuronio(j);
-	 *				for(int k = 0; k < neuronio.pesos.length; k++){
+	 * 	//indice na lista de coeficientes, caso o otimizador precise	
+	 * 	int id = 0;
+	 *		for(Camada camada : redec){
+	 *			for(Neuronio neuronio : camada.neuronios()){
+	 *				for(int i = 0; i < neuronio.pesos.length; i++){
 	 *					// implementação do otimizador
 	 *
 	 *					id++;

@@ -129,10 +129,10 @@ public class Serializador{
          writer.newLine();
 
          //pesos dos neuronios
-         for(int i = 0; i < camadas.length; i++){
-            for(int j = 0; j < camadas[i].quantidadeNeuronios(); j++){
-               for(int k = 0; k < camadas[i].neuronio(j).numPesos(); k++){
-                  double peso = camadas[i].neuronio(j).pesos[k];
+         for(Camada camada : rede.obterCamadas()){
+            for(Neuronio neuronio : camada.neuronios()){
+               for(int i = 0; i < neuronio.numPesos(); i++){
+                  double peso = neuronio.pesos[i];
                   
                   if(tipo.equals(Double.TYPE)){
                      writer.write(Double.toString(peso));
@@ -220,12 +220,10 @@ public class Serializador{
 
          int cont = 1;
          try{
-            for(int i = 0; i < rede.obterQuantidadeCamadas(); i++){
-               Camada camda = rede.obterCamada(i);
-               for(int j = 0; j < camda.quantidadeNeuronios(); j++){
-                  Neuronio neuronio = camda.neuronio(j);
-                  for(int k = 0; k < neuronio.numPesos(); k++){
-                     neuronio.pesos[k] = Double.parseDouble(reader.readLine());
+            for(Camada camada : rede.obterCamadas()){
+               for(Neuronio neuronio : camada.neuronios()){
+                  for(int i = 0; i < neuronio.numPesos(); i++){
+                     neuronio.pesos[i] = Double.parseDouble(reader.readLine());
                      cont++;
                   }
                }

@@ -121,16 +121,16 @@ public class TestandoMnist{
       return indice;
    }
 
-   public static void exportarHistoricoCustos(RedeNeural rede, Ged ged){
+   public static void exportarHistoricoPerda(RedeNeural rede, Ged ged){
       System.out.println("Exportando histórico de custo");
-      ArrayList<Double> custos = rede.obterHistoricoCusto();
-      double[][] dadosErro = new double[custos.size()][1];
+      double[] perdas = rede.obterHistoricoCusto();
+      double[][] dadosPerdas = new double[perdas.length][1];
 
-      for(int i = 0; i < dadosErro.length; i++){
-         dadosErro[i][0] = custos.get(i);
+      for(int i = 0; i < dadosPerdas.length; i++){
+         dadosPerdas[i][0] = perdas[i];
       }
 
-      Dados dados = new Dados(dadosErro);
+      Dados dados = new Dados(dadosPerdas);
       ged.exportarCsv(dados, "historico-custo");
    }
 }

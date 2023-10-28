@@ -22,7 +22,7 @@ import rna.inicializadores.Xavier;
 public class Neuronio implements Cloneable{
 
    /**
-    * Array que representa às saídas dos neurônios da camada anterior.
+    * Dados de entrada que serão processados pelo neurônio.
     */
    public double[] entradas;
 
@@ -38,7 +38,8 @@ public class Neuronio implements Cloneable{
    public double[] pesos;
 
    /**
-    * Resultado da multiplicação entre os pesos e entradas com adição do bias (se houver).
+    * Resultado do produto entre os dados de entrada com os pesos do neurônio com 
+    * a adição do bias (se houver).
     */
    public double somatorio;
 
@@ -53,8 +54,8 @@ public class Neuronio implements Cloneable{
    public double derivada;
 
    /**
-    * Auxiliar utilizado durante o cálculo dos erros dos neurônios
-    * na etapa do Backpropagation.
+    * Auxiliar utilizado durante o cálculo dos erros dos neurônios durante o treinamento
+    * na etapa do backpropagation.
     */
    public double erro;
 
@@ -99,30 +100,41 @@ public class Neuronio implements Cloneable{
    private boolean bias = true;
 
    /**
-    * Instancia um neurônio individual da rede.
+    * Instancia um neurônio artificial.
     * <p>
     *    Os valores iniciais de são dados como 0.
     * </p>
-    * @param conexoes quantidade de conexões, deve estar relacionada com a 
-    * quatidade de neurônios da camada anterior.
+    * @param entrada capacidade dos dados de entrada do neurônio.
     * @param bias aplicar víes ao neurônio.
     */
-   public Neuronio(int conexoes, boolean bias){
+   public Neuronio(int entrada, boolean bias){
       this.bias = bias;
-      int ligacoes = conexoes + ((bias) ? 1 : 0);
+      int conexoes = entrada + ((bias) ? 1 : 0);
 
-      this.pesos = new double[ligacoes];
-      this.entradas = new double[ligacoes];
-      this.gradientes = new double[ligacoes];
-      this.gradientesAcumulados = new double[ligacoes];
+      this.pesos = new double[conexoes];
+      this.entradas = new double[conexoes];
+      this.gradientes = new double[conexoes];
+      this.gradientesAcumulados = new double[conexoes];
 
       this.saida = 0;
       this.erro = 0;
 
       //entrada do bias
       if(bias){
-         this.entradas[this.entradas.length-1] = 0.5;
+         this.entradas[this.entradas.length-1] = 1;
       }
+   }
+
+   /**
+    * Instancia um neurônio artificial.
+    * <p>
+    *    Os valores iniciais de são dados como 0 e o valor do bias
+    *    é usado como verdadeiro por padrão.
+    * </p>
+    * @param entrada capacidade dos dados de entrada do neurônio.
+    */
+   public Neuronio(int entrada){
+      this(entrada, true);
    }
     
    /**
@@ -148,7 +160,8 @@ public class Neuronio implements Cloneable{
       
       }else{
          throw new IllegalArgumentException(
-            "Inicializador (" + inicializador.getClass().getSimpleName() + ") não suportado"
+            "Inicializador (" + inicializador.getClass().getSimpleName() + 
+            ") não suportado"
          );
       }
 

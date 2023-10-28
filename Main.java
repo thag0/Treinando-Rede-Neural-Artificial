@@ -3,7 +3,6 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 import render.JanelaRede;
@@ -29,8 +28,8 @@ class Main{
 
    //20s
    static final String caminhoImagemExportada = "./resultados/imagem-ampliada";
-   static final int epocas = 10*1000;
-   static final float escalaRender = 7.5f;
+   static final int epocas = 15*1000;
+   static final float escalaRender = 8f;
    static final float escalaImagemExportada = 30f;
 
    // Sempre lembrar de quando mudar o dataset, também mudar a quantidade de dados de entrada e saída.
@@ -100,7 +99,7 @@ class Main{
       RedeNeural rede = new RedeNeural(arq);
       rede.compilar(perda, otm, ini);
       rede.configurarAtivacao(new TanH());
-      rede.configurarAtivacao(rede.obterCamadaSaida(), new Sigmoid());
+      rede.configurarAtivacao(rede.obterCamadaSaida(), "sigmoid");
 
       return rede;
    }
@@ -111,7 +110,7 @@ class Main{
 
       //acelerar o processo de desenho
       //bom em situações de janelas muito grandes
-      int numThreads = (int)(Runtime.getRuntime().availableProcessors() * 0.75);
+      int numThreads = (int)(Runtime.getRuntime().availableProcessors() * 0.5);
 
       JanelaTreino jt = new JanelaTreino(imagem.getWidth(), imagem.getHeight(), escalaRender);
       jt.desenharTreino(rede, 0, numThreads);
@@ -125,6 +124,7 @@ class Main{
       while(i < epocas && jt.isVisible()){
          rede.treinar(dadosEntrada, dadosSaida, epocasPorFrame);
          jt.desenharTreino(rede, i, numThreads);
+         i += epocasPorFrame;
 
          try{
             tempoRestante = proximoTempoDesenho - System.nanoTime();
@@ -135,8 +135,6 @@ class Main{
             proximoTempoDesenho += intervaloDesenho;
 
          }catch(Exception e){ }
-
-         i += epocasPorFrame;
       }
 
       jt.dispose();
@@ -165,26 +163,26 @@ class Main{
       int nEntrada = rede.obterTamanhoEntrada();
       int nSaida = rede.obterCamadaSaida().quantidadeNeuronios();
 
-      double[] entrada_rede = new double[nEntrada];
-      double[] saida_rede = new double[nSaida];
+      double[] entradaRede = new double[nEntrada];
+      double[] saidaRede = new double[nSaida];
 
       System.out.println("\n" + texto);
 
       //mostrar saída da rede comparada aos dados
       for(int i = 0; i < dadosEntrada.length; i++){
          for(int j = 0; j < dadosEntrada[0].length; j++){
-            entrada_rede[j] = dadosEntrada[i][j];
+            entradaRede[j] = dadosEntrada[i][j];
          }
 
-         rede.calcularSaida(entrada_rede);
-         saida_rede = rede.obterSaidas();
+         rede.calcularSaida(entradaRede);
+         saidaRede = rede.obterSaidas();
 
          //apenas formatação
          if(i < 10) System.out.print("Dado 00" + i + " |");
          else if(i < 100) System.out.print("Dado 0" + i + " |");
          else System.out.print("Dado " + i + " |");
-         for(int j = 0; j < entrada_rede.length; j++){
-            System.out.print(" " + entrada_rede[j] + " ");
+         for(int j = 0; j < entradaRede.length; j++){
+            System.out.print(" " + entradaRede[j] + " ");
          }
 
          System.out.print(" - ");
@@ -193,22 +191,22 @@ class Main{
          }
          System.out.print(" | Rede ->");
          for(int j = 0; j < nSaida; j++){
-            System.out.print("  " + formatarDecimal(saida_rede[j], 4));
+            System.out.print("  " + formatarDecimal(saidaRede[j], 4));
          }
          System.out.println();
       }
    }
 
-   public static void exportarHistoricoCustos(RedeNeural rede, Ged ged){
+   public static void exportarHistoricoPerda(RedeNeural rede, Ged ged){
       System.out.println("Exportando histórico de custo");
-      ArrayList<Double> custos = rede.obterHistoricoCusto();
-      double[][] dadosErro = new double[custos.size()][1];
+      double[] perdas = rede.obterHistoricoCusto();
+      double[][] dadosPerdas = new double[perdas.length][1];
 
-      for(int i = 0; i < dadosErro.length; i++){
-         dadosErro[i][0] = custos.get(i);
+      for(int i = 0; i < dadosPerdas.length; i++){
+         dadosPerdas[i][0] = perdas[i];
       }
 
-      Dados dados = new Dados(dadosErro);
+      Dados dados = new Dados(dadosPerdas);
       ged.exportarCsv(dados, "historico-custo");
    }
 

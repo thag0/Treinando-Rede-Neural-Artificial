@@ -22,9 +22,9 @@ public class ExemploUsandoSerializador {
          {0}
       };
 
-      RedeNeural rede = new RedeNeural(2, 2, 1, 1);
+      RedeNeural rede = new RedeNeural(new int[]{2, 40, 1});
       rede.compilar();
-      rede.configurarAtivacao(2);
+      rede.configurarAtivacao("sigmoid");
       rede.treinar(e, s, 10_000);
 
       System.out.println(rede);

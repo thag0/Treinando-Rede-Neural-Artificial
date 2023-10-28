@@ -1,18 +1,9 @@
 package rna.estrutura;
 
-import rna.ativacoes.Argmax;
-import rna.ativacoes.ELU;
-import rna.ativacoes.FuncaoAtivacao;
-import rna.ativacoes.GELU;
-import rna.ativacoes.LeakyReLU;
-import rna.ativacoes.Linear;
+import rna.ativacoes.Ativacao;
 import rna.ativacoes.ReLU;
-import rna.ativacoes.Seno;
-import rna.ativacoes.Sigmoid;
-import rna.ativacoes.SoftPlus;
-import rna.ativacoes.Softmax;
-import rna.ativacoes.Swish;
-import rna.ativacoes.TanH;
+
+import rna.serializacao.DicionarioAtivacoes;
 
 import rna.inicializadores.Inicializador;
 
@@ -24,7 +15,17 @@ import rna.inicializadores.Inicializador;
  * </p>
  *    O bias configurado será aplicado em cada neurônio individualmente.
  * <p>
- *    Após instanciar a camada é necessário inicializar seus neurônios.
+ *    Após instanciar a camada é necessário inicializar seus neurônios por meio do método
+ *    {@code inicializar()}.
+ * </p>
+ * <p>
+ *    Por motivos de facilidade e otimização, os dados propagados são salvos nas saídas 
+ *    dos neurônios, com isso o método de cálculo da saída da camada não retorna nada e
+ *    para obter as saídas deve-se esclarecer por meio do método {@code obterSaida()}
+ * </p>
+ * <p>
+ *    Toda camada instanciada só pode ser usada depois da instanciação e inicialização de
+ *    seus atributos por meio do método {@code inicializar()}.
  * </p>
  */
 public class Camada implements Cloneable{
@@ -38,20 +39,15 @@ public class Camada implements Cloneable{
    Neuronio[] neuronios;
 
    /**
+    * Resultado das ativações dos neurônios.
+    */
+   private double[] saida;
+
+   /**
     * Auxiliar na verificação de bias aplicado aos
     * neurônios da camada.
     */
    private boolean bias;
-
-   /**
-    * Identificador da camada dentro da Rede Neural.
-    * <p>
-    *    Esse identificador deve corresponder ao índice da camada
-    *    dentro do conjunto de camadas presente na rede, sendo 0 o 
-    *    índice inicial.
-    * </p>
-    */
-   private int id;
 
    /**
     * Capacidade de entrada de dados da camada.
@@ -62,13 +58,23 @@ public class Camada implements Cloneable{
     * Função de ativação da camada que atuará no resultado do somatório entre
     * os pesos e entradas com a adição do bias (se houver).
     */
-   private FuncaoAtivacao ativacao;
+   private Ativacao ativacao;
 
    /**
     * Auxiliar no controle de inicialização da camada, para evitar problemas de 
     * uso indevido com recursos não alocados.
     */
    private boolean inicializada = false;
+
+   /**
+    * Identificador da camada dentro da Rede Neural.
+    * <p>
+    *    Esse identificador deve corresponder ao índice da camada
+    *    dentro do conjunto de camadas presente na rede, sendo 0 o 
+    *    índice inicial.
+    * </p>
+    */
+   private int id;
 
    /**
     * Inicializa uma camada densa individual para a Rede Neural.
@@ -82,17 +88,22 @@ public class Camada implements Cloneable{
     */
    public Camada(int neuronios, boolean usarBias){
       this.neuronios = new Neuronio[neuronios];
+
       this.bias = usarBias;
       this.ativacao = new ReLU();
    }
 
    /**
-    * Configura o id da camada. O id deve indicar dentro da rede neural, em 
-    * qual posição a camada está localizada.
-    * @param id id da camada.
+    * Inicializa uma camada densa individual para a Rede Neural com o valor de bias definido
+    * como verdadeiro por padrão.
+    * <p>
+    *    Após instanciar a camada é preciso inicializar os neurônios dela.
+    * </p>
+    * Depois de inicializada, a camada pode ser usada por completo.
+    * @param neuronios quantidade de neurônios desejados para a camada.
     */
-   public void configurarId(int id){
-      this.id = id;
+   public Camada(int neuronios){
+      this(neuronios, true);
    }
 
    /**
@@ -111,6 +122,8 @@ public class Camada implements Cloneable{
       }
 
       this.tamanhoEntrada = entrada;
+      this.saida = new double[this.neuronios.length];
+
       for(int i = 0; i < this.neuronios.length; i++){
          this.neuronios[i] = new Neuronio(entrada, this.bias);
          this.neuronios[i].inicializarPesos(inicializador, alcancePeso, this.neuronios.length);
@@ -132,47 +145,41 @@ public class Camada implements Cloneable{
    }
 
    /**
-    * Configura a função de ativação da camada.
+    * Configura o id da camada. O id deve indicar dentro da rede neural, em 
+    * qual posição a camada está localizada.
+    * @param id id da camada.
+    */
+   public void configurarId(int id){
+      this.id = id;
+   }
+
+   /**
+    * Configura a função de ativação da camada através do nome fornecido, letras maiúsculas 
+    * e minúsculas não serão diferenciadas.
     * <p>
     *    Ativações disponíveis:
     * </p>
     * <ul>
-    *    <li> 1 - ReLU. </li>
-    *    <li> 2 - Sigmoid. </li>
-    *    <li> 3 - Tangente Hiperbólica. </li>
-    *    <li> 4 - Leaky ReLU. </li>
-    *    <li> 5 - ELU .</li>
-    *    <li> 6 - Swish. </li>
-    *    <li> 7 - GELU. </li>
-    *    <li> 8 - Linear. </li>
-    *    <li> 9 - Seno. </li>
-    *    <li> 10 - Argmax. </li>
-    *    <li> 11 - Softmax. </li>
-    *    <li> 12 - Softplus. </li>
+    *    <li> ReLU. </li>
+    *    <li> Sigmoid. </li>
+    *    <li> Tangente Hiperbólica. </li>
+    *    <li> Leaky ReLU. </li>
+    *    <li> ELU .</li>
+    *    <li> Swish. </li>
+    *    <li> GELU. </li>
+    *    <li> Linear. </li>
+    *    <li> Seno. </li>
+    *    <li> Argmax. </li>
+    *    <li> Softmax. </li>
+    *    <li> Softplus. </li>
     * </ul>
-    * @param ativacao valor da nova função de ativação.
+    * @param ativacao nome da nova função de ativação.
     * @throws IllegalArgumentException se o valor fornecido não corresponder a nenhuma 
     * função de ativação suportada.
     */
-   public void configurarAtivacao(int ativacao){
-      switch(ativacao){
-         case 1 : this.ativacao = new ReLU(); break;
-         case 2 : this.ativacao = new Sigmoid(); break;
-         case 3 : this.ativacao = new TanH(); break;
-         case 4 : this.ativacao = new LeakyReLU(); break;
-         case 5 : this.ativacao = new ELU(); break;
-         case 6 : this.ativacao = new Swish(); break;
-         case 7 : this.ativacao = new GELU(); break;
-         case 8 : this.ativacao = new Linear(); break;
-         case 9 : this.ativacao = new Seno(); break;
-         case 10: this.ativacao = new Argmax(); break;
-         case 11: this.ativacao = new Softmax(); break;
-         case 12: this.ativacao = new SoftPlus(); break;
-
-         default: throw new IllegalArgumentException(
-            "Valor fornecido ("  + ativacao + ") para a função de ativação está fora de alcance."
-         );
-      }
+   public void configurarAtivacao(String ativacao){
+      DicionarioAtivacoes dicionario = new DicionarioAtivacoes();
+      this.ativacao = dicionario.obterAtivacao(ativacao);
    }
 
    /**
@@ -186,7 +193,7 @@ public class Camada implements Cloneable{
     * @param ativacao nova função de ativação.
     * @throws IllegalArgumentException se a função de ativação fornecida for nula.
     */
-   public void configurarAtivacao(FuncaoAtivacao ativacao){
+   public void configurarAtivacao(Ativacao ativacao){
       if(ativacao == null){
          throw new IllegalArgumentException(
             "A nova função de ativação não pode ser nula."
@@ -197,32 +204,33 @@ public class Camada implements Cloneable{
    }
 
    /**
-    * Realiza a operação do somatório de cada peso do neurônio com sua entrada.
+    * Alimenta os dados de entrada pelos neurônios da camada, realizando o produto das entradas 
+    * com seus pesos, adicionando bias e aplicando a função de ativação.
     * <p>
-    *    As entradas do neurônio correspondem ás saídas dos neurônios da camada anterior.
-    *    Com isso cada neurônio multiplica o {@code peso} da conexão pelo valor da {@code entrada}
-    *    correspondente.
-    * </p>
-    * <p>
-    *    Após o somatório é aplicada a função de ativação em cada neurônio e o resultado
-    *    é salvo na sua {@code saída}.
+    *    Para obter o resultado da propagação dos dados pela camada, é necessário usar o método
+    *    {@code obterSaida()}
     * </p>
     * @param entrada dados de entrada que serão processados pelos neurônios.
     */
-   public void ativarNeuronios(double[] entrada){
+   public void calcularSaida(double[] entrada){
       this.verificarInicializacao();
 
       for(int i = 0; i < this.neuronios.length; i++){
          this.neuronios[i].calcularSaida(entrada);
       }
       this.ativacao.ativar(this.neuronios);
+
+      //copiar valores de saída dos neurônios para a saída da camada
+      for(int i = 0; i < this.neuronios.length; i++){
+         this.saida[i] = this.neuronios[i].saida;
+      }
    }
 
    /**
     * Executa a derivada da função de ativação específica da camada
     * em todos os neurônios dela.
     * <p>
-    *    O resultado da derivada de cada neurônio estará salvo na 
+    *    O resultado da derivada de cada neurônio é salvo na 
     *    propriedade {@code neuronio.derivada}.
     * </p>
     */
@@ -235,7 +243,7 @@ public class Camada implements Cloneable{
     * Retorna a instância da função de ativação configurada para a camada.
     * @return função de ativação da camada.
     */
-   public FuncaoAtivacao obterAtivacao(){
+   public Ativacao obterAtivacao(){
       return this.ativacao;
    }
 
@@ -250,7 +258,8 @@ public class Camada implements Cloneable{
 
       if(id < 0 || id >= this.neuronios.length){
          throw new IllegalArgumentException(
-            "Índice fornecido para busca do neurônio (" + id + ") é inválido"
+            "Índice fornecido para busca do neurônio (" + id + 
+            ") é inválido"
          );
       }
 
@@ -299,13 +308,14 @@ public class Camada implements Cloneable{
     * valores de entradas e pesos dos bias, caso configurados).
     * @return a quantidade de conexões totais.
     */
-   public int numConexoes(){
+   public int numParametros(){
       this.verificarInicializacao();
-      int numConexoes = 0;
-      for(int i = 0; i < this.neuronios.length; i++){
-         numConexoes += this.neuronios[i].numPesos();
+
+      int parametros = 0;
+      for(Neuronio neuronio : this.neuronios){
+         parametros += neuronio.numPesos();
       }
-      return numConexoes;
+      return parametros;
    }
 
    /**
@@ -315,12 +325,7 @@ public class Camada implements Cloneable{
     */
    public double[] obterSaida(){
       this.verificarInicializacao();
-      double[] saida = new double[this.neuronios.length];
-      for(int i = 0; i < saida.length; i++){
-         saida[i] = this.neuronios[i].saida;
-      }
-
-      return saida;
+      return this.saida;
    }
 
    /**
@@ -348,7 +353,7 @@ public class Camada implements Cloneable{
       buffer += espacamento + "Quantidade neurônios: " + this.neuronios.length + "\n";
       
       if(this.inicializada){
-         buffer += espacamento + "Quantidade de conexões: " + this.numConexoes() + "\n";
+         buffer += espacamento + "Quantidade de conexões: " + this.numParametros() + "\n";
          buffer += espacamento + "Bias: " + this.bias + "\n";
          buffer += espacamento + "Tamanho Entrada: " + this.tamanhoEntrada + "\n";
          
@@ -375,15 +380,18 @@ public class Camada implements Cloneable{
       try{
          Camada clone = (Camada) super.clone();
 
-         clone.ativacao = this.ativacao;
-         clone.bias = this.bias;
-         clone.inicializada = this.inicializada;
-         clone.id = this.id;
-
          clone.neuronios = new Neuronio[this.neuronios.length];
          for(int i = 0; i < clone.neuronios.length; i++){
             clone.neuronios[i] = this.neuronio(i).clone();
          }
+
+         clone.saida = new double[this.saida.length];
+         System.arraycopy(this.saida, 0, clone.saida, 0, this.saida.length);
+
+         clone.ativacao = this.ativacao;
+         clone.bias = this.bias;
+         clone.inicializada = this.inicializada;
+         clone.id = this.id;
 
          return clone;
       }catch(Exception e){

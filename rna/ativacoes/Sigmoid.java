@@ -6,7 +6,7 @@ import rna.estrutura.Neuronio;
  * Implementação da função de ativação Sigmóide para uso 
  * dentro da {@code Rede Neural}.
  */
-public class Sigmoid extends FuncaoAtivacao{
+public class Sigmoid extends Ativacao{
 
    /**
     * Instancia a função de ativação Sigmóide.
@@ -17,7 +17,7 @@ public class Sigmoid extends FuncaoAtivacao{
     * </p>
     */
    public Sigmoid(){
-
+      
    }
 
    private double sigmoid(double x){

@@ -16,11 +16,6 @@ package utilitarios.ged;
  *    Algumas operação necessitam de um objeto do tipo {@code Dados} para serem realizadas que 
  *    deve ser importado através de <pre>import ged.Dados;</pre>
  * <p>
- *    A classe Ged é apeans uma casca/embrulho (ou wrapper) que contém as funções que são expostas 
- *    publicamente para quem quiser utilizá-las, o conteúdo com implementações está divididos de acordo 
- *    com suas especialidades.
- * </p>
- * <p>
  *    Aos poucos são adicionadas novas funcionalidades de acordo com as necessidades que surgem então o
  *    Ged sempre pode sofrer alterações e melhorias com o passar do tempo.
  * </p>

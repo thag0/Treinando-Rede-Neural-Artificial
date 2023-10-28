@@ -6,7 +6,7 @@ import rna.estrutura.Neuronio;
  * Implementação da função de ativação GELU para uso dentro 
  * da {@code Rede Neural}.
  */
-public class GELU extends FuncaoAtivacao{
+public class GELU extends Ativacao{
 
    /**
     * Intancia uma nova função de ativação GELU.

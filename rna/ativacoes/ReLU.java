@@ -6,7 +6,7 @@ import rna.estrutura.Neuronio;
  * Implementação da função de ativação ReLU para uso dentro 
  * da {@code Rede Neural}.
  */
-public class ReLU extends FuncaoAtivacao{
+public class ReLU extends Ativacao{
 
    /**
     * Instancia a função de ativação ReLU.

@@ -10,7 +10,7 @@ import rna.estrutura.Neuronio;
  *    melhores resultados.
  * </p>
  */
-public class LeakyReLU extends FuncaoAtivacao{
+public class LeakyReLU extends Ativacao{
 
    /**
     * Valor alfa da função LeakyReLU.

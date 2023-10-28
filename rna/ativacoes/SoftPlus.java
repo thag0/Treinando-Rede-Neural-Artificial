@@ -6,7 +6,7 @@ import rna.estrutura.Neuronio;
  * Implementação da função de ativação SoftPlus para uso 
  * dentro da {@code Rede Neural}.
  */
-public class SoftPlus extends FuncaoAtivacao{
+public class SoftPlus extends Ativacao{
 
    /**
     * Instancia a função de ativação SoftPlus.
