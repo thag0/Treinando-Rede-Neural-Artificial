@@ -46,7 +46,7 @@ public class ExemploClassificacao{
       RedeNeural rede = new RedeNeural(arq);
       rede.compilar(new EntropiaCruzada(), new SGD(0.0001, 0.9), new Xavier());
       rede.configurarAtivacao(new LeakyReLU());
-      rede.configurarAtivacao(rede.obterCamadaSaida(), new Softmax());
+      rede.configurarAtivacao(rede.obterCamadaSaida(), "softmax");
 
       System.out.println(rede.info());
       

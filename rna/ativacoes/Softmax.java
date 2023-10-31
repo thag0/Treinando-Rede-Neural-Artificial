@@ -1,5 +1,6 @@
 package rna.ativacoes;
 
+import rna.estrutura.Camada;
 import rna.estrutura.Neuronio;
 
 /**
@@ -20,15 +21,15 @@ public class Softmax extends Ativacao{
    }
 
    @Override
-   public void ativar(Neuronio[] neuronios){
+   public void calcular(Camada camada){
       double somaExp = 0;
 
-      for(int i = 0; i < neuronios.length; i++){
-         somaExp += Math.exp(neuronios[i].somatorio);
+      for(Neuronio neuronio : camada.neuronios()){
+         somaExp += Math.exp(neuronio.somatorio);
       }
 
-      for(int i = 0; i < neuronios.length; i++){
-         neuronios[i].saida = Math.exp(neuronios[i].somatorio) / somaExp;
+      for(Neuronio neuronio : camada.neuronios()){
+         neuronio.saida = Math.exp(neuronio.somatorio) / somaExp;
       }
    }
 }

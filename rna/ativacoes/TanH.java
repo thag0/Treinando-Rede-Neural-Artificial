@@ -1,5 +1,6 @@
 package rna.ativacoes;
 
+import rna.estrutura.Camada;
 import rna.estrutura.Neuronio;
 
 /**
@@ -21,17 +22,17 @@ public class TanH extends Ativacao{
    }
 
    @Override
-   public void ativar(Neuronio[] neuronios){
-      for(int i = 0; i < neuronios.length; i++){
-         neuronios[i].saida = tanh(neuronios[i].somatorio);
+   public void calcular(Camada camada){
+      for(Neuronio neuronio : camada.neuronios()){
+         neuronio.saida = tanh(neuronio.somatorio);
       }
    }
 
    @Override
-   public void derivada(Neuronio[] neuronios){
+   public void derivada(Camada camada){
       //aproveitando o valor pre calculado
-      for(int i = 0; i < neuronios.length; i++){
-         neuronios[i].derivada = 1 - (neuronios[i].saida * neuronios[i].saida);
+      for(Neuronio neuronio : camada.neuronios()){
+         neuronio.derivada = 1 - (neuronio.saida * neuronio.saida);
       }
    }
 }

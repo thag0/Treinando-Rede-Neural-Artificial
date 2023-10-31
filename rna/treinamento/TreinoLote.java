@@ -97,7 +97,8 @@ class TreinoLote{
 
          //feedback de avanço da rede
          if(calcularHistorico){
-            historico = aux.adicionarPerda(historico, perda.calcular(rede, entradas, saidas));
+            // TODO corrigir para o novo formato das funções de perda
+            //historico = aux.adicionarPerda(historico, perda.calcular(rede, entradas, saidas));
          }
       }
    }

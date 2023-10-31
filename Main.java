@@ -1,7 +1,6 @@
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-
 import java.text.DecimalFormat;
 import java.util.concurrent.TimeUnit;
 
@@ -89,7 +88,7 @@ class Main{
 
    public static RedeNeural criarRede(int entradas, int saidas){
       // int[] arq = {entradas, 96, 48, 48, saidas};//dog
-      // int[] arq = {entradas, 42, 42, 42, saidas};//32x32
+      // int[] arq = {entradas, 64, 48, 48, saidas};//32x32
       int[] arq = {entradas, 13, 13, saidas};//28x28
 
       Perda perda = new ErroMedioQuadrado();
@@ -98,15 +97,15 @@ class Main{
 
       RedeNeural rede = new RedeNeural(arq);
       rede.compilar(perda, otm, ini);
-      rede.configurarAtivacao(new TanH());
-      rede.configurarAtivacao(rede.obterCamadaSaida(), "sigmoid");
+      rede.configurarAtivacao("tanh");
+      rede.configurarAtivacao(rede.obterCamadaSaida(), new Sigmoid());
 
       return rede;
    }
 
    public static void treinoEmPainel(RedeNeural rede, BufferedImage imagem, double[][] dadosEntrada, double[][] dadosSaida){
-      final int fps = 600;
-      int epocasPorFrame = 20;
+      final int fps = 60;
+      int epocasPorFrame = 10;
 
       //acelerar o processo de desenho
       //bom em situações de janelas muito grandes

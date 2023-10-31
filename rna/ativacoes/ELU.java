@@ -1,5 +1,6 @@
 package rna.ativacoes;
 
+import rna.estrutura.Camada;
 import rna.estrutura.Neuronio;
 
 /**
@@ -38,16 +39,16 @@ public class ELU extends Ativacao{
    }
 
    @Override
-   public void ativar(Neuronio[] neuronios){
-      for(int i = 0; i < neuronios.length; i++){
-         neuronios[i].saida = (neuronios[i].somatorio > 0) ? neuronios[i].somatorio : alfa * (Math.exp(neuronios[i].somatorio) - 1);
+   public void calcular(Camada camada){
+      for(Neuronio neuronio : camada.neuronios()){
+         neuronio.saida = (neuronio.somatorio > 0) ? neuronio.somatorio : alfa * (Math.exp(neuronio.somatorio) - 1);
       }
    }
 
    @Override
-   public void derivada(Neuronio[] neuronios){
-      for(int i = 0; i < neuronios.length; i++){
-         neuronios[i].derivada = (neuronios[i].somatorio > 0) ? 1 : alfa * Math.exp(neuronios[i].somatorio);
+   public void derivada(Camada camada){
+      for(Neuronio neuronio : camada.neuronios()){
+         neuronio.derivada = (neuronio.somatorio > 0) ? 1 : alfa * Math.exp(neuronio.somatorio);
       }
    }
 }

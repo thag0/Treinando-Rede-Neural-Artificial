@@ -1,6 +1,6 @@
 package rna.ativacoes;
 
-import rna.estrutura.Neuronio;
+import rna.estrutura.Camada;
 
 /**
  * Implementação da função de ativação Argmax para uso 
@@ -22,19 +22,19 @@ public class Argmax extends Ativacao{
    }
 
    @Override
-   public void ativar(Neuronio[] neuronios){
+   public void calcular(Camada camada){
       int indiceMaximo = 0;
-      double valorMaximo = neuronios[0].somatorio;
+      double valorMaximo = camada.neuronio(0).somatorio;
 
-      for(int i = 1; i < neuronios.length; i++){
-         if(neuronios[i].somatorio > valorMaximo){
+      for(int i = 1; i < camada.neuronios().length; i++){
+         if(camada.neuronio(i).somatorio > valorMaximo){
             indiceMaximo = i;
-            valorMaximo = neuronios[i].somatorio;
+            valorMaximo = camada.neuronio(i).somatorio;
          }
       }
 
-      for(int i = 0; i < neuronios.length; i++){
-         neuronios[i].saida = (i == indiceMaximo) ? 1 : 0;
+      for(int i = 0; i < camada.neuronios().length; i++){
+         camada.neuronio(i).saida = (i == indiceMaximo) ? 1 : 0;
       }
    }
 }

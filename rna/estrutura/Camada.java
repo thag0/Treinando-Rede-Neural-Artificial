@@ -27,6 +27,14 @@ import rna.inicializadores.Inicializador;
  *    Toda camada instanciada só pode ser usada depois da instanciação e inicialização de
  *    seus atributos por meio do método {@code inicializar()}.
  * </p>
+ * Exemplificação da organização de neurônios dentro da camada:
+ * <pre>
+ * camada.neuronios = [
+ *    n0,
+ *    n1,
+ *    n2
+ * ]
+ * </pre>
  */
 public class Camada implements Cloneable{
 
@@ -218,7 +226,7 @@ public class Camada implements Cloneable{
       for(int i = 0; i < this.neuronios.length; i++){
          this.neuronios[i].calcularSaida(entrada);
       }
-      this.ativacao.ativar(this.neuronios);
+      this.ativacao.calcular(this);
 
       //copiar valores de saída dos neurônios para a saída da camada
       for(int i = 0; i < this.neuronios.length; i++){
@@ -236,7 +244,7 @@ public class Camada implements Cloneable{
     */
    public void ativacaoDerivada(){
       this.verificarInicializacao();
-      this.ativacao.derivada(this.neuronios);
+      this.ativacao.derivada(this);
    }
 
    /**
@@ -326,6 +334,40 @@ public class Camada implements Cloneable{
    public double[] obterSaida(){
       this.verificarInicializacao();
       return this.saida;
+   }
+
+   /**
+    * Configura os novos valores de pesos do neurônio desejado de acordo com o
+    * índice fornecido e array com os pesos.
+    * @param id índice do neurônio dentro da camada.
+    * @param pesos array contendo os novos valores de pesos.
+    * @throws IllegalArgumentException se o índice for inválido.
+    */
+   public void configurarPesos(int id, double[] pesos){
+      if(id < 0 || id >= this.neuronios.length){
+         throw new IllegalArgumentException(
+            "Índice fornecido (" + id +") inválido."
+         );
+      }
+
+      this.neuronios[id].configurarPesos(pesos);
+   }
+
+   /**
+    * Configura o valor do bias de um neurônio da camada de acordo com o índice
+    * especificado.
+    * @param id índice do neurônio dentro da camada.
+    * @param bias novo valor de bias (viés) do neurônio.
+    * @throws IllegalArgumentException se o índice for inválido.
+    */
+   public void configurarBias(int id, double bias){
+      if(id < 0 || id >= this.neuronios.length){
+         throw new IllegalArgumentException(
+            "Índice fornecido (" + id +") inválido."
+         );
+      }
+
+      this.neuronios[id].configurarBias(bias);
    }
 
    /**

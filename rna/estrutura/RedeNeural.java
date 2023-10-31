@@ -96,7 +96,7 @@ public class RedeNeural implements Cloneable{
     * indevido caso a rede não tenha suas variáveis e dependências inicializadas 
     * previamente.
     */
-   private boolean compilado = false;
+   private boolean compilado;
 
    /**
     * Função de perda usada durante o processo de treinamento.
@@ -186,6 +186,7 @@ public class RedeNeural implements Cloneable{
       }
 
       this.arquitetura = arquitetura;
+      this.compilado = false;
    }
 
    /**
@@ -224,6 +225,7 @@ public class RedeNeural implements Cloneable{
          this.arquitetura[i] = nOcultas;
       }
       this.arquitetura[this.arquitetura.length-1] = nSaida;
+      this.compilado = false;
    }
 
    /**
@@ -555,7 +557,7 @@ public class RedeNeural implements Cloneable{
     * Define se durante o processo de treinamento, a rede vai salvar dados relacionados a 
     * função de custo/perda de cada época.
     * <p>
-    *    Calcular o custo é uma operação que pode ser computacionalmente cara dependendo do 
+    *    Calcular a perda é uma operação que pode ser computacionalmente cara dependendo do 
     *    tamanho da rede e do conjunto de dados, então deve ser bem avaliado querer habilitar 
     *    ou não esse recurso.
     * </p>
@@ -564,7 +566,7 @@ public class RedeNeural implements Cloneable{
     * </p>
     * @param calcular se verdadeiro, a rede armazenará o histórico de custo de cada época.
     */
-   public void configurarHistoricoCusto(boolean calcular){
+   public void configurarHistoricoPerda(boolean calcular){
       this.treinador.configurarHistoricoCusto(calcular);
    }
 
@@ -1052,8 +1054,8 @@ public class RedeNeural implements Cloneable{
 
       for(int epocas = 0; epocas < epochs; epocas++){
          
-         double custo = avaliador.erroMedioQuadrado(entradas, saidas);
-         if(custo < perdaMinima) break;
+         double perda = avaliador.erroMedioQuadrado(entradas, saidas);
+         if(perda < perdaMinima) break;
 
          double valorAnterior = 0;
          for(int i = 0; i < redec.length; i++){
@@ -1061,7 +1063,7 @@ public class RedeNeural implements Cloneable{
                for(int k = 0; k < redec[i].neuronios[j].pesos.length; k++){
                   valorAnterior = redec[i].neuronios[j].pesos[k];
                   redec[i].neuronios[j].pesos[k] += eps;
-                  gradc[i].neuronios[j].pesos[k] = ((avaliador.erroMedioQuadrado(entradas, saidas) - custo)/eps);
+                  gradc[i].neuronios[j].pesos[k] = ((avaliador.erroMedioQuadrado(entradas, saidas) - perda)/eps);
                   redec[i].neuronios[j].pesos[k] = valorAnterior;
                }
             }
@@ -1109,7 +1111,7 @@ public class RedeNeural implements Cloneable{
       if((id < 0) || (id >= this.camadas.length)){
          throw new IllegalArgumentException(
             "O índice fornecido (" + id + 
-            ") está é inválido ou fora de alcance."
+            ") é inválido ou fora de alcance."
          );
       }
    
@@ -1194,7 +1196,7 @@ public class RedeNeural implements Cloneable{
    public double[] obterHistoricoCusto(){
       if(!this.treinador.calcularHistorico){
          throw new IllegalArgumentException(
-            "O histórico de custo da rede deve ser habilitado."
+            "O histórico de custo da rede deve ser habilitado previamente."
          );
       }
       return this.treinador.obterHistorico();
@@ -1209,11 +1211,11 @@ public class RedeNeural implements Cloneable{
     * @return quantiade de parâmetros total da rede.
     */
    public int obterQuantidadeParametros(){
-      int numPesos = 0;
+      int parametros = 0;
       for(Camada camada : this.camadas){
-         numPesos += camada.numParametros();
+         parametros += camada.numParametros();
       }
-      return numPesos;
+      return parametros;
    }
 
    /**
@@ -1227,7 +1229,6 @@ public class RedeNeural implements Cloneable{
     */
    public int obterQuantidadeCamadas(){
       this.verificarCompilacao();
-
       return this.camadas.length;
    }
 
@@ -1239,7 +1240,6 @@ public class RedeNeural implements Cloneable{
     */
    public int obterTamanhoEntrada(){
       this.verificarCompilacao();
-
       return this.arquitetura[0];
    }
 
@@ -1251,7 +1251,6 @@ public class RedeNeural implements Cloneable{
     */
    public int obterTamanhoSaida(){
       this.verificarCompilacao();
-
       return this.arquitetura[this.arquitetura.length-1];
    }
 

@@ -38,13 +38,42 @@ public class Avaliador{
    }
 
    /**
+    * Calcula o erro médio quadrado da rede neural em relação aos dados previstos e reais.
+    * @param previsto dados previstos.
+    * @param real dados rotulados.
+    * @return valor do erro médio quadrado da rede em relação ao dados fornecidos (custo/perda).
+    */
+   public double erroMedioQuadrado(double[] previsto, double[] real){
+      return emq.calcular(previsto, real);
+   }
+
+   /**
     * Calcula o erro médio quadrado da rede neural em relação aos dados de entrada e saída fornecidos.
-    * @param entrada dados de entrada.
-    * @param saida dados de saída contendo os resultados respectivos para as entradas.
+    * @param entrada matriz com  os dados de entrada (features).
+    * @param saida matriz com os dados de saída (classes).
     * @return valor do erro médio quadrado da rede em relação ao dados fornecidos (custo/perda).
     */
    public double erroMedioQuadrado(double[][] entrada, double[][] saida){
-      return emq.calcular(this.rede, entrada, saida);
+      double[][] previsoes = rede.calcularSaida(entrada);
+      double mse = 0;
+
+      for(int i = 0; i < saida.length; i++){
+         mse += emq.calcular(previsoes[i], saida[i]);
+      }
+
+      mse /= saida.length;
+
+      return mse;
+   }
+
+   /**
+    * Calcula o erro médio absoluto da rede neural em relação aos dados previstos e reais.
+    * @param previsto dados previstos.
+    * @param real dados rotulados.
+    * @return valor do erro médio abosoluto da rede em relação ao dados fornecidos (custo/perda).
+    */
+   public double erroMedioAbsoluto(double[] previsto, double[] real){
+      return ema.calcular(previsto, real);
    }
 
    /**
@@ -54,7 +83,16 @@ public class Avaliador{
     * @return valor do erro médio abosoluto da rede em relação ao dados fornecidos (custo/perda).
     */
    public double erroMedioAbsoluto(double[][] entrada, double[][] saida){
-      return ema.calcular(this.rede, entrada, saida);
+      double[][] previsoes = rede.calcularSaida(entrada);
+      double mae = 0;
+
+      for(int i = 0; i < saida.length; i++){
+         mae += emq.calcular(previsoes[i], saida[i]);
+      }
+
+      mae /= saida.length;
+
+      return mae;
    }
 
    /**
@@ -68,6 +106,17 @@ public class Avaliador{
    }
 
    /**
+    * Calcula a entropia cruzada da rede neural em relação aos dados previstos e reais.
+    * e as saídas reais fornecidas.
+    * @param previsto dados previstos.
+    * @param real dados rotulados.
+    * @return entropia cruzada da rede em relação ao dados fornecidos (custo/perda).
+    */
+   public double entropiaCruzada(double[] previsto, double[] real){  
+      return entropiaCruzada.calcular(previsto, real);
+   }
+
+   /**
     * Calcula a entropia cruzada entre as saídas previstas pela rede neural
     * e as saídas reais fornecidas.
     * @param entrada dados de entrada.
@@ -75,7 +124,27 @@ public class Avaliador{
     * @return entropia cruzada da rede em relação ao dados fornecidos (custo/perda).
     */
    public double entropiaCruzada(double[][] entrada, double[][] saida){  
-      return entropiaCruzada.calcular(this.rede, entrada, saida);
+      double[][] previsoes = rede.calcularSaida(entrada);
+      double ec = 0;
+
+      for(int i = 0; i < saida.length; i++){
+         ec += entropiaCruzada.calcular(previsoes[i], saida[i]);
+      }
+
+      ec /= saida.length;
+
+      return ec;
+   }
+
+   /**
+    * Calcula a entropia cruzada binária entre as saídas previstas pela rede neural
+    * e as saídas reais fornecidas.
+    * @param previsto dados previstos.
+    * @param real dados rotulados.
+    * @return valor da entropia cruzada binária da rede em relação ao dados fornecidos (custo/perda).
+    */
+   public double entropiaCruzadaBinaria(double[] previsto, double[] real){
+      return entropiaCruzadaBinaria.calcular(previsto, real);
    }
 
    /**
@@ -86,7 +155,17 @@ public class Avaliador{
     * @return valor da entropia cruzada binária.
     */
    public double entropiaCruzadaBinaria(double[][] entrada, double[][] saida){
-      return entropiaCruzadaBinaria.calcular(this.rede, entrada, saida);
+      //TODO corrigir valores NaN
+      double[][] previsoes = rede.calcularSaida(entrada);
+      double ecb = 0;
+
+      for(int i = 0; i < saida.length; i++){
+         ecb += entropiaCruzadaBinaria.calcular(previsoes[i], saida[i]);
+      }
+
+      ecb /= saida.length;
+
+      return ecb;
    }
 
    /**

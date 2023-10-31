@@ -1,5 +1,6 @@
 package rna.ativacoes;
 
+import rna.estrutura.Camada;
 import rna.estrutura.Neuronio;
 
 /**
@@ -20,17 +21,17 @@ public class Swish extends Ativacao{
    }
 
    @Override
-   public void ativar(Neuronio[] neuronios){
-      for(int i = 0; i < neuronios.length; i++){
-         neuronios[i].saida = neuronios[i].somatorio * sigmoid(neuronios[i].somatorio);
+   public void calcular(Camada camada){
+      for(Neuronio neuronio : camada.neuronios()){
+         neuronio.saida = neuronio.somatorio * sigmoid(neuronio.somatorio);
       }
    }
 
    @Override
-   public void derivada(Neuronio[] neuronios){
-      for(int i = 0; i < neuronios.length; i++){
-         double sig = sigmoid(neuronios[i].somatorio);
-         neuronios[i].derivada = sig + (neuronios[i].somatorio * sig * (1 - sig));
+   public void derivada(Camada camada){
+      for(Neuronio neuronio : camada.neuronios()){
+         double sig = sigmoid(neuronio.somatorio);
+         neuronio.derivada = sig + (neuronio.somatorio * sig * (1 - sig));
       }
    }
 }

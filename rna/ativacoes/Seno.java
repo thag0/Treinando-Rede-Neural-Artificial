@@ -1,5 +1,6 @@
 package rna.ativacoes;
 
+import rna.estrutura.Camada;
 import rna.estrutura.Neuronio;
 
 /**
@@ -16,16 +17,16 @@ public class Seno extends Ativacao{
    }
 
    @Override
-   public void ativar(Neuronio[] neuronios){
-      for(int i = 0; i < neuronios.length; i++){
-         neuronios[i].saida = Math.sin(neuronios[i].somatorio);
+   public void calcular(Camada camada){
+      for(Neuronio neuronio : camada.neuronios()){
+         neuronio.saida = Math.sin(neuronio.somatorio);
       }
    }
 
    @Override
-   public void derivada(Neuronio[] neuronios){
-      for(int i = 0; i < neuronios.length; i++){
-         neuronios[i].derivada = Math.cos(neuronios[i].somatorio);
+   public void derivada(Camada camada){
+      for(Neuronio neuronio : camada.neuronios()){
+         neuronio.derivada = Math.cos(neuronio.somatorio);
       }
    }
    

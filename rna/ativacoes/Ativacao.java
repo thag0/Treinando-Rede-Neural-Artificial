@@ -1,6 +1,6 @@
 package rna.ativacoes;
 
-import rna.estrutura.Neuronio;
+import rna.estrutura.Camada;
 
 /**
  * Classe base para a implementação das funções de ativação.
@@ -18,7 +18,7 @@ public abstract class Ativacao{
     * @param neuronios conjunto de neurônios para ativação.
     * @param quantidade quantidade de neurônios que serão ativados, em ordem crescente.
     */
-   public void ativar(Neuronio[] neuronios){
+   public void calcular(Camada camada){
       throw new UnsupportedOperationException(
          "Método de atualização da função de ativação não foi implementado."
       );
@@ -32,7 +32,7 @@ public abstract class Ativacao{
     * @param neuronios conjunto de neurônios para ativação.
     * @param quantidade quantidade de neurônios que serão ativados, em ordem crescente.
     */
-   public void derivada(Neuronio[] neuronios){
+   public void derivada(Camada camada){
       throw new UnsupportedOperationException(
          "Método de atualização da derivada da função de ativação não foi implementado."
       );

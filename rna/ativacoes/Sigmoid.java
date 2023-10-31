@@ -1,5 +1,6 @@
 package rna.ativacoes;
 
+import rna.estrutura.Camada;
 import rna.estrutura.Neuronio;
 
 /**
@@ -25,17 +26,17 @@ public class Sigmoid extends Ativacao{
    }
 
    @Override
-   public void ativar(Neuronio[] neuronios){
-      for(int i = 0; i < neuronios.length; i++){
-         neuronios[i].saida = sigmoid(neuronios[i].somatorio);
+   public void calcular(Camada camada){
+      for(Neuronio neuronio : camada.neuronios()){
+         neuronio.saida = sigmoid(neuronio.somatorio);
       }
    }
 
    @Override
-   public void derivada(Neuronio[] neuronios){
+   public void derivada(Camada camada){
       //aproveitando o valor pre calculado
-      for(int i = 0; i < neuronios.length; i++){
-         neuronios[i].derivada = neuronios[i].saida * (1 - neuronios[i].saida);
+      for(Neuronio neuronio : camada.neuronios()){
+         neuronio.derivada = neuronio.saida * (1 - neuronio.saida);
       }
    }
 }

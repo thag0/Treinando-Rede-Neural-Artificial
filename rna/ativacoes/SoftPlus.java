@@ -1,5 +1,6 @@
 package rna.ativacoes;
 
+import rna.estrutura.Camada;
 import rna.estrutura.Neuronio;
 
 /**
@@ -16,17 +17,17 @@ public class SoftPlus extends Ativacao{
    }
 
    @Override
-   public void ativar(Neuronio[] neuronios){
-      for(int i = 0; i < neuronios.length; i++){
-         neuronios[i].saida = Math.log(1 + Math.exp(neuronios[i].somatorio));
+   public void calcular(Camada camada){
+      for(Neuronio neuronio : camada.neuronios()){
+         neuronio.saida = Math.log(1 + Math.exp(neuronio.somatorio));
       }
    }
 
    @Override
-   public void derivada(Neuronio[] neuronios){
-      for(int i = 0; i < neuronios.length; i++){
-         double exp = Math.exp(neuronios[i].somatorio);
-         neuronios[i].derivada = exp / (1 + exp);
+   public void derivada(Camada camada){
+      for(Neuronio neuronio : camada.neuronios()){
+         double exp = Math.exp(neuronio.somatorio);
+         neuronio.derivada = exp / (1 + exp);
       }
    }
 }

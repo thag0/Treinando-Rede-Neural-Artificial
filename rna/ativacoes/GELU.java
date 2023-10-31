@@ -1,5 +1,6 @@
 package rna.ativacoes;
 
+import rna.estrutura.Camada;
 import rna.estrutura.Neuronio;
 
 /**
@@ -16,22 +17,22 @@ public class GELU extends Ativacao{
    }
 
    @Override
-   public void ativar(Neuronio[] neuronios){
+   public void calcular(Camada camada){
       double x;
-      for(int i = 0; i < neuronios.length; i++){
-         x = neuronios[i].somatorio;
+      for(Neuronio neuronio : camada.neuronios()){
+         x = neuronio.somatorio;
          x = 0.5 * x * (1.0 + Math.tanh(Math.sqrt(2.0 / Math.PI) * (x + 0.044715 * Math.pow(x, 3))));
-         neuronios[i].saida = x;
+         neuronio.saida = x;
       }
    }
 
    @Override
-   public void derivada(Neuronio[] neuronios){
+   public void derivada(Camada camada){
       double x, cdf;
-      for(int i = 0; i < neuronios.length; i++){
-         x = neuronios[i].somatorio;
+      for(Neuronio neuronio : camada.neuronios()){
+         x = neuronio.somatorio;
          cdf = 0.5 * (1.0 + Math.tanh(Math.sqrt(2.0 / Math.PI) * (x + 0.044715 * Math.pow(x, 3))));
-         neuronios[i].derivada = 0.5 * (1.0 + cdf + x * Math.exp(-Math.pow(x, 2) / 2.0) / Math.sqrt(2.0 * Math.PI));
+         neuronio.derivada = 0.5 * (1.0 + cdf + x * Math.exp(-Math.pow(x, 2) / 2.0) / Math.sqrt(2.0 * Math.PI));
       }
    }
 }

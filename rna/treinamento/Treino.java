@@ -80,12 +80,11 @@ class Treino{
          //alterando a organização dos dados em cada época
          if(embaralhar) aux.embaralharDados(entradas, saidas);
 
+         double perdaEpoca = 0;
+
          //percorrer amostras
          for(int j = 0; j < entradas.length; j++){
             //preencher dados de entrada e saída
-            // System.arraycopy(entradas[j], 0, entrada, 0, entrada.length);
-            //System.arraycopy(saidas[j], 0, saida, 0, saida.length);
-            
             for(int k = 0; k < entrada.length; k++){
                entrada[k] = entradas[j][k];
             }    
@@ -93,15 +92,20 @@ class Treino{
                saida[k] = saidas[j][k];
             }
 
-            //calcular desempenho, erros e gradientes, atualizar os pesos
             rede.calcularSaida(entrada);
+
+            //feedback de avanço da rede
+            if(calcularHistorico){
+               perdaEpoca += perda.calcular(rede.obterSaidas(), saida);
+            }
+
             backpropagation(redec, perda, saida);
             otimizador.atualizar(redec);
          }
 
          //feedback de avanço da rede
          if(calcularHistorico){
-            this.historico = aux.adicionarPerda(this.historico, perda.calcular(rede, entradas, saidas));
+            this.historico = aux.adicionarPerda(this.historico, perdaEpoca);
          }
       }
    }
@@ -109,6 +113,23 @@ class Treino{
    /**
     * Retropropaga o erro da rede neural de acordo com os dados de entrada e 
     * saída esperados e calcula os gradientes dos pesos de cada neurônio.
+    * <p>
+    *    O gradiente de cada conexão do neurônio é dado por:
+    * </p>
+    * <pre>
+    *    g[i] = -e * en[i]
+    * </pre>
+    * onde:
+    * <p>
+    *    g - vetor de gradientes do neurônio.
+    * </p>
+    * <p>
+    * <p>
+    *    e - erro do neurônio. 
+    * </p>
+    * <p>
+    *    en - vetor de entradas do neurônio. 
+    * </p>
     * @param redec Rede Neural em formato de lista de camadas.
     * @param saidas array com as saídas esperadas das amostras.
     */

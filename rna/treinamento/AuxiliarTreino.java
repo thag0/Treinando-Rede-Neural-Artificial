@@ -48,12 +48,9 @@ class AuxiliarTreino{
     * @param real array com as saídas esperadas.
     */
    void calcularErroSaida(Camada saida, Perda perda, double[] real){
-      double[] previsto = new double[saida.quantidadeNeuronios()];
-      for(int i = 0; i < previsto.length; i++){
-         previsto[i] = saida.neuronio(i).saida;
-      }
+      double[] previsto = saida.obterSaida();
+      double[] erros = perda.derivada(previsto, real);
 
-      double[] erros = perda.calcularErro(previsto, real);
       for(int i = 0; i < saida.quantidadeNeuronios(); i++){
          saida.neuronio(i).erro = erros[i];
       }
@@ -93,10 +90,10 @@ class AuxiliarTreino{
       for(int i = redec.length-2; i >= 0; i--){
          
          camadaAtual = redec[i];
+         camadaProxima = redec[i+1];
          camadaAtual.ativacaoDerivada();
          for(int j = 0; j < camadaAtual.quantidadeNeuronios(); j++){
 
-            camadaProxima = redec[i+1];
             // percorrer neurônios da camada seguinte
             double somaErros = 0.0;
             neuronio = camadaAtual.neuronio(j);
@@ -182,16 +179,16 @@ class AuxiliarTreino{
    }
 
    /**
-    * TODO
-    * @param historico
-    * @param valor
+    * Adiciona o novo valor de perda no final do histórico.
+    * @param historico histórico com os valores de perda da rede.
+    * @param valor novo valor que será adicionado.
     */
    double[] adicionarPerda(double[] historico, double valor){
-      double[] novoHist = historico;
+      double[] aux = historico;
       historico = new double[historico.length + 1];
       
-      for(int i = 0; i < novoHist.length; i++){
-         historico[i] = novoHist[i];
+      for(int i = 0; i < aux.length; i++){
+         historico[i] = aux[i];
       }
       historico[historico.length-1] = valor;
 

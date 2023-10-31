@@ -18,6 +18,17 @@ import rna.inicializadores.Xavier;
  * O neurônio oferece métodos de inicialização de pesos e cálculo do somatório
  * de seus pesos multiplicados pelas entradas. Métodos de funções de ativação
  * e treino do neurônio se encontram em outros componentes da Rede Neural.
+ * <p>
+ *    Exemplificação de organização da estrutura no neurônio:
+ * </p>
+ * <pre>
+ * neuronio = [
+ *    e0, p0,
+ *    e1, p1,
+ *    e2, p2,
+ *    1 , pb
+ * ]
+ * </pre>
  */
 public class Neuronio implements Cloneable{
 
@@ -67,23 +78,6 @@ public class Neuronio implements Cloneable{
     *    gradiente da conexão entre a entrada {@code en[i]} e o peso 
     *    correspondente {@code p[i]}.
     * </p>
-    * <p>
-    *    O gradiente de cada conexão do neurônio é dado por:
-    * </p>
-    * <pre>
-    *    g[i] = -e * en[i]
-    * </pre>
-    * onde:
-    * <p>
-    *    g - vetor de gradientes do neurônio.
-    * </p>
-    * <p>
-    * <p>
-    *    e - erro do neurônio. 
-    * </p>
-    * <p>
-    *    en - vetor de entradas do neurônio. 
-    * </p>
     */
    public double[] gradientes;
 
@@ -102,7 +96,7 @@ public class Neuronio implements Cloneable{
    /**
     * Instancia um neurônio artificial.
     * <p>
-    *    Os valores iniciais de são dados como 0.
+    *    Os valores iniciais de pesos são dados como 0.
     * </p>
     * @param entrada capacidade dos dados de entrada do neurônio.
     * @param bias aplicar víes ao neurônio.
@@ -128,8 +122,8 @@ public class Neuronio implements Cloneable{
    /**
     * Instancia um neurônio artificial.
     * <p>
-    *    Os valores iniciais de são dados como 0 e o valor do bias
-    *    é usado como verdadeiro por padrão.
+    *    Os valores iniciais de pesos são dados como 0 e o valor do 
+    *    bias é usado como verdadeiro por padrão.
     * </p>
     * @param entrada capacidade dos dados de entrada do neurônio.
     */
@@ -167,7 +161,8 @@ public class Neuronio implements Cloneable{
 
       //tentar usar um valor pequeno pra ter menos influência no começo
       if(this.bias){
-         this.pesos[this.pesos.length-1] = 0.5;
+         // this.pesos[this.pesos.length-1] = 0.5;
+         this.pesos[this.pesos.length-1] = inicializador.gerarDouble() / 2;
       }
    }
 
@@ -200,6 +195,7 @@ public class Neuronio implements Cloneable{
       for(int i = 0; i < this.tamanhoEntrada(); i++){
          this.entradas[i] = entrada[i];
       }
+
       for(int i = 0; i < this.entradas.length; i++){
          this.somatorio += this.entradas[i] * this.pesos[i];
       }
@@ -219,6 +215,40 @@ public class Neuronio implements Cloneable{
     */
    public int tamanhoEntrada(){
       return this.entradas.length - ((this.bias) ? 1 : 0);
+   }
+
+   /**
+    * Configura os pesos do neurônio de acordo com o novo valor
+    * contido no array de pesos fornecido.
+    * @param pesos novos valores de pesos para o neurônio.
+    * @throws IllegalArgumentException se o tamanho do vetor de pesos fornecido for
+    * diferente do tamanho de pesos suportado pelo neurônio.
+    */
+   public void configurarPesos(double[] pesos){
+      if(pesos.length != this.tamanhoEntrada()){
+         throw new IllegalArgumentException(
+            "A quantidade de pesos fornecida (" + pesos.length + 
+            ") é diferente da quantidade de pesos do neurônio (" + this.tamanhoEntrada() + ")"
+         );
+      }
+
+      System.arraycopy(pesos, 0, this.pesos, 0, pesos.length);
+   }
+
+   /**
+    * Configura o novo valor de bias para o neurônio.
+    * @param bias novo valore de bias (viés) para o neurônio.
+    * @throws IllegalArgumentException se o neurônio não foi configurado para ter
+    * suporte ao bias.
+    */
+   public void configurarBias(double bias){
+      if(!this.bias){
+         throw new IllegalArgumentException(
+            "O neurônio não foi configurado para suportar um bias (viés)."
+         );
+      }
+
+      this.pesos[this.pesos.length-1] = bias;
    }
 
    /**

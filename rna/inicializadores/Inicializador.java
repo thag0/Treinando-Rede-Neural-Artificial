@@ -22,6 +22,10 @@ public class Inicializador{
       this.random.setSeed(seed);
    }
 
+   public double gerarDouble(){
+      return this.random.nextDouble();
+   }
+
    /**
     * Inicializa os valores do array de acordo com o inicializador configurado.
     * @param array array de pesos do neurônio.
