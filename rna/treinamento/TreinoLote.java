@@ -111,7 +111,7 @@ class TreinoLote{
     * @param saidas array com as saídas esperadas das amostras.
     */
    private void backpropagationLote(Camada[] redec, Perda perda, double[] saidas){
-      aux.calcularErroSaida(redec[redec.length-1], perda, saidas);
+      aux.calcularGradientesSaida(redec[redec.length-1], perda, saidas);
       aux.calcularErroOcultas(redec);
       calcularGradientesAcumulados(redec);
    }
@@ -144,7 +144,7 @@ class TreinoLote{
             
             Neuronio neuronio = redec[i].neuronio(j);
             for(int k = 0; k < neuronio.pesos.length; k++){
-               neuronio.gradientes[k] = -neuronio.erro * neuronio.entradas[k];
+               neuronio.gradientes[k] = -neuronio.gradiente * neuronio.entradas[k];
                neuronio.gradientesAcumulados[k] += neuronio.gradientes[k];
             }
          }

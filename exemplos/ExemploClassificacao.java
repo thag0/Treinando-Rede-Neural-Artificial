@@ -44,18 +44,22 @@ public class ExemploClassificacao{
       //criando e configurando a rede neural
       int[] arq = {qEntradas, 8, 8, qSaidas};
       RedeNeural rede = new RedeNeural(arq);
-      rede.compilar(new EntropiaCruzada(), new SGD(0.0001, 0.9), new Xavier());
-      rede.configurarAtivacao(new LeakyReLU());
-      rede.configurarAtivacao(rede.obterCamadaSaida(), "softmax");
 
+      Perda perda = new EntropiaCruzadaBinaria();
+      Otimizador otimizador = new SGD(0.0001, 0.9);
+      Inicializador inicializador = new Xavier();
+
+      rede.compilar(perda, otimizador, inicializador);
+      rede.configurarAtivacao(new LeakyReLU());
+      rede.configurarAtivacao(rede.obterCamadaSaida(), "argmax");
       System.out.println(rede.info());
       
       //treinando e avaliando os resultados
       rede.treinar(treinoX, treinoY, 5_000);
-      double acuraria = rede.avaliador.acuracia(testeX, testeY);
-      double perda = rede.avaliador.entropiaCruzada(testeX, testeY);
-      System.out.println("Acurácia = " + formatarDecimal(acuraria*100, 4) + "%");
-      System.out.println("Perda = " + perda);
+      double acurariaRede = rede.avaliador.acuracia(testeX, testeY);
+      double perdaRede = rede.avaliador.entropiaCruzadaBinaria(testeX, testeY);
+      System.out.println("Acurácia = " + formatarDecimal(acurariaRede*100, 4) + "%");
+      System.out.println("Perda = " + perdaRede);
 
       int[][] matrizConfusao = rede.avaliador.matrizConfusao(testeX, testeY);
       Dados d = new Dados(matrizConfusao);

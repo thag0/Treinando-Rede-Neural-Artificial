@@ -806,23 +806,24 @@ public class RedeNeural implements Cloneable{
     * @param saida conjunto de dados de saída.
     */
    private void consistenciaDados(double[][] entrada, double[][] saida){
-      int tamEntrada = this.obterTamanhoEntrada();
-      int tamSaida = this.obterTamanhoSaida();
-
       if(entrada.length != saida.length){
          throw new IllegalArgumentException(
-            "Quantidade de linhas de dados de entrada (" + entrada.length +
+            "Quantidade de amostras de dados de entrada (" + entrada.length +
             ") e saída (" + saida.length + 
             ") devem ser iguais."
          );
       }
+
+      int tamEntrada = this.obterTamanhoEntrada();
       if(tamEntrada != entrada[0].length){
          throw new IllegalArgumentException(
-            "Dimensões dos dados de entrada (" + entrada[0].length +
-            ") e capacidade de entrada da rede (" + tamEntrada + 
-            ") incompatíveis."
+         "Dimensões dos dados de entrada (" + entrada[0].length +
+         ") e capacidade de entrada da rede (" + tamEntrada + 
+         ") incompatíveis."
          );
       }
+
+      int tamSaida = this.obterTamanhoSaida();
       if(tamSaida != saida[0].length){
          throw new IllegalArgumentException(
             "Dados de saída (" + saida[0].length +
@@ -1045,35 +1046,28 @@ public class RedeNeural implements Cloneable{
             "O valor de perda mínima (" + perdaMinima + ") não pode ser negativo."
          );
       }
-      
-      //copia da rede para guardar os valores de "gradientes"
-      RedeNeural redeG = this.clone();
 
-      Camada[] redec = this.camadas;
-      Camada[] gradc = redeG.camadas;
-
-      for(int epocas = 0; epocas < epochs; epocas++){
-         
+      for(int epocas = 0; epocas < epochs; epocas++){    
          double perda = avaliador.erroMedioQuadrado(entradas, saidas);
          if(perda < perdaMinima) break;
 
          double valorAnterior = 0;
-         for(int i = 0; i < redec.length; i++){
-            for(int j = 0; j < redec[i].quantidadeNeuronios(); j++){
-               for(int k = 0; k < redec[i].neuronios[j].pesos.length; k++){
-                  valorAnterior = redec[i].neuronios[j].pesos[k];
-                  redec[i].neuronios[j].pesos[k] += eps;
-                  gradc[i].neuronios[j].pesos[k] = ((avaliador.erroMedioQuadrado(entradas, saidas) - perda)/eps);
-                  redec[i].neuronios[j].pesos[k] = valorAnterior;
+         for(Camada camada : this.camadas){
+            for(Neuronio neuronio : camada.neuronios){
+               for(int i = 0; i < neuronio.pesos.length; i++){
+                  valorAnterior = neuronio.pesos[i];
+                  neuronio.pesos[i] += eps;
+                  neuronio.gradientes[i] = ((avaliador.erroMedioQuadrado(entradas, saidas) - perda)/eps);
+                  neuronio.pesos[i] = valorAnterior;
                }
             }
          }
 
          //atualizar pesos
-         for(int i = 0; i < redec.length; i++){
-            for(int j = 0; j < redec[i].quantidadeNeuronios(); j++){
-               for(int k = 0; k < redec[i].neuronios[j].pesos.length; k++){
-                  redec[i].neuronios[j].pesos[k] -= tA * gradc[i].neuronios[j].pesos[k];
+         for(Camada camada : this.camadas){
+            for(Neuronio neuronio : camada.neuronios){
+               for(int i = 0; i < neuronio.pesos.length; i++){
+                  neuronio.pesos[i] -= tA * neuronio.gradientes[i];
                }
             }
          }
@@ -1119,16 +1113,6 @@ public class RedeNeural implements Cloneable{
    }
 
    /**
-    * Retorna a {@code camada de saída} da Rede Neural.
-    * @return camada de saída, ou ultima camada densa.
-    * @throws IllegalArgumentException se o modelo não foi compilado previamente.
-    */
-   public Camada obterCamadaSaida(){
-      this.verificarCompilacao();
-      return this.camadas[this.camadas.length-1];
-   }
-
-   /**
     * Retorna todo o conjunto de camadas densas presente na Rede Neural.
     * @throws IllegalArgumentException se o modelo não foi compilado previamente.
     * @return conjunto de camadas da rede.
@@ -1136,6 +1120,16 @@ public class RedeNeural implements Cloneable{
    public Camada[] obterCamadas(){
       this.verificarCompilacao();
       return this.camadas;
+   }
+   
+   /**
+    * Retorna a {@code camada de saída} da Rede Neural.
+    * @return camada de saída, ou ultima camada densa.
+    * @throws IllegalArgumentException se o modelo não foi compilado previamente.
+    */
+   public Camada obterCamadaSaida(){
+      this.verificarCompilacao();
+      return this.camadas[this.camadas.length-1];
    }
 
    /**

@@ -65,10 +65,9 @@ public class Neuronio implements Cloneable{
    public double derivada;
 
    /**
-    * Auxiliar utilizado durante o cálculo dos erros dos neurônios durante o treinamento
-    * na etapa do backpropagation.
+    * Auxiliar utilizado durante o treinamento do neurônio na etapa de backpropagation.
     */
-   public double erro;
+   public double gradiente;
 
    /**
     * Vetor de gradientes do neurônio utilizado pelos otimizadores para 
@@ -111,7 +110,7 @@ public class Neuronio implements Cloneable{
       this.gradientesAcumulados = new double[conexoes];
 
       this.saida = 0;
-      this.erro = 0;
+      this.gradiente = 0;
 
       //entrada do bias
       if(bias){

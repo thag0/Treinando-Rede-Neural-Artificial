@@ -18,11 +18,10 @@ public class EntropiaCruzada extends Perda{
    public double[] derivada(double[] previsto, double[] real){
       //adaptação pra minha arquitetura por enquanto
       //não econtrei ainda uma boa resposta de como calcular isso
-
-      double[] erros = new double[previsto.length];
+      double[] gradientes = new double[previsto.length];
       for(int i = 0; i < previsto.length; i++){
-         erros[i] = real[i] - previsto[i];
+         gradientes[i] = real[i] - previsto[i];
       }
-      return erros;
+      return gradientes;
    }
 }

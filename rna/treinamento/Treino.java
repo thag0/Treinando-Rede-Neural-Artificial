@@ -117,30 +117,31 @@ class Treino{
     *    O gradiente de cada conexão do neurônio é dado por:
     * </p>
     * <pre>
-    *    g[i] = -e * en[i]
+    *    grads[i] = -g * en[i]
     * </pre>
     * onde:
     * <p>
-    *    g - vetor de gradientes do neurônio.
+    *    grads - vetor de gradientes do neurônio.
     * </p>
     * <p>
     * <p>
-    *    e - erro do neurônio. 
+    *    g - gradiente local do neurônio. 
     * </p>
     * <p>
     *    en - vetor de entradas do neurônio. 
     * </p>
     * @param redec Rede Neural em formato de lista de camadas.
+    * @param perda função de perda usada para calcular os gradientes da saída da Rede Neural.
     * @param saidas array com as saídas esperadas das amostras.
     */
    private void backpropagation(Camada[] redec, Perda perda, double[] saidas){
-      aux.calcularErroSaida(redec[redec.length-1], perda, saidas);
+      aux.calcularGradientesSaida(redec[redec.length-1], perda, saidas);
       aux.calcularErroOcultas(redec);
 
       for(Camada camada : redec){
          for(Neuronio neuronio : camada.neuronios()){
             for(int i = 0; i < neuronio.pesos.length; i++){
-               neuronio.gradientes[i] = -neuronio.erro * neuronio.entradas[i];
+               neuronio.gradientes[i] = -neuronio.gradiente * neuronio.entradas[i];
             }
          }
       }

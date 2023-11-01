@@ -1,6 +1,7 @@
 package exemplos;
 
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 import rna.estrutura.*;
 import rna.inicializadores.*;
@@ -28,11 +29,11 @@ class Teste{
          {0}
       };
 
-      RedeNeural rede = new RedeNeural(new int[]{2, 2, 1});
+      RedeNeural rede = new RedeNeural(new int[]{2, 3, 1});
       rede.compilar(new SGD(), new Xavier());
       rede.configurarAtivacao("sigmoid");
 
-      rede.treinar(e, s, 3_000);
+      rede.diferencaFinita(e, s, 0.1, 0.1, 20_000, 0);
 
       double perda = rede.avaliador.erroMedioQuadrado(e, s);
       System.out.println(perda);

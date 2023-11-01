@@ -8,7 +8,7 @@ import rna.avaliacao.perda.EntropiaCruzada;
 import rna.avaliacao.perda.EntropiaCruzadaBinaria;
 import rna.avaliacao.perda.ErroMedioAbsoluto;
 import rna.avaliacao.perda.ErroMedioQuadrado;
-
+import rna.avaliacao.perda.ErroMedioQuadradoLogaritmico;
 import rna.estrutura.RedeNeural;
 
 /**
@@ -24,6 +24,7 @@ public class Avaliador{
    F1Score f1Score = new F1Score();
    ErroMedioQuadrado emq = new ErroMedioQuadrado();
    ErroMedioAbsoluto ema = new ErroMedioAbsoluto();
+   ErroMedioQuadradoLogaritmico emql = new ErroMedioQuadradoLogaritmico();
 
    /**
     * Instancia um novo avaliador destinado a uma Rede Neural.
@@ -48,7 +49,8 @@ public class Avaliador{
    }
 
    /**
-    * Calcula o erro médio quadrado da rede neural em relação aos dados de entrada e saída fornecidos.
+    * Calcula o erro médio quadrado médio da rede neural em relação aos dados de entrada e 
+    * saída fornecidos.
     * @param entrada matriz com  os dados de entrada (features).
     * @param saida matriz com os dados de saída (classes).
     * @return valor do erro médio quadrado da rede em relação ao dados fornecidos (custo/perda).
@@ -64,6 +66,39 @@ public class Avaliador{
       mse /= saida.length;
 
       return mse;
+   }
+
+   /**
+    * Calcula o erro médio quadrado logarítimoco da rede neural em relação aos dados 
+    * previstos e reais.
+    * @param previsto dados previstos.
+    * @param real dados rotulados.
+    * @return valor do erro médio quadrado logarítimico da rede em relação ao dados 
+    * fornecidos (custo/perda).
+    */
+   public double erroMedioQuadradoLogaritmico(double[] previsto, double[] real){
+      return emql.calcular(previsto, real);
+   }
+
+   /**
+    * Calcula o erro médio quadrado logarítimico médio da rede neural em relação aos dados 
+    * de entrada e saída fornecidos.
+    * @param entrada matriz com  os dados de entrada (features).
+    * @param saida matriz com os dados de saída (classes).
+    * @return valor do erro médio quadrado logarítimico da rede em relação ao dados 
+    * fornecidos (custo/perda).
+    */
+   public double erroMedioQuadradoLogaritmico(double[][] entrada, double[][] saida){
+      double[][] previsoes = rede.calcularSaida(entrada);
+      double msle = 0;
+
+      for(int i = 0; i < saida.length; i++){
+         msle += emql.calcular(previsoes[i], saida[i]);
+      }
+
+      msle /= saida.length;
+
+      return msle; 
    }
 
    /**

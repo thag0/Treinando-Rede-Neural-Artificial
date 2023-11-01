@@ -25,49 +25,32 @@ class AuxiliarTreino{
    }
 
    /**
-    * Método exclusivo para separar a forma de calcular os erros da camada de saída.
-    * Dando suporte não apenas para problemas de regressão.
-    * <p>
-    *    O cálculo do erro é dado por:
-    *    <pre>
-    *       er = (y - p)
-    *    </pre>
-    *    Onde:
-    *    <p>
-    *       {@code er} - erro do neurônio.
-    *    </p>
-    *    <p>
-    *       {@code y} - saída desejada.
-    *    </p>
-    *    <p>
-    *       {@code p} - saída prevista pelo neurônio.
-    *    </p>
-    * </p>
+    * Método exclusivo para separar a forma de calcular os gradientes da camada de saída.
     * @param saida camada de saída da Rede Reural.
     * @param perda função de perda da rede usada para calcular os erros.
     * @param real array com as saídas esperadas.
     */
-   void calcularErroSaida(Camada saida, Perda perda, double[] real){
+   void calcularGradientesSaida(Camada saida, Perda perda, double[] real){
       double[] previsto = saida.obterSaida();
-      double[] erros = perda.derivada(previsto, real);
+      double[] gradientes = perda.derivada(previsto, real);
 
       for(int i = 0; i < saida.quantidadeNeuronios(); i++){
-         saida.neuronio(i).erro = erros[i];
+         saida.neuronio(i).gradiente = gradientes[i];
       }
    }
 
    /**
-    * Método exclusivo para separar a forma de calcular os erros das camadas ocultas
-    * da rede neural.
+    * Método exclusivo para separar a forma de calcular os gradientes das camadas 
+    * ocultas da rede neural.
     * <p>
-    *    O erro do neurônio da camada oculta se da por:
+    *    O gradiente do neurônio da camada oculta se da por:
     * </p>
     * <pre>
-    *    e = d * ∑(pn * epn)
+    *    g = d * ∑(pn * epn)
     * </pre>
     * Onde:
     * <p>
-    *    e - erro do neurônio oculto
+    *    g - gradiente do neurônio oculto
     * </p>
     * <p>
     *    d - resultado da derivada da função de ativação
@@ -85,8 +68,8 @@ class AuxiliarTreino{
       Camada camadaAtual, camadaProxima;
       Neuronio neuronio, neuronioProxima;
 
-      // começar da ultima oculta
-      // percorrer camadas ocultas de trás pra frente
+      //começar da ultima oculta
+      //percorrer camadas ocultas de trás pra frente
       for(int i = redec.length-2; i >= 0; i--){
          
          camadaAtual = redec[i];
@@ -95,13 +78,13 @@ class AuxiliarTreino{
          for(int j = 0; j < camadaAtual.quantidadeNeuronios(); j++){
 
             // percorrer neurônios da camada seguinte
-            double somaErros = 0.0;
+            double somaGradientes = 0.0;
             neuronio = camadaAtual.neuronio(j);
             for(int k = 0; k < camadaProxima.quantidadeNeuronios(); k++){
                neuronioProxima = camadaProxima.neuronio(k);
-               somaErros += neuronioProxima.pesos[j] * neuronioProxima.erro;
+               somaGradientes += neuronioProxima.pesos[j] * neuronioProxima.gradiente;
             }
-            neuronio.erro = somaErros * neuronio.derivada;
+            neuronio.gradiente = somaGradientes * neuronio.derivada;
          }
       }
    }

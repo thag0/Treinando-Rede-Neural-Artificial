@@ -73,7 +73,7 @@ class Main{
 
       //avaliar resultados
       double perda = rede.avaliador.erroMedioQuadrado(treinoX, treinoY);
-      double precisao = 1 - rede.avaliador.erroMedioAbsoluto(treinoX, treinoY);
+      double precisao = 1 - rede.avaliador.erroMedioQuadradoLogaritmico(treinoX, treinoY);
 
       System.out.println("Perda = " + perda);
       System.out.println("Precisão = " + (formatarDecimal(precisao*100, 2)) + "%");
@@ -92,7 +92,7 @@ class Main{
       int[] arq = {entradas, 13, 13, saidas};//28x28
 
       Perda perda = new ErroMedioQuadrado();
-      Otimizador otm = new SGD(0.00001, 0.999, true);
+      Otimizador otm = new SGD(0.000001, 0.9999, true);
       Inicializador ini = new Xavier();
 
       RedeNeural rede = new RedeNeural(arq);
@@ -104,8 +104,8 @@ class Main{
    }
 
    public static void treinoEmPainel(RedeNeural rede, BufferedImage imagem, double[][] dadosEntrada, double[][] dadosSaida){
-      final int fps = 60;
-      int epocasPorFrame = 10;
+      final int fps = 600;
+      int epocasPorFrame = 20;
 
       //acelerar o processo de desenho
       //bom em situações de janelas muito grandes
