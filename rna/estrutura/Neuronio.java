@@ -166,21 +166,12 @@ public class Neuronio implements Cloneable{
    }
 
    /**
-    * Calcula o resultado do somatório da multiplicação entre os elementos do
-    * array de entradas pelo array de pesos. O resultado será usado como entrada 
-    * para a função de ativação.
-    * <p>
-    *    O algoritmo padrão do feedforward se baseia em fazer o somatório dos 
-    *    produtos entre a entrada com o peso respectivo e ao final adicionar o bias. 
-    *    Nesse modelo de arquitetura o bias é um parâmetro adicional nas entradas dos
-    *    neurônios e possui valor de saída sempre igual a 1, então é possível generalizar
-    *    num único loop.
-    * </p>
+    * Carrega todos os dados de entrada necessários para calcular a saída do neurônio.
     * @param entrada array com os dados de entrada para alimentar o neurônio.
     * @throws IllegalArgumentException se o tamanho dos dados de entrada for diferente
     * da capacidade de entrada do neurônio.
     */
-   public void calcularSaida(double[] entrada){
+   public void carregarEntrada(double[] entrada){
       if(this.tamanhoEntrada() != entrada.length){
          throw new IllegalArgumentException(
             "Incompatibilidade de tamanho entre os dados de entrada (" + entrada.length +
@@ -190,11 +181,28 @@ public class Neuronio implements Cloneable{
 
       //esse método de cópia ta sendo mais eficiente
       //do que usar o system.arraycopy
-      this.somatorio = 0;
       for(int i = 0; i < this.tamanhoEntrada(); i++){
          this.entradas[i] = entrada[i];
       }
+   }
 
+   /**
+    * Calcula o resultado do somatório da multiplicação entre os elementos do
+    * array de entradas pelo array de pesos. O resultado será usado como entrada 
+    * para a função de ativação.
+    * <p>
+    *    Os dados devem ser carregados para a entrada previamente.
+    * </p>
+    * <p>
+    *    O algoritmo padrão do feedforward se baseia em fazer o somatório dos 
+    *    produtos entre a entrada com o peso respectivo e ao final adicionar o bias. 
+    *    Nesse modelo de arquitetura o bias é um parâmetro adicional nas entradas dos
+    *    neurônios e possui valor de saída sempre igual a 1, então é possível generalizar
+    *    num único loop.
+    * </p>
+    */
+   public void calcularSaida(){
+      this.somatorio = 0;
       for(int i = 0; i < this.entradas.length; i++){
          this.somatorio += this.entradas[i] * this.pesos[i];
       }

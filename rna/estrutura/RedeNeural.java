@@ -180,7 +180,7 @@ public class RedeNeural implements Cloneable{
       for(int i = 0; i < arquitetura.length; i++){
          if(arquitetura[i] < 1){
             throw new IllegalArgumentException(
-               "Os valores de arquitetura fornecidos não devem ser menores do que um."
+               "Os valores de arquitetura fornecidos não devem ser maiores que zero."
             );
          }
       }
@@ -215,7 +215,7 @@ public class RedeNeural implements Cloneable{
     */
    public RedeNeural(int nEntrada, int nOcultas, int nSaida, int qOcultas){
       if(nEntrada < 1 || nOcultas < 1 || nSaida < 1 || qOcultas < 1){
-         throw new IllegalArgumentException("Os valores fornecidos devem ser maiores ou iguais a 1.");
+         throw new IllegalArgumentException("Os valores fornecidos devem ser maiores que zero.");
       }
 
       this.arquitetura = new int[1 + qOcultas + 1];
@@ -942,7 +942,7 @@ public class RedeNeural implements Cloneable{
          );
       }
 
-      treinador.treino(
+      this.treinador.treino(
          this,
          this.perda,
          this.otimizador,
@@ -988,7 +988,7 @@ public class RedeNeural implements Cloneable{
          );
       }
 
-      treinador.treino(
+      this.treinador.treino(
          this,
          this.perda,
          this.otimizador,

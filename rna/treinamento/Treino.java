@@ -136,7 +136,7 @@ class Treino{
     */
    private void backpropagation(Camada[] redec, Perda perda, double[] saidas){
       aux.calcularGradientesSaida(redec[redec.length-1], perda, saidas);
-      aux.calcularErroOcultas(redec);
+      aux.calcularGradienteOcultas(redec);
 
       for(Camada camada : redec){
          for(Neuronio neuronio : camada.neuronios()){

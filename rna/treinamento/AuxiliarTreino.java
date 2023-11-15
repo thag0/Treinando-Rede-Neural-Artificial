@@ -64,7 +64,7 @@ class AuxiliarTreino{
     * </p>
     * @param redec Rede Neural em formato de array de camadas.
     */
-   void calcularErroOcultas(Camada[] redec){
+   void calcularGradienteOcultas(Camada[] redec){
       Camada camadaAtual, camadaProxima;
       Neuronio neuronio, neuronioProxima;
 

@@ -224,7 +224,8 @@ public class Camada implements Cloneable{
       this.verificarInicializacao();
 
       for(int i = 0; i < this.neuronios.length; i++){
-         this.neuronios[i].calcularSaida(entrada);
+         this.neuronios[i].carregarEntrada(entrada);
+         this.neuronios[i].calcularSaida();
       }
       this.ativacao.calcular(this);
 
