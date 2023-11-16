@@ -111,8 +111,7 @@ class TreinoLote{
     * @param saidas array com as saídas esperadas das amostras.
     */
    private void backpropagationLote(Camada[] redec, Perda perda, double[] saidas){
-      aux.calcularGradientesSaida(redec[redec.length-1], perda, saidas);
-      aux.calcularGradienteOcultas(redec);
+      aux.calcularGradientes(redec, perda, saidas);
       calcularGradientesAcumulados(redec);
    }
 

@@ -135,8 +135,7 @@ class Treino{
     * @param saidas array com as saídas esperadas das amostras.
     */
    private void backpropagation(Camada[] redec, Perda perda, double[] saidas){
-      aux.calcularGradientesSaida(redec[redec.length-1], perda, saidas);
-      aux.calcularGradienteOcultas(redec);
+      aux.calcularGradientes(redec, perda, saidas);
 
       for(Camada camada : redec){
          for(Neuronio neuronio : camada.neuronios()){

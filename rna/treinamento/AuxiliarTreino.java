@@ -25,63 +25,61 @@ class AuxiliarTreino{
    }
 
    /**
-    * Método exclusivo para separar a forma de calcular os gradientes da camada de saída.
-    * @param saida camada de saída da Rede Reural.
-    * @param perda função de perda da rede usada para calcular os erros.
-    * @param real array com as saídas esperadas.
+    * Calcula os gradientes de cada neurônio das camadas da Rede Neural
+    * <p>
+    *    Para a camada de saída, os gradientes são calculados usando a derivada
+    *    da função de perda configurada para a Rede Neural.
+    * </p>
+    * <p>
+    *    Nas demais camadas intermediárias, o gradiente do neurônio se dá por:
+    * </p>
+    * <pre>
+    *    g = d * ∑(pn * gpn)
+    * </pre>
+    * Onde:
+    * <p>
+    *    g - gradiente do neurônio.
+    * </p>
+    * <p>
+    *    d - resultado da derivada da função de ativação do neurônio.
+    * </p>
+    * <p>
+    *    pn - peso do neurônio da camada seguinte, relativo a conexão com 
+    *    o neurônio que terá o gradiente calculado.
+    * </p>
+    * <p>
+    *    gpn - gradiente do neurônio da camada seguinte.
+    * </p>
+    * @param redec conjunto de camadas da Rede Neural.
+    * @param perda função de perda da Rede Neural.
+    * @param real valores reais baseados na entrada alimentada, que serão usados
+    * para calcular os gradientes da camada de saída.
     */
-   void calcularGradientesSaida(Camada saida, Perda perda, double[] real){
+   void calcularGradientes(Camada[] redec, Perda perda, double[] real){
+      //saída
+      Camada saida = redec[redec.length-1];
       double[] previsto = saida.obterSaida();
       double[] gradientes = perda.derivada(previsto, real);
 
       for(int i = 0; i < saida.quantidadeNeuronios(); i++){
          saida.neuronio(i).gradiente = gradientes[i];
       }
-   }
 
-   /**
-    * Método exclusivo para separar a forma de calcular os gradientes das camadas 
-    * ocultas da rede neural.
-    * <p>
-    *    O gradiente do neurônio da camada oculta se da por:
-    * </p>
-    * <pre>
-    *    g = d * ∑(pn * epn)
-    * </pre>
-    * Onde:
-    * <p>
-    *    g - gradiente do neurônio oculto
-    * </p>
-    * <p>
-    *    d - resultado da derivada da função de ativação
-    * </p>
-    * <p>
-    *    pn - peso do neurônio da camada seguinte, relativo a conexão com 
-    *    o neurônio que terá o erro calculado
-    * </p>
-    * <p>
-    *    epn - erro do neurônio da camada seguinte.
-    * </p>
-    * @param redec Rede Neural em formato de array de camadas.
-    */
-   void calcularGradienteOcultas(Camada[] redec){
-      Camada camadaAtual, camadaProxima;
-      Neuronio neuronio, neuronioProxima;
-
+      //ocultas
       //começar da ultima oculta
       //percorrer camadas ocultas de trás pra frente
       for(int i = redec.length-2; i >= 0; i--){
-         
-         camadaAtual = redec[i];
-         camadaProxima = redec[i+1];
+   
+         Camada camadaAtual = redec[i];
+         Camada camadaProxima = redec[i+1];
          camadaAtual.ativacaoDerivada();
          for(int j = 0; j < camadaAtual.quantidadeNeuronios(); j++){
 
-            // percorrer neurônios da camada seguinte
+            //calcular a soma dos gradientes da camada seguinte
+            Neuronio neuronio = camadaAtual.neuronio(j);
             double somaGradientes = 0.0;
-            neuronio = camadaAtual.neuronio(j);
             for(int k = 0; k < camadaProxima.quantidadeNeuronios(); k++){
-               neuronioProxima = camadaProxima.neuronio(k);
+               Neuronio neuronioProxima = camadaProxima.neuronio(k);
                somaGradientes += neuronioProxima.pesos[j] * neuronioProxima.gradiente;
             }
             neuronio.gradiente = somaGradientes * neuronio.derivada;
